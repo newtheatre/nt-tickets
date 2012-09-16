@@ -11,6 +11,15 @@ class Ticket_Type(models.Model):
 class Show(models.Model):
 	name=models.CharField(max_length=30)
 	location=models.CharField(max_length=30, default='Theatre')
+	
+	def all_ticket_types(self):
+		ticket_types=[]
+		for o in self.occurrence_set.all():
+			for t in o.tickets_available.all():
+				if not t in ticket_types:
+					ticket_types.append(t)
+		return ticket_types
+
 	def __unicode__(self):
 		return self.name;
 
@@ -28,6 +37,7 @@ class Occurrence(models.Model):
 class Ticket(models.Model):	
 	occurrence=models.ForeignKey(Occurrence)
 	stamp=models.DateTimeField(auto_now=True)
-	person_name=models.CharField(max_length=40)
-	email_address=models.EmailField(max_length=40)
+	person_name=models.CharField(max_length=80)
+	email_address=models.EmailField(max_length=80)
 	type=models.ForeignKey(Ticket_Type)
+
