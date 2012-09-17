@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from tickets.models import *
 
@@ -16,12 +17,15 @@ class BookingFormLanding(forms.Form):
 		self.fields['occurrence'].queryset = Occurrence.objects.filter(show=show.id)
 		self.fields['occurrence'].empty_label=None
 
-class BookingFormOccurrences(forms.Form):
+class BookingFormOccurrence(forms.Form):
 
-	def __init__(self,*args,**kwargs):
+	def __init__(self, *args, **kwargs):
+		show = kwargs.pop('show', None)
 		ticket_types = kwargs.pop('ticket_types', None)
-		super(BookingFormOccurrences, self).__init__(*args, **kwargs)
+		super(BookingFormOccurrence, self).__init__(*args, **kwargs)
 
 		for t in ticket_types:
-			self.fields['ticket_type_{id}'.format(id=t.id)] = forms.PositiveIntegerField(max_value=5)
+			c=u"£"
+			label = t.name+" "+ c+str(t.price)
+			self.fields[str(t.id)] = forms.IntegerField(max_value=5, min_value=0, initial=0, label=label)
 

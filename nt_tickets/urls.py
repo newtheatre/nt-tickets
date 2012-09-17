@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, include, url
 
-from tickets.forms import BookingFormLanding, BookingFormOccurrences
 from tickets.views import *
 
 # Uncomment the next two lines to enable the admin:
@@ -11,7 +10,8 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'tickets.views.defaultFNI', name='home'),
     url(r'^book/(?P<show_id>\d+)/$', 'tickets.views.book_landing'),
-    url(r'^book/(?P<show_id>\d+)/occurrence$', 'tickets.views.book_occurrence'),
+    url(r'^book/(?P<show_id>\d+)/occurrence/$', 'tickets.views.book_occurrence'),
+    url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish'),
 
     # url(r'^nt_tickets/', include('nt_tickets.foo.urls')),
 
