@@ -5,6 +5,8 @@ from django.shortcuts import render
 from tickets.models import Show
 from tickets.forms import BookingFormLanding, BookingFormOccurrence
 
+import datetime
+
 def defaultFNI(request):
 	html="<html><body><h1>nt_tickets</h1><p>Function not implemented.</p></body></html>"
 	return HttpResponse(html)
@@ -44,7 +46,8 @@ def book_occurrence(request,show_id):
 	ticket_types=occurrence.tickets_available.all()
 	step=2
 	total=2
-	message="Enter the quantity of tickets you'd like to reserve."
+
+	message="Enter the quantity of tickets you'd like to reserve for the "+request.session['occurrence'].day_formatted()+" "+request.session['occurrence'].time_formatted()+" performace."
 
 	if request.method=='POST':
 		form = BookingFormOccurrence(request.POST, show=show, ticket_types=ticket_types) # A form bound to the POST data

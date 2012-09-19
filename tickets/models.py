@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 # Create your models here.
@@ -5,6 +6,8 @@ from django.db import models
 class Ticket_Type(models.Model):
 	name=models.CharField(max_length=30)
 	price=models.DecimalField(max_digits=4, decimal_places=2)
+	def price_formatted(self):
+		return u"£%.2f" % self.price
 	def __unicode__(self):
 		return self.name+" L"+str(self.price)
 
@@ -30,6 +33,13 @@ class Occurrence(models.Model):
 	maximum_sell=models.PositiveIntegerField()
 	hours_til_close=models.IntegerField(default=3)
 	tickets_available=models.ManyToManyField(Ticket_Type)
+
+	def day_formatted(self):
+		return self.date.strftime('%A')
+	def time_formatted(self):
+		return self.time.strftime('%-I%p').lower()
+	def datetime_formatted(self):
+		return self.date.strftime('%A %d %B ')+self.time.strftime('%-I%p').lower()
 
 	def __unicode__(self):
 		return self.show.name+" on "+str(self.date)+" at "+str(self.time)
