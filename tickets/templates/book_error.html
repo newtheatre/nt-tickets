@@ -1,4 +1,11 @@
-<h1>Book Tickets</h1>
-<h2 style="color:red">Error</h2>
+{% extends "base.html" %}
+
+{% block title %}
+Book Tickets
+{% endblock %}
+
+{% block content %}
+<h1 style="color:red">Error</h1>
 <p>Sorry but there's been an problem booking your tickets, please <a href="../">try again</a> from the beginning.</p>
 <p>If this happens again email your request to boxoffice@newtheatre.org.uk instead.</p>
+{% endblock %}

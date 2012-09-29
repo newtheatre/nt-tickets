@@ -1,21 +1,47 @@
-<h1>nt_tickets Reporting</h1>
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
+
+{% block title %}Reporting{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="span4">
+<h3>Filters</h3>
 <form action="report" method="post">{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Submit" />
-</form>
-
+{{ form|as_bootstrap }}
+<div class="actions">
+        <button type="submit" class="btn primary">Search</button>
+</div></form>
+</div>
+<div class="span8">
+	<h1>Ticket Booking Report</h1>
 {% if report.have_report %}
-<h2>Ticket Booking Report</h2>
-<p>For show <strong>{{occurrence.show.name}}</strong> on <strong>{{occurrence.datetime_formatted}}.</p>
-<p><strong>{{report.how_many_sold}}</strong> sold out of a maximum of <strong>{{occurrence.maximum_sell}}</strong>.</p>
+<p>For show <strong>{{occurrence.show.name}}</strong> on <strong>{{occurrence.datetime_formatted}}</strong>.</p>
+<p><strong>{{report.how_many_sold}}</strong> reserved out of a maximum of <strong>{{occurrence.maximum_sell}}</strong>.</p>
+<div class="progress progress-success">
+  <div class="bar" style="width: {{report.percentage}}%"></div>
+</div>
 
-	<table><tr><th>Reservee</th><th>Email Address</th><th>Ticket Type</th><th>Timestamp</th></tr>
+	{% ifequal report.how_many_sold 0 %}
+		<div class="alert">
+  			<strong>Huh</strong> No tickets have been reserved for this occurrence. Maybe someone needs to publicise a bit more :P
+		</div>
+	{%else%}
+	<table class="table"><tr><th>Reservee</th><th>Email Address</th><th>Ticket Type</th><th>Timestamp</th></tr>
 	{% for sale in report.tickets %}
 		<tr><td>{{sale.person_name}}</td><td>{{sale.email_address}}</td><td>{{sale.type.name}} @ {{sale.type.price}}</td><td>{{sale.stamp}}</td></tr>
 	{% endfor %}
 	</table>
+	{%endifequal%}
 
-	<p style="color:green">End of report.</p>
-
+{%else%}
+<div class="alert">
+  <strong>Hey!</strong> Pick a valid filter from the left.
+</div>
 
 {% endif %}
+
+</div>
+</div>
+</div>
+{% endblock %}

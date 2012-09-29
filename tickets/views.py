@@ -111,7 +111,7 @@ def report(request):
 			occurrence=form.cleaned_data['occurrence']
 			report['tickets']=Ticket.objects.filter(occurrence=occurrence)
 			report['how_many_sold']=Ticket.objects.filter(occurrence=occurrence).count()
-
+			report['percentage']=(report['how_many_sold']/float(occurrence.maximum_sell))*100
 			report['have_report']=True
 		else:
 			pass		
