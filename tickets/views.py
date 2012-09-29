@@ -123,3 +123,10 @@ def report(request):
 		'occurrence':occurrence,
 		'report':report,
 	})
+
+def list(request):
+	shows=Show.objects.all()
+
+	return render(request, 'list.html', {
+		'shows':shows
+	})

@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^book/(?P<show_id>\d+)/occurrence/$', 'tickets.views.book_occurrence'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish'),
     url(r'^report$', 'tickets.views.report'),
+    url(r'^list$', 'tickets.views.list'),
 
     # url(r'^nt_tickets/', include('nt_tickets.foo.urls')),
 
