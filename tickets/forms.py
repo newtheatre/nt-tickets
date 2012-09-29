@@ -25,5 +25,7 @@ class BookingFormOccurrence(forms.Form):
 
 		for t in ticket_types:
 			label = t.name+" "+t.price_formatted()
-			self.fields[str(t.id)] = forms.IntegerField(max_value=5, min_value=0, initial=0, label=label)
+			self.fields[str(t.id)] = forms.IntegerField(max_value=10, min_value=0, initial=0, label=label)
 
+class ReportForm(forms.Form):
+	occurrence=forms.ModelChoiceField(queryset=Occurrence.objects.all())

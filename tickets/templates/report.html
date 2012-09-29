@@ -1,0 +1,21 @@
+<h1>nt_tickets Reporting</h1>
+<form action="report" method="post">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+
+{% if report.have_report %}
+<h2>Ticket Booking Report</h2>
+<p>For show <strong>{{occurrence.show.name}}</strong> on <strong>{{occurrence.datetime_formatted}}.</p>
+<p><strong>{{report.how_many_sold}}</strong> sold out of a maximum of <strong>{{occurrence.maximum_sell}}</strong>.</p>
+
+	<table><tr><th>Reservee</th><th>Email Address</th><th>Ticket Type</th><th>Timestamp</th></tr>
+	{% for sale in report.tickets %}
+		<tr><td>{{sale.person_name}}</td><td>{{sale.email_address}}</td><td>{{sale.type.name}} @ {{sale.type.price}}</td><td>{{sale.stamp}}</td></tr>
+	{% endfor %}
+	</table>
+
+	<p style="color:green">End of report.</p>
+
+
+{% endif %}
