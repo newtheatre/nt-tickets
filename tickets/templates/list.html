@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
+
+{% block title %}Reporting{% endblock %}
+
+{% block content %}
+	<h1>Show Listing</h1>
+	{% ifequal shows.count 0 %}
+		<div class="error">
+  			<strong>Huh</strong> No shows found.
+		</div>
+	{%else%}
+	<table class="table"><tr><th>ID</th><th>Name</th><th>Location</th><th>Booking URL</th></tr>
+	{% for show in shows %}
+		<tr><td>{{show.id}}</td><td>{{show.name}}</td><td>{{show.location}}</td><td><a href="http://ticketing.nottinghamnewtheatre.org.uk/book/{{show.id}}">http://ticketing.nottinghamnewtheatre.org.uk/book/{{show.id}}</a></tr>
+	{% endfor %}
+	</table>
+	{%endifequal%}
+{% endblock %}
