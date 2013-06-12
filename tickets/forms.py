@@ -18,7 +18,7 @@ class BookingFormLanding(forms.Form):
 		show = kwargs.pop('show', None)
 		super(BookingFormLanding, self).__init__(*args, **kwargs)
 		today=datetime.date.today()
-		self.fields['occurrence'].queryset = Occurrence.objects.filter(show=show.id).filter(date__gt=today)
+		self.fields['occurrence'].queryset = Occurrence.objects.get_avaliable()
 		self.fields['occurrence'].empty_label=None
 
 class ReportForm(forms.Form):

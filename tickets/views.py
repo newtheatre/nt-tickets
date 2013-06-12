@@ -32,6 +32,9 @@ def book_landing(request, show_id):
 			if t.occurrence.date<datetime.date.today():
 				return HttpResponseRedirect('./error/')
 			t.quantity = form.cleaned_data['quantity']
+			if t.occurrence.maximum_sell<(t.occurrence.tickets_sold()+t.quantity):
+				return HttpResponseRedirect('./error/?err=sold_out')
+
 			t.save()
 			request.session["ticket"] = t
 			return HttpResponseRedirect('./thanks/') # Redirect after POST
@@ -55,7 +58,8 @@ def book_finish(request,show_id):
 	})
 
 def book_error(request,show_id):
-	return render(request, 'book_error.html', {})
+	err=request.GET['err']
+	return render(request, 'book_error.html', {'err':err})
 
 def report(request):
 	report=dict()

@@ -28,12 +28,23 @@ class Show(models.Model):
 	def __unicode__(self):
 		return self.name;
 
+class OccurrenceManager(models.Manager):
+	def get_avaliable(self):
+		occs=Occurrence.objects.filter(show=super(self,self.show.id)).filter(date__gt=today).filter(sold_out=True)
+		deleted=[]
+		for oc in occs:
+			if oc.sold_out():
+				deleted.append(oc)
+		return [o for o in occs if o not in deleted]
+
 class Occurrence(models.Model):
 	show=models.ForeignKey(Show)
 	date=models.DateField()
 	time=models.TimeField()
 	maximum_sell=models.PositiveIntegerField()
 	hours_til_close=models.IntegerField(default=3)
+
+	objects=OccurrenceManager()
 
 	def day_formatted(self):
 		return self.date.strftime('%A')
@@ -48,6 +59,10 @@ class Occurrence(models.Model):
 		for ticket in tickets:
 			sold+=ticket.quantity
 		return sold
+	def sold_out(self):
+		if tickets_sold>=self.maximum_sell:
+			return True
+		else: return False
 
 	def __unicode__(self):
 		return self.show.name+" on "+str(self.date)+" at "+str(self.time)
