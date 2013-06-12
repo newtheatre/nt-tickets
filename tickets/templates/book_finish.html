@@ -6,6 +6,7 @@ Book Tickets
 
 {% block content %}
 <h1>Thanks!</h1>
-<h2>Your tickets have been booked.</h2>
-<p>You'll shortly recive an email with details of your tickets and a link in case you need to cancel them. You don't need to print off anything to bring to the theatre, just tell us your name when you come to collect and pay.</p>
+<h2>Your tickets for {{show.name}} have been booked.</h2>
+<p>You've reserved {{ticket.quantity}} for the performance on {{ticket.occurrence.date|date:"l d F"}}, tickets can be collected from {{ticket.occurrence.time}}</p>
+<p>You'll shortly receive an email with details of your tickets and a link in case you need to cancel them. You don't need to print off anything to bring to the theatre, just tell us your name when you come to collect and pay.</p>
 {% endblock %}

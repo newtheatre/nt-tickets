@@ -15,6 +15,8 @@ def defaultFNI(request):
 
 def book_landing(request, show_id):
 	show = Show.objects.get(id=show_id)
+	if show.is_current()==False:
+		return HttpResponseRedirect('./error/')
 	step=1
 	total=2
 	message="Tickets for performances are reserved online and payed for on collection at the box office."
@@ -23,14 +25,15 @@ def book_landing(request, show_id):
 		form = BookingFormLanding(request.POST, show=show) # A form bound to the POST data
 		if form.is_valid(): # All validation rules pass
 			t=Ticket()
-
 			t.person_name=form.cleaned_data['person_name']
 			t.email_address=form.cleaned_data['email_address']
 			t.show = show
 			t.occurrence = form.cleaned_data['occurrence']
+			if t.occurrence.date<datetime.date.today():
+				return HttpResponseRedirect('./error/')
 			t.quantity = form.cleaned_data['quantity']
-
 			t.save()
+			request.session["ticket"] = t
 			return HttpResponseRedirect('./thanks/') # Redirect after POST
 	else:
 		form = BookingFormLanding(show=show) # An unbound form
@@ -45,12 +48,13 @@ def book_landing(request, show_id):
 
 def book_finish(request,show_id):	
 	show = Show.objects.get(id=show_id)
+	ticket = request.session["ticket"]
 	
 	return render(request, 'book_finish.html', {
-		'show':show,
+		'show':show, 'ticket':ticket,
 	})
 
-def book_error(request):
+def book_error(request,show_id):
 	return render(request, 'book_error.html', {})
 
 def report(request):

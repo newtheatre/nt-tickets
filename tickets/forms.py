@@ -1,6 +1,8 @@
 from django import forms
 from tickets.models import *
 
+import datetime
+
 class OccurrenceChoiceField(forms.ModelChoiceField):
   def label_from_instance(self, obj):
     return "%s" % obj.datetime_formatted()
@@ -15,7 +17,8 @@ class BookingFormLanding(forms.Form):
 	def __init__(self, *args, **kwargs):
 		show = kwargs.pop('show', None)
 		super(BookingFormLanding, self).__init__(*args, **kwargs)
-		self.fields['occurrence'].queryset = Occurrence.objects.filter(show=show.id)
+		today=datetime.date.today()
+		self.fields['occurrence'].queryset = Occurrence.objects.filter(show=show.id).filter(date__gt=today)
 		self.fields['occurrence'].empty_label=None
 
 class ReportForm(forms.Form):

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -14,6 +15,15 @@ class Show(models.Model):
 	# 			if not t in ticket_types:
 	# 				ticket_types.append(t)
 	# 	return ticket_types
+
+	def is_current(self):
+		today=datetime.date.today()
+		occs=Occurrence.objects.filter(show=self).filter(date__gt=today)
+
+		if len(occs)==0:
+			return False
+		else:
+			return True
 
 	def __unicode__(self):
 		return self.name;
