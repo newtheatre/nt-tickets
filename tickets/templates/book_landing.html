@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
+
+{% block title %}
+Book Tickets
+{% endblock %}
+
+{% block content %}
+<h2>Part {{step}} of {{total}}</h2>
+<p class="lead">You're booking tickets for {{show.name}} at {{show.location}}.</p>
+<p>{{ message }}</p>
+
+<form action="." method="post">{% csrf_token %}
+{{ form|as_bootstrap }}
+<div class="actions">
+        <button type="submit" class="btn btn-success">Continue</button>
+</div>
+</form>
+{% endblock %}
