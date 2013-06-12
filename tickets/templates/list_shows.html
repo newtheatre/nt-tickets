@@ -1,0 +1,16 @@
+
+{% ifequal shows.count 0 %}
+	<div class="error">
+			<strong>Huh</strong> No shows found.
+	</div>
+{%else%}
+<ul>
+{% for show in shows %}
+	<li>
+		<h3>{{show.name}}</h3>
+		{{show.description}}
+		<div class="book"><a href="{% url 'book' show.id %}">Book Tickets</a></div>
+	</li>
+{% endfor %}
+</ul>
+{%endifequal%}

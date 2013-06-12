@@ -2,6 +2,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
+from django.views.generic.list import ListView
+
 from tickets.models import *
 from tickets.forms import *
 
@@ -130,3 +132,8 @@ def list(request):
 	return render(request, 'list.html', {
 		'shows':shows
 	})
+
+class ListShows(ListView):
+	model=Show
+	template_name='list_shows.html'
+	context_object_name='shows'

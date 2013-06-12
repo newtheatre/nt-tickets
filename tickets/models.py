@@ -3,14 +3,6 @@ from django.db import models
 
 # Create your models here.
 
-class Ticket_Type(models.Model):
-	name=models.CharField(max_length=30)
-	price=models.DecimalField(max_digits=4, decimal_places=2)
-	def price_formatted(self):
-		return u"£%.2f" % self.price
-	def __unicode__(self):
-		return self.name+" L"+str(self.price)
-
 class Show(models.Model):
 	name=models.CharField(max_length=30)
 	location=models.CharField(max_length=30, default='Theatre')
@@ -32,7 +24,6 @@ class Occurrence(models.Model):
 	time=models.TimeField()
 	maximum_sell=models.PositiveIntegerField()
 	hours_til_close=models.IntegerField(default=3)
-	tickets_available=models.ManyToManyField(Ticket_Type)
 
 	def day_formatted(self):
 		return self.date.strftime('%A')
@@ -49,7 +40,6 @@ class Ticket(models.Model):
 	stamp=models.DateTimeField(auto_now=True)
 	person_name=models.CharField(max_length=80)
 	email_address=models.EmailField(max_length=80)
-	type=models.ForeignKey(Ticket_Type)
 
 	def __unicode__(self):
 		return self.occurrence.show.name+" on "+str(self.occurrence.date)+" at "+str(self.occurrence.time)+" for "+self.person_name

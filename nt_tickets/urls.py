@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 
-from tickets.views import *
+import tickets.views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -9,11 +9,11 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'tickets.views.defaultFNI', name='home'),
-    url(r'^book/(?P<show_id>\d+)/$', 'tickets.views.book_landing'),
+    url(r'^book/(?P<show_id>\d+)/$', 'tickets.views.book_landing', name='book'),
     url(r'^book/(?P<show_id>\d+)/occurrence/$', 'tickets.views.book_occurrence'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish'),
     url(r'^report$', 'tickets.views.report'),
-    url(r'^list$', 'tickets.views.list'),
+    url(r'^list$', tickets.views.ListShows.as_view()),
 
     # url(r'^nt_tickets/', include('nt_tickets.foo.urls')),
 
