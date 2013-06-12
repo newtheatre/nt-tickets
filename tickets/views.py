@@ -38,37 +38,6 @@ def book_landing(request, show_id):
 		'message':message,
 	})
 
-def book_occurrence(request,show_id):
-
-	if not request.session.get('show'):
-		return book_error(request)
-	
-	show = Show.objects.get(id=show_id)
-	occurrence=request.session['occurrence']
-	ticket_types=occurrence.tickets_available.all()
-	step=2
-	total=2
-
-	message="Enter the quantity of tickets you'd like to reserve for the "+request.session['occurrence'].day_formatted()+" "+request.session['occurrence'].time_formatted()+" performace."
-
-	if request.method=='POST':
-		form = BookingFormOccurrence(request.POST, show=show, ticket_types=ticket_types) # A form bound to the POST data
-		if form.is_valid(): # All validation rules pass
-			request.session['tickets']=dict()
-			for t_type in form.cleaned_data:
-				request.session['tickets'][t_type]=form.cleaned_data[t_type]
-			return HttpResponseRedirect('../thanks/') # Redirect after POST
-
-
-	else:
-		form = BookingFormOccurrence(show=show, ticket_types=ticket_types)
-
-	return render(request, 'book_landing.html', {
-		'form': form,
-		'show':show,
-		'step':step, 'total':total,
-		'message':message,
-	})
 
 def book_finish(request,show_id):
 	if not request.session.get('tickets'):
