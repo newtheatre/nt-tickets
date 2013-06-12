@@ -62,7 +62,7 @@ def report(request):
 		form = ReportForm(request.POST)
 		if form.is_valid():
 			occurrence=form.cleaned_data['occurrence']
-			report['tickets']=Ticket.objects.filter(occurrence=occurrence)
+			report['tickets']=Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
 			report['how_many_sold']=occurrence.tickets_sold()
 			report['percentage']=(report['how_many_sold']/float(occurrence.maximum_sell))*100
 			report['have_report']=True

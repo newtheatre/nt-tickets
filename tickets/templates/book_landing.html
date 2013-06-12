@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "book_base.html" %}
 {% load bootstrap_toolkit %}
 
 {% block title %}
@@ -10,9 +10,17 @@ Book Tickets
 <p>{{ message }}</p>
 
 <form action="." method="post">{% csrf_token %}
-{{ form|as_bootstrap }}
+<div class="col col_left">
+{{ form.occurrence|as_bootstrap }}
+{{ form.quantity|as_bootstrap }}
+</div>
+<div class="col col_right">
+{{ form.person_name|as_bootstrap }}
+{{ form.email_address|as_bootstrap }}
+
+</div>
 <div class="actions">
-        <button type="submit" class="btn btn-success">Book Tickets</button>
+        <button type="submit" class="btn btn-primary">Book Tickets</button>
 </div>
 </form>
 {% endblock %}

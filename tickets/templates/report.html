@@ -27,9 +27,9 @@
   			<strong>Huh</strong> No tickets have been reserved for this occurrence. Maybe someone needs to publicise a bit more :P
 		</div>
 	{%else%}
-	<table class="table"><tr><th>Reservee</th><th>Email Address</th><th>Timestamp</th></tr>
+	<table class="table"><tr><th>Reservee</th><th>Quantity</th><th>Timestamp</th></tr>
 	{% for sale in report.tickets %}
-		<tr><td>{{sale.person_name}}</td><td>{{sale.email_address}}</td><td>{{sale.stamp}}</td></tr>
+		<tr {% if sale.cancelled %}class="cancelled"{%endif%}><td>{{sale.person_name}}</del></td><td> 	<span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td><td>{{sale.stamp}}</td></tr>
 	{% endfor %}
 	</table>
 	{%endifequal%}

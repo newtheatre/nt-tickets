@@ -6,11 +6,11 @@ class OccurrenceChoiceField(forms.ModelChoiceField):
     return "%s" % obj.datetime_formatted()
 
 class BookingFormLanding(forms.Form):
-	occurrence=OccurrenceChoiceField(queryset=None,empty_label="No Occurrences")
-	person_name=forms.CharField(max_length=80)
+	occurrence=OccurrenceChoiceField(label="Date",queryset=None,empty_label="No Occurrences")
+	person_name=forms.CharField(label="Your Full Name",max_length=80)
 	email_address=forms.EmailField(max_length=80)
 	max_q=8
-	quantity=forms.IntegerField(label="Quantity",min_value=1,max_value=max_q,required=True,widget=forms.Select(choices=  [ (i,i) for i in range(1,max_q+1) ]) )
+	quantity=forms.IntegerField(label="Number of Seats",min_value=1,max_value=max_q,required=True,widget=forms.Select(choices=  [ (i,i) for i in range(1,max_q+1) ]) )
 
 	def __init__(self, *args, **kwargs):
 		show = kwargs.pop('show', None)
