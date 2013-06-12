@@ -32,6 +32,13 @@ class Occurrence(models.Model):
 	def datetime_formatted(self):
 		return self.date.strftime('%A %d %B ')+self.time.strftime('%-I%p').lower()
 
+	def tickets_sold(self):
+		tickets=Ticket.objects.filter(occurrence=self).filter(cancelled=False)
+		sold=0
+		for ticket in tickets:
+			sold+=ticket.quantity
+		return sold
+
 	def __unicode__(self):
 		return self.show.name+" on "+str(self.date)+" at "+str(self.time)
 

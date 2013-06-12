@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^$', 'tickets.views.defaultFNI', name='home'),
     url(r'^book/(?P<show_id>\d+)/$', 'tickets.views.book_landing', name='book'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish'),
-    url(r'^report$', 'tickets.views.report'),
+    url(r'^admin/report/$', 'tickets.views.report'),
     url(r'^list$', tickets.views.ListShows.as_view()),
 
     # url(r'^nt_tickets/', include('nt_tickets.foo.urls')),
