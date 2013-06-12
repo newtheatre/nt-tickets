@@ -7,13 +7,13 @@ class Show(models.Model):
 	name=models.CharField(max_length=30)
 	location=models.CharField(max_length=30, default='Theatre')
 	
-	def all_ticket_types(self):
-		ticket_types=[]
-		for o in self.occurrence_set.all():
-			for t in o.tickets_available.all():
-				if not t in ticket_types:
-					ticket_types.append(t)
-		return ticket_types
+	# def all_ticket_types(self):
+	# 	ticket_types=[]
+	# 	for o in self.occurrence_set.all():
+	# 		for t in o.tickets_available.all():
+	# 			if not t in ticket_types:
+	# 				ticket_types.append(t)
+	# 	return ticket_types
 
 	def __unicode__(self):
 		return self.name;
@@ -40,6 +40,9 @@ class Ticket(models.Model):
 	stamp=models.DateTimeField(auto_now=True)
 	person_name=models.CharField(max_length=80)
 	email_address=models.EmailField(max_length=80)
+	quantity=models.IntegerField(default=1)
+	cancelled=models.BooleanField(default=False)
+
 
 	def __unicode__(self):
 		return self.occurrence.show.name+" on "+str(self.occurrence.date)+" at "+str(self.occurrence.time)+" for "+self.person_name
