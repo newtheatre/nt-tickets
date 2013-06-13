@@ -2,11 +2,17 @@
 from django.db import models
 import datetime
 
-# Create your models here.
+class Category(models.Model):
+	name=models.CharField(max_length=50)
+	def __unicode__(self): return self.name
 
 class Show(models.Model):
 	name=models.CharField(max_length=30)
 	location=models.CharField(max_length=30, default='Theatre')
+	description = models.TextField()
+	long_description = models.TextField(blank=True)
+	poster=models.ImageField(upload_to='posters', blank=True, null=True)
+	category=models.ForeignKey('Category')
 	
 	# def all_ticket_types(self):
 	# 	ticket_types=[]
