@@ -34,8 +34,7 @@ class OccurrenceManager(models.Manager):
 		occs=Occurrence.objects.filter(show=show).filter(date__gt=today).all()
 		ret=[]
 		for oc in occs:
-			if oc.sold_out():
-				pass
+			if oc.sold_out(): pass
 			else:
 				ret.append((oc.id,oc.datetime_formatted()))
 		print ret
