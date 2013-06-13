@@ -3,12 +3,8 @@ from tickets.models import *
 
 import datetime
 
-class OccurrenceChoiceField(forms.ModelChoiceField):
-  def label_from_instance(self, obj):
-    return "%s" % obj.datetime_formatted()
-
 class BookingFormLanding(forms.Form):
-	occurrence=OccurrenceChoiceField(label="Date",queryset=None,empty_label="No Occurrences")
+	occurrence=forms.ChoiceField(label="Date",choices=('0','Not Loaded'))
 	person_name=forms.CharField(label="Your Full Name",max_length=80)
 	email_address=forms.EmailField(max_length=80)
 	max_q=8
@@ -17,9 +13,7 @@ class BookingFormLanding(forms.Form):
 	def __init__(self, *args, **kwargs):
 		show = kwargs.pop('show', None)
 		super(BookingFormLanding, self).__init__(*args, **kwargs)
-		today=datetime.date.today()
-		self.fields['occurrence'].queryset = Occurrence.objects.get_avaliable()
-		self.fields['occurrence'].empty_label=None
+		self.fields['occurrence'].choices = Occurrence.objects.get_avaliable(show=show)
 
 class ReportForm(forms.Form):
 	occurrence=forms.ModelChoiceField(queryset=Occurrence.objects.all())

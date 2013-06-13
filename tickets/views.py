@@ -28,7 +28,8 @@ def book_landing(request, show_id):
 			t.person_name=form.cleaned_data['person_name']
 			t.email_address=form.cleaned_data['email_address']
 			t.show = show
-			t.occurrence = form.cleaned_data['occurrence']
+			occ_id=form.cleaned_data['occurrence']
+			t.occurrence = Occurrence.objects.get(pk=occ_id)
 			if t.occurrence.date<datetime.date.today():
 				return HttpResponseRedirect('./error/')
 			t.quantity = form.cleaned_data['quantity']
@@ -58,7 +59,9 @@ def book_finish(request,show_id):
 	})
 
 def book_error(request,show_id):
-	err=request.GET['err']
+	if 'err' in request.GET:
+		err=request.GET['err']
+	else: err=None
 	return render(request, 'book_error.html', {'err':err})
 
 def report(request):

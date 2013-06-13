@@ -29,13 +29,17 @@ class Show(models.Model):
 		return self.name;
 
 class OccurrenceManager(models.Manager):
-	def get_avaliable(self):
-		occs=Occurrence.objects.filter(show=super(self,self.show.id)).filter(date__gt=today).filter(sold_out=True)
-		deleted=[]
+	def get_avaliable(self,show):
+		today=datetime.date.today()
+		occs=Occurrence.objects.filter(show=show).filter(date__gt=today).all()
+		ret=[]
 		for oc in occs:
 			if oc.sold_out():
-				deleted.append(oc)
-		return [o for o in occs if o not in deleted]
+				pass
+			else:
+				ret.append((oc.id,oc.datetime_formatted()))
+		print ret
+		return ret
 
 class Occurrence(models.Model):
 	show=models.ForeignKey(Show)
@@ -60,7 +64,7 @@ class Occurrence(models.Model):
 			sold+=ticket.quantity
 		return sold
 	def sold_out(self):
-		if tickets_sold>=self.maximum_sell:
+		if self.tickets_sold()>=self.maximum_sell:
 			return True
 		else: return False
 
