@@ -7,6 +7,7 @@
 <ul>
 {% for show in shows %}
 	<li>
+		<img src="{{show.poster_wall.url}}" style="float:left" />
 		<h3>{{show.name}}</h3>
 		{{show.description}}
 		<div class="book"><a href="{% url 'book' show.id %}">Book Tickets</a></div>
