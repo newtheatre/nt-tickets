@@ -5,5 +5,6 @@ class TicketAdmin(admin.ModelAdmin):
     list_filter = ['occurrence']
 
 admin.site.register(Show)
+admin.site.register(Category)
 admin.site.register(Occurrence)
 admin.site.register(Ticket,TicketAdmin)
