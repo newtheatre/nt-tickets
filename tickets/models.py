@@ -39,6 +39,16 @@ class Show(models.Model):
         else:
             return True
 
+    def sold_out(self):
+        if self.occurrence_set.count() > 0:
+            for occ in self.occurrence_set.all():
+                if occ.sold_out()==False:
+                    return False
+            return True
+        else:
+            return False
+
+
     def gen_thumbs(self):
         img = Image.open(self.poster.path)
         #Convert to RGB
