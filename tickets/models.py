@@ -32,13 +32,8 @@ class Show(models.Model):
     
     def is_current(self):
         today=datetime.date.today()
-        occs=Occurrence.objects.filter(show=self).filter(date__gt=today)
-
-        if len(occs)==0:
-            return False
-        else:
-            return True
-
+        if today>self.end_date: return False
+        else: return True
     def sold_out(self):
         if self.occurrence_set.count() > 0:
             for occ in self.occurrence_set.all():
