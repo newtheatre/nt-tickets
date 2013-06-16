@@ -11,9 +11,6 @@ class Category(models.Model):
     def __unicode__(self): return self.name
 
 class Show(models.Model):
-
-
-
     name=models.CharField(max_length=30)
     location=models.CharField(max_length=30, default='Theatre')
     description = models.TextField()
@@ -30,14 +27,6 @@ class Show(models.Model):
                    'poster_page'    : (256, 362),       
                    'poster_tiny'    : (50, 71) }
     
-    # def all_ticket_types(self):
-    #   ticket_types=[]
-    #   for o in self.occurrence_set.all():
-    #       for t in o.tickets_available.all():
-    #           if not t in ticket_types:
-    #               ticket_types.append(t)
-    #   return ticket_types
-
     def is_current(self):
         today=datetime.date.today()
         occs=Occurrence.objects.filter(show=self).filter(date__gt=today)
@@ -49,11 +38,9 @@ class Show(models.Model):
 
     def gen_thumbs(self):
         img = Image.open(self.poster.path)
-        
         #Convert to RGB
         if img.mode not in ('L', 'RGB'):
             img = img.convert('RGB')
-        
         for field_name, size in self.IMAGE_SIZES.iteritems():
             field = getattr(self, field_name)
             working = img.copy()
@@ -62,11 +49,8 @@ class Show(models.Model):
             working.save(fp, "JPEG", quality=95)
             cf = InMemoryUploadedFile(fp, None, self.poster.name, 'image/jpeg',
                                   fp.len, None)
-
             field.save(name=self.poster.name, content=cf, save=False);
-                
-
-
+    
     def __unicode__(self):
         return self.name;
 
