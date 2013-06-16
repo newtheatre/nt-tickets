@@ -16,12 +16,10 @@
 [x] define category order in settings or something (in db)
 [x] build sidebar
 [x] ignore cats with order=0
-[ ] make general and refactor
 
 ## Booking
 [ ] send email
 [x] cancellation
-[ ] include poster ?
 [ ] refactor/cleanup
 
 ## Reporting
