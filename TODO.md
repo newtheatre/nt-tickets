@@ -25,6 +25,8 @@
 
 ## Reporting
 [ ] print stylesheet
-[ ] link all pages together, main index?
-[ ] friendlier
-[ ] look into integrating with django admin (would be awesome)
+[x] link all pages together, main index?
+[x] friendlier
+[x] look into integrating with django admin (would be awesome)
+[ ] clean up django admin implementation: rename in menu, remove add and change buttons
+[ ] clean up django admin implementation: strip bootstrap-admin.css back to whats needed (90% can be removed)

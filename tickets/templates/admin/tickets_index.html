@@ -1,0 +1,83 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static admin_list %}
+{% load admin_urls %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+<link rel="stylesheet" type="text/css" href="/static/admin.css" />
+<link href="{{ STATIC_URL }}bootstrap-admin.css" rel="stylesheet" />
+
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% if action_form %}{% if actions_on_top or actions_on_bottom %}
+<script type="text/javascript">
+(function($) {
+  $(document).ready(function($) {
+    $("tr input.action-select").actions();
+  });
+})(django.jQuery);
+</script>
+{% endif %}{% endif %}
+{% endblock %}
+
+{% block bodyclass %}change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="/admin/">Home</a>
+  &rsaquo; <a href="/admin/tickets/">Tickets</a>
+  &rsaquo; Ticket Reservation Reporting
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div class="filter-col">
+    <h2>Select Report</h2>
+    <form action="." method="post">{% csrf_token %}
+      {{ form }}
+      <div class="actions">
+        <button type="submit" class="btn primary">Search</button>
+      </div></form>
+    </div>
+    <div class="report-col">
+      <img src="{{occurrence.show.poster_tiny.url}}" style="float:right" />
+
+      <h2>Ticket Reservation Report</h2>
+      {% if report.have_report %}
+      <p>For show <strong>{{occurrence.show.name}}</strong> on <strong>{{occurrence.datetime_formatted}}</strong>.</p>
+      <p><strong>{{report.how_many_sold}}</strong> reserved out of a maximum of {{occurrence.maximum_sell}} leaving <strong>{{report.how_many_left}}</strong> seats left.</p>
+      <div class="progress progress-success">
+        <div class="bar" style="width: {{report.percentage}}%"></div>
+      </div>
+
+      {% ifequal report.how_many_sold 0 %}
+      <div class="alert">
+        <strong>Huh</strong> No tickets have been reserved for this performance. Maybe someone needs to publicise a bit more!
+      </div>
+      {%else%}
+      <table class="table"><tr><th>Reservee</th><th>Quantity</th><th>Timestamp</th></tr>
+        {% for sale in report.tickets %}
+        <tr {% if sale.cancelled %}class="cancelled"{%endif%}><td>{{sale.person_name}}</del></td><td>   <span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td><td>{{sale.stamp}}</td></tr>
+        {% endfor %}
+      </table>
+      {%endifequal%}
+
+      {%else%}
+      <div class="alert">
+        <strong>Hey!</strong> Pick a valid filter from the left.
+      </div>
+
+      {% endif %}
+
+    </div>
+  </div>
+  {% endblock %}

@@ -16,4 +16,4 @@ class BookingFormLanding(forms.Form):
 		self.fields['occurrence'].choices = Occurrence.objects.get_avaliable(show=show)
 
 class ReportForm(forms.Form):
-	occurrence=forms.ModelChoiceField(queryset=Occurrence.objects.all())
+	occurrence=forms.ModelChoiceField(queryset=Occurrence.objects.all(),label='')

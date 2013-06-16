@@ -1,0 +1,19 @@
+.filter-col {
+	float:left;
+	width:30%;
+}
+.report-col {
+	width:70%;
+	float:left;
+}
+.filter-col, .report-col {
+	margin-top: -16px
+}
+select {
+	width:90%;
+}
+
+tr.cancelled td {
+  text-decoration: line-through;
+  color:#999;
+}
