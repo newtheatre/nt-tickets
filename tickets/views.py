@@ -64,31 +64,6 @@ def book_error(request,show_id):
     else: err=None
     return render(request, 'book_error.html', {'err':err})
 
-def report(request):
-    report=dict()
-    report['have_report']=False
-    occurrence=""
-
-    if request.method=='POST':
-        form = ReportForm(request.POST)
-        if form.is_valid():
-            occurrence=form.cleaned_data['occurrence']
-            report['tickets']=Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
-            report['how_many_sold']=occurrence.tickets_sold()
-            report['how_many_left']=occurrence.maximum_sell-occurrence.tickets_sold()
-            report['percentage']=(report['how_many_sold']/float(occurrence.maximum_sell))*100
-            report['have_report']=True
-        else:
-            pass        
-    else:
-        form=ReportForm()
-
-    return render(request, 'report.html', {
-        'form':form,
-        'occurrence':occurrence,
-        'report':report,
-    })
-
 def list(request):
     shows=Show.objects.all()
 
