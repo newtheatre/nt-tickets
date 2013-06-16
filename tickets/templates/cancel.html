@@ -10,7 +10,9 @@ Cancel Tickets
 <h1>Your tickets have been cancelled</h1>
 <p>Your reservation of {{ticket.quantity}} seats for {{ticket.occurrence.show}} on {{ticket.occurrence.date}}, has been cancelled.</p>
 <p>Thank you for taking the time to cancel an unneeded reservation and opening up seats for others.</p>
-
+{% elif already_cancelled %}
+<h1 style="color:red">Error</h1>
+<p>The tickets under reference <strong>{{ticket.unique_code}}</strong> have already been cancelled.</p>
 {% else %}
 <h1>Hi {{ticket.person_name}}</h1>
 <p>Are you sure you want to cancel your reservation of {{ticket.quantity}} seats for {{ticket.occurrence.show}} on {{ticket.occurrence.date}}?</p>

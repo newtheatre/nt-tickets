@@ -98,7 +98,13 @@ def cancel(request, ref_id):
         ticket.cancelled=True
         ticket.save()
         cancelled=True
+        already_cancelled=False
+    elif ticket.cancelled==True:
+        already_cancelled=True
+        cancelled=False
     else:
         cancelled=False
-    return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled}) 
+        already_cancelled=False
+
+    return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled,'already_cancelled':already_cancelled}) 
 
