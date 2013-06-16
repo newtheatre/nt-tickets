@@ -1,6 +1,6 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from django.views.generic.list import ListView
 
@@ -115,4 +115,14 @@ def sidebar(request):
         if len(shows)>0:
             current_shows.append(shows[0])
     return render(request, 'sidebar.html', {'shows':current_shows})
+
+def cancel(request, ref_id):
+    ticket=get_object_or_404(Ticket, unique_code=ref_id)
+    if request.POST.get("id", "")==ticket.unique_code:
+        ticket.cancelled=True
+        ticket.save()
+        cancelled=True
+    else:
+        cancelled=False
+    return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled}) 
 

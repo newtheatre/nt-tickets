@@ -19,7 +19,7 @@
 
 ## Booking
 [ ] send email
-[ ] cancellation
+[x] cancellation
 [ ] include poster ?
 [ ] refactor/cleanup
 
