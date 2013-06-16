@@ -9,12 +9,21 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from tickets.func import rand_16
 
 class Category(models.Model):
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
     name=models.CharField(max_length=50)
     slug=models.SlugField()
     sort=models.IntegerField()
     def __unicode__(self): return self.name
 
+
 class Show(models.Model):
+    class Meta:
+        verbose_name = 'Show'
+        verbose_name_plural = 'Shows'
+
     name=models.CharField(max_length=30)
     location=models.CharField(max_length=30, default='Theatre')
     description = models.TextField()
@@ -96,6 +105,10 @@ class OccurrenceManager(models.Manager):
         return ret
 
 class Occurrence(models.Model):
+    class Meta:
+        verbose_name = 'Occurrence'
+        verbose_name_plural = 'Occurrences'
+
     show=models.ForeignKey(Show)
     date=models.DateField()
     time=models.TimeField()
@@ -128,7 +141,11 @@ class Occurrence(models.Model):
     def __unicode__(self):
         return self.show.name+" on "+str(self.date)+" at "+str(self.time)
 
-class Ticket(models.Model): 
+class Ticket(models.Model):
+    class Meta:
+        verbose_name = 'Ticket'
+        verbose_name_plural = 'Tickets'
+
     occurrence=models.ForeignKey(Occurrence)
     stamp=models.DateTimeField(auto_now=True)
     person_name=models.CharField(max_length=80)
