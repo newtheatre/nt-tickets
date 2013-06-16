@@ -42,6 +42,7 @@ class Show(models.Model):
         if img.mode not in ('L', 'RGB'):
             img = img.convert('RGB')
         for field_name, size in self.IMAGE_SIZES.iteritems():
+            print field_name
             field = getattr(self, field_name)
             working = img.copy()
             working.thumbnail(size, Image.ANTIALIAS)
@@ -49,7 +50,12 @@ class Show(models.Model):
             working.save(fp, "JPEG", quality=95)
             cf = InMemoryUploadedFile(fp, None, self.poster.name, 'image/jpeg',
                                   fp.len, None)
-            field.save(name=self.poster.name, content=cf, save=False);
+            field.save(name=self.poster.name+"_"+field_name, content=cf, save=True)
+    def save(self, *args, **kwargs):
+        super(Show, self).save(*args, **kwargs)
+        if not self.poster_wall and not self.poster_page and not self.poster_tiny:
+            print "no posters"
+            self.gen_thumbs()
     
     def __unicode__(self):
         return self.name;
