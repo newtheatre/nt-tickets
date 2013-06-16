@@ -18,7 +18,6 @@
 [ ] make general and refactor
 
 ## Booking
-[ ] cancelation page
 [ ] send email
 [ ] cancellation
 [ ] include poster ?
