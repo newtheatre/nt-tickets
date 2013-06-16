@@ -106,3 +106,13 @@ class ListShows(OrderedListView):
     context_object_name='shows'
     order_by='start_date'
 
+def sidebar(request):
+    categories=Category.objects.all().exclude(sort=0).order_by('sort')
+    today=datetime.date.today()
+    current_shows=[]
+    for category in categories:
+        shows=Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date')
+        if len(shows)>0:
+            current_shows.append(shows[0])
+    return render(request, 'sidebar.html', {'shows':current_shows})
+

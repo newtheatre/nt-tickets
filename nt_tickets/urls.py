@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^book/(?P<show_id>\d+)/error/$', 'tickets.views.book_error'),
     url(r'^admin/report/$', 'tickets.views.report'),
     url(r'^list$', tickets.views.ListShows.as_view()),
+    url(r'^sidebar$', 'tickets.views.sidebar'),
 
     # url(r'^nt_tickets/', include('nt_tickets.foo.urls')),
 

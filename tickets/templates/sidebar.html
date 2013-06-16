@@ -1,0 +1,9 @@
+<h1>Sidebar</h1>
+{% for show in shows %}
+<h2>{{show.name}}</h2>
+<img src="{{show.poster_wall.url}}" />
+<p>{{show.start_date}} to {{show.end_date}}</p>
+<p>{{show.description}}</p>
+{% include 'book_button.html' %}
+
+{% endfor %}

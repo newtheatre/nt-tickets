@@ -8,6 +8,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class Category(models.Model):
     name=models.CharField(max_length=50)
+    slug=models.SlugField()
+    sort=models.IntegerField()
     def __unicode__(self): return self.name
 
 class Show(models.Model):
