@@ -9,6 +9,7 @@
 [x] hide link when show is passed or no tickets left
 [x] show SOLD OUT if current and sold out
 [x] show show category
+[ ] get settings passed to template to allow absolute URLs for booking link
 
 ## Current show sidebar
 [x] add categories to model

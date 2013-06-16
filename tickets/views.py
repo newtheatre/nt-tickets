@@ -8,6 +8,7 @@ from tickets.models import *
 from tickets.forms import *
 
 import datetime
+import nt_tickets.settings as settings
 
 def defaultFNI(request):
     html="<html><body><h1>nt_tickets</h1><p>Function not implemented.</p></body></html>"
@@ -89,7 +90,7 @@ def sidebar(request):
         shows=Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date')
         if len(shows)>0:
             current_shows.append(shows[0])
-    return render(request, 'sidebar.html', {'shows':current_shows})
+    return render(request, 'sidebar.html', {'shows':current_shows, 'settings':settings})
 
 def cancel(request, ref_id):
     ticket=get_object_or_404(Ticket, unique_code=ref_id)

@@ -25,6 +25,8 @@ DATABASES = {
     }
 }
 
+SITE_URL="http://localhost:8000"
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -52,7 +54,7 @@ USE_TZ = True
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, "media")
-MEDIA_URL = "/media/"
+MEDIA_URL = "http://localhost:8000/media/"
 
 
 STATIC_ROOT = os.path.join(PROJECT_PATH, "static")
