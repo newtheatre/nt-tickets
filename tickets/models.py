@@ -139,8 +139,8 @@ class Ticket(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
-            self.unique_code=""
-        super(Occurrence, self).save(*args, **kwargs)
+            self.unique_code=rand_16()
+        super(Ticket, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.occurrence.show.name+" on "+str(self.occurrence.date)+" at "+str(self.occurrence.time)+" for "+self.person_name
