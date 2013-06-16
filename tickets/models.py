@@ -20,6 +20,9 @@ class Show(models.Model):
     poster_page=models.ImageField(upload_to='posters', blank=True, null=True)
     poster_tiny=models.ImageField(upload_to='posters', blank=True, null=True)
 
+    start_date=models.DateField(blank=True,null=True)  # these fields autoset from occurrences
+    end_date=models.DateField(blank=True,null=True)
+
 
     category=models.ForeignKey('Category')
 
@@ -51,7 +54,16 @@ class Show(models.Model):
             cf = InMemoryUploadedFile(fp, None, self.poster.name, 'image/jpeg',
                                   fp.len, None)
             field.save(name=self.poster.name+"_"+field_name, content=cf, save=True)
+    def update_dates(self):
+        if self.occurrence_set.count() > 0:
+            first_show_date=self.occurrence_set.order_by('date')[0].date
+            last_show_date=self.occurrence_set.order_by('-date')[0].date
+            self.start_date=first_show_date
+            self.end_date=last_show_date
+
+
     def save(self, *args, **kwargs):
+        self.update_dates()
         super(Show, self).save(*args, **kwargs)
         if not self.poster_wall and not self.poster_page and not self.poster_tiny:
             print "no posters"
@@ -99,6 +111,9 @@ class Occurrence(models.Model):
             return True
         else: return False
 
+    def save(self, *args, **kwargs):
+        super(Occurrence, self).save(*args, **kwargs)
+        self.show.save()
     def __unicode__(self):
         return self.show.name+" on "+str(self.date)+" at "+str(self.time)
 
