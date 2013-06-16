@@ -6,6 +6,8 @@ from PIL import Image
 from StringIO import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
+from tickets.func import rand_16
+
 class Category(models.Model):
     name=models.CharField(max_length=50)
     slug=models.SlugField()
@@ -133,7 +135,12 @@ class Ticket(models.Model):
     email_address=models.EmailField(max_length=80)
     quantity=models.IntegerField(default=1)
     cancelled=models.BooleanField(default=False)
+    unique_code=models.CharField(max_length=16)
 
+    def save(self, *args, **kwargs):
+        if not self.unique_code:
+            self.unique_code=""
+        super(Occurrence, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.occurrence.show.name+" on "+str(self.occurrence.date)+" at "+str(self.occurrence.time)+" for "+self.person_name
