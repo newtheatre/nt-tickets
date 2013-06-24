@@ -9,10 +9,11 @@
 	<li>
 		<img src="{{show.poster_wall.url}}" style="float:left" />
 		<h3>{{show.name}}</h3>
+        <p class="meta">{{show.start_date|date:"j M"}} to {{show.end_date}}</p>
 		<p>{{show.description}}</p>
-		<div class="category">Venue: {{show.location}}</div>
+		<div class="venue cat-{{show.category.slug}}">Venue: {{show.location}}</div>
 
-		<div class="category">{{show.category}}</div>
+		<div class="category cat-{{show.category.slug}}">{{show.category}}</div>
 		{% include 'book_button.html' %}
 	</li>
 {% endfor %}
