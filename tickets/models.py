@@ -33,8 +33,8 @@ class Show(models.Model):
     poster_page=models.ImageField(upload_to='posters', blank=True, null=True)
     poster_tiny=models.ImageField(upload_to='posters', blank=True, null=True)
 
-    start_date=models.DateField(blank=True,null=True)  # these fields autoset from occurrences
-    end_date=models.DateField(blank=True,null=True)
+    start_date=models.DateField()  # these fields autoset from occurrences
+    end_date=models.DateField()
 
 
     category=models.ForeignKey('Category')
