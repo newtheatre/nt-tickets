@@ -81,13 +81,15 @@ class Show(models.Model):
 
 
     def save(self, *args, **kwargs):
+        have_orig=False
         if self.pk:
             orig=Show.objects.get(pk=self.pk)
+            have_orig=True
             self.update_dates()
         super(Show, self).save(*args, **kwargs)
-        if not self.poster_wall and not self.poster_page and not self.poster_tiny:
+        if not self.poster_wall and not self.poster_page and not self.poster_tiny and self.poster:
             self.gen_thumbs()
-        elif self.poster!=orig.poster:
+        elif have_orig and self.poster!=orig.poster:
             self.gen_thumbs()
     
     def __unicode__(self):
