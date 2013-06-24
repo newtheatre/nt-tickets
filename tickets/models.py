@@ -55,7 +55,10 @@ class Show(models.Model):
             return True
         else:
             return False
-
+    def has_occurrences(self):
+        occs=Occurrence.objects.filter(show=self)
+        if len(occs)>0: return True
+        else: return False
 
     def gen_thumbs(self):
         img = Image.open(self.poster.path)
