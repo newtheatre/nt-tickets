@@ -17,6 +17,9 @@
 [x] build sidebar
 [x] ignore cats with order=0
 
+## Show page
+[ ] make individual show page
+
 ## Booking
 [ ] send email
 [x] cancellation

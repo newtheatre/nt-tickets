@@ -49,8 +49,10 @@ class TicketAdmin(admin.ModelAdmin):
             
         }, context_instance=RequestContext(request))
 
+class ShowAdmin(admin.ModelAdmin):
+    fields=['name','location','category','poster','description','long_description']
 
-admin.site.register(Show)
+admin.site.register(Show, ShowAdmin)
 admin.site.register(Category)
 admin.site.register(Occurrence)
 admin.site.register(Ticket,TicketAdmin)
