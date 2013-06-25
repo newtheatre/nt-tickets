@@ -3,7 +3,7 @@
 <h2>{{show.category}}</h2>
 <img src="{{show.poster_page.url}}" />
 <div class="interior">
-<p>{{show.start_date}} to {{show.end_date}}</p>
+<p>{{show.start_date|date:"j M"}} to {{show.end_date}}</p>
 <p>{{show.description}}</p>
 {% include 'book_button.html' %}
 </div>
