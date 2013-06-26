@@ -74,7 +74,7 @@ class Show(models.Model):
             working.save(fp, "JPEG", quality=95)
             cf = InMemoryUploadedFile(fp, None, self.poster.name, 'image/jpeg',
                                   fp.len, None)
-            field.save(name=self.poster.name+"_"+field_name, content=cf, save=True)
+            field.save(name=field_name+"_"+self.poster.name, content=cf, save=True)
     def update_dates(self):
         if self.occurrence_set.count() > 0:
             first_show_date=self.occurrence_set.order_by('date')[0].date
