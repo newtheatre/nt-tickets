@@ -83,6 +83,7 @@ class Show(models.Model):
         #    last_show_date=self.occurrence_set.order_by('-date')[0].date
         #    self.start_date=first_show_date
         #    self.end_date=last_show_date
+        pass
 
 
     def save(self, *args, **kwargs):
