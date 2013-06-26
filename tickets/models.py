@@ -76,11 +76,13 @@ class Show(models.Model):
                                   fp.len, None)
             field.save(name=field_name+"_"+self.poster.name, content=cf, save=True)
     def update_dates(self):
-        if self.occurrence_set.count() > 0:
-            first_show_date=self.occurrence_set.order_by('date')[0].date
-            last_show_date=self.occurrence_set.order_by('-date')[0].date
-            self.start_date=first_show_date
-            self.end_date=last_show_date
+        # This is disabled as the user will now set the start and end dates
+        # Occs will need to be limited inside these dates
+        #if self.occurrence_set.count() > 0:
+        #    first_show_date=self.occurrence_set.order_by('date')[0].date
+        #    last_show_date=self.occurrence_set.order_by('-date')[0].date
+        #    self.start_date=first_show_date
+        #    self.end_date=last_show_date
 
 
     def save(self, *args, **kwargs):
