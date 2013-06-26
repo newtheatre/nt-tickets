@@ -66,7 +66,6 @@ class Show(models.Model):
         if img.mode not in ('L', 'RGB'):
             img = img.convert('RGB')
         for field_name, size in self.IMAGE_SIZES.iteritems():
-            print field_name
             field = getattr(self, field_name)
             working = img.copy()
             working.thumbnail(size, Image.ANTIALIAS)
