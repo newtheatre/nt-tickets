@@ -88,6 +88,9 @@ class ListShows(OrderedListView):
         # Add in a QuerySet of all the books
         context['settings'] = settings
         return context
+    def get_queryset(self):
+        today=datetime.date.today()
+        return super(ListShows, self).get_queryset().filter(end_date__gte=today)
 
 def sidebar(request):
     categories=Category.objects.all().exclude(sort=0).order_by('sort')
