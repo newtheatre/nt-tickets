@@ -120,6 +120,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'south',
     
+    'bootstrap_toolkit',
     'tickets',
 )
 
