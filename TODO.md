@@ -25,7 +25,7 @@
 
 ## Booking
 [ ] send email
-[ ] obey 'hours_til_close' parameter
+[x] obey 'hours_til_close' parameter
 [x] cancellation
 [ ] refactor/cleanup
 
