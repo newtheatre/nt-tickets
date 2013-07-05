@@ -29,7 +29,7 @@
 [ ] refactor/cleanup
 
 ## Reporting
-[ ] print stylesheet
+[x] print stylesheet
 [x] link all pages together, main index?
 [x] friendlier
 [x] look into integrating with django admin (would be awesome)

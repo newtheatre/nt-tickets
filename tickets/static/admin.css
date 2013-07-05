@@ -17,3 +17,13 @@ tr.cancelled td {
   text-decoration: line-through;
   color:#999;
 }
+
+@media print {
+	.filter-col{
+		display: none;
+	}
+	.report-col{
+		width: 100%;
+	}
+
+}
