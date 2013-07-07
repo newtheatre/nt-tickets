@@ -104,12 +104,13 @@ class OccurrenceManager(models.Manager):
     def get_avaliable(self,show):
         today=datetime.date.today()
         time=datetime.datetime.now() # needs to be current time
-        occs=Occurrence.objects.filter(show=show).filter(date__gt=today).all()
+        occs=Occurrence.objects.filter(show=show).filter(date__gte=today).all()
         ret=[]
         for oc in occs:
-            close_time=time-datetime.timedelta(hours=oc.hours_til_close)
+            hour= oc.time.hour
+            close_time=hour-oc.hours_til_close
             if oc.sold_out(): pass
-            if oc.date==today and time>close_time: pass
+            if oc.date==today and time.hour>=close_time: pass
             else:
                 ret.append((oc.id,oc.datetime_formatted()))
         print ret
