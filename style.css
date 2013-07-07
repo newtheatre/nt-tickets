@@ -1,0 +1,55 @@
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; } /* Use a better box model, IE8+ */
+* {margin: 0; padding:0;}
+#page {
+	width:88%;
+	min-width: 900px;
+	margin: 0 auto;
+}
+
+header {
+	background:#54B375;
+	padding: 40px 0 5px 10px;
+}
+
+header nav ul {
+	list-style-type: none
+}
+header nav ul li {
+	display: inline-block;
+	padding-right: 10px
+}
+
+#wrapper {
+	padding: 10px 10px 20px 10px;
+}
+.box_1, .box_2, .box_3, .box_4, .box_5, .box_6, .box_7, .box_8, .banner { /* General def. for a content block */
+  padding:0 0.5em 0 1px; /* Its ok, were using the border-box model */
+  float:left;
+  margin-bottom: 1em;
+  position: relative;
+}
+.box_1 {width: 12.5%;}  /* Widths of content blocks */
+.box_2 {width: 25%;}
+.box_3 {width: 37.5%;}
+.box_4 {width: 50%;}
+.box_5 {width: 62.5%;}
+.box_6 {width: 75%;}
+.box_7 {width: 87.5%;}
+.box_8 {width: 100%;}
+
+.image, .banner {
+  overflow: hidden;
+  padding: 0
+}
+
+.img-width img {
+	width:100%;
+}
+
+.pad-right {
+	padding-right:2em;
+}
+
+footer {
+	padding: 10px 10px 20px 10px;
+}
