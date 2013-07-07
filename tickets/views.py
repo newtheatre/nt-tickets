@@ -1,6 +1,9 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.core.mail import send_mail
+from django.template.loader import get_template
+from django.template import Context
 
 from django.views.generic.list import ListView
 
@@ -39,6 +42,14 @@ def book_landing(request, show_id):
 
             t.save()
             request.session["ticket"] = t
+            
+            send_mail('Ticket Confirmation', get_template('email/confirm.html').render(
+                Context({
+                    'show':show,
+                    'ticket':t,    
+                })),
+                'boxoffice@fullaf.com', [t.email_address], fail_silently=False)
+
             return HttpResponseRedirect('./thanks/') # Redirect after POST
     else:
         form = BookingFormLanding(show=show) # An unbound form
