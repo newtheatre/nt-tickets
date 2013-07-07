@@ -107,7 +107,7 @@ class OccurrenceManager(models.Manager):
         occs=Occurrence.objects.filter(show=show).filter(date__gt=today).all()
         ret=[]
         for oc in occs:
-            close_time=oc.time-datetime.timedelta(hours=oc.hours_til_close)
+            close_time=time-datetime.timedelta(hours=oc.hours_til_close)
             if oc.sold_out(): pass
             if oc.date==today and time>close_time: pass
             else:
