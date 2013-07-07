@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-# Django settings for nt_tickets project.
+# All common settings for nt_tickets project.
 
 import os
 gettext = lambda s: s
 PROJECT_PATH = os.path.join(os.path.dirname(__file__),'..')
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -42,14 +39,14 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+USE_L10N = False
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -95,10 +92,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'nt_tickets.urls'
+ROOT_URLCONF = 'urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'nt_tickets.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -152,3 +149,16 @@ LOGGING = {
         },
     }
 }
+
+# What enviroment are we in?
+
+RUN_ENV = 'development'
+
+if RUN_ENV == 'production':
+    from configuration.production import *
+elif RUN_ENV == 'staging':
+    from configuration.staging import *
+elif RUN_ENV == 'development':
+    from configuration.development import *
+elif RUN_ENV == 'testing':
+    from configuration.testing import *

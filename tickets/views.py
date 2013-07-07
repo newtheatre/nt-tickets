@@ -8,7 +8,7 @@ from tickets.models import *
 from tickets.forms import *
 
 import datetime
-import nt_tickets.settings as settings
+import settings
 
 def defaultFNI(request):
     html="<html><body><h1>nt_tickets</h1><p>Function not implemented.</p></body></html>"
