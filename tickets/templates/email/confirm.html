@@ -1,4 +1,8 @@
-<h1>Thanks!</h1>
+<p>{{ticket.person_name}},</p>
 <h2>Your tickets for {{show.name}} have been booked.</h2>
-<p>You've reserved {{ticket.quantity}} for the performance on {{ticket.occurrence.date|date:"l d F"}}, tickets can be collected from {{ticket.occurrence.time}}.</p>
-<p>We'd be sad not to see you but if can't attend please <a href="http://localhost/cancel/{{ticket.unique_code}}">cancel your tickets</a> so others can take your place.</p>
+<p>You've reserved {{ticket.quantity}} for the performance on {{ticket.occurrence.date|date:"l d F"}}, tickets can be collected from {{ticket.occurrence.time}}</p>
+<p>We'd be sad not to see you but if can't attend please <a href="{{settings.SITE_URL}}{% url 'cancel' ticket.unique_code %}">cancel your tickets</a> so others can take your place.</p>
+
+<p>Please don't hesitate to contact us if you have any questions.</p>
+<hr />
+<p><strong>New Theatre Box Office</strong><br /><a href="mailto:boxoffice@newtheatre.org.uk">boxoffice@newtheatre.org.uk</a></p>

@@ -1,7 +1,8 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
+from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
 
@@ -20,7 +21,7 @@ def defaultFNI(request):
 def book_landing(request, show_id):
     show = Show.objects.get(id=show_id)
     if show.is_current()==False:
-        return HttpResponseRedirect('./error/')
+        return HttpResponseRedirect(reverse('error',kwargs={'show_id':show.id}), args=[show.id])
     step=1
     total=2
     message="Tickets for performances are reserved online and payed for on collection at the box office."
@@ -35,13 +36,14 @@ def book_landing(request, show_id):
             occ_id=form.cleaned_data['occurrence']
             t.occurrence = Occurrence.objects.get(pk=occ_id)
             if t.occurrence.date<datetime.date.today():
-                return HttpResponseRedirect('./error/')
+                return HttpResponseRedirect(reverse('error',kwargs={'show_id':show.id}))
             t.quantity = form.cleaned_data['quantity']
             if t.occurrence.maximum_sell<(t.occurrence.tickets_sold()+t.quantity):
-                return HttpResponseRedirect('./error/?err=sold_out')
+                return HttpResponseRedirect(reverse('error',kwargs={'show_id':show.id})+"?err=sold_out")
 
             t.save()
             request.session["ticket"] = t
+<<<<<<< HEAD
             
             send_mail('Ticket Confirmation', get_template('email/confirm.html').render(
                 Context({
@@ -51,6 +53,22 @@ def book_landing(request, show_id):
                 'boxoffice@fullaf.com', [t.email_address], fail_silently=False)
 
             return HttpResponseRedirect('./thanks/') # Redirect after POST
+=======
+
+            email_html=get_template('email/confirm.html').render(
+                Context({
+                    'show':show,
+                    'ticket':t,
+                    'settings':settings,    
+                }))
+            email_subject='Tickets reserved for ' + show.name
+            email=EmailMessage(subject=email_subject, body=email_html,
+                to=[t.email_address], from_email="Box Office <boxoffice@newtheatre.org.uk>")
+            email.content_subtype = 'html'
+            email.send()
+
+            return HttpResponseRedirect(reverse('finish',kwargs={'show_id':show.id})) # Redirect after POST
+>>>>>>> b9b010b334e764ca5467905be7c558d50ec03ff3
     else:
         form = BookingFormLanding(show=show) # An unbound form
 
@@ -129,4 +147,3 @@ def cancel(request, ref_id):
         already_cancelled=False
 
     return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled,'already_cancelled':already_cancelled}) 
-
