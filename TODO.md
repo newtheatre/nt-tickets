@@ -24,7 +24,7 @@
 [ ] make individual show page
 
 ## Booking
-[ ] send email
+[x] send email
 [x] obey 'hours_til_close' parameter
 [x] cancellation
 [ ] refactor/cleanup
