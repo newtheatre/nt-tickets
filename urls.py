@@ -10,18 +10,12 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'tickets.views.defaultFNI', name='home'),
     url(r'^book/(?P<show_id>\d+)/$', 'tickets.views.book_landing', name='book'),
-    url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish'),
-    url(r'^book/(?P<show_id>\d+)/error/$', 'tickets.views.book_error'),
-    url(r'^cancel/(?P<ref_id>.*)/$', 'tickets.views.cancel'),
-    url(r'^list$', tickets.views.ListShows.as_view()),
-    url(r'^sidebar$', 'tickets.views.sidebar'),
+    url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish', name='finish'),
+    url(r'^book/(?P<show_id>\d+)/error/$', 'tickets.views.book_error', name='error'),
+    url(r'^cancel/(?P<ref_id>.*)/$', 'tickets.views.cancel', name='cancel'),
+    url(r'^list$', tickets.views.ListShows.as_view(), name='list'),
+    url(r'^sidebar$', 'tickets.views.sidebar', name='sidebar'),
 
-    # url(r'^nt_tickets/', include('nt_tickets.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
 
