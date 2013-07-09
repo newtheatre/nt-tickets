@@ -43,17 +43,6 @@ def book_landing(request, show_id):
 
             t.save()
             request.session["ticket"] = t
-<<<<<<< HEAD
-            
-            send_mail('Ticket Confirmation', get_template('email/confirm.html').render(
-                Context({
-                    'show':show,
-                    'ticket':t,    
-                })),
-                'boxoffice@fullaf.com', [t.email_address], fail_silently=False)
-
-            return HttpResponseRedirect('./thanks/') # Redirect after POST
-=======
 
             email_html=get_template('email/confirm.html').render(
                 Context({
@@ -68,7 +57,6 @@ def book_landing(request, show_id):
             email.send()
 
             return HttpResponseRedirect(reverse('finish',kwargs={'show_id':show.id})) # Redirect after POST
->>>>>>> b9b010b334e764ca5467905be7c558d50ec03ff3
     else:
         form = BookingFormLanding(show=show) # An unbound form
 
