@@ -152,13 +152,13 @@ LOGGING = {
 
 # What enviroment are we in?
 
-RUN_ENV = 'development'
+import configuration.enviroment as env
 
-if RUN_ENV == 'production':
+if env.RUN_ENV == 'production':
     from configuration.production import *
-elif RUN_ENV == 'staging':
+elif env.RUN_ENV == 'staging':
     from configuration.staging import *
-elif RUN_ENV == 'development':
+elif env.RUN_ENV == 'development':
     from configuration.development import *
-elif RUN_ENV == 'testing':
+elif env.RUN_ENV == 'testing':
     from configuration.testing import *
