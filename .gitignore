@@ -1,3 +1,7 @@
 db.sqlite3
 *.pyc
 media/*
+
+configuration/development.py
+configuration/staging.py
+configuration/production.py
