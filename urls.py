@@ -2,13 +2,10 @@ from django.conf.urls import patterns, include, url
 import settings
 import tickets.views
 
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    url(r'^$', 'tickets.views.defaultFNI', name='home'),
     url(r'^book/(?P<show_id>\d+)/$', 'tickets.views.book_landing', name='book'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish', name='finish'),
     url(r'^book/(?P<show_id>\d+)/error/$', 'tickets.views.book_error', name='error'),
