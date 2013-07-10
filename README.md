@@ -13,7 +13,4 @@ The current plan is to build frontends for:
 ![Ticket booking screenshot](http://github.com/fullaf/nt-tickets/raw/master/docs/screenshot_frontend.png)
 
 ## Backend
-- Basic django admin for CRUD operations
-- Reporting page for viewing ticket list
-
-![Reporting screenshot](http://github.com/fullaf/nt-tickets/raw/master/docs/screenshot_backend.png)
+- Uses django admin for CRUD for shows, occurrences, categories and viewing reservations.
