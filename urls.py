@@ -14,6 +14,8 @@ urlpatterns = patterns('',
     url(r'^list/(?P<slug>[-_\w]+)/$', tickets.views.DetailShow.as_view(), name='detail'),
     url(r'^sidebar/$', 'tickets.views.sidebar', name='sidebar'),
 
+    url(r'^api/', include('tickets.api_urls')),
+
     url(r'^admin/', include(admin.site.urls)),
 )
 
