@@ -8,6 +8,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from tickets.func import rand_16
 
+import configuration.customise
+
 class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
@@ -25,7 +27,7 @@ class Show(models.Model):
         verbose_name_plural = 'Shows'
 
     name=models.CharField(max_length=30)
-    location=models.CharField(max_length=30, default='Theatre')
+    location=models.CharField(max_length=30, default=configuration.customise.DEFAULT_LOCATION)
     description = models.TextField()
     long_description = models.TextField(blank=True)
     poster=models.ImageField(upload_to='posters', blank=True, null=True)
@@ -123,7 +125,7 @@ class Occurrence(models.Model):
 
     show=models.ForeignKey(Show)
     date=models.DateField()
-    time=models.TimeField()
+    time=models.TimeField(default=configuration.customise.DEFAULT_TIME)
     maximum_sell=models.PositiveIntegerField()
     hours_til_close=models.IntegerField(default=3)
 
