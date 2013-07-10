@@ -99,7 +99,6 @@ class Show(models.Model):
         if self.pk:
             orig = Show.objects.get(pk=self.pk)
             have_orig = True
-            self.update_dates()
         super(Show, self).save(*args, **kwargs)
         if not self.poster_wall and not self.poster_page \
         and not self.poster_tiny and self.poster:
