@@ -30,4 +30,4 @@ Configuration of your web server is a little beyond the scope of this document. 
 - http://gunicorn.org/#deployment
 - http://www.apachetutor.org/admin/reverseproxies
 
-For production you will need to serve static and media files using your web server and not django/nt-tickets. In the nt-tickets directory /static should be mapped to http://<your-url>/static and /media to http://<your-url>/media.
+For production you will need to serve static and media files using your web server and not django/nt-tickets. In the nt-tickets directory /static should be mapped to http://your-url/static and /media to http://your-url/media.
