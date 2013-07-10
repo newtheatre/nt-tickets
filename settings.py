@@ -3,7 +3,7 @@
 
 import os
 gettext = lambda s: s
-PROJECT_PATH = os.path.join(os.path.dirname(__file__),'..')
+PROJECT_PATH = os.path.dirname(__file__)
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
