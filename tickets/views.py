@@ -11,6 +11,8 @@ from django.views.generic.list import ListView
 from tickets.models import *
 from tickets.forms import *
 
+import configuration.customise
+
 import datetime
 import settings
 
@@ -112,7 +114,7 @@ class ListShows(OrderedListView):
 def sidebar(request):
     categories=Category.objects.all().exclude(sort=0).order_by('sort')
     today=datetime.date.today()
-    limit=today+datetime.timedelta(weeks=3)
+    limit=today+configuration.customise.SIDEBAR_FILTER_PERIOD
     current_shows=[]
     for category in categories:
         shows=Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit)
