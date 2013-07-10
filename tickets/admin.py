@@ -50,7 +50,7 @@ class TicketAdmin(admin.ModelAdmin):
         }, context_instance=RequestContext(request))
 
 class ShowAdmin(admin.ModelAdmin):
-    fields=['name','location','category','poster','description','long_description', 'start_date','end_date']
+    fields=['name','location','category','poster','slug','description','long_description', 'start_date','end_date']
 
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category)

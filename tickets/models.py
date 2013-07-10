@@ -4,7 +4,10 @@ import datetime
 
 from PIL import Image
 from StringIO import StringIO
+from markdown2 import Markdown
+
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.template.defaultfilters import slugify
 
 from tickets.func import rand_16
 
@@ -27,6 +30,7 @@ class Show(models.Model):
         verbose_name_plural = 'Shows'
 
     name=models.CharField(max_length=30)
+    slug=models.SlugField(blank=True)
     location=models.CharField(max_length=30, default=configuration.customise.DEFAULT_LOCATION)
     description = models.TextField()
     long_description = models.TextField(blank=True)
@@ -86,8 +90,13 @@ class Show(models.Model):
         #    self.end_date=last_show_date
         pass
 
+    def long_markdown(self):
+        md=Markdown()
+        return md.convert(self.long_description)
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
         have_orig=False
         if self.pk:
             orig=Show.objects.get(pk=self.pk)

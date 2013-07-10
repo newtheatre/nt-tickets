@@ -1,0 +1,11 @@
+{% if show.poster %}<img src="{{show.poster_wall.url}}" style="float:left" />{% endif %}
+<h2>{{show.name}}</h2>
+<p class="meta">{{show.start_date|date:"j M"}} to {{show.end_date}}</p>
+<div class="venue cat-{{show.category.slug}}">Venue: {{show.location}}</div>
+
+<div class="category cat-{{show.category.slug}}">{{show.category}}</div>
+
+{% if show.long_description %}{{show.long_markdown|safe}}
+{% else %}<p>{{show.description}}</p>{% endif %}
+{% include 'book_button.html' %}
+

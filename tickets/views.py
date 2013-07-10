@@ -7,6 +7,7 @@ from django.template.loader import get_template
 from django.template import Context
 
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 from tickets.models import *
 from tickets.forms import *
@@ -110,6 +111,11 @@ class ListShows(OrderedListView):
     def get_queryset(self):
         today=datetime.date.today()
         return super(ListShows, self).get_queryset().filter(end_date__gte=today)
+
+class DetailShow(DetailView):
+    model=Show
+    template_name='detail_show.html'
+    context_object_name='show'
 
 def sidebar(request):
     categories=Category.objects.all().exclude(sort=0).order_by('sort')

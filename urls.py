@@ -13,8 +13,9 @@ urlpatterns = patterns('',
     url(r'^book/(?P<show_id>\d+)/thanks/$', 'tickets.views.book_finish', name='finish'),
     url(r'^book/(?P<show_id>\d+)/error/$', 'tickets.views.book_error', name='error'),
     url(r'^cancel/(?P<ref_id>.*)/$', 'tickets.views.cancel', name='cancel'),
-    url(r'^list$', tickets.views.ListShows.as_view(), name='list'),
-    url(r'^sidebar$', 'tickets.views.sidebar', name='sidebar'),
+    url(r'^list/$', tickets.views.ListShows.as_view(), name='list'),
+    url(r'^list/(?P<slug>[-_\w]+)/$', tickets.views.DetailShow.as_view(), name='detail'),
+    url(r'^sidebar/$', 'tickets.views.sidebar', name='sidebar'),
 
     url(r'^admin/', include(admin.site.urls)),
 )
