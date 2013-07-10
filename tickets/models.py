@@ -126,8 +126,8 @@ class Occurrence(models.Model):
     show=models.ForeignKey(Show)
     date=models.DateField()
     time=models.TimeField(default=configuration.customise.DEFAULT_TIME)
-    maximum_sell=models.PositiveIntegerField()
-    hours_til_close=models.IntegerField(default=3)
+    maximum_sell=models.PositiveIntegerField(default=configuration.customise.DEFAULT_MAX_SELL)
+    hours_til_close=models.IntegerField(default=configuration.customise.DEFAULT_HOURS_TIL_CLOSE)
 
     objects=OccurrenceManager()
 
