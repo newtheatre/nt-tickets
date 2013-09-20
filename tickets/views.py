@@ -22,9 +22,9 @@ def defaultFNI(request):
     return HttpResponse(html)
 
 def book_landing(request, show_id):
-    show = Show.objects.get(id=show_id)
+    show = get_object_or_404(Show, id=show_id)
     if show.is_current()==False:
-        return HttpResponseRedirect(reverse('error',kwargs={'show_id':show.id}), args=[show.id])
+        return HttpResponseRedirect(reverse('error',kwargs={'show_id':show.id}))
     step=1
     total=2
     message="Tickets for performances are reserved online and payed for on collection at the box office."
