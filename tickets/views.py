@@ -12,7 +12,7 @@ from django.views.generic.detail import DetailView
 from tickets.models import *
 from tickets.forms import *
 
-import configuration.customise
+import configuration.customise as customise
 
 import datetime
 import settings
@@ -51,7 +51,8 @@ def book_landing(request, show_id):
                 Context({
                     'show':show,
                     'ticket':t,
-                    'settings':settings,    
+                    'settings':settings,
+                    'customise':customise,    
                 }))
             email_subject='Tickets reserved for ' + show.name
             email=EmailMessage(subject=email_subject, body=email_html,
