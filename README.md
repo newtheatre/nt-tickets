@@ -5,7 +5,7 @@ The project is being built for a redesign of the Nottingham New Theatre website,
 
 ## Frontend
 The current plan is to build frontends for:
-- Displaying a list of shows, with date poster etc, all unstyled for including in a website.
+- Displaying a list of shows, with date poster etc, all unstyled for including in a website. A JSON API is also avaliable.
 - A 'current show' unstyled page for inclusion in website. Can show multiple categories of show
 - An iframe-able ticket reservation form
 - Cancellation page, via email link
