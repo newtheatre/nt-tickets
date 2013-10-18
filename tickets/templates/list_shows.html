@@ -7,9 +7,9 @@
 <ul>
 {% for show in shows %}
 	<li{% if show.poster %} class="poster"{%else%} class="noposter"{%endif%}>
-		{% if show.poster %}<img src="{{show.poster_wall.url}}" style="float:left" />{% endif %}
+		{% if show.poster %}<img src="{{show.poster_page.url}}" style="float:left" />{% endif %}
 		<h3>{{show.name}}</h3>
-        <p class="meta">{{show.start_date|date:"j M"}} to {{show.end_date}}</p>
+		<p class="meta">{% if show.start_date != show.end_date %}{{show.start_date|date:"j M"}} to {% endif %}{{show.end_date|date:"j M o"}}</p>
 		<p>{{show.description}}</p>
 		<div class="venue cat-{{show.category.slug}}">Venue: {{show.location}}</div>
 

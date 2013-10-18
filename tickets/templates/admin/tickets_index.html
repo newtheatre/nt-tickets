@@ -49,7 +49,7 @@
       </div></form>
     </div>
     <div class="report-col">
-      <img src="{{occurrence.show.poster_tiny.url}}" style="float:right" />
+      {% if occurrence.show.poster %}<img src="{{occurrence.show.poster_tiny.url}}" style="float:right" />{% endif %}
 
       <h2>Ticket Reservation Report</h2>
       {% if report.have_report %}
