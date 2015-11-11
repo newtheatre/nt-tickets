@@ -1,6 +1,7 @@
 db.sqlite3
 *.pyc
 media/*
+/venv
 
 configuration/development.py
 configuration/staging.py
