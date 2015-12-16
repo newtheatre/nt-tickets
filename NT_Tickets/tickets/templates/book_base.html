@@ -10,10 +10,38 @@
       margin:10px;
     }
   </style>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 </head>
 <body>
-    <div class="main">
-       	{% block content %}Sorry but something has gone wrong, you should try again from where you came from.{% endblock %}
-	</div>
+  <div class="main">
+    {% block content %}Sorry but something has gone wrong, you should try again from where you came from.{% endblock %}
+  </div>
+  <script type="text/javascript">
+    var occ_select = $('#id_occurrence')
+    var seat_select = $('#id_quantity')
+    $('#id_quantity > option').remove();
+    occ_select.prop("selectedIndex", -1);
+    seat_select.prop("selectedIndex", -1);
+    occ_select.change(function() 
+    {
+      $.getJSON( "/api/0.1/remain?occ="+$(this).val(), function( data ) {
+        var hml = data.how_many_left;
+        $('#id_quantity > option').remove();
+        if (hml==0) {
+          seat_select.append($("<option />").val("0").text("Performance Sold Out"));
+          seat_select.prop("selectedIndex", 0);
+          seat_select.attr('disabled', 'disabled');
+        }
+        else {
+          for (var i = 1; i <= hml; i++) {
+            seat_select.append($("<option />").val(i).text(i));
+            seat_select.removeAttr('disabled');
+          }
+        }
+      });
+
+    });
+    
+  </script>
 </body>
 </html>

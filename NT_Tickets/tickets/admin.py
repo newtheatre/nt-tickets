@@ -51,8 +51,24 @@ class TicketAdmin(admin.ModelAdmin):
 
 class ShowAdmin(admin.ModelAdmin):
     fields=['name','location','category','poster','slug','description','long_description', 'start_date','end_date']
+    list_display=('name','location','category','start_date','end_date')
+    list_filter=['category']
+    ordering=['start_date','name']
+    search_fields = ('name','description')
+
+class OccurrenceAdmin(admin.ModelAdmin):
+    fields=['show','date','time','maximum_sell','hours_til_close']
+    list_display=('show','date','time','maximum_sell','hours_til_close')
+    ordering=['date','time']
+    search_fields = ['show']
+
+class CategoryAdmin(admin.ModelAdmin):
+    fields=['name','slug','sort']
+    list_display=('name','slug','sort')
+    ordering=['sort']
+    search_fields = ['show']
 
 admin.site.register(Show, ShowAdmin)
-admin.site.register(Category)
-admin.site.register(Occurrence)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket,TicketAdmin)
