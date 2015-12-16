@@ -19,6 +19,11 @@ Book Tickets
 {{ form.email_address|as_bootstrap }}
 
 </div>
+{% if mc %}
+<div class="clear">
+{{ form.add_to_mailinglist|as_bootstrap }}
+</div>
+{% endif %}
 <div class="actions">
         <button type="submit" class="btn btn-large btn-primary">Book Tickets</button>
 </div>

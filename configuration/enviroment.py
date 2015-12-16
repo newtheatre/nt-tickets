@@ -1,1 +1,1 @@
-RUN_ENV = 'staging'
+RUN_ENV = 'development'

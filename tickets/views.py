@@ -16,6 +16,7 @@ import configuration.customise as customise
 
 import datetime
 import settings
+import mailchimp_util
 
 def defaultFNI(request):
     html="<html><body><h1>nt_tickets</h1><p>Function not implemented.</p></body></html>"
@@ -28,7 +29,14 @@ def book_landing(request, show_id):
     step=1
     total=2
     message="Tickets for performances are reserved online and payed for on collection at the box office."
-    
+
+
+    mailchimp = mailchimp_util.get_mailchimp_api()
+    if mailchimp == None:
+        mc = False
+    else:
+        mc = True
+
     if request.method == 'POST': # If the form has been submitted...
         form = BookingFormLanding(request.POST, show=show) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
@@ -52,13 +60,28 @@ def book_landing(request, show_id):
                     'show':show,
                     'ticket':t,
                     'settings':settings,
-                    'customise':customise,    
+                    'customise':customise,
                 }))
             email_subject='Tickets reserved for ' + show.name
             email=EmailMessage(subject=email_subject, body=email_html,
                 to=[t.email_address], from_email="Box Office <boxoffice@newtheatre.org.uk>")
             email.content_subtype = 'html'
-            email.send()
+            if settings.ACTUALLY_SEND_MAIL:
+                email.send()
+
+            # Do MailChimp subscribe if using and if checked
+            if mc:
+                if form.cleaned_data['add_to_mailinglist']:
+                    email = form.cleaned_data['email_address']
+                    fullname = form.cleaned_data['person_name']
+                    fullname_s = fullname.split(" ")
+                    if len(fullname_s)==2:
+                        first=fullname_s[0]
+                        last=fullname_s[1]
+                    else:
+                        first=fullname
+                        last=""
+                    mailchimp_util.subscribe(email,first,last)
 
             return HttpResponseRedirect(reverse('finish',kwargs={'show_id':show.id})) # Redirect after POST
     else:
@@ -69,13 +92,36 @@ def book_landing(request, show_id):
         'show':show,
         'step':step, 'total':total,
         'message':message,
+        'mc':mc,
     })
 
+import json
 
-def book_finish(request,show_id):   
+def how_many_left(request):
+    if 'occ' in request.GET:
+        occ = get_object_or_404(Occurrence, pk = request.GET['occ'])
+
+        response_data = {}
+        response_data['sold_out'] = occ.sold_out()
+        left = occ.maximum_sell - occ.tickets_sold()
+        if left <= settings.MAX_DISCLOSURE:
+            response_data['more_than_max'] = False
+            response_data['how_many_left'] = left
+        else:
+            response_data['more_than_max'] = True
+            response_data['how_many_left'] = settings.MAX_DISCLOSURE
+        response_data['error'] = False
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        response_data = {}
+        response_data['error'] = True
+        response_data['error_message'] = 'Required parameters not given'
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def book_finish(request,show_id):
     show = Show.objects.get(id=show_id)
     ticket = request.session["ticket"]
-    
+
     return render(request, 'book_finish.html', {
         'show':show, 'ticket':ticket,
     })
@@ -106,12 +152,27 @@ class ListShows(OrderedListView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ListShows, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
         context['settings'] = settings
         return context
     def get_queryset(self):
         today=datetime.date.today()
-        return super(ListShows, self).get_queryset().filter(end_date__gte=today)
+        return super(ListShows, self).get_queryset().filter(end_date__gte=today).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
+
+class ListPastShows(OrderedListView):
+    model=Show
+    template_name='list_past_shows.html'
+    context_object_name='shows'
+    order_by='-start_date'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ListPastShows, self).get_context_data(**kwargs)
+        context['settings'] = settings
+        return context
+    def get_queryset(self):
+        today=datetime.date.today()
+        return super(ListPastShows, self).get_queryset().filter(end_date__lte=today)
+
 
 class DetailShow(DetailView):
     model=Show
@@ -124,7 +185,7 @@ def sidebar(request):
     limit=today+configuration.customise.SIDEBAR_FILTER_PERIOD
     current_shows=[]
     for category in categories:
-        shows=Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit)
+        shows=Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
         if len(shows)>0:
             current_shows.append(shows[0])
     return render(request, 'sidebar.html', {'shows':current_shows, 'settings':settings})
@@ -143,4 +204,4 @@ def cancel(request, ref_id):
         cancelled=False
         already_cancelled=False
 
-    return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled,'already_cancelled':already_cancelled}) 
+    return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled,'already_cancelled':already_cancelled})

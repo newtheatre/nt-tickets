@@ -20,3 +20,7 @@ float: left
 .col_right {
 float: left;
 }
+
+.clear {
+clear: left;
+}

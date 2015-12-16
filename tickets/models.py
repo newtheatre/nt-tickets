@@ -32,7 +32,7 @@ class Show(models.Model):
         verbose_name = 'Show'
         verbose_name_plural = 'Shows'
 
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=64)
     slug = models.SlugField(blank=True,
         help_text='Used in the URL of the detail page, leave blank to auto-generate.')
     location = models.CharField(max_length=30, default=configuration.customise.DEFAULT_LOCATION,
@@ -113,7 +113,7 @@ class OccurrenceManager(models.Manager):
     def get_avaliable(self,show):
         today = datetime.date.today()
         time = datetime.datetime.now()
-        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).all()
+        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date','time')
         ret = []
         for oc in occs:
             hour = oc.time.hour
