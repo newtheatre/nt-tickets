@@ -12,7 +12,7 @@ You will need:
 
 - Pop your database details into configuration/development.py staging.py or production.py
 - Change configuration/enviroment.py to match what enviroment you'd like to use
-- pip install -r REQUIREMENTS.txt (google any compilation errors, usually you're just missing a package, or two)
+- pip install -r requirements.txt (google any compilation errors, usually you're just missing a package, or two)
 - python manage.py syncdb, create yourself a superuser
 - python manage.py migrate
 - bin/start.sh, you can modify this file to change the default port (8000)
