@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+from captcha.fields import ReCaptchaField
 from tickets.models import *
 import settings
 
@@ -24,3 +26,6 @@ class ReportForm(forms.Form):
 		.filter(date__gte=hide_filter).order_by('date','time')
 		,label=''
 	)
+
+class LoginForm(AuthenticationForm):
+    captcha = ReCaptchaField(label='Captcha')

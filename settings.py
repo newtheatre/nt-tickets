@@ -108,6 +108,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -164,8 +165,10 @@ LOGGING = {
     }
 }
 
-# What enviroment are we in?
+RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
+RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
 
+# What enviroment are we in?
 import configuration.enviroment as env
 
 if env.RUN_ENV == 'production':

@@ -1,11 +1,13 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
 
+from django.views import generic
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
@@ -17,6 +19,18 @@ import configuration.customise as customise
 import datetime
 import settings
 import mailchimp_util
+
+class Index(generic.TemplateView):
+    template_name = 'index.html'
+
+def login(request, **kwargs):
+    if request.user.is_authenticated():
+        next = request.REQUEST.get('next', '/')
+        return HttpResponseRedirect(request.REQUEST.get('next', '/'))
+    else:
+        from django.contrib.auth.views import login
+
+        return login(request, authentication_form=forms.LoginForm)
 
 def defaultFNI(request):
     html="<html><body><h1>nt_tickets</h1><p>Function not implemented.</p></body></html>"
@@ -205,6 +219,3 @@ def cancel(request, ref_id):
         already_cancelled=False
 
     return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled,'already_cancelled':already_cancelled})
-
-def index(request):
-    return render(request, 'index.html')

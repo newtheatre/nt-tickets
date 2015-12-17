@@ -184,4 +184,3 @@ class Ticket(models.Model):
     def __unicode__(self):
         return self.occurrence.show.name + " on " + str(self.occurrence.date) + \
         " at "+str(self.occurrence.time) + " for " + self.person_name
-

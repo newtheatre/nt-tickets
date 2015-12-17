@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 
 from tickets import views as tickets_views
 
@@ -20,7 +21,7 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^$', tickets_views.index),
+    url(r'^$', login_required(tickets_views.Index.as_view()), name='index'),
 ] 
 
 if settings.DEBUG:
