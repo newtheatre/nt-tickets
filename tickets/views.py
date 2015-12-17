@@ -1,11 +1,14 @@
 # Create your views here.
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context
+from django.core import serializers
+from json import dumps
+
 
 from django.views import generic
 from django.views.generic.list import ListView
@@ -84,7 +87,7 @@ def book_landing(request, show_id):
                 email.send()
 
             # Do MailChimp subscribe if using and if checked
-            if mc:
+            if settings.DO_CHIMP:
                 if form.cleaned_data['add_to_mailinglist']:
                     email = form.cleaned_data['email_address']
                     fullname = form.cleaned_data['person_name']

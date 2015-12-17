@@ -62,6 +62,8 @@ STATICFILES_DIRS = (
     
 )
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -167,6 +169,8 @@ LOGGING = {
 
 RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
 RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
+
+ACTUALLY_SEND_MAIL = False
 
 # What enviroment are we in?
 import configuration.enviroment as env
