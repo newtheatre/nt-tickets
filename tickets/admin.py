@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.template import RequestContext
-from django.conf.urls import patterns
+from django.conf.urls import url
 from django.shortcuts import render_to_response
 
 from tickets.models import *
@@ -11,10 +11,10 @@ class TicketAdmin(admin.ModelAdmin):
  
     def get_urls(self):
         urls = super(TicketAdmin, self).get_urls()
-        my_urls = patterns('',
-            (r'$',self.admin_site.admin_view(self.report_index)),
-            (r'\d+/report/$', self.admin_site.admin_view(self.review)),
-        )
+        my_urls = [
+            url(r'$',self.admin_site.admin_view(self.report_index)),
+            url(r'\d+/report/$', self.admin_site.admin_view(self.review)),
+        ]
         return my_urls + urls
 
     def report_index(self,request):
