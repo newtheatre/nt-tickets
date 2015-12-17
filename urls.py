@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^sidebar/$', tickets_views.sidebar, name='sidebar'),
 
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^$', tickets_views.index),
 ] 
 
 if settings.DEBUG:

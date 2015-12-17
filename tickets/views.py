@@ -205,3 +205,6 @@ def cancel(request, ref_id):
         already_cancelled=False
 
     return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled,'already_cancelled':already_cancelled})
+
+def index(request):
+    return render(request, 'index.html')
