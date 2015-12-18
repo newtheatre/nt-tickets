@@ -46,6 +46,7 @@ def book_landing(request, show_id):
     step=1
     total=2
     message="Tickets for performances are reserved online and payed for on collection at the box office."
+    foh_contact = 'foh@newtheatre.org.uk'
 
 
     mailchimp = mailchimp_util.get_mailchimp_api()
@@ -110,6 +111,7 @@ def book_landing(request, show_id):
         'step':step, 'total':total,
         'message':message,
         'mc':mc,
+        'foh_contact':foh_contact,
     })
 
 import json
