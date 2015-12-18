@@ -65,9 +65,20 @@
         <strong>Huh</strong> No tickets have been reserved for this performance. Maybe someone needs to publicise a bit more!
       </div>
       {%else%}
-      <table class="table"><tr><th>Reservee</th><th>Quantity</th><th>Timestamp</th></tr>
+      <table class="table table-striped">
+        <tr>
+          <th>Reservee</th>
+          <th>Quantity</th>
+          <th>Timestamp</th>
+          <th>Cancel Tickets</th>
+        </tr>
         {% for sale in report.tickets %}
-        <tr {% if sale.cancelled %}class="cancelled"{%endif%}><td>{{sale.person_name}}</del></td><td>   <span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td><td>{{sale.stamp}}</td></tr>
+        <tr {% if sale.cancelled %}class="cancelled warning"{%endif%}>
+          <td>{{sale.person_name}}</del></td>
+          <td><span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td>
+          <td>{{sale.stamp}}</td>
+          <td><button {% if sale.cancelled %}class="btn btn-danger disabled"{% else %}class="btn btn-danger"{%endif%} type="submit" value="Submit">Cancel</button></td>
+        </tr>
         {% endfor %}
       </table>
       {%endifequal%}
