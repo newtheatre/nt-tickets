@@ -1,4 +1,6 @@
 # nt-tickets
+[![Coverage Status](https://coveralls.io/repos/newtheatre/nt-tickets/badge.svg?branch=master&service=github)](https://coveralls.io/github/newtheatre/nt-tickets?branch=master)
+
 nt-tickets is a self-contained Django project to provide a multi-occurrence event ticket reservation frontend and backend.
 
 The project was built for a redesign of the Nottingham New Theatre website (http://newtheatre.org.uk), the aim was to provide a simple embeddable show listing and ticket reservation system.
