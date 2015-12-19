@@ -4,6 +4,7 @@ db.sqlite3
 *.pyc
 media/*
 env/
+NTenv/
 
 configuration/development.py
 configuration/staging.py

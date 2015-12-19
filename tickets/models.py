@@ -163,7 +163,7 @@ class Occurrence(models.Model):
         return self.time.strftime('%-I%p').lower()
 
     def datetime_formatted(self):
-        return self.date.strftime('%A %d %B ')+
+        return self.date.strftime('%A %d %B ') + \
             self.time.strftime('%-I%p').lower()
 
     def tickets_sold(self):
@@ -209,7 +209,7 @@ class Ticket(models.Model):
         super(Ticket, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.occurrence.show.name + 
+        return self.occurrence.show.name + \
             "on" + str(self.occurrence.date) + \
-            "at" + str(self.occurrence.time) + 
+            "at" + str(self.occurrence.time) + \
             "for" + self.person_name
