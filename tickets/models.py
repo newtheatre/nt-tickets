@@ -30,6 +30,7 @@ class Category(models.Model):
     
     def __str__(self): return self.name
 
+
 @python_2_unicode_compatible
 class Show(models.Model):
     class Meta:
@@ -45,7 +46,7 @@ class Show(models.Model):
         help_text='A short description, one paragraph only.')
     long_description = models.TextField(blank=True,
         help_text='Shows up on the detail page, this field is written in Markdown. ' +
-        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">http://www.darkcoding.net/software/markdown-quick-reference/</a> for reference.')
+        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.')
     poster = models.ImageField(upload_to='posters', blank=True, null=True,
         help_text='Upload a large image, we will automatically create smaller versions to use.')
     poster_wall = models.ImageField(upload_to='posters', blank=True, null=True)
@@ -57,14 +58,17 @@ class Show(models.Model):
 
     category = models.ForeignKey('Category')
 
-    IMAGE_SIZES = {'poster_wall'    : (126, 178),
-                   'poster_page'    : (256, 362),       
-                   'poster_tiny'    : (50, 71) }
+    IMAGE_SIZES = {'poster_wall': (126, 178),
+                   'poster_page': (256, 362),
+                   'poster_tiny': (50, 71)}
     
     def is_current(self):
         today = datetime.date.today()
-        if today > self.end_date: return False
-        else: return True
+        if today > self.end_date: 
+            return False
+        else: 
+            return True
+
     def sold_out(self):
         if self.occurrence_set.count() > 0:
             for occ in self.occurrence_set.all():
@@ -73,14 +77,17 @@ class Show(models.Model):
             return True
         else:
             return False
+
     def has_occurrences(self):
         occs = Occurrence.objects.filter(show=self)
-        if len(occs) > 0: return True
-        else: return False
+        if len(occs) > 0: 
+            return True
+        else: 
+            return False
 
     def gen_thumbs(self):
         img = Image.open(self.poster.path)
-        if img.mode not in ('L', 'RGB'): #Convert to RGB
+        if img.mode not in ('L', 'RGB'):    #Convert to RGB
             img = img.convert('RGB')
         for field_name, size in self.IMAGE_SIZES.iteritems():
             field = getattr(self, field_name)
@@ -89,7 +96,7 @@ class Show(models.Model):
             fp = StringIO()
             working.save(fp, "JPEG", quality=95)
             cf = InMemoryUploadedFile(fp, None, self.poster.name, 'image/jpeg',
-                                  fp.len, None)
+                fp.len, None)
             field.save(name=field_name+"_"+self.poster.name, content=cf, save=True)
 
     def long_markdown(self):
@@ -109,9 +116,10 @@ class Show(models.Model):
             self.gen_thumbs()
         elif have_orig and self.poster != orig.poster:
             self.gen_thumbs()
-    
+
     def __str__(self):
         return self.name;
+
 
 class OccurrenceManager(models.Manager):
     def get_avaliable(self,show):
@@ -122,11 +130,14 @@ class OccurrenceManager(models.Manager):
         for oc in occs:
             hour = oc.time.hour
             close_time = hour - oc.hours_til_close
-            if oc.sold_out(): pass
-            if oc.date == today and time.hour >= close_time: pass
+            if oc.sold_out(): 
+                pass
+            if oc.date == today and time.hour >= close_time: 
+                pass
             else:
-                ret.append((oc.id,oc.datetime_formatted()))
+                ret.append((oc.id, oc.datetime_formatted()))
         return ret
+
 
 @python_2_unicode_compatible
 class Occurrence(models.Model):
@@ -138,19 +149,22 @@ class Occurrence(models.Model):
     date = models.DateField()
     time = models.TimeField(default=configuration.customise.DEFAULT_TIME)
     maximum_sell = models.PositiveIntegerField(default=configuration.customise.DEFAULT_MAX_SELL,
-        help_text='The maximum number of tickets we will allow to be reserved.')
+                help_text='The maximum number of tickets we will allow to be reserved.')
     hours_til_close = models.IntegerField(default=configuration.customise.DEFAULT_HOURS_TIL_CLOSE,
-        help_text='Hours before \'time\' that we will stop reservations being made.')
+                help_text='Hours before \'time\' that we will stop reservations being made.')
     unique_code = models.CharField(max_length=16)
 
     objects = OccurrenceManager()
 
     def day_formatted(self):
         return self.date.strftime('%A')
+
     def time_formatted(self):
         return self.time.strftime('%-I%p').lower()
+
     def datetime_formatted(self):
-        return self.date.strftime('%A %d %B ')+self.time.strftime('%-I%p').lower()
+        return self.date.strftime('%A %d %B ')+
+        self.time.strftime('%-I%p').lower()
 
     def tickets_sold(self):
         tickets = Ticket.objects.filter(occurrence=self).filter(cancelled=False)
@@ -158,10 +172,12 @@ class Occurrence(models.Model):
         for ticket in tickets:
             sold += ticket.quantity
         return sold
+
     def sold_out(self):
         if self.tickets_sold() >= self.maximum_sell:
             return True
-        else: return False
+        else: 
+            return False
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
@@ -171,6 +187,7 @@ class Occurrence(models.Model):
 
     def __str__(self):
         return self.show.name + " on " + str(self.date) + " at " + str(self.time)
+
 
 @python_2_unicode_compatible
 class Ticket(models.Model):
@@ -192,5 +209,7 @@ class Ticket(models.Model):
         super(Ticket, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.occurrence.show.name + " on " + str(self.occurrence.date) + \
-        " at "+str(self.occurrence.time) + " for " + self.person_name
+        return self.occurrence.show.name + 
+        "on" + str(self.occurrence.date) + \
+        "at" + str(self.occurrence.time) + 
+        "for" + self.person_name
