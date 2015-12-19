@@ -13,7 +13,7 @@ class TicketAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super(TicketAdmin, self).get_urls()
         my_urls = [
-            url(r'$',self.admin_site.admin_view(self.report_index)),
+            url(r'$', self.admin_site.admin_view(self.report_index)),
             url(r'\d+/report/$', self.admin_site.admin_view(self.review)),
         ]
         return my_urls + urls
@@ -40,7 +40,7 @@ class TicketAdmin(admin.ModelAdmin):
                 ticket = Ticket.objects.get(unique_code=ticket_id)
 
                 ticket.cancelled = True
-                ticket.save() 
+                ticket.save()
 
                 occurrence = Occurrence.objects.get(unique_code=occurrence_id)
 
@@ -55,7 +55,7 @@ class TicketAdmin(admin.ModelAdmin):
                 pass
 
         else:
-            R_form=ReportForm()
+            R_form = ReportForm()
             C_form = CancelForm()
 
         return render_to_response('admin/tickets_index.html', {
@@ -81,7 +81,7 @@ class ShowAdmin(admin.ModelAdmin):
             'poster',
             'slug',
             'description',
-            'long_description', 
+            'long_description',
             'start_date',
             'end_date'
             ]
@@ -94,8 +94,8 @@ class ShowAdmin(admin.ModelAdmin):
                 'end_date')
 
     list_filter = ['category']
-    ordering = ['start_date','name']
-    search_fields = ('name','description')
+    ordering = ['start_date', 'name']
+    search_fields = ('name', 'description')
 
 
 class OccurrenceAdmin(admin.ModelAdmin):
@@ -103,7 +103,8 @@ class OccurrenceAdmin(admin.ModelAdmin):
             'show',
             'date',
             'time',
-            'maximum_sell','hours_til_close'
+            'maximum_sell',
+            'hours_til_close'
             ]
 
     list_display = (
@@ -114,13 +115,13 @@ class OccurrenceAdmin(admin.ModelAdmin):
                 'hours_til_close'
                 )
 
-    ordering = ['date','time']
+    ordering = ['date', 'time']
     search_fields = ['show']
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    fields = ['name','slug','sort']
-    list_display = ('name','slug','sort')
+    fields = ['name', 'slug', 'sort']
+    list_display = ('name', 'slug', 'sort')
     ordering = ['sort']
     search_fields = ['show']
 
@@ -128,4 +129,4 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Occurrence, OccurrenceAdmin)
-admin.site.register(Ticket,TicketAdmin)
+admin.site.register(Ticket, TicketAdmin)

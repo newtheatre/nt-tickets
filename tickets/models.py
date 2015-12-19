@@ -46,7 +46,7 @@ class Show(models.Model):
                     )
 
     location = models.CharField(
-                    max_length=30, 
+                    max_length=30,
                     default=configuration.customise.DEFAULT_LOCATION,
                     help_text='Will show up alongside show, you can hide this with CSS if needed.'
                     )
@@ -136,7 +136,7 @@ class Show(models.Model):
             self.gen_thumbs()
 
     def __str__(self):
-        return self.name;
+        return self.name
 
 
 class OccurrenceManager(models.Manager):
@@ -144,7 +144,7 @@ class OccurrenceManager(models.Manager):
     def get_avaliable(self, show):
         today = datetime.date.today()
         time = datetime.datetime.now()
-        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date','time')
+        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
         ret = []
         for oc in occs:
             hour = oc.time.hour
@@ -168,10 +168,15 @@ class Occurrence(models.Model):
     show = models.ForeignKey(Show)
     date = models.DateField()
     time = models.TimeField(default=configuration.customise.DEFAULT_TIME)
-    maximum_sell = models.PositiveIntegerField(default=configuration.customise.DEFAULT_MAX_SELL,
-                help_text='The maximum number of tickets we will allow to be reserved.')
-    hours_til_close = models.IntegerField(default=configuration.customise.DEFAULT_HOURS_TIL_CLOSE,
-                help_text='Hours before \'time\' that we will stop reservations being made.')
+    maximum_sell = models.PositiveIntegerField(
+                default=configuration.customise.DEFAULT_MAX_SELL,
+                help_text='The maximum number of tickets we will allow to be reserved.'
+                )
+
+    hours_til_close = models.IntegerField(
+                default=configuration.customise.DEFAULT_HOURS_TIL_CLOSE,
+                help_text='Hours before \'time\' that we will stop reservations being made.'
+                )
     unique_code = models.CharField(max_length=16)
 
     objects = OccurrenceManager()
@@ -196,7 +201,7 @@ class Occurrence(models.Model):
     def sold_out(self):
         if self.tickets_sold() >= self.maximum_sell:
             return True
-        else: 
+        else:
             return False
 
     def save(self, *args, **kwargs):
@@ -211,7 +216,7 @@ class Occurrence(models.Model):
 
 @python_2_unicode_compatible
 class Ticket(models.Model):
-    
+
     class Meta:
         verbose_name = 'Ticket'
         verbose_name_plural = 'Tickets'

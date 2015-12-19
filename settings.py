@@ -3,6 +3,7 @@
 import os
 import configuration.enviroment as env
 
+
 def gettext(s):
     return s
 
@@ -100,7 +101,7 @@ TEMPLATES = [
                 # insert your TEMPLATE_LOADERS here
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
-                #'django.template.loaders.eggs.Loader',
+                # 'django.template.loaders.eggs.Loader',
             ]
         },
     },
