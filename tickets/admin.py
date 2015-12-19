@@ -4,7 +4,7 @@ from django.conf.urls import url
 from django.shortcuts import render_to_response
 
 from tickets.models import *
-from tickets.forms import ReportForm
+from tickets.forms import ReportForm, CancelForm
 
 class TicketAdmin(admin.ModelAdmin):
     review_template = 'report.html'
@@ -23,21 +23,43 @@ class TicketAdmin(admin.ModelAdmin):
         occurrence=""
 
         if request.method=='POST':
-            form = ReportForm(request.POST)
-            if form.is_valid():
-                occurrence=form.cleaned_data['occurrence']
+            R_form = ReportForm(request.POST)
+            C_form = CancelForm(request.POST)
+            if R_form.is_valid():
+                occurrence=R_form.cleaned_data['occurrence']
                 report['tickets']=Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
                 report['how_many_sold']=occurrence.tickets_sold()
                 report['how_many_left']=occurrence.maximum_sell-occurrence.tickets_sold()
                 report['percentage']=(report['how_many_sold']/float(occurrence.maximum_sell))*100
                 report['have_report']=True
+            elif C_form.is_valid():
+                ticket_id = C_form.cleaned_data['ticket']
+                occurrence_id = C_form.cleaned_data['occurrence']
+
+                ticket = Ticket.objects.get(unique_code=ticket_id)
+
+                ticket.cancelled = True
+                ticket.save() 
+
+                occurrence = Occurrence.objects.get(unique_code=occurrence_id)
+
+                report['tickets']=Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
+                report['how_many_sold']=occurrence.tickets_sold()
+                report['how_many_left']=occurrence.maximum_sell-occurrence.tickets_sold()
+                report['percentage']=(report['how_many_sold']/float(occurrence.maximum_sell))*100
+                report['have_report']=True
+
+                R_form = ReportForm(initial={'occurrence':occurrence})
             else:
-                pass        
+                pass
+
         else:
-            form=ReportForm()
+            R_form=ReportForm()
+            C_form = CancelForm()
 
         return render_to_response('admin/tickets_index.html', {
-            'form':form,
+            'R_form':R_form,
+            'C_form':C_form,
             'occurrence':occurrence,
             'report':report,
         }, context_instance=RequestContext(request))

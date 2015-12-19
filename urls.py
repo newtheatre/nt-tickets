@@ -20,7 +20,6 @@ urlpatterns = [
     url(r'^sidebar/$', tickets_views.sidebar, name='sidebar'),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^admin/tickets/ticket/$', tickets_views.admin_cancel),
 
     url(r'^$', login_required(tickets_views.Index.as_view()), name='index'),
 ] 

@@ -46,7 +46,7 @@
     <h2>Select Report</h2>
     <p>Reports are available 4 weeks after event date.</p>
     <form action="." method="post">{% csrf_token %}
-      {{ form }}
+      {{ R_form }}
       <div class="actions">
         <br>
         <button type="submit" class="btn primary">Search</button>
@@ -80,7 +80,9 @@
           <td>{{sale.person_name}}</td>
           <td><span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td>
           <td>{{sale.stamp}}</td>
-          <td><button {% if sale.cancelled %}class="btn btn-default disabled"{% else %}class="btn btn-danger" data-toggle="modal" data-target="#{{sale.unique_code}}"{%endif%}>Cancel</button></td>
+          <td>
+              <button type="button" {% if sale.cancelled %}class="btn btn-default disabled"{% else %}class="btn btn-danger"{%endif%} data-toggle="modal" data-target="#{{ sale.unique_code }}">Cancel</button>
+          </td>
         </tr>
         {% endfor %}
       </table>
@@ -105,15 +107,16 @@
             <h4 class="modal-title">Cancel Tickets</h4>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to cancel this booking for <strong>{{modal.person_name}}</strong> on <strong>{{modal.stamp}}</strong>?</p>
-            <p class="text-danger">This action can't be undone!</p>
+            <p>Are you sure you want to cancel {% if modal.quantity == 1 %}this ticket{% else %}these <strong>{{modal.quantity}}</strong> tickets{% endif %} for <strong>{{modal.person_name}}</strong> on <strong>{{modal.occurrence.date}}</strong>?</p>
+            <p class="text-danger"><strong>This action can't be undone!</strong></p>
           </div>
           <div class="modal-footer">
-            <form action=".">
-              <input type="hidden" name="id" value="{{modal.unique_code}}">
+            <form action="." method="post">
+            {% csrf_token %}
+              <input type="hidden" name="{{ C_form.ticket.name }}" value="{{ modal.unique_code }}">
+              <input type="hidden" name="{{ C_form.occurrence.name }}" value="{{ modal.occurrence.unique_code }}">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-danger">Confirm</button>
-              <!-- <input class="danger" type="submit" value="Confirm"> -->
             </form>
           </div>
         </div>

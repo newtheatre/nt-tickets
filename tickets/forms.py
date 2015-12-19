@@ -32,3 +32,4 @@ class LoginForm(AuthenticationForm):
 
 class CancelForm(forms.Form):
     ticket = forms.CharField(max_length=16)
+    occurrence = forms.CharField(max_length=16)
