@@ -13,6 +13,9 @@ from tickets.func import rand_16
 
 import configuration.customise
 
+from django.utils.encoding import python_2_unicode_compatible
+
+@python_2_unicode_compatible
 class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
@@ -24,9 +27,10 @@ class Category(models.Model):
         help_text='Will be used in class names, so you can style categories differently.')
     sort = models.IntegerField(
         help_text='Low to high, sorts the sidebar.')
-    def __unicode__(self): return self.name
+    
+    def __str__(self): return self.name
 
-
+@python_2_unicode_compatible
 class Show(models.Model):
     class Meta:
         verbose_name = 'Show'
@@ -106,7 +110,7 @@ class Show(models.Model):
         elif have_orig and self.poster != orig.poster:
             self.gen_thumbs()
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name;
 
 class OccurrenceManager(models.Manager):
@@ -124,6 +128,7 @@ class OccurrenceManager(models.Manager):
                 ret.append((oc.id,oc.datetime_formatted()))
         return ret
 
+@python_2_unicode_compatible
 class Occurrence(models.Model):
     class Meta:
         verbose_name = 'Occurrence'
@@ -136,6 +141,7 @@ class Occurrence(models.Model):
         help_text='The maximum number of tickets we will allow to be reserved.')
     hours_til_close = models.IntegerField(default=configuration.customise.DEFAULT_HOURS_TIL_CLOSE,
         help_text='Hours before \'time\' that we will stop reservations being made.')
+    unique_code = models.CharField(max_length=16)
 
     objects = OccurrenceManager()
 
@@ -158,11 +164,15 @@ class Occurrence(models.Model):
         else: return False
 
     def save(self, *args, **kwargs):
+        if not self.unique_code:
+            self.unique_code = rand_16()
         super(Occurrence, self).save(*args, **kwargs)
         self.show.save()
-    def __unicode__(self):
+
+    def __str__(self):
         return self.show.name + " on " + str(self.date) + " at " + str(self.time)
 
+@python_2_unicode_compatible
 class Ticket(models.Model):
     class Meta:
         verbose_name = 'Ticket'
@@ -181,6 +191,6 @@ class Ticket(models.Model):
             self.unique_code = rand_16()
         super(Ticket, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.occurrence.show.name + " on " + str(self.occurrence.date) + \
         " at "+str(self.occurrence.time) + " for " + self.person_name
