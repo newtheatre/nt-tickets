@@ -15,6 +15,7 @@ import configuration.customise
 
 from django.utils.encoding import python_2_unicode_compatible
 
+
 @python_2_unicode_compatible
 class Category(models.Model):
     class Meta:
@@ -27,7 +28,7 @@ class Category(models.Model):
         help_text='Will be used in class names, so you can style categories differently.')
     sort = models.IntegerField(
         help_text='Low to high, sorts the sidebar.')
-    
+
     def __str__(self): return self.name
 
 
@@ -38,17 +39,34 @@ class Show(models.Model):
         verbose_name_plural = 'Shows'
 
     name = models.CharField(max_length=64)
-    slug = models.SlugField(blank=True,
-        help_text='Used in the URL of the detail page, leave blank to auto-generate.')
-    location = models.CharField(max_length=30, default=configuration.customise.DEFAULT_LOCATION,
-        help_text='Will show up alongside show, you can hide this with CSS if needed.')
+
+    slug = models.SlugField(
+                    blank=True,
+                    help_text='Used in the URL of the detail page, leave blank to auto-generate.'
+                    )
+
+    location = models.CharField(
+                    max_length=30, 
+                    default=configuration.customise.DEFAULT_LOCATION,
+                    help_text='Will show up alongside show, you can hide this with CSS if needed.'
+                    )
+
     description = models.TextField(
-        help_text='A short description, one paragraph only.')
-    long_description = models.TextField(blank=True,
-        help_text='Shows up on the detail page, this field is written in Markdown. ' +
-        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.')
-    poster = models.ImageField(upload_to='posters', blank=True, null=True,
-        help_text='Upload a large image, we will automatically create smaller versions to use.')
+                    help_text='A short description, one paragraph only.'
+                    )
+
+    long_description = models.TextField(
+                    blank=True,
+                    help_text='Shows up on the detail page, this field is written in Markdown. ' +
+                    '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.'
+                    )
+
+    poster = models.ImageField(
+                    upload_to='posters',
+                    blank=True, null=True,
+                    help_text='Upload a large image, we will automatically create smaller versions to use.'
+                    )
+
     poster_wall = models.ImageField(upload_to='posters', blank=True, null=True)
     poster_page = models.ImageField(upload_to='posters', blank=True, null=True)
     poster_tiny = models.ImageField(upload_to='posters', blank=True, null=True)
@@ -61,18 +79,18 @@ class Show(models.Model):
     IMAGE_SIZES = {'poster_wall': (126, 178),
                    'poster_page': (256, 362),
                    'poster_tiny': (50, 71)}
-    
+
     def is_current(self):
         today = datetime.date.today()
-        if today > self.end_date: 
+        if today > self.end_date:
             return False
-        else: 
+        else:
             return True
 
     def sold_out(self):
         if self.occurrence_set.count() > 0:
             for occ in self.occurrence_set.all():
-                if occ.sold_out() == False:
+                if occ.sold_out() is False:
                     return False
             return True
         else:
@@ -80,14 +98,14 @@ class Show(models.Model):
 
     def has_occurrences(self):
         occs = Occurrence.objects.filter(show=self)
-        if len(occs) > 0: 
+        if len(occs) > 0:
             return True
-        else: 
+        else:
             return False
 
     def gen_thumbs(self):
         img = Image.open(self.poster.path)
-        if img.mode not in ('L', 'RGB'):    #Convert to RGB
+        if img.mode not in ('L', 'RGB'):    # Convert to RGB
             img = img.convert('RGB')
         for field_name, size in self.IMAGE_SIZES.iteritems():
             field = getattr(self, field_name)
@@ -122,7 +140,8 @@ class Show(models.Model):
 
 
 class OccurrenceManager(models.Manager):
-    def get_avaliable(self,show):
+
+    def get_avaliable(self, show):
         today = datetime.date.today()
         time = datetime.datetime.now()
         occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date','time')
@@ -130,9 +149,9 @@ class OccurrenceManager(models.Manager):
         for oc in occs:
             hour = oc.time.hour
             close_time = hour - oc.hours_til_close
-            if oc.sold_out(): 
+            if oc.sold_out():
                 pass
-            if oc.date == today and time.hour >= close_time: 
+            if oc.date == today and time.hour >= close_time:
                 pass
             else:
                 ret.append((oc.id, oc.datetime_formatted()))
@@ -141,6 +160,7 @@ class OccurrenceManager(models.Manager):
 
 @python_2_unicode_compatible
 class Occurrence(models.Model):
+
     class Meta:
         verbose_name = 'Occurrence'
         verbose_name_plural = 'Occurrences'
@@ -191,6 +211,7 @@ class Occurrence(models.Model):
 
 @python_2_unicode_compatible
 class Ticket(models.Model):
+    
     class Meta:
         verbose_name = 'Ticket'
         verbose_name_plural = 'Tickets'

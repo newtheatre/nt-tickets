@@ -24,6 +24,5 @@ def subscribe(email, first_name, last_name):
     except mailchimp.ListAlreadySubscribedError:
         print('already subscribed ' + email)
         return False
-    except mailchimp.Error, e:
-        print(e)
+    except mailchimp.Error:
         return False

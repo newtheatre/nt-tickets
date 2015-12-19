@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # All common settings for nt_tickets project.
-
 import os
-gettext = lambda s: s
+import configuration.enviroment as env
+
+def gettext(s):
+    return s
+
 PROJECT_PATH = os.path.dirname(__file__)
 
 ADMINS = (
@@ -22,7 +25,7 @@ DATABASES = {
     }
 }
 
-SITE_URL="http://localhost:8000"
+SITE_URL = "http://localhost:8000"
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -58,9 +61,7 @@ STATIC_ROOT = os.path.join(PROJECT_PATH, "static")
 STATIC_URL = "/static/"
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-    
-)
+STATICFILES_DIRS = ()
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
@@ -132,8 +133,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    #'south',
-    
+    # 'south',
+
     'bootstrap_toolkit',
     'tickets',
 )
@@ -173,8 +174,6 @@ RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
 ACTUALLY_SEND_MAIL = False
 
 # What enviroment are we in?
-import configuration.enviroment as env
-
 if env.RUN_ENV == 'production':
     from configuration.production import *
 elif env.RUN_ENV == 'staging':
