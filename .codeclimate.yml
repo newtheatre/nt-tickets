@@ -1,11 +1,10 @@
 engines:
-	radon: 
-		enabled: true
-	pep8: 
-		enabled: true
+ radon: 
+  enabled: true
+ pep8: 
+  enabled: true
 
 ratings:
-	paths:
-
-	- "tickets/*"
-	- "/*""
+ paths:
+ - "tickets/*"
+ - "/*""
