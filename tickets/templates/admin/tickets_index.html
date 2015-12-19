@@ -7,7 +7,9 @@
 <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
 <link href="{{ STATIC_URL }}bootstrap-admin.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="/static/admin.css" />
-
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block extrahead %}
@@ -46,6 +48,7 @@
     <form action="." method="post">{% csrf_token %}
       {{ form }}
       <div class="actions">
+        <br>
         <button type="submit" class="btn primary">Search</button>
       </div></form>
     </div>
@@ -73,11 +76,11 @@
           <th>Cancel Tickets</th>
         </tr>
         {% for sale in report.tickets %}
-        <tr {% if sale.cancelled %}class="cancelled warning"{%endif%}>
-          <td>{{sale.person_name}}</del></td>
+        <tr {% if sale.cancelled %}class="cancelled warning"{%endif%} id="sale-{{forloop.counter}}">
+          <td>{{sale.person_name}}</td>
           <td><span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td>
           <td>{{sale.stamp}}</td>
-          <td><button {% if sale.cancelled %}class="btn btn-danger disabled"{% else %}class="btn btn-danger"{%endif%} type="submit" value="Submit">Cancel</button></td>
+          <td><button {% if sale.cancelled %}class="btn btn-default disabled"{% else %}class="btn btn-danger" data-toggle="modal" data-target="#{{sale.unique_code}}"{%endif%}>Cancel</button></td>
         </tr>
         {% endfor %}
       </table>
@@ -91,5 +94,31 @@
       {% endif %}
 
     </div>
+    {% for modal in report.tickets %}
+    <div id="{{modal.unique_code}}" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Cancel Tickets</h4>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to cancel this booking for <strong>{{modal.person_name}}</strong> on <strong>{{modal.stamp}}</strong>?</p>
+            <p class="text-danger">This action can't be undone!</p>
+          </div>
+          <div class="modal-footer">
+            <form action=".">
+              <input type="hidden" name="id" value="{{modal.unique_code}}">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-danger">Confirm</button>
+              <!-- <input class="danger" type="submit" value="Confirm"> -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
   {% endblock %}

@@ -29,3 +29,6 @@ class ReportForm(forms.Form):
 
 class LoginForm(AuthenticationForm):
     captcha = ReCaptchaField(label='Captcha')
+
+class CancelForm(forms.Form):
+    ticket = forms.CharField(max_length=16)

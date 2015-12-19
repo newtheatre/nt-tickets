@@ -116,7 +116,7 @@ def book_landing(request, show_id):
 
 import json
 
-def how_many_left(request):
+def  left(request):
     if 'occ' in request.GET:
         occ = get_object_or_404(Occurrence, pk = request.GET['occ'])
 
@@ -224,3 +224,10 @@ def cancel(request, ref_id):
         already_cancelled=False
 
     return render(request, 'cancel.html', {'ticket':ticket, 'cancelled':cancelled,'already_cancelled':already_cancelled})
+
+def admin_cancel(request):
+    ticket_id = request.GET.get('id', None)
+    ticket = get_object_or_404(Ticket, unique_code=ticket_id)
+
+    ticket.cancelled = True
+    ticket.save()
