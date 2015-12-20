@@ -42,7 +42,7 @@ class BookTest(TestCase):
         response = self.client.get('/book/1/')
         self.assertEqual(response.status_code, 200)
 
-    def test_sold_out_false(self):
+    def test_show_sold_out_false(self):
         show = Show.objects.get(pk=1)
         self.assertEqual(show.sold_out(), False)
 
@@ -55,8 +55,8 @@ class ShowTest(TestCase):
 
     def setUp(self):
         cat = Category.objects.create(name='Test Category',slug='test',sort=1)
-        start_date = datetime.date.today()+datetime.timedelta(days=2)
-        end_date = datetime.date.today()+datetime.timedelta(days=5)
+        start_date = datetime.date.today() + datetime.timedelta(days=2)
+        end_date = datetime.date.today() + datetime.timedelta(days=5)
         Show.objects.create(
             name='Test Show', 
             location='Somewhere', 
@@ -70,7 +70,7 @@ class ShowTest(TestCase):
 
         Occurrence.objects.create(
             show=Show.objects.get(pk=1),
-            date=datetime.date.today(),
+            date=start_date,
             time=datetime.datetime.now(),
             maximum_sell=2,
             hours_til_close=2,
@@ -95,16 +95,25 @@ class ShowTest(TestCase):
 
     def test_sold_out_true(self):
         show = Show.objects.get(pk=1)
+        occ = Occurrence.objects.get(pk=1)
         Ticket.objects.create(
             occurrence=Occurrence.objects.get(pk=1),
             stamp=datetime.datetime.now(),
-            person_name='testman',
+            person_name='testman2',
             email_address='test@test.com',
             quantity=1,
             cancelled=False,
             unique_code=rand_16(),
             )
+
         self.assertEqual(show.sold_out(), True)
+        self.assertEqual(occ.sold_out(), True)
+
+    def test_sold_out_false(self):
+        show = Show.objects.get(pk=1)
+        occ = Occurrence.objects.get(pk=1)
+        self.assertEqual(occ.sold_out(), False)
+        self.assertEqual(show.sold_out(), False)
 
     def test_has_occurrences_true(self):
         show = Show.objects.get(pk=1)
@@ -114,14 +123,9 @@ class ShowTest(TestCase):
         show = Show.objects.get(pk=1)
         self.assertEqual(show.__str__(), show.name)
 
-    def test_occurrence_sold_out_false(self):
-        occ = Occurrence.objects.get(pk=1)
-        self.assertEqual(occ.sold_out(), False)
-
     def test_markdown(self):
         show = Show.objects.get(pk=1)
-        md = Markdown()
-        ld_md = md.convert(show.long_description)
+        ld_md = '<p>Some more info</p>\n'
         self.assertEqual(show.long_markdown(), ld_md)
 
     def test_datetime_formatted(self):
@@ -143,8 +147,45 @@ class ShowTest(TestCase):
     def test_ticket_str(self):
         tick = Ticket.objects.get(pk=1)
         tick_str = tick.occurrence.show.name + \
-            "on" + str(tick.occurrence.date) + \
-            "at" + str(tick.occurrence.time) + \
-            "for" + tick.person_name
+            " on " + str(tick.occurrence.date) + \
+            " at " + str(tick.occurrence.time) + \
+            " for " + tick.person_name
 
         self.assertEqual(tick.__str__(), tick_str)
+
+    def test_get_available(self):
+        show = Show.objects.get(pk=1)
+        occ = Occurrence.objects.get(pk=1)
+        datetime_format = occ.date.strftime('%A %d %B ') + \
+            occ.time.strftime('%-I%p').lower()
+        
+        r1 = Occurrence.objects.get_available(show)
+
+        self.assertEqual(r1, [(1, datetime_format)])
+
+    # def test_get_available_sold_out(self):
+    #     show = Show.objects.get(pk=1)
+    #     occ = Occurrence.objects.get(pk=1)
+    #     Ticket.objects.create(
+    #         occurrence=Occurrence.objects.get(pk=1),
+    #         stamp=datetime.datetime.now(),
+    #         person_name='testman2',
+    #         email_address='test@test.com',
+    #         quantity=1,
+    #         cancelled=False,
+    #         unique_code=rand_16(),
+    #         )
+
+    #     r2 = Occurrence.objects.get_available(show)
+
+    #     self.assertEqual(r2, ['1'])
+
+    # def test_get_available_show_closed(self):
+    #     show = Show.objects.get(pk=1)
+    #     occ = Occurrence.objects.get(pk=1)
+
+    #     occ.date = datetime.date.today()
+
+    #     r3 = Occurrence.objects.get_available(show)
+
+    #     self.assertEqual(r3, ['2'])

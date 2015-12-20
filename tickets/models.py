@@ -150,9 +150,11 @@ class OccurrenceManager(models.Manager):
             hour = oc.time.hour
             close_time = hour - oc.hours_til_close
             if oc.sold_out():
-                pass
+                #pass
+                ret = ['1']
             if oc.date == today and time.hour >= close_time:
-                pass
+                # pass
+                ret = ['2']
             else:
                 ret.append((oc.id, oc.datetime_formatted()))
         return ret
