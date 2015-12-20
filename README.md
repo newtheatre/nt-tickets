@@ -1,4 +1,4 @@
-# nt-tickets
+# NT-Tickets
 [![Build Status](https://travis-ci.org/newtheatre/nt-tickets.svg?branch=master)](https://travis-ci.org/newtheatre/nt-tickets)
 [![Coverage Status](https://coveralls.io/repos/newtheatre/nt-tickets/badge.svg?branch=master&service=github)](https://coveralls.io/github/newtheatre/nt-tickets?branch=master)
 [![Dependency Status](https://gemnasium.com/newtheatre/nt-tickets.svg)](https://gemnasium.com/newtheatre/nt-tickets)
