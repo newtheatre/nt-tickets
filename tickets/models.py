@@ -141,7 +141,7 @@ class Show(models.Model):
 
 class OccurrenceManager(models.Manager):
 
-    def get_avaliable(self, show):
+    def get_available(self, show):
         today = datetime.date.today()
         time = datetime.datetime.now()
         occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
@@ -236,6 +236,6 @@ class Ticket(models.Model):
 
     def __str__(self):
         return self.occurrence.show.name + \
-            "on" + str(self.occurrence.date) + \
-            "at" + str(self.occurrence.time) + \
-            "for" + self.person_name
+            " on " + str(self.occurrence.date) + \
+            " at " + str(self.occurrence.time) + \
+            " for " + self.person_name

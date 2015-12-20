@@ -22,7 +22,7 @@ class BookingFormLanding(forms.Form):
     def __init__(self, *args, **kwargs):
         show = kwargs.pop('show', None)
         super(BookingFormLanding, self).__init__(*args, **kwargs)
-        self.fields['occurrence'].choices = Occurrence.objects.get_avaliable(show=show)
+        self.fields['occurrence'].choices = Occurrence.objects.get_available(show=show)
 
 
 class ReportForm(forms.Form):
