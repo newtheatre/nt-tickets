@@ -6,5 +6,6 @@ engines:
 
 ratings:
  paths:
- - "tickets/*"
+ - "tickets/*/**"
+ - "bin/*"
  - "/*"
