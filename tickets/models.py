@@ -91,7 +91,7 @@ class Show(models.Model):
         else:
             return True
 
-    def sold_out(self):
+    def show_sold_out(self):
         if self.occurrence_set.count() > 0:
             for occ in self.occurrence_set.all():
                 if occ.sold_out() is False:
@@ -154,11 +154,11 @@ class OccurrenceManager(models.Manager):
             hour = oc.time.hour
             close_time = hour - oc.hours_til_close
             if oc.sold_out():
-                # pass
-                ret = ['1']
+                pass
+                break
             if oc.date == today and time.hour >= close_time:
-                # pass
-                ret = ['2']
+                pass
+                break
             else:
                 ret.append((oc.id, oc.datetime_formatted()))
         return ret
