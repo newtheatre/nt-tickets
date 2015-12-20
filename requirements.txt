@@ -1,12 +1,9 @@
 Django == 1.9
 Pillow == 3.0.0
-South == 1.0.2
 argparse == 1.4.0
 django-bootstrap-toolkit == 2.15.0
 gunicorn == 19.4.1
 mailchimp == 2.0.9
-docopt == 0.4.0
-requests == 2.9.0
 markdown2 == 2.3.0
 wsgiref == 0.1.2
 django-recaptcha == 1.0.4
