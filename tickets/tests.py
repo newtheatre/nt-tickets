@@ -41,7 +41,11 @@ class BookTest(TestCase):
         response = self.client.get('/book/1/')
         self.assertEqual(response.status_code, 200)
 
-    def has_occurrences_false(self):
+    def test_sold_out_false(self):
+        show = Show.objects.get(pk=1)
+        self.assertEqual(show.sold_out(), False)
+
+    def test_has_occurrences_false(self):
         show = Show.objects.get(pk=1)
         self.assertEqual(show.has_occurrences(), False)
 
@@ -87,9 +91,6 @@ class ShowTest(TestCase):
         show.end_date = datetime.date.today() + datetime.timedelta(days=-5)
         self.assertEqual(show.is_current(), False)
 
-    def test_sold_out_false(self):
-        show = Show.objects.get(pk=1)
-        self.assertEqual(show.sold_out(), False)
 
     def test_sold_out_true(self):
         show = Show.objects.get(pk=1)
@@ -104,6 +105,10 @@ class ShowTest(TestCase):
             )
         self.assertEqual(show.sold_out(), True)
 
-    def has_occurrences_true(self):
-        show = Show.objects.get(pk=2)
-        self.assertEqual(show.has_occurrences(), True)
+    def test_has_occurrences_true(self):
+        show = Show.objects.get(pk=1)
+        self.assertEqual(show.is_current(), True)
+
+    def test_name(self):
+        show = Show.objects.get(pk=1)
+        self.assertEqual(show.__str__(), show.name)
