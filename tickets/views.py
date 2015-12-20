@@ -23,6 +23,7 @@ import datetime
 import settings
 import mailchimp_util
 
+
 class Index(generic.TemplateView):
     template_name = 'index.html'
 
@@ -44,13 +45,12 @@ def defaultFNI(request):
 
 def book_landing(request, show_id):
     show = get_object_or_404(Show, id=show_id)
-    if show.is_current()==False:
+    if show.is_current() is False:
         return HttpResponseRedirect(reverse('error',kwargs={'show_id': show.id}))
-    step=1
-    total=2
-    message="Tickets for performances are reserved online and payed for on collection at the box office."
+    step = 1
+    total = 2
+    message = "Tickets for performances are reserved online and payed for on collection at the box office."
     foh_contact = 'foh@newtheatre.org.uk'
-
 
     mailchimp = mailchimp_util.get_mailchimp_api()
     if mailchimp is None:
@@ -58,9 +58,9 @@ def book_landing(request, show_id):
     else:
         mc = True
 
-    if request.method == 'POST': # If the form has been submitted...
-        form = BookingFormLanding(request.POST, show=show)  #A form bound to the POST data
-        if form.is_valid():    #All validation rules pass
+    if request.method == 'POST':    # If the form has been submitted...
+        form = BookingFormLanding(request.POST, show=show)    # A form bound to the POST data
+        if form.is_valid():     # All validation rules pass
             t = Ticket()
             t.person_name = form.cleaned_data['person_name']
             t.email_address = form.cleaned_data['email_address']
@@ -68,25 +68,28 @@ def book_landing(request, show_id):
             occ_id = form.cleaned_data['occurrence']
             t.occurrence = Occurrence.objects.get(pk=occ_id)
             if t.occurrence.date < datetime.date.today():
-                return HttpResponseRedirect(reverse('error',kwargs={'show_id':show.id}))
+                return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
             t.quantity = form.cleaned_data['quantity']
             if t.occurrence.maximum_sell < (t.occurrence.tickets_sold()+t.quantity):
-                return HttpResponseRedirect(reverse('error',kwargs={'show_id':show.id})+"?err=sold_out")
+                return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}) + "?err=sold_out")
 
             t.save()
             request.session["ticket"] = t
 
-            email_html=get_template('email/confirm.html').render(
+            email_html = get_template('email/confirm.html').render(
                 Context({
                     'show': show,
                     'ticket': t,
                     'settings': settings,
                     'customise': customise,
                 }))
-            email_subject='Tickets reserved for ' + show.name
-            email=EmailMessage(subject=email_subject, body=email_html,
-                to=[t.email_address], 
-                from_email="Box Office <boxoffice@newtheatre.org.uk>")
+            email_subject = 'Tickets reserved for ' + show.name
+            email = EmailMessage(
+                subject=email_subject,
+                body=email_html,
+                to=[t.email_address],
+                from_email="Box Office <boxoffice@newtheatre.org.uk>"
+                )
             email.content_subtype = 'html'
             if settings.ACTUALLY_SEND_MAIL:
                 email.send()
@@ -105,9 +108,9 @@ def book_landing(request, show_id):
                         last = ""
                     mailchimp_util.subscribe(email, first, last)
 
-            return HttpResponseRedirect(reverse('finish',kwargs={'show_id':show.id}))   #Redirect after POST
+            return HttpResponseRedirect(reverse('finish', kwargs={'show_id':show.id}))   # Redirect after POST
     else:
-        form = BookingFormLanding(show=show)    #An unbound form
+        form = BookingFormLanding(show=show)    # An unbound form
 
     return render(request, 'book_landing.html', {
         'form': form,
@@ -120,7 +123,7 @@ def book_landing(request, show_id):
     })
 
 
-def  how_many_left(request):
+def how_many_left(request):
     if 'occ' in request.GET:
         occ = get_object_or_404(Occurrence, pk=request.GET['occ'])
 
@@ -147,7 +150,7 @@ def book_finish(request, show_id):
     ticket = request.session["ticket"]
 
     return render(request, 'book_finish.html', {
-        'show': show, 
+        'show': show,
         'ticket': ticket,
     })
 
@@ -155,9 +158,9 @@ def book_finish(request, show_id):
 def book_error(request, show_id):
     if 'err' in request.GET:
         err = request.GET['err']
-    else: 
+    else:
         err = None
-    return render(request, 'book_error.html', {'err':err})
+    return render(request, 'book_error.html', {'err': err})
 
 
 def list(request):
@@ -233,7 +236,7 @@ def cancel(request, ref_id):
         ticket.save()
         cancelled = True
         already_cancelled = False
-    elif ticket.cancelled == True:
+    elif ticket.cancelled is True:
         already_cancelled = True
         cancelled = False
     else:

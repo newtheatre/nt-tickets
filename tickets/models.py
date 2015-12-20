@@ -22,12 +22,16 @@ class Category(models.Model):
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
-    name = models.CharField(max_length=50,
-        help_text='Shows up on pages.')
+    name = models.CharField(
+        max_length=50,
+        help_text='Shows up on pages.'
+        )
     slug = models.SlugField(
-        help_text='Will be used in class names, so you can style categories differently.')
+        help_text='Will be used in class names, so you can style categories differently.'
+        )
     sort = models.IntegerField(
-        help_text='Low to high, sorts the sidebar.')
+        help_text='Low to high, sorts the sidebar.'
+        )
 
     def __str__(self): return self.name
 
@@ -150,7 +154,7 @@ class OccurrenceManager(models.Manager):
             hour = oc.time.hour
             close_time = hour - oc.hours_til_close
             if oc.sold_out():
-                #pass
+                # pass
                 ret = ['1']
             if oc.date == today and time.hour >= close_time:
                 # pass
