@@ -20,17 +20,17 @@ class StaticPageTest(TestCase):
 class BookTest(TestCase):
 
     def setUp(self):
-        cat = Category.objects.create(name='Test Category',slug='test',sort=1)
-        start_date = datetime.date.today()+datetime.timedelta(days=2)
-        end_date = datetime.date.today()+datetime.timedelta(days=5)
+        cat = Category.objects.create(name='Test Category', slug='test', sort=1)
+        start_date = datetime.date.today() + datetime.timedelta(days=2)
+        end_date = datetime.date.today() + datetime.timedelta(days=5)
         Show.objects.create(
-            name='Test Show', 
-            location='Somewhere', 
+            name='Test Show',
+            location='Somewhere',
             description='Some Info',
-            long_description='Some more info', 
+            long_description='Some more info',
             poster=File(open('test/test_poster.jpg')),
-            start_date=start_date, 
-            end_date=end_date, 
+            start_date=start_date,
+            end_date=end_date,
             category=cat
             )
 
@@ -54,17 +54,17 @@ class BookTest(TestCase):
 class ShowTest(TestCase):
 
     def setUp(self):
-        cat = Category.objects.create(name='Test Category',slug='test',sort=1)
+        cat = Category.objects.create(name='Test Category', slug='test', sort=1)
         start_date = datetime.date.today() + datetime.timedelta(days=2)
         end_date = datetime.date.today() + datetime.timedelta(days=5)
         Show.objects.create(
-            name='Test Show', 
-            location='Somewhere', 
+            name='Test Show',
+            location='Somewhere',
             description='Some Info',
-            long_description='Some more info', 
+            long_description='Some more info',
             poster=File(open('test/test_poster.jpg')),
-            start_date=start_date, 
-            end_date=end_date, 
+            start_date=start_date,
+            end_date=end_date,
             category=cat
             )
 
@@ -91,7 +91,6 @@ class ShowTest(TestCase):
         show = Show.objects.get(pk=1)
         show.end_date = datetime.date.today() + datetime.timedelta(days=-5)
         self.assertEqual(show.is_current(), False)
-
 
     def test_sold_out_true(self):
         show = Show.objects.get(pk=1)
@@ -141,7 +140,9 @@ class ShowTest(TestCase):
 
     def test_occurrence_str(self):
         occ = Occurrence.objects.get(pk=1)
-        occ_str = occ.show.name + " on " + str(occ.date) + " at " + str(occ.time)
+        occ_str = occ.show.name + \
+            " on " + str(occ.date) + \
+            " at " + str(occ.time)
         self.assertEqual(occ.__str__(), occ_str)
 
     def test_ticket_str(self):
@@ -158,7 +159,7 @@ class ShowTest(TestCase):
         occ = Occurrence.objects.get(pk=1)
         datetime_format = occ.date.strftime('%A %d %B ') + \
             occ.time.strftime('%-I%p').lower()
-        
+
         r1 = Occurrence.objects.get_available(show)
 
         self.assertEqual(r1, [(1, datetime_format)])
@@ -185,7 +186,7 @@ class ShowTest(TestCase):
 
 class ShowClosed(TestCase):
     def setUp(self):
-        cat = Category.objects.create(name='Test Category',slug='test',sort=1)
+        cat = Category.objects.create(name='Test Category', slug='test', sort=1)
         start_date = datetime.date.today() + datetime.timedelta(days=2)
         end_date = datetime.date.today() + datetime.timedelta(days=5)
         Show.objects.create(
