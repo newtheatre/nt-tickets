@@ -117,7 +117,7 @@ class ShowTest(TestCase):
 
     def test_has_occurrences_true(self):
         show = Show.objects.get(pk=1)
-        self.assertEqual(show.is_current(), True)
+        self.assertEqual(show.has_occurrences(), True)
 
     def test_show_name(self):
         show = Show.objects.get(pk=1)
