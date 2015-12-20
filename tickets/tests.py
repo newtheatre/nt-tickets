@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.files import File
 from models import *
+from markdown2 import Markdown
 
 import datetime
 
@@ -109,6 +110,41 @@ class ShowTest(TestCase):
         show = Show.objects.get(pk=1)
         self.assertEqual(show.is_current(), True)
 
-    def test_name(self):
+    def test_show_name(self):
         show = Show.objects.get(pk=1)
         self.assertEqual(show.__str__(), show.name)
+
+    def test_occurrence_sold_out_false(self):
+        occ = Occurrence.objects.get(pk=1)
+        self.assertEqual(occ.sold_out(), False)
+
+    def test_markdown(self):
+        show = Show.objects.get(pk=1)
+        md = Markdown()
+        ld_md = md.convert(show.long_description)
+        self.assertEqual(show.long_markdown(), ld_md)
+
+    def test_datetime_formatted(self):
+        occ = Occurrence.objects.get(pk=1)
+        day_format = occ.date.strftime('%A')
+        time_format = occ.time.strftime('%-I%p').lower()
+        datetime_format = occ.date.strftime('%A %d %B ') + \
+            occ.time.strftime('%-I%p').lower()
+
+        self.assertEqual(occ.day_formatted(), day_format)
+        self.assertEqual(occ.time_formatted(), time_format)
+        self.assertEqual(occ.datetime_formatted(), datetime_format)
+
+    def test_occurrence_str(self):
+        occ = Occurrence.objects.get(pk=1)
+        occ_str = occ.show.name + " on " + str(occ.date) + " at " + str(occ.time)
+        self.assertEqual(occ.__str__(), occ_str)
+
+    def test_ticket_str(self):
+        tick = Ticket.objects.get(pk=1)
+        tick_str = tick.occurrence.show.name + \
+            "on" + str(tick.occurrence.date) + \
+            "at" + str(tick.occurrence.time) + \
+            "for" + tick.person_name
+
+        self.assertEqual(tick.__str__(), tick_str)
