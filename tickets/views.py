@@ -46,7 +46,7 @@ def defaultFNI(request):
 def book_landing(request, show_id):
     show = get_object_or_404(Show, id=show_id)
     if show.is_current() is False:
-        return HttpResponseRedirect(reverse('error',kwargs={'show_id': show.id}))
+        return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
     step = 1
     total = 2
     message = "Tickets for performances are reserved online and payed for on collection at the box office."
@@ -108,14 +108,14 @@ def book_landing(request, show_id):
                         last = ""
                     mailchimp_util.subscribe(email, first, last)
 
-            return HttpResponseRedirect(reverse('finish', kwargs={'show_id':show.id}))   # Redirect after POST
+            return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))   # Redirect after POST
     else:
         form = BookingFormLanding(show=show)    # An unbound form
 
     return render(request, 'book_landing.html', {
         'form': form,
         'show': show,
-        'step': step, 
+        'step': step,
         'total': total,
         'message': message,
         'mc': mc,
@@ -164,7 +164,7 @@ def book_error(request, show_id):
 
 
 def list(request):
-    shows=Show.objects.all()
+    shows = Show.objects.all()
 
     return render(request, 'list.html', {
         'shows': shows

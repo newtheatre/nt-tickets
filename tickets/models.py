@@ -117,8 +117,14 @@ class Show(models.Model):
             working.thumbnail(size, Image.ANTIALIAS)
             fp = StringIO()
             working.save(fp, "JPEG", quality=95)
-            cf = InMemoryUploadedFile(fp, None, self.poster.name, 'image/jpeg',
-                fp.len, None)
+            cf = InMemoryUploadedFile(
+                fp, 
+                None, 
+                self.poster.name, 
+                'image/jpeg',
+                fp.len, 
+                None
+                )
             field.save(name=field_name+"_"+self.poster.name, content=cf, save=True)
 
     def long_markdown(self):
