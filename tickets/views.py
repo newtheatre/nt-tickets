@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
-from django.template import Context
+from django.template import Context, RequestContext
 from django.core import serializers
 import json
 
@@ -13,6 +13,7 @@ import json
 from django.views import generic
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.shortcuts import render_to_response
 
 from tickets.models import *
 from tickets.forms import *
@@ -24,8 +25,51 @@ import settings
 import mailchimp_util
 
 
-class Index(generic.TemplateView):
-    template_name = 'index.html'
+def ShowIndex(request):
+    report = dict()
+    show = dict()
+    show_list = Show.objects.all()
+
+    number = 0
+
+    # if show.is_current():
+    
+
+    for sh in show_list:
+        if sh.is_current():
+            number = number + 1
+            report['number'] = number
+
+    report['show'] = show_list
+    show = show_list
+
+    context = {
+        'show': show,
+        'report': report,
+    }
+
+    return render_to_response('show_index.html', context, context_instance=RequestContext(request)) 
+
+
+def ShowReport(request, show_name, occ_id):
+    report = dict()
+    show_list = get_object_or_404(Show, id=show_name)
+    occurrence = Occurrence.objects.get_available(show=show_name)
+
+    show = show_list
+
+    if show.is_current():
+        report['current'] = True
+    else:
+        report['current'] = False
+
+    context = {
+        'report': report,
+        'show': show,
+        'occurrence': occurrence,
+    }
+
+    return render_to_response('show_report.html', context, context_instance=RequestContext(request))
 
 
 def login(request, **kwargs):

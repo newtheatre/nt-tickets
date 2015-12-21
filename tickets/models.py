@@ -166,7 +166,7 @@ class OccurrenceManager(models.Manager):
                 pass
                 break
             else:
-                ret.append((oc.id, oc.datetime_formatted()))
+                ret.append((oc.id, oc.datetime_formatted(), oc.day_formatted(), oc.unique_code))
         return ret
 
 

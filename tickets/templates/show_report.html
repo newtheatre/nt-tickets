@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>NT Tickets</title>
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="{{ STATIC_URL }}stylesheets/materialize.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}stylesheets/style.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bin/materialize.js"></script>
+<body id="background">
+	<header>
+		<div class="navbar-fixed">
+			<nav>
+			    <div class="nav-wrapper">
+			     	<a href="/" class="brand-logo center">NT Tickets</a>
+			     	<div class="nav-container">
+				     	<ul id="nav-mobile" class="left hide-on-med-and-down">
+				        	<li><a href="/">Home</a></li>
+				        	<li><a href="#">Sale Reports</a></li>
+				      	</ul>
+				      	<ul id="nav-mobile" class="right hide-on-med-and-down">
+				      		<li><a href="/admin">Admin Login</a></li>
+				      	</ul>
+			      	</div>
+			    </div>
+			</nav>
+		</div>
+	</header>
+	<main>
+	<div class="container">
+
+		<div class="card small grey darken-3">
+			<a href="{{ show.id }}" rel="nofollow"></a>
+			<div class="row">
+				<div class="col s2">
+					<div class="card-image">
+						{% if show.poster %}
+							<img class="responsive-img" id="report-image" src="{{ show.poster_page.url }}"></a>
+						{% else %}
+							<p>no image</p>
+						{% endif %}
+					</div>
+				</div>
+				<div class="col s10">
+					<div class="card-content">
+						<h1 class="light white-text flow-text">{{ show.name }}</h1>
+						<button data-target="picker-modal" class="btn modal-trigger">Choose Show</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Structure -->
+		<div id="picker-modal" class="modal bottom-sheet">
+		    <div class="modal-content">
+		        <h4>{{show.name}}</h4>
+		        {% for oc in occurrence %}
+		        	<a href="/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat">{{ show.name }} on {{ oc.2 }}</a>
+		        	<br>
+		        {% endfor %}
+		    </div>
+			    
+		</div>
+	</div>
+	
+	</main>
+
+	<script>
+		$(document).ready(function(){
+	    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+		    $('.modal-trigger').leanModal({
+		      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+		      opacity: .5, // Opacity of modal background
+		      in_duration: 300, // Transition in duration
+		      out_duration: 300, // Transition out duration
+		    }
+		  );
+		});
+	</script>
+
+</body>
+</html>
