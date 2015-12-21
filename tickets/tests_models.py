@@ -162,7 +162,7 @@ class ShowTest(TestCase):
 
         r1 = Occurrence.objects.get_available(show)
 
-        self.assertEqual(r1, [(1, datetime_format)])
+        self.assertEqual(r1, [(1, datetime_format, occ.day_formatted(), occ.unique_code)])
 
     def test_get_available_sold_out(self):
         show = Show.objects.get(pk=1)
