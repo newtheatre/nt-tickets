@@ -4,6 +4,7 @@
 
 {% block extrastyle %}
 {{ block.super }}
+{% include 'favicon.html' %}
 <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
 <link href="{{ STATIC_URL }}bootstrap-admin.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="/static/admin.css" />

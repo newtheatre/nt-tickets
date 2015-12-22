@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	{% include 'favicon.html' %}
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>NT Tickets</title>
 	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -45,7 +46,7 @@
 				<div class="col s10">
 					<div class="card-content">
 						<h1 class="light white-text flow-text">{{ show.name }}</h1>
-						<button data-target="picker-modal" class="btn modal-trigger">Choose Show</button>
+						<button data-target="picker-modal" class="btn modal-trigger">Choose Showing</button>
 					</div>
 				</div>
 			</div>
@@ -56,7 +57,9 @@
 		    <div class="modal-content">
 		        <h4>{{show.name}}</h4>
 		        {% for oc in occurrence %}
-		        	<a href="/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat">{{ show.name }} on {{ oc.2 }}</a>
+		        	<a href="/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat">
+		        	{{ show.name }} on {{ oc.2 }} at {{ oc.4 }}
+		        	</a>
 		        	<br>
 		        {% endfor %}
 		    </div>
