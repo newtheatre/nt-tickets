@@ -11,6 +11,4 @@ NTenv/
 htmlcov/
 *.coverage
 
-configuration/development.py
 configuration/staging.py
-configuration/production.py
