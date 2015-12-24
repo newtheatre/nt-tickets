@@ -251,3 +251,25 @@ class Ticket(models.Model):
             " on " + str(self.occurrence.date) + \
             " at " + str(self.occurrence.time) + \
             " for " + self.person_name
+
+
+class Sale(models.Model):
+
+    class Meta:
+        verbose_name = 'Sale'
+        verbose_name_plural = 'Sales'
+
+    occurrence = models.ForeignKey(Occurrence)
+
+    stamp = models.DateTimeField(auto_now=True)
+    unique_code = models.CharField(max_length=16)
+
+    number_concession = models.IntegerField()
+    number_public = models.IntegerField()
+    number_season = models.IntegerField()
+    number_fellow = models.IntegerField()
+    
+    def save(self, *args, **kwargs):
+        if not self.unique_code:
+            self.unique_code = rand_16()
+        super(Sale, self).save(*args, **kwargs)

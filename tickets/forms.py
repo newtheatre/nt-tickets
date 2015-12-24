@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from captcha.fields import ReCaptchaField
 from tickets.models import *
 import settings
+
+import configuration.customise as config
 
 import datetime
 
@@ -12,11 +16,13 @@ class BookingFormLanding(forms.Form):
     person_name = forms.CharField(label="Your Full Name", max_length=80)
     email_address = forms.EmailField(max_length=80)
     max_q = settings.MAX_DISCLOSURE
-    quantity = forms.IntegerField(label="Number of Seats",
+    quantity = forms.IntegerField(
+            label="Number of Seats",
             min_value=1,
             max_value=max_q,
             required=True,
-            widget=forms.Select(choices=[(i,i) for i in range(1,max_q+1)]))
+            widget=forms.Select(choices=[(i,i) for i in range(1,max_q+1)])
+            )
     add_to_mailinglist = forms.BooleanField(label="Please add me to the New Theatre mailing list for updates on future plays and events.", initial = True, required=False)
 
     def __init__(self, *args, **kwargs):
@@ -38,3 +44,12 @@ class LoginForm(AuthenticationForm):
 class CancelForm(forms.Form):
     ticket = forms.CharField(max_length=16)
     occurrence = forms.CharField(max_length=16)
+
+
+class SaleForm(forms.Form):
+    # ticket = forms.CharField(label='Reservation')
+
+    number_concession = forms.IntegerField(label="Concession Tickets " + config.CONCESSION_PRICE[1])
+    number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])
+    number_season = forms.IntegerField(label="Season Pass Tickets")
+    number_fellow = forms.IntegerField(label="Fellow Tickets")

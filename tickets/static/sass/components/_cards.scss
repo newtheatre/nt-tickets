@@ -48,12 +48,16 @@
     }
   }
 
+  &.tiny {
+    height: 100px;
+  }
+
   &.small {
     height: 200px;
   }
 
   &.medium {
-    height: 400px;
+    height: 500px;
   }
 
   &.large {

@@ -1,5 +1,3 @@
-@import "components/color";
-
 #background {
 	height: auto;
 	width: 100vw;
@@ -14,5 +12,24 @@
 
 #report-image {
 	width: auto;
-	height: 200px;
+	height: auto;
+	max-height: 200px;
+}
+
+#nav-logo {
+	width: auto;
+	height: 1.7em;
+	padding-top: 0.2em;
+}
+
+#form-button-inline {
+	padding-top: 1.6em;
+}
+
+#form-background {
+	background-color: #424242;
+}
+
+#report-bar {
+	padding-top: 0.4em;
 }

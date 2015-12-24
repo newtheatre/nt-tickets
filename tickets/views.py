@@ -25,6 +25,16 @@ import settings
 import mailchimp_util
 
 
+def login(request, **kwargs):
+    if request.user.is_authenticated():
+        next = request.REQUEST.get('next', '/')
+        return HttpResponseRedirect(request.REQUEST.get('next', '/'))
+    else:
+        from django.contrib.auth.views import login
+
+        return login(request, authentication_form=forms.LoginForm)
+
+
 def ShowIndex(request):
     report = dict()
     show = dict()
@@ -33,7 +43,7 @@ def ShowIndex(request):
     number = 0
 
     # if show.is_current():
-    
+
 
     for sh in show_list:
         if sh.is_current():
@@ -53,8 +63,25 @@ def ShowIndex(request):
 
 def ShowReport(request, show_name, occ_id):
     report = dict()
+    occurrence_fin = dict()
     show_list = get_object_or_404(Show, id=show_name)
     occurrence = Occurrence.objects.get_available(show=show_name)
+
+    if occ_id > '0':
+        report['have_form'] = True
+        occ_fin = Occurrence.objects.get(id=occ_id)
+
+        report['day'] = occ_fin.day_formatted()
+        report['time'] = occ_fin.time_formatted()
+
+        report['max'] = occ_fin.maximum_sell
+
+        report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
+        report['how_many_sold'] = occ_fin.tickets_sold()
+        report['how_many_left'] = occ_fin.maximum_sell-occ_fin.tickets_sold()
+        report['percentage'] = (report['how_many_sold']/float(occ_fin.maximum_sell))*100
+    else:
+        report['have_form'] = False
 
     show = show_list
 
@@ -63,23 +90,34 @@ def ShowReport(request, show_name, occ_id):
     else:
         report['current'] = False
 
+    if request.method == 'POST':
+        S_form = SaleForm(request.POST)
+
+        if S_form.is_valid():
+            s = Sale()
+            s.occurrence = occ_fin
+
+            s.number_concession = S_form.cleaned_data['number_concession']
+            s.number_public = S_form.cleaned_data['number_public']
+            s.number_season = S_form.cleaned_data['number_season']
+            s.number_fellow = S_form.cleaned_data['number_fellow']
+
+            s.save()
+        else:
+            pass
+    else:
+        S_form = SaleForm()
+
     context = {
         'report': report,
         'show': show,
         'occurrence': occurrence,
+        'S_form': S_form,
+        'occ_id': occ_id,
+        'show_name': show_name,
     }
 
     return render_to_response('show_report.html', context, context_instance=RequestContext(request))
-
-
-def login(request, **kwargs):
-    if request.user.is_authenticated():
-        next = request.REQUEST.get('next', '/')
-        return HttpResponseRedirect(request.REQUEST.get('next', '/'))
-    else:
-        from django.contrib.auth.views import login
-
-        return login(request, authentication_form=forms.LoginForm)
 
 
 def defaultFNI(request):

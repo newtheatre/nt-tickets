@@ -14,7 +14,9 @@
 		<div class="navbar-fixed">
 			<nav>
 			    <div class="nav-wrapper">
-			     	<a href="/" class="brand-logo center">NT Tickets</a>
+			     	<a href="/" class="brand-logo center">
+			     	<img src="{{ STATIC_URL }}images/nnt_tickets_white.png" id="nav-logo">
+			     	</a>
 			     	<div class="nav-container">
 				     	<ul id="nav-mobile" class="left hide-on-med-and-down">
 				        	<li><a href="/">Home</a></li>
@@ -34,7 +36,7 @@
 		        <div class="col s12">
 					{% if show.number == 1 %}
 						{% if show.is_current %}
-							<img class="circle responsive-img" src="{{ show.poster_page.url }}">
+							<img class="responsive-img" src="{{ show.poster_page.url }}">
 						{% else %}
 							<p>There are no shows at the moment<p>
 						{% endif %}
@@ -43,19 +45,19 @@
 					{% else %}
 						{% for sh in show %}
 							{% if sh.is_current %}
-								<div class="card grey darken-3">
+								<div class="card small grey darken-3">
 									<a href="{{ sh.id }}/0" rel="nofollow">
 									<div class="row">
-										<div class="col s3">
+										<div class="col s2">
 											<div class="card-image">
 												{% if sh.poster %}
-													<img class="responsive-img" src="{{ sh.poster_page.url }}"></a>
+													<img class="responsive-img" id="report-image" src="{{ sh.poster_page.url }}"></a>
 												{% else %}
 													<p>no image<p>
 												{% endif %}
 											</div>
 										</div>
-										<div class="col s9">
+										<div class="col s10">
 											<div class="card-content">
 												<h1 class="light white-text flow-text">{{ sh.name }}</h1>
 												<blockquote class="grey-text text-lighten-1">{{ sh.description }}</blockquote>

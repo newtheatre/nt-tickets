@@ -22,8 +22,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', login_required(tickets_views.ShowIndex), name='index'),
-    url(r'^(?P<show_name>\w{0,50})/$', tickets_views.ShowReport, name='show_report'),
-    url(r'^(?P<show_name>\w{0,50})/(?P<occ_id>\w{0,50})/$', tickets_views.ShowReport, name='show_report_full'),
+    url(r'^(?P<show_name>[0-9]{1})/$', tickets_views.ShowReport, name='show_report'),
+    url(r'^(?P<show_name>[0-9]{1})/(?P<occ_id>[0-9]{1})/$', tickets_views.ShowReport, name='show_report_full'),
 ] 
 
 if settings.DEBUG:
