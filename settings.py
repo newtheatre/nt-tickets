@@ -60,6 +60,7 @@ MEDIA_URL = "http://localhost:8000/media/"
 
 STATIC_ROOT = os.path.join(PROJECT_PATH, "static")
 STATIC_URL = "/static/"
+STATIC_URL_IMG = "/static/images/"
 
 # Additional locations of static files
 STATICFILES_DIRS = ()
