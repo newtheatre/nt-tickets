@@ -80,9 +80,11 @@ class Show(models.Model):
 
     category = models.ForeignKey('Category')
 
-    IMAGE_SIZES = {'poster_wall': (126, 178),
-                   'poster_page': (256, 362),
-                   'poster_tiny': (50, 71)}
+    IMAGE_SIZES = {
+                'poster_wall': (126, 178),
+                'poster_page': (256, 362),
+                'poster_tiny': (50, 71),
+               }
 
     def is_current(self):
         today = datetime.date.today()
@@ -215,6 +217,18 @@ class Occurrence(models.Model):
             return True
         else:
             return False
+
+    def sales(self):
+        sale = Sale.objects.filter(occurrence=self)
+        sold = 0
+        for s in sale:
+            sold += (
+                s.number_concession +
+                s.number_public +
+                s.number_season +
+                s.number_fellow
+                )
+        return sold
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
