@@ -20,7 +20,7 @@
 			     	<div class="nav-container">
 				     	<ul id="nav-mobile" class="left hide-on-med-and-down">
 				        	<li><a href="/">Home</a></li>
-				        	<li><a href="#">Sale Reports</a></li>
+				        	<li><a href="/report">Sale Reports</a></li>
 				      	</ul>
 				      	<ul id="nav-mobile" class="right hide-on-med-and-down">
 				      		<li><a href="/admin">Admin Login</a></li>
@@ -46,15 +46,16 @@
 						{% for sh in show %}
 							{% if sh.is_current %}
 								<div class="card small grey darken-3">
-									<a href="{{ sh.id }}/0" rel="nofollow">
 									<div class="row">
 										<div class="col s2">
 											<div class="card-image">
-												{% if sh.poster %}
-													<img class="responsive-img" id="report-image" src="{{ sh.poster_page.url }}"></a>
+												<a href="show/{{ sh.id }}/0" rel="nofollow">
+												{% if sh.poster_page %}
+													<img class="responsive-img" src="{{ sh.poster_page.url }}"	id="report-image">
 												{% else %}
-													<p>no image<p>
+													<img class="responsive-img" src="{{ STATIC_URL }}images/no_image.png" id="report-image">
 												{% endif %}
+												</a>
 											</div>
 										</div>
 										<div class="col s10">

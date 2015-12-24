@@ -10238,7 +10238,7 @@ button:focus {
 /* line 10, ../sass/components/_form.scss */
 label {
   font-size: 0.8rem;
-  color: #a54499;
+  color: #ffc425;
 }
 
 /***************************
@@ -10246,24 +10246,24 @@ label {
 ****************************/
 /* line 20, ../sass/components/_form.scss */
 ::-webkit-input-placeholder {
-  color: #cc83c3;
+  color: #ffe08b;
 }
 
 /* line 24, ../sass/components/_form.scss */
 :-moz-placeholder {
   /* Firefox 18- */
-  color: #cc83c3;
+  color: #ffe08b;
 }
 
 /* line 28, ../sass/components/_form.scss */
 ::-moz-placeholder {
   /* Firefox 19+ */
-  color: #cc83c3;
+  color: #ffe08b;
 }
 
 /* line 32, ../sass/components/_form.scss */
 :-ms-input-placeholder {
-  color: #cc83c3;
+  color: #ffe08b;
 }
 
 /* line 37, ../sass/components/_form.scss */
@@ -10281,7 +10281,7 @@ input[type=search],
 textarea.materialize-textarea {
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid #a54499;
+  border-bottom: 1px solid #ffc425;
   border-radius: 0;
   outline: none;
   height: 3rem;
@@ -10292,7 +10292,7 @@ textarea.materialize-textarea {
   box-shadow: none;
   box-sizing: content-box;
   transition: all .3s;
-  color: #a54499;
+  color: #ffc425;
 }
 /* line 69, ../sass/components/_form.scss */
 input:not([type]):disabled, input:not([type])[readonly="readonly"],
@@ -10318,8 +10318,8 @@ input[type=search]:disabled,
 input[type=search][readonly="readonly"],
 textarea.materialize-textarea:disabled,
 textarea.materialize-textarea[readonly="readonly"] {
-  color: #933d88;
-  border-bottom: 1px dotted #933d88;
+  color: #d89d00;
+  border-bottom: 1px dotted #d89d00;
 }
 /* line 74, ../sass/components/_form.scss */
 input:not([type]):disabled + label, input:not([type])[readonly="readonly"] + label,
@@ -10345,7 +10345,7 @@ input[type=search]:disabled + label,
 input[type=search][readonly="readonly"] + label,
 textarea.materialize-textarea:disabled + label,
 textarea.materialize-textarea[readonly="readonly"] + label {
-  color: #933d88;
+  color: #d89d00;
 }
 /* line 78, ../sass/components/_form.scss */
 input:not([type]):focus:not([readonly]),
@@ -10360,9 +10360,9 @@ input[type=tel]:focus:not([readonly]),
 input[type=number]:focus:not([readonly]),
 input[type=search]:focus:not([readonly]),
 textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #ffc425;
-  box-shadow: 0 1px 0 0 #ffc425;
-  color: #ffc425;
+  border-bottom: 1px solid #c471ba;
+  box-shadow: 0 1px 0 0 #c471ba;
+  color: #c471ba;
 }
 /* line 84, ../sass/components/_form.scss */
 input:not([type]):focus:not([readonly]) + label,
@@ -10377,7 +10377,7 @@ input[type=tel]:focus:not([readonly]) + label,
 input[type=number]:focus:not([readonly]) + label,
 input[type=search]:focus:not([readonly]) + label,
 textarea.materialize-textarea:focus:not([readonly]) + label {
-  color: #ffc425;
+  color: #c471ba;
 }
 /* line 88, ../sass/components/_form.scss */
 input:not([type]).valid, input:not([type]):focus.valid,
@@ -10517,7 +10517,7 @@ textarea.materialize-textarea + label:after {
 }
 /* line 130, ../sass/components/_form.scss */
 .input-field label {
-  color: #a54499;
+  color: #ffc425;
   position: absolute;
   top: 0.8rem;
   left: 0.75rem;
@@ -10539,7 +10539,7 @@ textarea.materialize-textarea + label:after {
 }
 /* line 151, ../sass/components/_form.scss */
 .input-field .prefix.active {
-  color: #ffc425;
+  color: #c471ba;
 }
 /* line 153, ../sass/components/_form.scss */
 .input-field .prefix ~ input,
@@ -10723,13 +10723,13 @@ textarea.materialize-textarea {
 /* Disabled Radio With gap */
 /* line 317, ../sass/components/_form.scss */
 [type="radio"].with-gap:disabled:checked + label:before {
-  border: 2px solid #933d88;
+  border: 2px solid #d89d00;
 }
 
 /* line 320, ../sass/components/_form.scss */
 [type="radio"].with-gap:disabled:checked + label:after {
   border: none;
-  background-color: #933d88;
+  background-color: #d89d00;
 }
 
 /* Disabled style */
@@ -10737,22 +10737,22 @@ textarea.materialize-textarea {
 [type="radio"]:disabled:not(:checked) + label:before,
 [type="radio"]:disabled:checked + label:before {
   background-color: transparent;
-  border-color: #933d88;
+  border-color: #d89d00;
 }
 
 /* line 331, ../sass/components/_form.scss */
 [type="radio"]:disabled + label {
-  color: #933d88;
+  color: #d89d00;
 }
 
 /* line 334, ../sass/components/_form.scss */
 [type="radio"]:disabled:not(:checked) + label:before {
-  border-color: #933d88;
+  border-color: #d89d00;
 }
 
 /* line 337, ../sass/components/_form.scss */
 [type="radio"]:disabled:checked + label:after {
-  background-color: #933d88;
+  background-color: #d89d00;
   border-color: #fff;
 }
 
@@ -10819,7 +10819,7 @@ form p:last-child {
 /* line 397, ../sass/components/_form.scss */
 [type="checkbox"]:not(:checked):disabled + label:before {
   border: none;
-  background-color: #933d88;
+  background-color: #d89d00;
 }
 
 /* line 404, ../sass/components/_form.scss */
@@ -10838,8 +10838,8 @@ form p:last-child {
 }
 /* line 417, ../sass/components/_form.scss */
 [type="checkbox"]:checked:disabled + label:before {
-  border-right: 2px solid #933d88;
-  border-bottom: 2px solid #933d88;
+  border-right: 2px solid #d89d00;
+  border-bottom: 2px solid #d89d00;
 }
 
 /* Indeterminate checkbox */
@@ -10859,7 +10859,7 @@ form p:last-child {
 }
 /* line 439, ../sass/components/_form.scss */
 [type="checkbox"]:indeterminate:disabled + label:before {
-  border-right: 2px solid #933d88;
+  border-right: 2px solid #d89d00;
   background-color: transparent;
 }
 
@@ -11050,7 +11050,7 @@ input[type=checkbox]:not(:disabled) ~ .lever:active:after {
   cursor: pointer;
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid #a54499;
+  border-bottom: 1px solid #ffc425;
   outline: none;
   height: 3rem;
   line-height: 3rem;
@@ -11070,7 +11070,7 @@ input[type=checkbox]:not(:disabled) ~ .lever:active:after {
 }
 /* line 644, ../sass/components/_form.scss */
 .select-wrapper span.caret.disabled {
-  color: #933d88;
+  color: #d89d00;
 }
 /* line 649, ../sass/components/_form.scss */
 .select-wrapper + label {

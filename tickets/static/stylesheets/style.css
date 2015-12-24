@@ -14,29 +14,33 @@
 
 /* line 13, ../sass/style.scss */
 #report-image {
-  width: auto;
-  height: auto;
-  max-height: 200px;
+  width: 141px;
+  height: 200px;
 }
 
-/* line 19, ../sass/style.scss */
+/* line 18, ../sass/style.scss */
 #nav-logo {
   width: auto;
   height: 1.7em;
   padding-top: 0.2em;
 }
 
-/* line 25, ../sass/style.scss */
+/* line 24, ../sass/style.scss */
 #form-button-inline {
   padding-top: 1.6em;
 }
 
-/* line 29, ../sass/style.scss */
+/* line 28, ../sass/style.scss */
 #form-background {
   background-color: #424242;
 }
 
-/* line 33, ../sass/style.scss */
+/* line 32, ../sass/style.scss */
 #report-bar {
   padding-top: 0.4em;
+}
+
+/* line 36, ../sass/style.scss */
+#sale-percentage {
+  background-color: #a54499;
 }

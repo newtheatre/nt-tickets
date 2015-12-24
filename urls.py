@@ -9,6 +9,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [
+    # User frontend urls
     url(r'^api/0.1/remain$', tickets_views.how_many_left),
     url(r'^book/(?P<show_id>\d+)/$', tickets_views.book_landing, name='book'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', tickets_views.book_finish, name='finish'),
@@ -19,11 +20,15 @@ urlpatterns = [
     url(r'^list/(?P<slug>[-_\w]+)/$', tickets_views.DetailShow.as_view(), name='detail'),
     url(r'^sidebar/$', tickets_views.sidebar, name='sidebar'),
 
+    # Admin urls
     url(r'^admin/', include(admin.site.urls)),
 
+    # Admin frontend urls
     url(r'^$', login_required(tickets_views.ShowIndex), name='index'),
-    url(r'^(?P<show_name>[0-9]{1})/$', tickets_views.ShowReport, name='show_report'),
-    url(r'^(?P<show_name>[0-9]{1})/(?P<occ_id>[0-9]{1})/$', tickets_views.ShowReport, name='show_report_full'),
+    url(r'^show/(?P<show_name>[0-9])/$', tickets_views.ShowReport, name='show_report'),
+    url(r'^show/(?P<show_name>[0-9])/(?P<occ_id>[0-9])/$', tickets_views.ShowReport, name='show_report_full'),
+    url(r'^report/$', tickets_views.SaleReport, name='sale_report'),
+
 ] 
 
 if settings.DEBUG:

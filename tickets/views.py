@@ -77,9 +77,8 @@ def ShowReport(request, show_name, occ_id):
         report['max'] = occ_fin.maximum_sell
 
         report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
-        report['how_many_sold'] = occ_fin.tickets_sold()
-        report['how_many_left'] = occ_fin.maximum_sell-occ_fin.tickets_sold()
-        report['percentage'] = (report['how_many_sold']/float(occ_fin.maximum_sell))*100
+        report['how_many_reserved'] = occ_fin.tickets_sold()
+        report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
     else:
         report['have_form'] = False
 
@@ -92,6 +91,7 @@ def ShowReport(request, show_name, occ_id):
 
     if request.method == 'POST':
         S_form = SaleForm(request.POST)
+        R_form = ReserveForm(request.POST)
 
         if S_form.is_valid():
             s = Sale()
@@ -104,21 +104,46 @@ def ShowReport(request, show_name, occ_id):
             s.number_fellow = S_form.cleaned_data['number_fellow']
 
             s.save()
+
+            if occ_id > '0':
+                report['sold'] = occ_fin.sales()
+                report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.sales()
+                report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
+
+        elif R_form.is_valid():
+            report['reservation'] = R_form.cleaned_data['ticket']
         else:
             pass
     else:
         S_form = SaleForm()
+        R_form = ReserveForm()
+        report['reservation'] = 'None'
+
+        if occ_id > '0':
+            report['sold'] = occ_fin.sales()
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.sales()
+            report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
 
     context = {
         'report': report,
         'show': show,
         'occurrence': occurrence,
         'S_form': S_form,
+        'R_form': R_form,
         'occ_id': occ_id,
         'show_name': show_name,
     }
 
     return render_to_response('show_report.html', context, context_instance=RequestContext(request))
+
+
+def SaleReport(request):
+
+    context = {
+
+    }
+
+    return render_to_response('sale_report.html', context, context_instance=RequestContext(request))
 
 
 def defaultFNI(request):
