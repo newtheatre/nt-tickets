@@ -1,6 +1,6 @@
 *.DS_Store
 
-*.sass-cache/*
+*.sass-cache
 
 db.sqlite3
 *.pyc
