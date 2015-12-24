@@ -1,0 +1,13 @@
+engines:
+ radon: 
+  enabled: true
+ pep8: 
+  enabled: true
+
+ratings:
+ paths:
+ - "tickets/static/*/**"
+ - "tickets/templates/*/**"
+ - "tickets/*"
+ - "bin/*"
+ - "/*"

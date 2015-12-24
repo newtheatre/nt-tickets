@@ -1,0 +1,15 @@
+{% extends "book_base.html" %}
+
+{% block title %}
+Book Tickets
+{% endblock %}
+
+{% block content %}
+<h1 style="color:red">Error</h1>
+{% ifequal err "sold_out" %}
+<p>Sorry but the performance you selected is now sold out.</p>
+{%else%}
+<p>Sorry but there's been an problem booking your tickets, please <a href="../">try again</a> from the beginning.</p>
+<p>If this happens again send your request to {{customise.ORG_CONTACT}} instead.</p>
+{%endifequal%}
+{% endblock %}

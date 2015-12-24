@@ -1,0 +1,128 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static admin_list %}
+{% load admin_urls %}
+
+{% block extrastyle %}
+{{ block.super }}
+{% include 'favicon.html' %}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+<link href="{{ STATIC_URL }}bootstrap-admin.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="/static/admin.css" />
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% if action_form %}{% if actions_on_top or actions_on_bottom %}
+<script type="text/javascript">
+(function($) {
+  $(document).ready(function($) {
+    $("tr input.action-select").actions();
+  });
+})(django.jQuery);
+</script>
+{% endif %}{% endif %}
+{% endblock %}
+
+{% block bodyclass %}change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="/admin/">Home</a>
+  &rsaquo; <a href="/admin/tickets/">Tickets</a>
+  &rsaquo; Ticket Reservation Reporting
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div class="filter-col">
+    <h2>Select Report</h2>
+    <p>Reports are available 4 weeks after event date.</p>
+    <form action="." method="post">{% csrf_token %}
+      {{ R_form }}
+      <div class="actions">
+        <br>
+        <button type="submit" class="btn primary">Search</button>
+      </div></form>
+    </div>
+    <div class="report-col">
+      {% if occurrence.show.poster %}<img src="{{occurrence.show.poster_tiny.url}}" style="float:right" />{% endif %}
+
+      <h2>Ticket Reservation Report</h2>
+      {% if report.have_report %}
+      <p>For show <strong>{{occurrence.show.name}}</strong> on <strong>{{occurrence.datetime_formatted}}</strong>.</p>
+      <p><strong>{{report.how_many_sold}}</strong> reserved out of a maximum of {{occurrence.maximum_sell}} leaving <strong>{{report.how_many_left}}</strong> seats left.</p>
+      <div class="progress progress-success">
+        <div class="bar" style="width: {{report.percentage}}%"></div>
+      </div>
+
+      {% ifequal report.how_many_sold 0 %}
+      <div class="alert">
+        <strong>Huh</strong> No tickets have been reserved for this performance. Maybe someone needs to publicise a bit more!
+      </div>
+      {%else%}
+      <table class="table table-striped">
+        <tr>
+          <th>Reservee</th>
+          <th>Quantity</th>
+          <th>Timestamp</th>
+          <th>Cancel Tickets</th>
+        </tr>
+        {% for sale in report.tickets %}
+        <tr {% if sale.cancelled %}class="cancelled warning"{%endif%} id="sale-{{forloop.counter}}">
+          <td>{{sale.person_name}}</td>
+          <td><span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td>
+          <td>{{sale.stamp}}</td>
+          <td>
+              <button type="button" {% if sale.cancelled %}class="btn btn-default disabled"{% else %}class="btn btn-danger"{%endif%} data-toggle="modal" data-target="#{{ sale.unique_code }}">Cancel</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {%endifequal%}
+
+      {%else%}
+      <div class="alert">
+        <strong>Hey!</strong> Pick a valid filter from the left.
+      </div>
+
+      {% endif %}
+
+    </div>
+    {% for modal in report.tickets %}
+    <div id="{{modal.unique_code}}" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Cancel Tickets</h4>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to cancel {% if modal.quantity == 1 %}this ticket{% else %}these <strong>{{modal.quantity}}</strong> tickets{% endif %} for <strong>{{modal.person_name}}</strong> on <strong>{{modal.occurrence.date}}</strong>?</p>
+            <p class="text-danger"><strong>This action can't be undone!</strong></p>
+          </div>
+          <div class="modal-footer">
+            <form action="." method="post">
+            {% csrf_token %}
+              <input type="hidden" name="{{ C_form.ticket.name }}" value="{{ modal.unique_code }}">
+              <input type="hidden" name="{{ C_form.occurrence.name }}" value="{{ modal.occurrence.unique_code }}">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-danger">Confirm</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock %}

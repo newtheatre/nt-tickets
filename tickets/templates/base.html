@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>nt_tickets Dev 0.2</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}style.css" />
+	<link href="{{ STATIC_URL }}bootstrap.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}bootstrap-responsive.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        	<a class="brand" href="#">{% block title %}{% endblock %}</a>
+         
+        </div>
+      </div>
+    </div>
+    <div class="container main">
+       	{% block content %}Sorry but something has gone wrong, you should try again from where you came from.{% endblock %}
+	</div>
+</body>
+</html>

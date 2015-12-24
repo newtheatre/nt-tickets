@@ -1,0 +1,14 @@
+*.DS_Store
+
+*.sass-cache
+
+db.sqlite3
+*.pyc
+media/*
+env/
+NTenv/
+
+htmlcov/
+*.coverage
+
+configuration/staging.py

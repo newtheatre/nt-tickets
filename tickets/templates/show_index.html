@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% include 'favicon.html' %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>NT Tickets</title>
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="{{ STATIC_URL }}stylesheets/materialize.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}stylesheets/style.css" rel="stylesheet" />
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+<body id="background">
+	<header>
+		<div class="navbar-fixed">
+			<nav>
+			    <div class="nav-wrapper">
+			     	<a href="/" class="brand-logo center">
+			     	<img src="{{ STATIC_URL }}images/nnt_tickets_white.png" id="nav-logo">
+			     	</a>
+			     	<div class="nav-container">
+				     	<ul id="nav-mobile" class="left hide-on-med-and-down">
+				        	<li><a href="/">Home</a></li>
+				        	<li><a href="/report">Sale Reports</a></li>
+				      	</ul>
+				      	<ul id="nav-mobile" class="right hide-on-med-and-down">
+				      		<li><a href="/admin">Admin Login</a></li>
+				      	</ul>
+			      	</div>
+			    </div>
+			</nav>
+		</div>
+	</header>
+	<main>
+		<div class="container">
+			<div class="row">
+		        <div class="col s12">
+					{% if show.number == 1 %}
+						{% if show.is_current %}
+							<img class="responsive-img" src="{{ show.poster_page.url }}">
+						{% else %}
+							<p>There are no shows at the moment<p>
+						{% endif %}
+					{% elif show.number == 0 %}
+						<p>There are no shows at the moment<p>
+					{% else %}
+						{% for sh in show %}
+							{% if sh.is_current %}
+								<div class="card small grey darken-3">
+									<div class="row">
+										<div class="col s2">
+											<div class="card-image">
+												<a href="show/{{ sh.id }}/0" rel="nofollow">
+												{% if sh.poster_page %}
+													<img class="responsive-img" src="{{ sh.poster_page.url }}"	id="report-image">
+												{% else %}
+													<img class="responsive-img" src="{{ STATIC_URL }}images/no_image.png" id="report-image">
+												{% endif %}
+												</a>
+											</div>
+										</div>
+										<div class="col s10">
+											<div class="card-content">
+												<h1 class="light white-text flow-text">{{ sh.name }}</h1>
+												<blockquote class="grey-text text-lighten-1">{{ sh.description }}</blockquote>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bin/materialize-min.js"></script>
+</body>
+</html>
