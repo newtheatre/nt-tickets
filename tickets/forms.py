@@ -47,7 +47,7 @@ class CancelForm(forms.Form):
 
 
 class SaleForm(forms.Form):
-    # ticket = forms.CharField(label='Reservation')
+    ticket = forms.CharField(label='Reservation', max_length=80)
 
     number_concession = forms.IntegerField(label="Concession Tickets " + config.CONCESSION_PRICE[1])
     number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])

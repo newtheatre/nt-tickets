@@ -260,6 +260,7 @@ class Sale(models.Model):
         verbose_name_plural = 'Sales'
 
     occurrence = models.ForeignKey(Occurrence)
+    ticket = models.CharField(max_length=80)
 
     stamp = models.DateTimeField(auto_now=True)
     unique_code = models.CharField(max_length=16)

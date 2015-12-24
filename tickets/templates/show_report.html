@@ -93,8 +93,8 @@
 			<form class="col s12" action="." method="post">
 			{% csrf_token %}
 				<div class="row" id="form-background">
-					<!-- <div class="input-field col s9">
-						<input name="{{ S_form.ticket.name }}" disabled type="text" class="validate" value="None">
+					<div class="input-field col s9">
+						<input name="{{ S_form.ticket.name }}" type="text" class="validate" value="None">
 						<label for="{{ S_form.ticket.name }}">{{ S_form.ticket.label }}</label>
 					</div>
 					<div class="col s3" id="form-button-inline">
@@ -103,7 +103,7 @@
 
 					<div class="input-field col s12">	
 						<input type="hidden">
-					</div> -->
+					</div>
 
 					<div class="input-field col s3">
 						<input name="{{ S_form.number_concession.name }}" type="number" class="validate" value="0" max="{{ report.max }}" min="0">

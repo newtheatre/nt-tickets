@@ -96,6 +96,7 @@ def ShowReport(request, show_name, occ_id):
         if S_form.is_valid():
             s = Sale()
             s.occurrence = occ_fin
+            s.ticket = S_form.cleaned_data['ticket']
 
             s.number_concession = S_form.cleaned_data['number_concession']
             s.number_public = S_form.cleaned_data['number_public']
