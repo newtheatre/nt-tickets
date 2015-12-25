@@ -66,11 +66,16 @@
 }
 
 /* line 59, ../sass/style.scss */
+.report-text {
+  font-size: 1.2em;
+}
+
+/* line 63, ../sass/style.scss */
 #cancelled {
   background-color: #faf3d1 !important;
 }
 
-/* line 63, ../sass/style.scss */
+/* line 67, ../sass/style.scss */
 #collect {
   background-color: #c7e4f3 !important;
 }
