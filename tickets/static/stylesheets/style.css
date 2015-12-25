@@ -67,6 +67,10 @@
 
 /* line 59, ../sass/style.scss */
 #cancelled {
-  color: grey;
-  background-color: #fcf8e3;
+  background-color: #faf3d1 !important;
+}
+
+/* line 63, ../sass/style.scss */
+#collect {
+  background-color: #c7e4f3 !important;
 }

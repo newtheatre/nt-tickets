@@ -268,7 +268,7 @@
 				{% csrf_token %}
 					<div class="row">
 						<div class="col s12">
-							<table class="highlight striped">
+							<table class="bordered">
 								<thead>
 									<tr>
 										<th data-field="name">Name</th>
@@ -280,8 +280,14 @@
 								<tbody>
 									{% for tick in report.tickets %}
 										{% if tick.cancelled %}
-										<tr id="cancelled">
-											<th><strike>{{ tick.person_name }}</strike></th>
+										<tr bgcolor="#faf3d1">
+											<th class="grey-text"><strike>{{ tick.person_name }}</strike></th>
+											<th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
+											<th><button type="button" class="btn disabled nnt purple">Add</button></th>
+										</tr>
+										{% elif tick.collected %}
+										<tr bgcolor="#c7e4f3">
+											<th class="grey-text"><strike>{{ tick.person_name }}</strike></th>
 											<th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
 											<th><button type="button" class="btn disabled nnt purple">Add</button></th>
 										</tr>
