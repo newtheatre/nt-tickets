@@ -6,6 +6,7 @@ ORG_NAME = "New Theatre"
 ORG_CONTACT = "boxoffice@newtheatre.org.uk"
 
 DEFAULT_LOCATION = "New Theatre"
+
 DEFAULT_TIME = datetime.time(19, 30)
 DEFAULT_TIME_MATINEE = datetime.time(14, 30)
 
@@ -19,4 +20,4 @@ CONCESSION_PRICE = [5.00, '£5.00']
 PUBLIC_PRICE = [8.00, '£8.00']
 EXTERNAL_PRICE = [4.00, '£4.00']
 MATINEE_FRESHERS_PRICE = [2.50, '£2.50']
-MATINEE_FRESHERS_PRICE_NNT = [2.00, '£2.00']
+MATINEE_FRESHERS_NNT_PRICE = [2.00, '£2.00']
