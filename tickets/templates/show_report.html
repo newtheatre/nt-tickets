@@ -172,18 +172,26 @@
 					{% endif %}
 					{% elif report.category|stringformat:"s" == "Fringe" %}
 						<div class="input-field col s6">
-							<input name="{{ S_form.number_fringe.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_fringe.name }}">{{ S_form.number_fringe.label }}</label>
 						</div>
 
 						<div class="input-field col s3">
-							<input name="{{ S_form.number_season.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
 						</div>
 
 						<div class="input-field col s3">
-							<input name="{{ S_form.number_fellow.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+						</div>
+
+						<div class="col s12">
+							<input name="{{ S_form.number_concession.name }}" id="concession" type="hidden" value="0">
+							<input name="{{ S_form.number_public.name }}" id="public" type="hidden" value="0">
+							<input name="{{ S_form.number_external.name }}" id="external" type="hidden" value="0">
+							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
+							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
 					{% else %}
 						<p class="white-text">This show does not have an appropriate category applied to it</p>
