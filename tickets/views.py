@@ -42,9 +42,6 @@ def ShowIndex(request):
 
     number = 0
 
-    # if show.is_current():
-
-
     for sh in show_list:
         if sh.is_current():
             number = number + 1
@@ -68,6 +65,9 @@ def ShowReport(request, show_name, occ_id):
     occurrence = Occurrence.objects.get_available(show=show_name)
 
     show = show_list
+
+    report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
+    report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
     report['concession_price'] = config.CONCESSION_PRICE[0]
     report['public_price'] = config.PUBLIC_PRICE[0]
@@ -128,7 +128,7 @@ def ShowReport(request, show_name, occ_id):
                 S_form.cleaned_data['number_external'] * config.EXTERNAL_PRICE[0] +
                 S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] +
                 S_form.cleaned_data['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0]+
-                S_form.cleaned_data['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_PRICE_NNT[0]
+                S_form.cleaned_data['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
                 )
 
             s.save()
@@ -170,9 +170,25 @@ def ShowReport(request, show_name, occ_id):
 
 
 def SaleReport(request):
+    report = dict()
+    show = dict()
+    show_list = Show.objects.all()
+    occurrence = Occurrence.objects.all
+
+    number = 0
+
+    for sh in show_list:
+        if sh.is_current():
+            number = number + 1
+            report['number'] = number
+
+    report['show'] = show_list
+    show = show_list
 
     context = {
-
+        'show': show,
+        'occurrence': occurrence,
+        'report': report,
     }
 
     return render_to_response('sale_report.html', context, context_instance=RequestContext(request))
