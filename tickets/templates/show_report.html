@@ -146,6 +146,9 @@
 
 						<div class="col s12">
 							<input name="{{ S_form.number_fringe.name }}" type="hidden" value="0">
+							<input name="{{ S_form.number_external.name }}" type="hidden" value="0">
+							<input name="{{ S_form.number_mat_freshers.name }}" type="hidden" value="0">
+							<input name="{{ S_form.number_mat_freshers_nnt.name }}" type="hidden" value="0">
 						</div>
 					{% elif report.category|stringformat:"s" == "Fringe" %}
 						<div class="input-field col s6">

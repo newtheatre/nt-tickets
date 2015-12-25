@@ -112,13 +112,20 @@ def ShowReport(request, show_name, occ_id):
             s.number_public = S_form.cleaned_data['number_public']
             s.number_season = S_form.cleaned_data['number_season']
             s.number_fellow = S_form.cleaned_data['number_fellow']
+            s.number_external = S_form.cleaned_data['number_external']
 
             s.number_fringe = S_form.cleaned_data['number_fringe']
+
+            s.number_mat_freshers = S_form.cleaned_data['number_mat_freshers']
+            s.number_mat_freshers_nnt = S_form.cleaned_data['number_mat_freshers_nnt']
 
             s.price = (
                 S_form.cleaned_data['number_concession'] * config.CONCESSION_PRICE[0] +
                 S_form.cleaned_data['number_public'] * config.PUBLIC_PRICE[0] +
-                S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] 
+                S_form.cleaned_data['number_external'] * config.EXTERNAL_PRICE[0] +
+                S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] +
+                S_form.cleaned_data['number_mat_freshers'] * config.MATINEE_FRESHERS_PRICE[0]+
+                S_form.cleaned_data['number_mat_freshers_nnt'] * config.MATINEE_FRESHERS_PRICE_NNT[0]
                 )
 
             s.save()

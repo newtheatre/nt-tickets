@@ -54,16 +54,24 @@ class SaleForm(forms.Form):
     number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])
     number_season = forms.IntegerField(label="Season Pass Tickets")
     number_fellow = forms.IntegerField(label="Fellow Tickets")
+    number_external = forms.IntegerField(label="External Tickets " + config.EXTERNAL_PRICE[1])
 
     number_fringe = forms.IntegerField(label="Fringe Tickets " + config.FRINGE_PRICE[1])
+    
+    number_mat_freshers = forms.IntegerField(label="Matinee Fresher Tickets " + config.MATINEE_FRESHERS_PRICE[1])
+    number_mat_freshers_nnt = forms.IntegerField(label="Matinee Member Fresher Tickets " + config.MATINEE_FRESHERS_PRICE_NNT[1])
+
 
     def at_least_one(self):
-        nc = self.cleaned_date.get('number_concession')
-        np = self.cleaned_date.get('number_public')
-        ns = self.cleaned_date.get('number_season')
-        nf = self.cleaned_date.get('number_fellow')
-
-        total_sale = nc + np + ns + nf
+        total_sale = \
+            self.cleaned_data.get('number_concession') + \
+            self.cleaned_data.get('number_public') + \
+            self.cleaned_data.get('number_season') + \
+            self.cleaned_data.get('number_fellow') + \
+            self.cleaned_data.get('number_external') + \
+            self.cleaned_data.get('number_fringe') + \
+            self.cleaned_data.get('number_mat_freshers') + \
+            self.cleaned_data.get('number_mat_freshers_nnt')
 
         if total_sale == 0:
             raise ValidationError("Please input at least one sale")
