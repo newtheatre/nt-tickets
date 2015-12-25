@@ -18,7 +18,7 @@ from django.shortcuts import render_to_response
 from tickets.models import *
 from tickets.forms import *
 
-import configuration.customise as customise
+import configuration.customise as config
 
 import datetime
 import settings
@@ -116,9 +116,9 @@ def ShowReport(request, show_name, occ_id):
             s.number_fringe = S_form.cleaned_data['number_fringe']
 
             s.price = (
-                S_form.cleaned_data['number_concession'] * customise.CONCESSION_PRICE[0] +
-                S_form.cleaned_data['number_public'] * customise.PUBLIC_PRICE[0] +
-                S_form.cleaned_data['number_fringe'] * customise.FRINGE_PRICE[0] 
+                S_form.cleaned_data['number_concession'] * config.CONCESSION_PRICE[0] +
+                S_form.cleaned_data['number_public'] * config.PUBLIC_PRICE[0] +
+                S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] 
                 )
 
             s.save()
@@ -211,7 +211,7 @@ def book_landing(request, show_id):
                     'show': show,
                     'ticket': t,
                     'settings': settings,
-                    'customise': customise,
+                    'customise': config,
                 }))
             email_subject = 'Tickets reserved for ' + show.name
             email = EmailMessage(
@@ -350,7 +350,7 @@ class DetailShow(DetailView):
 def sidebar(request):
     categories = Category.objects.all().exclude(sort=0).order_by('sort')
     today = datetime.date.today()
-    limit = today + configuration.customise.SIDEBAR_FILTER_PERIOD
+    limit = today + config.SIDEBAR_FILTER_PERIOD
     current_shows = []
     for category in categories:
         shows = Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
