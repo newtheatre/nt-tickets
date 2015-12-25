@@ -200,7 +200,14 @@ class OccurrenceManager(models.Manager):
                 pass
                 break
             else:
-                ret.append((oc.id, oc.datetime_formatted(), oc.day_formatted(), oc.unique_code, oc.time_formatted(), oc.tickets_sold()))
+                ret.append(( 
+                    oc.id, 
+                    oc.datetime_formatted(), 
+                    oc.day_formatted(), 
+                    oc.unique_code, 
+                    oc.time_formatted(), 
+                    oc.tickets_sold() 
+                    ))
         return ret
 
 
@@ -266,9 +273,25 @@ class Occurrence(models.Model):
                 s.number_public +
                 s.number_season +
                 s.number_fellow +
-                s.number_fringe
+                s.number_fringe +
+                s.number_external +
+                s.number_matinee_freshers +
+                S.number_matinee_freshers_nnt
                 )
         return sold
+
+    def sale_tally(self):
+        sale = Sale.objects.get(occurrence=self)
+        ret = []
+        concession = 0
+        public = 0
+        season = 0
+        fellow = 0
+        fringe = 0
+        external = 0
+        matinee = 0
+        matinee_nnt = 0
+        
 
     def total_sales(self):
         sale = Sale.objects.filter(occurrence=self)
@@ -324,6 +347,46 @@ class Ticket(models.Model):
             " for " + self.person_name
 
 
+class SaleManager(models.Manager):
+
+    def sale_tally(self, show):
+        occs = Occurrence.objects.filter(show=show)
+        ret = []
+
+        number_concession = 0
+        number_public = 0
+        number_season = 0
+        number_fellow = 0
+        number_external = 0
+        number_fringe = 0
+        number_matinee_freshers = 0
+        number_matinee_freshers_nnt = 0
+
+        for oc in occs:
+            sale = Sale.objects.get(occurrence=oc)
+
+            number_concession += sale.number_concession
+            number_public += sale.number_public
+            number_season += sale.number_season
+            number_fellow += sale.number_fellow
+            number_external += sale.number_external
+            number_fringe += sale.number_fringe
+            number_matinee_freshers += sale.number_matinee_freshers
+            number_matinee_freshers_nnt += sale.number_matinee_freshers_nnt
+
+            ret.append(( 
+                number_concession, 
+                number_public, 
+                number_season, 
+                number_fellow, 
+                number_external, 
+                number_fringe, 
+                number_matinee_freshers, 
+                number_matinee_freshers_nnt 
+                ))
+        return ret
+
+
 class Sale(models.Model):
 
     class Meta:
@@ -332,6 +395,8 @@ class Sale(models.Model):
 
     occurrence = models.ForeignKey(Occurrence)
     ticket = models.CharField(max_length=80)
+
+    objects = SaleManager()
 
     stamp = models.DateTimeField(auto_now=True)
     unique_code = models.CharField(max_length=16)
