@@ -130,7 +130,7 @@ class ShowTest(TestCase):
     def test_datetime_formatted(self):
         occ = Occurrence.objects.get(pk=1)
         day_format = occ.date.strftime('%A')
-        time_format = occ.time.strftime('%-I%p').lower()
+        time_format = occ.time.strftime('%-I:%M %p').lower()
         datetime_format = occ.date.strftime('%A %d %B ') + \
             occ.time.strftime('%-I%p').lower()
 
@@ -162,7 +162,7 @@ class ShowTest(TestCase):
 
         r1 = Occurrence.objects.get_available(show)
 
-        self.assertEqual(r1, [(1, datetime_format, occ.day_formatted(), occ.unique_code, occ.time_formatted())])
+        self.assertEqual(r1, [(1, datetime_format, occ.day_formatted(), occ.unique_code, occ.time_formatted(), occ.tickets_sold())])
 
     def test_get_available_sold_out(self):
         show = Show.objects.get(pk=1)
