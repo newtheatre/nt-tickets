@@ -153,6 +153,7 @@ def ShowReport(request, show_name, occ_id):
             report['reservation'] = ticket.person_name
         else:
             pass
+
     else:
         S_form = SaleForm()
         R_form = ReserveForm()
@@ -204,19 +205,19 @@ def SaleReport(request):
 
 def SaleReportFull(request, show_name):
     report = dict()
-    show = dict()
-    show_list = Show.objects.all()
-    occurrence = Occurrence.objects.all
+    show = Show.objects.get(id=show_name)
+    occurrence = Occurrence.objects.filter(show=show)
+    sale = Sale.objects.filter(occurrence=occurrence[2])
+    report['oc'] = occurrence[2]
 
-    number = 0
+    report['number_concession'] = [config.CONCESSION_PRICE[0]]
+    report['number_public'] = [config.PUBLIC_PRICE[0]]
+    report['number_external'] = [config.EXTERNAL_PRICE[0]]
+    report['number_fringe'] = [config.FRINGE_PRICE[0]]
+    report['number_matinee_freshers'] = [config.MATINEE_FRESHERS_PRICE[0]]
+    report['number_matinee_freshers_nnt'] = [config.MATINEE_FRESHERS_NNT_PRICE[0]]
 
-    for sh in show_list:
-        if sh.is_current():
-            number = number + 1
-            report['number'] = number
-
-    report['show'] = show_list
-    show = show_list
+    report['sale'] = sale
 
     context = {
         'show': show,
