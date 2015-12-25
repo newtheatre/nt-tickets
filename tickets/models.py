@@ -11,7 +11,7 @@ from django.template.defaultfilters import slugify
 
 from tickets.func import rand_16
 
-import configuration.customise
+import configuration.customise as config
 
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -51,7 +51,7 @@ class Show(models.Model):
 
     location = models.CharField(
                     max_length=30,
-                    default=configuration.customise.DEFAULT_LOCATION,
+                    default=config.DEFAULT_LOCATION,
                     help_text='Will show up alongside show, you can hide this with CSS if needed.'
                     )
 
@@ -181,14 +181,14 @@ class Occurrence(models.Model):
 
     show = models.ForeignKey(Show)
     date = models.DateField()
-    time = models.TimeField(default=configuration.customise.DEFAULT_TIME)
+    time = models.TimeField(default=config.DEFAULT_TIME)
     maximum_sell = models.PositiveIntegerField(
-                default=configuration.customise.DEFAULT_MAX_SELL,
+                default=config.DEFAULT_MAX_SELL,
                 help_text='The maximum number of tickets we will allow to be reserved.'
                 )
 
     hours_til_close = models.IntegerField(
-                default=configuration.customise.DEFAULT_HOURS_TIL_CLOSE,
+                default=config.DEFAULT_HOURS_TIL_CLOSE,
                 help_text='Hours before \'time\' that we will stop reservations being made.'
                 )
     unique_code = models.CharField(max_length=16)
@@ -225,6 +225,20 @@ class Occurrence(models.Model):
             sold += (
                 s.number_concession +
                 s.number_public +
+                s.number_season +
+                s.number_fellow +
+                s.number_fringe
+                )
+        return sold
+
+    def total_sales(self):
+        sale = Sale.objects.filter(occurrence=self)
+        sold = 0
+        for s in sale:
+            sold += (
+                s.number_concession * config.CONCESSION_PRICE[0] +
+                s.number_public * config.PUBLIC_PRICE[0] +
+                s.number_fringe * config.FRINGE_PRICE[0] +
                 s.number_season +
                 s.number_fellow
                 )
@@ -279,10 +293,14 @@ class Sale(models.Model):
     stamp = models.DateTimeField(auto_now=True)
     unique_code = models.CharField(max_length=16)
 
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
     number_concession = models.IntegerField()
     number_public = models.IntegerField()
     number_season = models.IntegerField()
     number_fellow = models.IntegerField()
+
+    number_fringe = models.IntegerField()
     
     def save(self, *args, **kwargs):
         if not self.unique_code:
