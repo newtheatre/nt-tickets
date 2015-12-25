@@ -62,7 +62,7 @@ def ShowReport(request, show_name, occ_id):
     report = dict()
     occurrence_fin = dict()
     show_list = get_object_or_404(Show, id=show_name)
-    occurrence = Occurrence.objects.get_available(show=show_name)
+    occurrence = Occurrence.objects.get_available_show(show=show_name)
 
     show = show_list
 
