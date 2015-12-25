@@ -44,11 +44,12 @@ class LoginForm(AuthenticationForm):
 
 class CancelForm(forms.Form):
     ticket = forms.CharField(max_length=16)
-    occurrence = forms.CharField(max_length=16)
+    occurrence = forms.CharField(max_length=80)
 
 
 class SaleForm(forms.Form):
     ticket = forms.CharField(label='Reservation', max_length=80)
+    unique_ticket = forms.CharField(max_length=16)
 
     number_concession = forms.IntegerField(label="Concession Tickets " + config.CONCESSION_PRICE[1])
     number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])
@@ -79,4 +80,4 @@ class SaleForm(forms.Form):
         return 
 
 class ReserveForm(forms.Form):
-    ticket = forms.CharField(label='Reservation', max_length=80)
+    unique_ticket = forms.CharField(max_length=16)
