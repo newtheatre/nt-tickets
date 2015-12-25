@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% include 'favicon.html' %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>NT Tickets</title>
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="{{ STATIC_URL }}stylesheets/materialize.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}stylesheets/style.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bin/materialize.js"></script>
+</head>
+<body id="background">
+	<header>
+		<div class="navbar-fixed">
+			<nav>
+			    <div class="nav-wrapper">
+			     	<a href="/" class="brand-logo center">
+			     	<img src="{{ STATIC_URL }}images/nnt_tickets_white.png" id="nav-logo">
+			     	</a>
+			     	<div class="nav-container">
+				     	<ul id="nav-mobile" class="left hide-on-med-and-down">
+				        	<li><a href="/">Home</a></li>
+				        	<li><a href="/report">Sale Reports</a></li>
+				      	</ul>
+				      	<ul id="nav-mobile" class="right hide-on-med-and-down">
+				      		<li><a href="/admin">Admin Login</a></li>
+				      	</ul>
+			      	</div>
+			    </div>
+			</nav>
+		</div>
+	</header>
+	<main>
+	<div class="container">
+		<div class="row">
+			<div class="col s12">
+				<div class="card small grey darken-3">
+					<div class="row">
+						<div class="col s2">
+							<div class="card-image">
+								<a href="/report/{{ sh.id }}" rel="nofollow">
+								{% if show.poster_page %}
+									<img class="responsive-img" src="{{ show.poster_page.url }}" id="report-image">
+								{% else %}
+									<img class="responsive-img" src="{{ STATIC_URL }}images/no_image.png" id="report-image">
+								{% endif %}
+								</a>
+							</div>
+						</div>
+						<div class="col s10">
+							<div class="card-content">
+								<span class="card-title light white-text">
+								{{ show.name }}
+								</span>
+
+								<div class="row">
+									<div class="col s9">
+										<div class="col s12">
+											<span class="nnt-orange sale-text truncate">Total Sales: 
+											<span class="bold">£{{ show.show_sales }}</span>
+											</span>
+										</div>
+										<div class="col s12">
+											<span class="nnt-purple sale-text truncate">Total Tickets Sold: 
+											<span class="bold">{{ show.total_tickets_sold_show }}</span>
+											</span>
+										</div>
+										<div class="col s12">
+											<span class="nnt-orange sale-text truncate">
+											Total Tickets Reserved: <span class="bold">{{ show.total_tickets_reserved }}</span>
+
+											(out of a possible of: <span class="bold">{{ show.total_possible }})</span>
+											</span>
+										</div>
+									</div>
+									<div class="col s3">
+										<button class="btn nnt purple waves-effect waves-dark">Download Report</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{% for oc in occurrence %}
+					<div class="card small grey darken-3">
+						<div class="row">
+							<div class="col s12">
+								<p class="light white-text center-align report-text bold">
+								{{ oc.day_formatted }} at {{ oc.time_formatted }}
+								</p>
+							</div>
+							{% if show.category|stringformat:"s" == "In House" %}
+								<p>in house</p>
+								{{ report.sale }}
+								{{ report.oc.id }}
+							{% elif show.category|stringformat:"s" == "Fringe" %}
+								<p>fringe</p>
+							{% elif show.category|stringformat:"s" == "External" %}
+								<p>External</p>
+							{% else %}
+								<p class="light red-text center-align report-text">Invalid category applied ({{ show.category }})</p>
+							{% endif %}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	</main>
+</head>
+</html>
+
