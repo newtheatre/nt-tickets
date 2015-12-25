@@ -55,6 +55,8 @@ class SaleForm(forms.Form):
     number_season = forms.IntegerField(label="Season Pass Tickets")
     number_fellow = forms.IntegerField(label="Fellow Tickets")
 
+    number_fringe = forms.IntegerField(label="Fringe Tickets " + config.FRINGE_PRICE[1])
+
     def at_least_one(self):
         nc = self.cleaned_date.get('number_concession')
         np = self.cleaned_date.get('number_public')
