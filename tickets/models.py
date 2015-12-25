@@ -199,7 +199,7 @@ class Occurrence(models.Model):
         return self.date.strftime('%A')
 
     def time_formatted(self):
-        return self.time.strftime('%-I%p').lower()
+        return self.time.strftime('%-I:%-M %p').lower()
 
     def datetime_formatted(self):
         return self.date.strftime('%A %d %B ') + \
@@ -299,8 +299,12 @@ class Sale(models.Model):
     number_public = models.IntegerField()
     number_season = models.IntegerField()
     number_fellow = models.IntegerField()
+    number_external = models.IntegerField()
 
     number_fringe = models.IntegerField()
+
+    number_mat_freshers = models.IntegerField()
+    number_mat_freshers_nnt = models.IntegerField()
     
     def save(self, *args, **kwargs):
         if not self.unique_code:
