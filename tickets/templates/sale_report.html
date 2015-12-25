@@ -40,7 +40,7 @@
 		        			<p>There are no showings at the moment</p>
 		        		{% endif %}
 					{% elif show.number == 0 %}
-						<p>There are no shows at the moment<p>
+						<p>There are no shows at the moment</p>
 					{% else %}
 						{% for sh in show %}
 							{% if sh.is_current %}
@@ -59,18 +59,33 @@
 										</div>
 										<div class="col s10">
 											<div class="card-content">
-												<h1 class="light white-text flow-text">{{ sh.name }}</h1>
-												<span>{{ sh.show_sales }}</span>
+												<span class="card-title light white-text">
+												{{ sh.name }}
+												</span>
+
 												<div class="row">
-												{% for oc in occurrence %}
-												<div class="col s2">
-													{% if oc.show|stringformat:"s" == sh.name %}
-														<p class="white-text">{{ oc.day_formatted }}</p>
-														<p class="white-text">{{ oc.total_sales }}</p>
-														<p class="white-text">{{ oc.tickets_sold }}</p>
-													{% endif %}
-												</div>
-												{% endfor %}
+													<div class="col s9">
+														<div class="col s12">
+															<span class="nnt-orange sale-text truncate">Total Sales: 
+															<span class="bold">£{{ sh.show_sales }}</span>
+															</span>
+														</div>
+														<div class="col s12">
+															<span class="nnt-purple sale-text truncate">Total Tickets Sold: 
+															<span class="bold">{{ sh.total_tickets_sold_show }}</span>
+															</span>
+														</div>
+														<div class="col s12">
+															<span class="nnt-orange sale-text truncate">
+															Total Tickets Reserved: <span class="bold">{{ sh.total_tickets_reserved }}</span>
+
+															(out of a possible of: <span class="bold">{{ sh.total_possible }})</span>
+															</span>
+														</div>
+													</div>
+													<div class="col s3">
+														<button class="btn nnt purple waves-effect waves-dark">Download Report</button>
+													</div>
 												</div>
 											</div>
 										</div>
