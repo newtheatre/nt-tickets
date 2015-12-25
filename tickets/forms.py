@@ -58,8 +58,8 @@ class SaleForm(forms.Form):
 
     number_fringe = forms.IntegerField(label="Fringe Tickets " + config.FRINGE_PRICE[1])
     
-    number_mat_freshers = forms.IntegerField(label="Matinee Fresher Tickets " + config.MATINEE_FRESHERS_PRICE[1])
-    number_mat_freshers_nnt = forms.IntegerField(label="Matinee Member Fresher Tickets " + config.MATINEE_FRESHERS_PRICE_NNT[1])
+    number_matinee_freshers = forms.IntegerField(label="Matinee Fresher Tickets " + config.MATINEE_FRESHERS_PRICE[1])
+    number_matinee_freshers_nnt = forms.IntegerField(label="Matinee Member Fresher Tickets " + config.MATINEE_FRESHERS_PRICE_NNT[1])
 
 
     def at_least_one(self):
@@ -70,8 +70,8 @@ class SaleForm(forms.Form):
             self.cleaned_data.get('number_fellow') + \
             self.cleaned_data.get('number_external') + \
             self.cleaned_data.get('number_fringe') + \
-            self.cleaned_data.get('number_mat_freshers') + \
-            self.cleaned_data.get('number_mat_freshers_nnt')
+            self.cleaned_data.get('number_matinee_freshers') + \
+            self.cleaned_data.get('number_matinee_freshers_nnt')
 
         if total_sale == 0:
             raise ValidationError("Please input at least one sale")

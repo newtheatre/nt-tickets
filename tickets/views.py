@@ -72,6 +72,9 @@ def ShowReport(request, show_name, occ_id):
     report['concession_price'] = config.CONCESSION_PRICE[0]
     report['public_price'] = config.PUBLIC_PRICE[0]
     report['fringe_price'] = config.FRINGE_PRICE[0]
+    report['external_price'] = config.EXTERNAL_PRICE[0]
+    report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
+    report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_PRICE_NNT[0]
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -116,16 +119,16 @@ def ShowReport(request, show_name, occ_id):
 
             s.number_fringe = S_form.cleaned_data['number_fringe']
 
-            s.number_mat_freshers = S_form.cleaned_data['number_mat_freshers']
-            s.number_mat_freshers_nnt = S_form.cleaned_data['number_mat_freshers_nnt']
+            s.number_matinee_freshers = S_form.cleaned_data['number_matinee_freshers']
+            s.number_matinee_freshers_nnt = S_form.cleaned_data['number_matinee_freshers_nnt']
 
             s.price = (
                 S_form.cleaned_data['number_concession'] * config.CONCESSION_PRICE[0] +
                 S_form.cleaned_data['number_public'] * config.PUBLIC_PRICE[0] +
                 S_form.cleaned_data['number_external'] * config.EXTERNAL_PRICE[0] +
                 S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] +
-                S_form.cleaned_data['number_mat_freshers'] * config.MATINEE_FRESHERS_PRICE[0]+
-                S_form.cleaned_data['number_mat_freshers_nnt'] * config.MATINEE_FRESHERS_PRICE_NNT[0]
+                S_form.cleaned_data['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0]+
+                S_form.cleaned_data['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_PRICE_NNT[0]
                 )
 
             s.save()

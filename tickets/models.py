@@ -168,7 +168,7 @@ class OccurrenceManager(models.Manager):
                 pass
                 break
             else:
-                ret.append((oc.id, oc.datetime_formatted(), oc.day_formatted(), oc.unique_code, oc.time_formatted()))
+                ret.append((oc.id, oc.datetime_formatted(), oc.day_formatted(), oc.unique_code, oc.time_formatted(), oc.tickets_sold()))
         return ret
 
 
@@ -303,8 +303,8 @@ class Sale(models.Model):
 
     number_fringe = models.IntegerField()
 
-    number_mat_freshers = models.IntegerField()
-    number_mat_freshers_nnt = models.IntegerField()
+    number_matinee_freshers = models.IntegerField()
+    number_matinee_freshers_nnt = models.IntegerField()
     
     def save(self, *args, **kwargs):
         if not self.unique_code:

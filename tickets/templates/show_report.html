@@ -118,10 +118,14 @@
 						<button class="btn nnt purple waves-effec waves-light modal-trigger" href="#modal2">Reservation</button>
 					</div>
 
+					<!-- Hidden inputs for ticket prices -->
 					<div class="input-field col s12">	
 						<input type="hidden" value="{{ report.concession_price }}" id="concession_price">
 						<input type="hidden" value="{{ report.public_price }}" id="public_price">
-						<input type="hidden" value="{{ report.fringe_price" id="fringe_price">
+						<input type="hidden" value="{{ report.fringe_price }}" id="fringe_price">
+						<input type="hidden" value="{{ report.external_price }}" id="external_price">
+						<input type="hidden" value="{{ report.matinee_freshers_price }}" id="matinee_freshers_price">
+						<input type="hidden" value="{{ report.matinee_freshers_nnt_price }}" id="matinee_freshers_nnt_price">
 					</div>
 					{% if report.category|stringformat:"s" == "In House" %}
 						<div class="input-field col s3">
@@ -143,13 +147,29 @@
 							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
 						</div>
+					{% if report.time|stringformat:"s" == "7:30 pm" %}
+						<div class="col s12">
+							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
+							<input name="{{ S_form.number_external.name }}" id="external" type="hidden" value="0">
+							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
+							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
+						</div>
+					{% elif report.time|stringformat:"s" == "2:30 pm" %}
+						<div class="input-field col s6">
+							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_matinee_freshers.name }}">{{ S_form.number_matinee_freshers.label }}</label>
+						</div>
+
+						<div class="input-field col s6">
+							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_matinee_freshers_nnt.name }}">{{ S_form.number_matinee_freshers_nnt.label }}</label>
+						</div>
 
 						<div class="col s12">
-							<input name="{{ S_form.number_fringe.name }}" type="hidden" value="0">
-							<input name="{{ S_form.number_external.name }}" type="hidden" value="0">
-							<input name="{{ S_form.number_mat_freshers.name }}" type="hidden" value="0">
-							<input name="{{ S_form.number_mat_freshers_nnt.name }}" type="hidden" value="0">
+							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
+							<input name="{{ S_form.number_external.name }}" id="external" type="hidden" value="0">
 						</div>
+					{% endif %}
 					{% elif report.category|stringformat:"s" == "Fringe" %}
 						<div class="input-field col s6">
 							<input name="{{ S_form.number_fringe.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
@@ -198,15 +218,26 @@
 		<!-- Occurrence Modal Structure -->
 		<div id="picker-modal" class="modal bottom-sheet">
 		    <div class="modal-content">
+		    	<div class="row">
 		        <h4>{{ show.name }}</h4>
 		        {% for oc in occurrence %}
-		        	<a href="/show/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat">
-		        	{{ show.name }} on <strong>{{ oc.2 }}</strong> at <strong>{{ oc.4 }}</strong>
-		        	</a>
+		        	<div class="col s12">
+			        	<a href="/show/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat">
+			        	{{ show.name }} on <strong>{{ oc.2 }}</strong> at <strong>{{ oc.4 }}</strong>
+		        		{% if oc.5 == 1 %}
+			        		, <strong>{{ oc.5 }}</strong> ticket reserved
+		        		{% else %}
+			        		, <strong>{{ oc.5 }}</strong> tickets reserved
+		        		{% endif %}
+			        	</a>
+		        	</div>
 		        	<br>
 	        	{% empty %}
-		        	<span class="modal-action modal-close btn-flat">There are no showings available</span>
+	        		<div class="col s12">
+			        	<span class="modal-action modal-close btn-flat">There are no showings available</span>
+		        	</div>
 		        {% endfor %}
+		        </div>
 		    </div>
 			    
 		</div>
@@ -279,16 +310,23 @@
 	<script>
 	$(document).ready(function(){
 	    $('input').keyup(function(){
-	    	var concession_price = document.getElementById("concession_price").value
-	    	var public_price = document.getElementById("public_price").value
-	    	var fringe_price = document.getElementById("fringe_price").value
+	    	var concession_price = document.getElementById("concession_price").value;
+	    	var public_price = document.getElementById("public_price").value;
+	    	var fringe_price = document.getElementById("fringe_price").value;
+	    	var external_price = document.getElementById("external_price").value;
+	    	var matinee_freshers_price = document.getElementById("matinee_freshers_price").value;
+	    	var matinee_freshers_nnt_price = document.getElementById("matinee_freshers_nnt_price").value;
 
 	        var num_concession = document.getElementById("concession").value * concession_price;
 	        var num_public = document.getElementById("public").value * public_price;
+	        var num_fringe = document.getElementById("fringe").value * fringe_price;
+	        var num_external = document.getElementById("external").value * external_price;
+	        var num_matinee_freshers = document.getElementById("matinee_freshers").value * matinee_freshers_price;
+	        var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value * matinee_freshers_nnt_price;
 	        var num_season = document.getElementById("season").value * 0;
 	        var num_fellow = document.getElementById("fellow").value * 0;
 
-	        var x = +num_concession + +num_public + +num_season + +num_fellow;
+	        var x = +num_concession + +num_public + +num_fringe + +num_external + +num_matinee_freshers + +num_matinee_freshers_nnt + +num_season + +num_fellow;
 	        document.getElementById("out").innerHTML = x;
 	    });
 	});
@@ -298,6 +336,12 @@
 	function resetButton() {
 		document.getElementById("out").innerHTML = 0;
 	}
+	</script>
+
+	<script>
+		$(document).ready(function(){
+		  document.getElementById("out").innerHTML = 0;
+		});
 	</script>
 </body>
 </html>
