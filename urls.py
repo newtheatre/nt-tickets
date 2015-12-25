@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^show/(?P<show_name>[0-9])/$', tickets_views.ShowReport, name='show_report'),
     url(r'^show/(?P<show_name>[0-9])/(?P<occ_id>[0-9])/$', tickets_views.ShowReport, name='show_report_full'),
     url(r'^report/$', tickets_views.SaleReport, name='sale_report'),
+    url(r'^report/(?P<show_name>[0-9])/$', tickets_views.SaleReportFull, name='sale_report_full'),
 
 ] 
 

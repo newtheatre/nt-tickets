@@ -74,7 +74,7 @@ def ShowReport(request, show_name, occ_id):
     report['fringe_price'] = config.FRINGE_PRICE[0]
     report['external_price'] = config.EXTERNAL_PRICE[0]
     report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
-    report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_PRICE_NNT[0]
+    report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -110,6 +110,11 @@ def ShowReport(request, show_name, occ_id):
             s = Sale()
             s.occurrence = occ_fin
             s.ticket = S_form.cleaned_data['ticket']
+            
+            if S_form.cleaned_data['unique_ticket'] != 'None':
+                T = Ticket.objects.get(unique_code=S_form.cleaned_data['unique_ticket'])
+                T.collected = True
+                T.save()
 
             s.number_concession = S_form.cleaned_data['number_concession']
             s.number_public = S_form.cleaned_data['number_public']
@@ -142,13 +147,17 @@ def ShowReport(request, show_name, occ_id):
                 report['total_sales'] = occ_fin.total_sales()
 
         elif R_form.is_valid():
-            report['reservation'] = R_form.cleaned_data['ticket']
+            report['unique_ticket'] = R_form.cleaned_data['unique_ticket']
+
+            ticket = Ticket.objects.get(unique_code=R_form.cleaned_data['unique_ticket'])
+            report['reservation'] = ticket.person_name
         else:
             pass
     else:
         S_form = SaleForm()
         R_form = ReserveForm()
         report['reservation'] = 'None'
+        report['unique_ticket'] = 'None'
 
         if occ_id > '0':
             report['sold'] = occ_fin.sales()
@@ -192,6 +201,30 @@ def SaleReport(request):
     }
 
     return render_to_response('sale_report.html', context, context_instance=RequestContext(request))
+
+def SaleReportFull(request, show_name):
+    report = dict()
+    show = dict()
+    show_list = Show.objects.all()
+    occurrence = Occurrence.objects.all
+
+    number = 0
+
+    for sh in show_list:
+        if sh.is_current():
+            number = number + 1
+            report['number'] = number
+
+    report['show'] = show_list
+    show = show_list
+
+    context = {
+        'show': show,
+        'occurrence': occurrence,
+        'report': report,
+    }
+
+    return render_to_response('sale_report_full.html', context, context_instance=RequestContext(request))
 
 
 def defaultFNI(request):
