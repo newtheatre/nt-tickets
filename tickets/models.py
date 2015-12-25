@@ -102,6 +102,14 @@ class Show(models.Model):
         else:
             return False
 
+    def show_sales(self):
+        occs = Occurrence.objects.filter(show=self)
+        total = 0
+        for oc in occs:
+            sale = oc.total_sales()
+            total = total + sale
+        return total
+
     def has_occurrences(self):
         occs = Occurrence.objects.filter(show=self)
         if len(occs) > 0:
@@ -239,6 +247,9 @@ class Occurrence(models.Model):
                 s.number_concession * config.CONCESSION_PRICE[0] +
                 s.number_public * config.PUBLIC_PRICE[0] +
                 s.number_fringe * config.FRINGE_PRICE[0] +
+                s.number_external * config.EXTERNAL_PRICE[0] +
+                s.number_matinee_freshers * config.MATINEE_FRESHERS_PRICE[0] +
+                s.number_matinee_freshers_nnt * config.MATINEE_FRESHERS_NNT_PRICE[0] +
                 s.number_season +
                 s.number_fellow
                 )
