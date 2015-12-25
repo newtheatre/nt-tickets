@@ -67,6 +67,13 @@ def ShowReport(request, show_name, occ_id):
     show_list = get_object_or_404(Show, id=show_name)
     occurrence = Occurrence.objects.get_available(show=show_name)
 
+    show = show_list
+
+    report['concession_price'] = config.CONCESSION_PRICE[0]
+    report['public_price'] = config.PUBLIC_PRICE[0]
+    report['fringe_price'] = config.FRINGE_PRICE[0]
+
+    # If there has been an occurrnece selected
     if occ_id > '0':
         report['have_form'] = True
         occ_fin = Occurrence.objects.get(id=occ_id)
@@ -79,16 +86,19 @@ def ShowReport(request, show_name, occ_id):
         report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
         report['how_many_reserved'] = occ_fin.tickets_sold()
         report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
+
+        report['category'] = occ_fin.show.category
+        report['total_sales'] = occ_fin.total_sales()
     else:
         report['have_form'] = False
 
-    show = show_list
-
+    # Testing if the show is current
     if show.is_current():
         report['current'] = True
     else:
         report['current'] = False
 
+    # If the a form has been submitted
     if request.method == 'POST':
         S_form = SaleForm(request.POST)
         R_form = ReserveForm(request.POST)
@@ -103,12 +113,23 @@ def ShowReport(request, show_name, occ_id):
             s.number_season = S_form.cleaned_data['number_season']
             s.number_fellow = S_form.cleaned_data['number_fellow']
 
+            s.number_fringe = S_form.cleaned_data['number_fringe']
+
+            s.price = (
+                S_form.cleaned_data['number_concession'] * customise.CONCESSION_PRICE[0] +
+                S_form.cleaned_data['number_public'] * customise.PUBLIC_PRICE[0] +
+                S_form.cleaned_data['number_fringe'] * customise.FRINGE_PRICE[0] 
+                )
+
             s.save()
+
+            report['reservation'] = 'None'
 
             if occ_id > '0':
                 report['sold'] = occ_fin.sales()
                 report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.sales()
                 report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
+                report['total_sales'] = occ_fin.total_sales()
 
         elif R_form.is_valid():
             report['reservation'] = R_form.cleaned_data['ticket']
@@ -123,6 +144,7 @@ def ShowReport(request, show_name, occ_id):
             report['sold'] = occ_fin.sales()
             report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.sales()
             report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
+            report['total_sales'] = occ_fin.total_sales()
 
     context = {
         'report': report,

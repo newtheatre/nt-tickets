@@ -13,34 +13,55 @@
 }
 
 /* line 13, ../sass/style.scss */
+.bold {
+  font-weight: bold;
+}
+
+/* line 17, ../sass/style.scss */
+.nnt-orange {
+  color: #ffc425;
+}
+
+/* line 22, ../sass/style.scss */
+.nnt-purple {
+  color: #a54499;
+}
+
+/* line 27, ../sass/style.scss */
 #report-image {
   width: 141px;
   height: 200px;
 }
 
-/* line 18, ../sass/style.scss */
+/* line 32, ../sass/style.scss */
 #nav-logo {
   width: auto;
   height: 1.7em;
   padding-top: 0.2em;
 }
 
-/* line 24, ../sass/style.scss */
+/* line 38, ../sass/style.scss */
 #form-button-inline {
   padding-top: 1.6em;
 }
 
-/* line 28, ../sass/style.scss */
+/* line 42, ../sass/style.scss */
 #form-background {
   background-color: #424242;
 }
 
-/* line 32, ../sass/style.scss */
+/* line 46, ../sass/style.scss */
 #report-bar {
   padding-top: 0.4em;
 }
 
-/* line 36, ../sass/style.scss */
+/* line 50, ../sass/style.scss */
 #sale-percentage {
   background-color: #a54499;
+}
+
+/* line 55, ../sass/style.scss */
+#cancelled {
+  color: grey;
+  background-color: #fcf8e3;
 }

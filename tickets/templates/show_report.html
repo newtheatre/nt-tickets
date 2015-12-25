@@ -55,7 +55,7 @@
 								on <strong>{{ report.day }}</strong> at <strong>{{ report.time }}</strong> 
 								{% endif %}
 								</h1>
-								<button data-target="picker-modal" class="btn nnt purple modal-trigger">Choose Showing</button>
+								<button data-target="picker-modal" class="btn nnt purple modal-trigger waves-effect waves-light">Choose Showing</button>
 							</div>
 						</div>
 					</div>
@@ -69,23 +69,36 @@
 			<div class="col s12">
 				<div class="card tiny grey darken-3">
 					<div class="card-content">
-						<h4 class="center-align light white-text flow-text">
-						{{ report.sold }} Sold
-						{% if report.how_many_sold == 0 %}
-						Huh, there are no tickets reserved! Maybe someone needs to publicise more!
-
-						{% elif report.how_many_sold == 1 %}
-						There is <strong>{{ report.how_many_reserved }}</strong> ticket reserved, leaving <strong>{{ report.how_many_left }}</strong> tickets left.
-
+						<p class="center-align light white-text flow-text">
+						{% if report.sold == 0 %}
+							No tickets have been sold yet
+						{% elif report.sold == 1 %}
+							There has been <span class="nnt-purple bold">{{ report.sold }}</span> ticket sold
 						{% else %}
-						There are <strong>{{ report.how_many_reserved }}</strong> tickets reserved, leaving <strong>{{ report.how_many_left }}</strong> tickets left.
-
+							There have been <span class="nnt-purple bold">{{ report.sold }}</span> tickets sold
 						{% endif %}
-						</h4>
+						</p>
+
+						<p class="center-align light white-text flow-text">
+						{% if report.how_many_sold == 0 %}
+							Huh, there are no tickets reserved! Maybe someone needs to publicise more!
+						{% elif report.how_many_sold == 1 %}
+							There is <span class="nnt-orange bold">{{ report.how_many_reserved }}</span> ticket reserved, 
+						{% else %}
+							There are <span class="nnt-orange bold">{{ report.how_many_reserved }}</span> tickets reserved, 
+						{% endif %}
+
+						leaving <span class="bold">{{ report.how_many_left }}</span> tickets left 
+						out of <span class="bold">{{ report.max }}</span>.
+						</p>
 						<div class="progress" id="report-bar">
+							{% if report.sale_percentage >= report.reserve_percentage %}
 							<div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
 					     	<div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
-					      
+					     	{% else %}
+				     		<div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
+			     			<div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
+					      	{% endif %}
 					  </div>
 					</div>
 				</div>
@@ -106,44 +119,71 @@
 					</div>
 
 					<div class="input-field col s12">	
-						<input type="hidden">
+						<input type="hidden" value="{{ report.concession_price }}" id="concession_price">
+						<input type="hidden" value="{{ report.public_price }}" id="public_price">
+						<input type="hidden" value="{{ report.fringe_price" id="fringe_price">
 					</div>
+					{% if report.category|stringformat:"s" == "In House" %}
+						<div class="input-field col s3">
+							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_concession.name }}">{{ S_form.number_concession.label }}</label>
+						</div>
 
-					<div class="input-field col s3">
-						<input name="{{ S_form.number_concession.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-						<label for="{{ S_form.number_concession.name }}">{{ S_form.number_concession.label }}</label>
-					</div>
+						<div class="input-field col s3">
+							<input name="{{ S_form.number_public.name }}" id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_public.name }}">{{ S_form.number_public.label }}</label>
+						</div>
 
-					<div class="input-field col s3">
-						<input name="{{ S_form.number_public.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-						<label for="{{ S_form.number_public.name }}">{{ S_form.number_public.label }}</label>
-					</div>
+						<div class="input-field col s3">
+							<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
+						</div>
 
-					<div class="input-field col s3">
-						<input name="{{ S_form.number_season.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-						<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
-					</div>
+						<div class="input-field col s3">
+							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+						</div>
 
-					<div class="input-field col s3">
-						<input name="{{ S_form.number_fellow.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-						<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
-					</div>
+						<div class="col s12">
+							<input name="{{ S_form.number_fringe.name }}" type="hidden" value="0">
+						</div>
+					{% elif report.category|stringformat:"s" == "Fringe" %}
+						<div class="input-field col s6">
+							<input name="{{ S_form.number_fringe.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_fringe.name }}">{{ S_form.number_fringe.label }}</label>
+						</div>
+
+						<div class="input-field col s3">
+							<input name="{{ S_form.number_season.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
+						</div>
+
+						<div class="input-field col s3">
+							<input name="{{ S_form.number_fellow.name }}" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+						</div>
+					{% else %}
+						<p class="white-text">This show does not have an appropriate category applied to it</p>
+						<p class="white-text">{{ report.category }}, {{ report.cat_id }}</p>
+					{% endif %}
 				</div>
 				<div class="row">
 					<div class="col s12">
 						<div class="card tiny grey darken-3 valign-wrapper">
-							
-								<div class="col s3">
-								{% if report.how_many_left == 0 %}
-									<button type="button" class="disabled btn nnt purple valign">Sell Tickets</button>
-								{% else %}
-									<button type="submit" class="btn nnt purple valign">Sell Tickets</button>
-								{% endif %}
-								</div>
-								<div class="col s3 offset-s6">
-									<button type="reset" class="btn nnt purple valign">Reset</button>
-								</div>
-							
+							<div class="col s6">
+								<p class="valign nnt-orange">Total sales: <span class="nnt-orange bold">£{{ report.total_sales }}</p>
+								<p class="nnt-orange">Order Total: <span class="bold">£</span> <span class="bold" id="out"></span></p>
+							</div>
+							<div class="col s3">
+								<button type="reset" class="btn nnt purple valign" onclick="resetButton()">Reset</button>
+							</div>
+							<div class="col s3"> 
+							{% if report.how_many_left == 0 %}
+								<button type="button" class="disabled btn nnt purple valign">Sell Tickets</button>
+							{% else %}
+								<button type="submit" class="btn nnt purple valign">Sell Tickets</button>
+							{% endif %}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -176,9 +216,37 @@
 				{% csrf_token %}
 					<div class="row">
 						<div class="col s12">
-						{% for tick in report.tickets %}
-							<button type="submit" class="modal-action modal-close btn-flat" name="{{ R_form.ticket.name }}" value="{{ tick.person_name }}">{{ tick.person_name }}</button>
-						{% endfor %}
+							<table class="highlight striped">
+								<thead>
+									<tr>
+										<th data-field="name">Name</th>
+										<th data-field="quantity">Quantity</th>
+										<th data-field="select">Select</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									{% for tick in report.tickets %}
+										{% if tick.cancelled %}
+										<tr id="cancelled">
+											<th><strike>{{ tick.person_name }}</strike></th>
+											<th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
+											<th><button type="button" class="btn disabled nnt purple">Add</button></th>
+										</tr>
+										{% else %}
+										<tr>
+											<th>{{ tick.person_name }}</th>
+											<th class="teal-text">{{ tick.quantity }}</th>
+											<th>
+											<button type="submit" class="btn nnt purple" name="{{ R_form.ticket.name }}" value="{{ tick.person_name}}">
+											Add
+											</button>
+											</th>
+										</tr>
+										{% endif %}
+									{% endfor %}
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</form>
@@ -205,5 +273,28 @@
 		});
 	</script>
 
+	<script>
+	$(document).ready(function(){
+	    $('input').keyup(function(){
+	    	var concession_price = document.getElementById("concession_price").value
+	    	var public_price = document.getElementById("public_price").value
+	    	var fringe_price = document.getElementById("fringe_price").value
+
+	        var num_concession = document.getElementById("concession").value * concession_price;
+	        var num_public = document.getElementById("public").value * public_price;
+	        var num_season = document.getElementById("season").value * 0;
+	        var num_fellow = document.getElementById("fellow").value * 0;
+
+	        var x = +num_concession + +num_public + +num_season + +num_fellow;
+	        document.getElementById("out").innerHTML = x;
+	    });
+	});
+	</script>
+
+	<script>
+	function resetButton() {
+		document.getElementById("out").innerHTML = 0;
+	}
+	</script>
 </body>
 </html>

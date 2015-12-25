@@ -10,6 +10,20 @@
 	margin: 0px 2em;
 }
 
+.bold {
+	font-weight: bold;
+}
+
+.nnt-orange {
+	// NNT Orange
+	color: #ffc425;
+}
+
+.nnt-purple {
+	// NNT Purple
+	color: #a54499;
+}
+
 #report-image {
 	width: 141px;
 	height: 200px;
@@ -34,5 +48,11 @@
 }
 
 #sale-percentage {
+	// NNT Purple
 	background-color: #a54499;
+}
+
+#cancelled {
+	color: grey;
+	background-color: #fcf8e3;
 }
