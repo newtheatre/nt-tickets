@@ -55,7 +55,16 @@
 								on <strong>{{ report.day }}</strong> at <strong>{{ report.time }}</strong> 
 								{% endif %}
 								</h1>
-								<button data-target="picker-modal" class="btn nnt purple modal-trigger waves-effect waves-dark">Choose Showing</button>
+								<div class="row">
+									<div class="col s6">
+										<button data-target="picker-modal" class="btn nnt purple modal-trigger waves-effect waves-dark">Choose Showing</button>
+									</div>
+									<div class="col s6">
+										<a href="/report/{{ show.id }}">
+											<button class="btn nnt purple waves-effect waves-dark">Show Report</button>
+										</a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
