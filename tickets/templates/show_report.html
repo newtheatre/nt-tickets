@@ -147,14 +147,14 @@
 							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
 						</div>
-					{% if report.time|stringformat:"s" == "7:30 pm" %}
+					{% if report.time|stringformat:"s" == report.default_time %}
 						<div class="col s12">
 							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
 							<input name="{{ S_form.number_external.name }}" id="external" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
-					{% elif report.time|stringformat:"s" == "2:30 pm" %}
+					{% elif report.time|stringformat:"s" == report.default_time_matinee %}
 						<div class="input-field col s6">
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_matinee_freshers.name }}">{{ S_form.number_matinee_freshers.label }}</label>
@@ -193,6 +193,11 @@
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
+					{% elif report.category|stringformat:"s" == "External" %}
+						<div class="input-field col s6">
+							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_fringe.name }}">{{ S_form.number_fringe.label }}</label>
+						</div>
 					{% else %}
 						<p class="white-text">This show does not have an appropriate category applied to it</p>
 						<p class="white-text">{{ report.category }}, {{ report.cat_id }}</p>
@@ -201,9 +206,11 @@
 				<div class="row">
 					<div class="col s12">
 						<div class="card tiny grey darken-3 valign-wrapper">
-							<div class="col s6">
-								<p class="valign nnt-orange">Total sales: <span class="nnt-orange bold">£{{ report.total_sales }}</p>
-								<p class="nnt-orange">Order Total: <span class="bold">£</span> <span class="bold" id="out"></span></p>
+							<div class="col s3">
+								<span class="valign nnt-orange" id="sale-text">Total sales: <span class="nnt-orange bold">£{{ report.total_sales }}</span></span>
+							</div>
+							<div class="col s3">
+								<span class="nnt-orange" id="sale-text">Order Total: <span class="bold">£</span><span class="bold" id="out"></span></span>
 							</div>
 							<div class="col s3">
 								<button type="reset" class="btn nnt purple valign" onclick="resetButton()">Reset</button>
