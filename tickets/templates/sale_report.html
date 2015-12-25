@@ -32,7 +32,56 @@
 		</div>
 	</header>
 	<main>
-	
+		<div class="container">
+			<div class="row">
+		        <div class="col s12">
+		        	{% if show.number == 1 %}
+		        		{% if not show.is_current %}
+		        			<p>There are no showings at the moment</p>
+		        		{% endif %}
+					{% elif show.number == 0 %}
+						<p>There are no shows at the moment<p>
+					{% else %}
+						{% for sh in show %}
+							{% if sh.is_current %}
+								<div class="card small grey darken-3">
+									<div class="row">
+										<div class="col s2">
+											<div class="card-image">
+												<a href="report/{{ sh.id }}/0" rel="nofollow">
+												{% if sh.poster_page %}
+													<img class="responsive-img" src="{{ sh.poster_page.url }}"	id="report-image">
+												{% else %}
+													<img class="responsive-img" src="{{ STATIC_URL }}images/no_image.png" id="report-image">
+												{% endif %}
+												</a>
+											</div>
+										</div>
+										<div class="col s10">
+											<div class="card-content">
+												<h1 class="light white-text flow-text">{{ sh.name }}</h1>
+												<span>{{ sh.show_sales }}</span>
+												<div class="row">
+												{% for oc in occurrence %}
+												<div class="col s2">
+													{% if oc.show|stringformat:"s" == sh.name %}
+														<p class="white-text">{{ oc.day_formatted }}</p>
+														<p class="white-text">{{ oc.total_sales }}</p>
+														<p class="white-text">{{ oc.tickets_sold }}</p>
+													{% endif %}
+												</div>
+												{% endfor %}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
 	</main>
 </body>
 </html>

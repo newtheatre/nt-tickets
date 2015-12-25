@@ -61,6 +61,11 @@
 }
 
 /* line 55, ../sass/style.scss */
+#sale-text {
+  font-size: 1.3em;
+}
+
+/* line 59, ../sass/style.scss */
 #cancelled {
   color: grey;
   background-color: #fcf8e3;
