@@ -82,7 +82,6 @@
 						</div>
 					</div>
 				</div>
-
 				{% for oc in occurrence %}
 					<div class="card small grey darken-3">
 						<div class="row">
@@ -92,9 +91,16 @@
 								</p>
 							</div>
 							{% if show.category|stringformat:"s" == "In House" %}
-								<p>in house</p>
-								{{ report.sale }}
-								{{ report.oc.id }}
+								
+								{{ oc.concession_tally }}
+
+								{% for s in report.sale %}
+									{% if s.occurrence.id == oc.id %}
+										<span class="white-text">
+										{{ s.number_concession }}
+										</span>
+									{% endif %}
+								{% endfor %}
 							{% elif show.category|stringformat:"s" == "Fringe" %}
 								<p>fringe</p>
 							{% elif show.category|stringformat:"s" == "External" %}

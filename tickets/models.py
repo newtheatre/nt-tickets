@@ -280,19 +280,70 @@ class Occurrence(models.Model):
                 )
         return sold
 
-    def sale_tally(self):
-        sale = Sale.objects.get(occurrence=self)
-        ret = []
+    def concession_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
         concession = 0
-        public = 0
-        season = 0
-        fellow = 0
-        fringe = 0
-        external = 0
-        matinee = 0
-        matinee_nnt = 0
-        
+        for s in sale:
+            if s.number_concession > 0:
+                concession += s.number_concession
+        return concession
 
+    def public_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        public = 0
+        for s in sale:
+            if s.number_public > 0:
+                public += s.number_public
+        return public
+
+    def season_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        season = 0
+        for s in sale:
+            if s.number_season > 0:
+                season += s.number_season
+        return season
+
+    def fellow_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        fellow = 0
+        for s in sale:
+            if s.number_fellow > 0:
+                fellow += s.number_fellow
+        return fellow
+
+    def external_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        external = 0
+        for s in sale:
+            if s.number_external > 0:
+                external += s.number_external
+        return external
+
+    def fringe_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        fringe = 0
+        for s in sale:
+            if s.number_fringe > 0:
+                fringe += s.number_fringe
+        return fringe
+
+    def matinee_freshers_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        matinee_freshers = 0
+        for s in sale:
+            if s.number_matinee_freshers > 0:
+                matinee_freshers += s.number_matinee_freshers
+        return matinee_freshers
+
+    def matinee_freshers_nnt_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        matinee_freshers_nnt = 0
+        for s in sale:
+            if s.number_matinee_freshers_nnt > 0:
+                matinee_freshers_nnt += s.number_matinee_freshers_nnt
+        return matinee_freshers_nnt
+        
     def total_sales(self):
         sale = Sale.objects.filter(occurrence=self)
         sold = 0
@@ -350,7 +401,7 @@ class Ticket(models.Model):
 class SaleManager(models.Manager):
 
     def sale_tally(self, show):
-        occs = Occurrence.objects.filter(show=show)
+        occs = Occurrence.objects.filter(id=show)
         ret = []
 
         number_concession = 0

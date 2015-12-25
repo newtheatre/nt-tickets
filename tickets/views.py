@@ -207,8 +207,14 @@ def SaleReportFull(request, show_name):
     report = dict()
     show = Show.objects.get(id=show_name)
     occurrence = Occurrence.objects.filter(show=show)
-    sale = Sale.objects.filter(occurrence=occurrence[2])
-    report['oc'] = occurrence[2]
+    report['sale'] = Sale.objects.filter(id__in=occurrence)
+    # sale = dict()
+    # i = 0
+    # for oc in occurrence:
+    #     sale[i] = Sale.objects.filter(occurrence=oc)
+    #     report[i].append(oc.id)
+    #     i += 1
+
 
     report['number_concession'] = [config.CONCESSION_PRICE[0]]
     report['number_public'] = [config.PUBLIC_PRICE[0]]
@@ -217,7 +223,7 @@ def SaleReportFull(request, show_name):
     report['number_matinee_freshers'] = [config.MATINEE_FRESHERS_PRICE[0]]
     report['number_matinee_freshers_nnt'] = [config.MATINEE_FRESHERS_NNT_PRICE[0]]
 
-    report['sale'] = sale
+    
 
     context = {
         'show': show,
