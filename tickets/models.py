@@ -107,7 +107,31 @@ class Show(models.Model):
         total = 0
         for oc in occs:
             sale = oc.total_sales()
-            total = total + sale
+            total += sale
+        return total
+
+    def total_tickets_sold_show(self):
+        sale = Occurrence.objects.filter(show=self)
+        total = 0
+        for s in sale:
+            ticket = s.total_tickets_sold()
+            total += ticket
+        return total
+
+    def total_tickets_reserved(self):
+        occs = Occurrence.objects.filter(show=self)
+        total = 0
+        for oc in occs:
+            reserve= oc.tickets_sold()
+            total += reserve
+        return total
+
+    def total_possible(self):
+        occs = Occurrence.objects.filter(show=self)
+        total = 0
+        for oc in occs:
+            maximum = oc.maximum_sell
+            total += maximum
         return total
 
     def has_occurrences(self):
@@ -220,6 +244,13 @@ class Occurrence(models.Model):
             sold += ticket.quantity
         return sold
 
+    def total_tickets_sold(self):
+        sale = Sale.objects.filter(occurrence=self)
+        total = 0
+        for s in sale:
+            total += 1
+        return total
+
     def sold_out(self):
         if self.tickets_sold() >= self.maximum_sell:
             return True
@@ -278,6 +309,7 @@ class Ticket(models.Model):
     email_address = models.EmailField(max_length=80)
     quantity = models.IntegerField(default=1)
     cancelled = models.BooleanField(default=False)
+    collected = models.BooleanField(default=False)
     unique_code = models.CharField(max_length=16)
 
     def save(self, *args, **kwargs):
