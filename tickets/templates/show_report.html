@@ -55,7 +55,7 @@
 								on <strong>{{ report.day }}</strong> at <strong>{{ report.time }}</strong> 
 								{% endif %}
 								</h1>
-								<button data-target="picker-modal" class="btn nnt purple modal-trigger waves-effect waves-light">Choose Showing</button>
+								<button data-target="picker-modal" class="btn nnt purple modal-trigger waves-effect waves-dark">Choose Showing</button>
 							</div>
 						</div>
 					</div>
@@ -109,6 +109,9 @@
 			<form class="col s12" action="." method="post">
 			{% csrf_token %}
 				<div class="row" id="form-background">
+					<div class="input-field col s12">
+						<input name="{{ S_form.unique_ticket.name }}" type="hidden" class="validate" value="{{ report.unique_ticket }}">
+					</div>
 					<div class="input-field col s9">
 						<input name="{{ S_form.ticket.name }}" type="text" class="validate" value="{{ report.reservation }}">
 						<label for="{{ S_form.ticket.name }}">{{ S_form.ticket.label }}</label>
@@ -207,10 +210,10 @@
 					<div class="col s12">
 						<div class="card tiny grey darken-3 valign-wrapper">
 							<div class="col s3">
-								<span class="valign nnt-orange" id="sale-text">Total sales: <span class="nnt-orange bold">£{{ report.total_sales }}</span></span>
+								<span class="valign nnt-orange sale-text">Total sales: <span class="nnt-orange bold">£{{ report.total_sales }}</span></span>
 							</div>
 							<div class="col s3">
-								<span class="nnt-orange" id="sale-text">Order Total: <span class="bold">£</span><span class="bold" id="out"></span></span>
+								<span class="nnt-orange sale-text">Order Total: <span class="bold">£</span><span class="bold" id="out"></span></span>
 							</div>
 							<div class="col s3">
 								<button type="reset" class="btn nnt purple valign" onclick="resetButton()">Reset</button>
@@ -270,7 +273,7 @@
 									<tr>
 										<th data-field="name">Name</th>
 										<th data-field="quantity">Quantity</th>
-										<th data-field="select">Select</th>
+										<th data-field="add">Add</th>
 									</tr>
 								</thead>
 
@@ -287,7 +290,7 @@
 											<th>{{ tick.person_name }}</th>
 											<th class="teal-text">{{ tick.quantity }}</th>
 											<th>
-											<button type="submit" class="btn nnt purple" name="{{ R_form.ticket.name }}" value="{{ tick.person_name}}">
+											<button type="submit" class="btn nnt purple" name="{{ R_form.unique_ticket.name }}" value="{{ tick.unique_code}}">
 											Add
 											</button>
 											</th>
