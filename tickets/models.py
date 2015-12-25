@@ -199,7 +199,7 @@ class Occurrence(models.Model):
         return self.date.strftime('%A')
 
     def time_formatted(self):
-        return self.time.strftime('%-I:%-M %p').lower()
+        return self.time.strftime('%-I:%M %p').lower()
 
     def datetime_formatted(self):
         return self.date.strftime('%A %d %B ') + \
