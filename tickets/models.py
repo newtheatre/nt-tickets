@@ -210,6 +210,28 @@ class OccurrenceManager(models.Manager):
                     ))
         return ret
 
+    def get_available_show(self, show):
+        today = datetime.date.today()
+        time = datetime.datetime.now()
+        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
+        ret = []
+        for oc in occs:
+            hour = oc.time.hour
+            close_time = hour + (2 * oc.hours_til_close)
+            if oc.date == today and time.hour >= close_time:
+                pass
+                break
+            else:
+                ret.append(( 
+                    oc.id, 
+                    oc.datetime_formatted(), 
+                    oc.day_formatted(), 
+                    oc.unique_code, 
+                    oc.time_formatted(), 
+                    oc.tickets_sold() 
+                    ))
+        return ret
+
 
 @python_2_unicode_compatible
 class Occurrence(models.Model):
