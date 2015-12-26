@@ -9,6 +9,10 @@ def gettext(s):
 
 PROJECT_PATH = os.path.dirname(__file__)
 
+# FIXTURE_DIRS = (
+#     'tickets/fixtures/'
+#     )
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -136,6 +140,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     # 'south',
+    'mathfilters',
 
     'bootstrap_toolkit',
     'tickets',
