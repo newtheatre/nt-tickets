@@ -24,3 +24,11 @@ MATINEE_FRESHERS_NNT_PRICE = [2.00, '£2.00']
 
 FELLOW_PRICE = [0.00, '£0.00']
 SEASON_PRICE = [0.00, '£0.00']
+
+CATEGORY_CHOICES = (
+	('IN_HOUSE', 'In House'),
+	('FRINGE', 'Fringe'),
+	('EXTERNAL', 'External'),
+	('STUFF', 'StuFF'),
+	('STUFF_EVENTS', 'StuFF Events'),
+	)
