@@ -57,6 +57,7 @@ class SaleForm(forms.Form):
     number_member = forms.IntegerField(label="Member Tickets" + config.MEMBER_PRICE[1])
     number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])
     number_season = forms.IntegerField(label="Season Pass Tickets")
+    number_season_sales = forms.IntegerField(label="Season Pass Ticket Sales " + config.SEASON_TICKET_PRICE[1])
     number_fellow = forms.IntegerField(label="Fellow Tickets")
     number_external = forms.IntegerField(label="External Tickets " + config.EXTERNAL_PRICE[1])
 
