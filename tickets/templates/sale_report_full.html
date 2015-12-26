@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+
+{% load mathfilters %}
 <html>
 <head>
 	{% include 'favicon.html' %}
@@ -39,7 +41,7 @@
 					<div class="row">
 						<div class="col s2">
 							<div class="card-image">
-								<a href="/report/{{ sh.id }}" rel="nofollow">
+								<a href="/report/" rel="nofollow">
 								{% if show.poster_page %}
 									<img class="responsive-img" src="{{ show.poster_page.url }}" id="report-image">
 								{% else %}
@@ -82,34 +84,102 @@
 						</div>
 					</div>
 				</div>
+			</div>
+
 				{% for oc in occurrence %}
-					<div class="card small grey darken-3">
-						<div class="row">
-							<div class="col s12">
-								<p class="light white-text center-align report-text bold">
+				<div class="row">
+
+					<div class="col s12" id="form-background">
+					<div class="sale-container">
+							<div class="col s12 center-align">
+								<span class="light nnt-orange report-text bold">
 								{{ oc.day_formatted }} at {{ oc.time_formatted }}
-								</p>
+								</span>
 							</div>
 							{% if show.category|stringformat:"s" == "In House" %}
-								
-								{{ oc.concession_tally }}
-
-								{% for s in report.sale %}
-									{% if s.occurrence.id == oc.id %}
-										<span class="white-text">
-										{{ s.number_concession }}
-										</span>
-									{% endif %}
-								{% endfor %}
+							<div class="col s12 center-align">
+								<table class="centered">
+									<thead>
+										<tr>
+											<th class="nnt-purple bold">Concession Tickets</th>
+											<th class="nnt-purple bold">Public Tickets</th>
+											<th class="nnt-purple bold">Season Tickets</th>
+											<th class="nnt-purple bold">Fellow Tickets</th>
+											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
+											<th class="nnt-purple bold">Matinee Freshers Tickets</th>
+											<th class="nnt-purple bold">Matinee NNT Freshers Tickets</th>
+											{% endif %}
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="nnt-orange bold">{{ oc.concession_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.public_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
+											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
+											<td class="nnt-orange bold">{{ oc.matinee_freshers_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.matinee_freshers_nnt_tally }}</td>
+											{% endif %}
+										</tr>
+										<tr>
+											<td class="nnt-orange bold">£{{ oc.concession_tally|mul:report.concession_price }}</td>
+											<td class="nnt-orange bold">£{{ oc.public_tally|mul:report.public_price }}</td>
+											<td class="nnt-orange bold">£{{ oc.season_tally|mul:0 }}</td>
+											<td class="nnt-orange bold">£{{ oc.fellow_tally|mul:0 }}</td>
+											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
+											<td class="nnt-orange bold">£{{ oc.matinee_freshers_tally|mul:report.matinee_freshers_price }}</td>
+											<td class="nnt-orange bold">£{{ oc.matinee_freshers_nnt_tally|mul:report.matinee_freshers_nnt_price }}</td>
+											{% endif %}
+										</tr>
+									</tbody>
+								</table>
+							</div>
 							{% elif show.category|stringformat:"s" == "Fringe" %}
-								<p>fringe</p>
+								<div class="col s12 center-align">
+								<table class="centered">
+									<thead>
+										<tr>
+											<th class="nnt-purple bold">Fringe Tickets</th>
+											<th class="nnt-purple bold">Season Tickets</th>
+											<th class="nnt-purple bold">Fellow Tickets</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="nnt-orange bold">{{ oc.fringe_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
+										</tr>
+										<tr>
+											<td class="nnt-orange bold">£{{ oc.fringe_tally|mul:report.fringe_price }}</td>
+											<td class="nnt-orange bold">£{{ oc.season_tally|mul:0 }}</td>
+											<td class="nnt-orange bold">£{{ oc.fellow_tally|mul:0 }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 							{% elif show.category|stringformat:"s" == "External" %}
 								<p>External</p>
 							{% else %}
 								<p class="light red-text center-align report-text">Invalid category applied ({{ show.category }})</p>
 							{% endif %}
+							<div class="col s12 center-align">
+								<div class="col s6">
+									<span class="nnt-orange bold small-text">Total tickets:
+									<span class="nnt-orange bold small-text">{{ oc.sales }}</span>
+									</span>
+								</div>
+								<div class="col s6">
+									<span class="nnt-orange bold small-text">Total sales:
+									<span class="nnt-orange bold small-text">£{{ oc.total_sales }}</span>
+									</span>
+								</div>
+							</div>
+							<div class="col s12"><br></div>
 						</div>
 					</div>
+				</div>
 				{% endfor %}
 			</div>
 		</div>
