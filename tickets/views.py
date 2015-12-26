@@ -70,6 +70,7 @@ def ShowReport(request, show_name, occ_id):
     report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
     report['concession_price'] = config.CONCESSION_PRICE[0]
+    report['member_price'] = config.MEMBER_PRICE[0]
     report['public_price'] = config.PUBLIC_PRICE[0]
     report['fringe_price'] = config.FRINGE_PRICE[0]
     report['external_price'] = config.EXTERNAL_PRICE[0]
@@ -92,6 +93,7 @@ def ShowReport(request, show_name, occ_id):
 
         report['category'] = occ_fin.show.category
         report['total_sales'] = occ_fin.total_sales()
+        report['sold'] = occ_fin.total_tickets_sold()
     else:
         report['have_form'] = False
 
@@ -117,6 +119,7 @@ def ShowReport(request, show_name, occ_id):
                 T.save()
 
             s.number_concession = S_form.cleaned_data['number_concession']
+            s.number_member = S_form.cleaned_data['number_member']
             s.number_public = S_form.cleaned_data['number_public']
             s.number_season = S_form.cleaned_data['number_season']
             s.number_fellow = S_form.cleaned_data['number_fellow']
@@ -129,6 +132,7 @@ def ShowReport(request, show_name, occ_id):
 
             s.price = (
                 S_form.cleaned_data['number_concession'] * config.CONCESSION_PRICE[0] +
+                S_form.cleaned_data['number_member'] * config.MEMBER_PRICE[0] +
                 S_form.cleaned_data['number_public'] * config.PUBLIC_PRICE[0] +
                 S_form.cleaned_data['number_external'] * config.EXTERNAL_PRICE[0] +
                 S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] +
@@ -136,21 +140,37 @@ def ShowReport(request, show_name, occ_id):
                 S_form.cleaned_data['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
                 )
 
+            s.number = (
+                S_form.cleaned_data['number_concession'] +
+                S_form.cleaned_data['number_member'] +
+                S_form.cleaned_data['number_public'] +
+                S_form.cleaned_data['number_external'] +
+                S_form.cleaned_data['number_fringe'] +
+                S_form.cleaned_data['number_matinee_freshers'] +
+                S_form.cleaned_data['number_matinee_freshers_nnt'] +
+                S_form.cleaned_data['number_season'] +
+                S_form.cleaned_data['number_fellow']
+                )
+
             s.save()
 
             report['reservation'] = 'None'
 
             if occ_id > '0':
-                report['sold'] = occ_fin.sales()
-                report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.sales()
+                report['sold'] = occ_fin.total_tickets_sold()
+                report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
                 report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
                 report['total_sales'] = occ_fin.total_sales()
 
         elif R_form.is_valid():
             report['unique_ticket'] = R_form.cleaned_data['unique_ticket']
 
-            ticket = Ticket.objects.get(unique_code=R_form.cleaned_data['unique_ticket'])
-            report['reservation'] = ticket.person_name
+            try:
+                ticket = Ticket.objects.get(unique_code=R_form.cleaned_data['unique_ticket'])
+                report['reservation'] = ticket.person_name
+            except Ticket.DoesNotExist:
+                report['reservation'] = 'None'
+
         else:
             pass
 
@@ -161,8 +181,8 @@ def ShowReport(request, show_name, occ_id):
         report['unique_ticket'] = 'None'
 
         if occ_id > '0':
-            report['sold'] = occ_fin.sales()
-            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.sales()
+            report['sold'] = occ_fin.total_tickets_sold()
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
             report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
             report['total_sales'] = occ_fin.total_sales()
 
