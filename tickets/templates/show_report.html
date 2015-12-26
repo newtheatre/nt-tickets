@@ -142,32 +142,34 @@
 						<input type="hidden" value="{{ report.matinee_freshers_nnt_price }}" id="matinee_freshers_nnt_price">
 					</div>
 					{% if report.category|stringformat:"s" == "In House" %}
-						<div class="input-field col s2">
+						<div class="input-field col s4">
 							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_concession.name }}">{{ S_form.number_concession.label }}</label>
 						</div>
 
-						<div class="input-field col s2">
+						<div class="input-field col s4">
 							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_member.name }}">{{ S_form.number_member.label }}</label>
 						</div>
 
-						<div class="input-field col s2">
+						<div class="input-field col s4">
 							<input name="{{ S_form.number_public.name }}" id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_public.name }}">{{ S_form.number_public.label }}</label>
 						</div>
 
-						<div class="input-field col s2">
+						<div class="input-field col s4">
 							<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
 						</div>
 
-						<div class="input-field col s2">
+						<div class="input-field col s4">
 							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
 						</div>
 
-						<div class="input-field col s2">
+						<div class="input-field col s4">
+							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
 						</div>
 					{% if report.time|stringformat:"s" == report.default_time %}
 						<div class="col s12">
@@ -193,7 +195,7 @@
 						</div>
 					{% endif %}
 					{% elif report.category|stringformat:"s" == "Fringe" %}
-						<div class="input-field col s6">
+						<div class="input-field col s3">
 							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_fringe.name }}">{{ S_form.number_fringe.label }}</label>
 						</div>
@@ -206,6 +208,11 @@
 						<div class="input-field col s3">
 							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+						</div>
+
+						<div class="input-field col s3">
+							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
 						</div>
 
 						<div class="col s12">
