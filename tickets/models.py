@@ -33,7 +33,8 @@ class Category(models.Model):
         help_text='Low to high, sorts the sidebar.'
         )
 
-    def __str__(self): return self.name
+    def __str__(self): 
+        return self.name
 
 
 @python_2_unicode_compatible
@@ -114,7 +115,7 @@ class Show(models.Model):
         sale = Occurrence.objects.filter(show=self)
         total = 0
         for s in sale:
-            ticket = s.total_tickets_sold()
+            ticket = s.sales()
             total += ticket
         return total
 
@@ -122,7 +123,7 @@ class Show(models.Model):
         occs = Occurrence.objects.filter(show=self)
         total = 0
         for oc in occs:
-            reserve= oc.tickets_sold()
+            reserve = oc.tickets_sold()
             total += reserve
         return total
 
@@ -273,13 +274,6 @@ class Occurrence(models.Model):
             sold += ticket.quantity
         return sold
 
-    def total_tickets_sold(self):
-        sale = Sale.objects.filter(occurrence=self)
-        total = 0
-        for s in sale:
-            total += 1
-        return total
-
     def sold_out(self):
         if self.tickets_sold() >= self.maximum_sell:
             return True
@@ -298,7 +292,23 @@ class Occurrence(models.Model):
                 s.number_fringe +
                 s.number_external +
                 s.number_matinee_freshers +
-                S.number_matinee_freshers_nnt
+                s.number_matinee_freshers_nnt
+                )
+        return sold
+
+    def total_sales(self):
+        sale = Sale.objects.filter(occurrence=self)
+        sold = 0
+        for s in sale:
+            sold += (
+                s.number_concession * config.CONCESSION_PRICE[0] +
+                s.number_public * config.PUBLIC_PRICE[0] +
+                s.number_season * config.SEASON_PRICE[0] +
+                s.number_fellow * config.FELLOW_PRICE[0] +
+                s.number_fringe * config.FRINGE_PRICE[0] +
+                s.number_external * config.EXTERNAL_PRICE[0] +
+                s.number_matinee_freshers * config.MATINEE_FRESHERS_PRICE[0] +
+                s.number_matinee_freshers_nnt * config.MATINEE_FRESHERS_NNT_PRICE[0]
                 )
         return sold
 
@@ -365,22 +375,6 @@ class Occurrence(models.Model):
             if s.number_matinee_freshers_nnt > 0:
                 matinee_freshers_nnt += s.number_matinee_freshers_nnt
         return matinee_freshers_nnt
-        
-    def total_sales(self):
-        sale = Sale.objects.filter(occurrence=self)
-        sold = 0
-        for s in sale:
-            sold += (
-                s.number_concession * config.CONCESSION_PRICE[0] +
-                s.number_public * config.PUBLIC_PRICE[0] +
-                s.number_fringe * config.FRINGE_PRICE[0] +
-                s.number_external * config.EXTERNAL_PRICE[0] +
-                s.number_matinee_freshers * config.MATINEE_FRESHERS_PRICE[0] +
-                s.number_matinee_freshers_nnt * config.MATINEE_FRESHERS_NNT_PRICE[0] +
-                s.number_season +
-                s.number_fellow
-                )
-        return sold
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
@@ -420,47 +414,23 @@ class Ticket(models.Model):
             " for " + self.person_name
 
 
-class SaleManager(models.Manager):
+class SaleBase(models.Model):
 
-    def sale_tally(self, show):
-        occs = Occurrence.objects.filter(id=show)
-        ret = []
+    class Meta:
+        abstract = True
 
-        number_concession = 0
-        number_public = 0
-        number_season = 0
-        number_fellow = 0
-        number_external = 0
-        number_fringe = 0
-        number_matinee_freshers = 0
-        number_matinee_freshers_nnt = 0
-
-        for oc in occs:
-            sale = Sale.objects.get(occurrence=oc)
-
-            number_concession += sale.number_concession
-            number_public += sale.number_public
-            number_season += sale.number_season
-            number_fellow += sale.number_fellow
-            number_external += sale.number_external
-            number_fringe += sale.number_fringe
-            number_matinee_freshers += sale.number_matinee_freshers
-            number_matinee_freshers_nnt += sale.number_matinee_freshers_nnt
-
-            ret.append(( 
-                number_concession, 
-                number_public, 
-                number_season, 
-                number_fellow, 
-                number_external, 
-                number_fringe, 
-                number_matinee_freshers, 
-                number_matinee_freshers_nnt 
-                ))
-        return ret
+    number_concession = models.IntegerField()
+    number_member = models.IntegerField()
+    number_public = models.IntegerField()
+    number_season = models.IntegerField()
+    number_fellow = models.IntegerField()
+    number_external = models.IntegerField()
+    number_fringe = models.IntegerField()
+    number_matinee_freshers = models.IntegerField()
+    number_matinee_freshers_nnt = models.IntegerField()
 
 
-class Sale(models.Model):
+class Sale(SaleBase):
 
     class Meta:
         verbose_name = 'Sale'
@@ -469,25 +439,33 @@ class Sale(models.Model):
     occurrence = models.ForeignKey(Occurrence)
     ticket = models.CharField(max_length=80)
 
-    objects = SaleManager()
-
     stamp = models.DateTimeField(auto_now=True)
     unique_code = models.CharField(max_length=16)
 
     price = models.DecimalField(max_digits=6, decimal_places=2)
-
-    number_concession = models.IntegerField()
-    number_public = models.IntegerField()
-    number_season = models.IntegerField()
-    number_fellow = models.IntegerField()
-    number_external = models.IntegerField()
-
-    number_fringe = models.IntegerField()
-
-    number_matinee_freshers = models.IntegerField()
-    number_matinee_freshers_nnt = models.IntegerField()
     
     def save(self, *args, **kwargs):
         if not self.unique_code:
             self.unique_code = rand_16()
         super(Sale, self).save(*args, **kwargs)
+
+
+class ExternalPricing(models.Model):
+
+    class Meta:
+        verbose_name = 'External Pricing'
+        verbose_name_plural = 'External Pricing'
+
+    show = models.ForeignKey(Show)
+
+    concession_price = models.IntegerField()
+    public_price = models.IntegerField()
+    member_price = models.IntegerField()
+
+    allow_season_tickets = models.BooleanField(default=True)
+    allow_fellow_tickets = models.BooleanField(default=True)
+    allow_half_matinee = models.BooleanField(default=True)
+    allow_half_nnt_matinee = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        super(ExternalPricing, self).save(*args, **kwargs)
