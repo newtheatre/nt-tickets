@@ -9,10 +9,6 @@ def gettext(s):
 
 PROJECT_PATH = os.path.dirname(__file__)
 
-# FIXTURE_DIRS = (
-#     'tickets/fixtures/'
-#     )
-
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
