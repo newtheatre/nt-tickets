@@ -120,8 +120,8 @@ class OccurrenceAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    fields = ['name', 'slug', 'sort',]
-    list_display = ('name', 'slug', 'sort',)
+    fields = ['name', 'slug', 'sort']
+    list_display = ('name', 'slug', 'sort')
     ordering = ['sort']
     search_fields = ['show']
 
