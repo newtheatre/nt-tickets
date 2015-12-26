@@ -81,6 +81,7 @@ class Show(models.Model):
 
     category = models.ForeignKey('Category')
 
+
     IMAGE_SIZES = {
                 'poster_wall': (126, 178),
                 'poster_page': (256, 362),
@@ -115,7 +116,7 @@ class Show(models.Model):
         sale = Occurrence.objects.filter(show=self)
         total = 0
         for s in sale:
-            ticket = s.sales()
+            ticket = s.total_tickets_sold()
             total += ticket
         return total
 
@@ -280,36 +281,18 @@ class Occurrence(models.Model):
         else:
             return False
 
-    def sales(self):
+    def total_tickets_sold(self):
         sale = Sale.objects.filter(occurrence=self)
         sold = 0
         for s in sale:
-            sold += (
-                s.number_concession +
-                s.number_public +
-                s.number_season +
-                s.number_fellow +
-                s.number_fringe +
-                s.number_external +
-                s.number_matinee_freshers +
-                s.number_matinee_freshers_nnt
-                )
+            sold += s.number
         return sold
 
     def total_sales(self):
         sale = Sale.objects.filter(occurrence=self)
         sold = 0
         for s in sale:
-            sold += (
-                s.number_concession * config.CONCESSION_PRICE[0] +
-                s.number_public * config.PUBLIC_PRICE[0] +
-                s.number_season * config.SEASON_PRICE[0] +
-                s.number_fellow * config.FELLOW_PRICE[0] +
-                s.number_fringe * config.FRINGE_PRICE[0] +
-                s.number_external * config.EXTERNAL_PRICE[0] +
-                s.number_matinee_freshers * config.MATINEE_FRESHERS_PRICE[0] +
-                s.number_matinee_freshers_nnt * config.MATINEE_FRESHERS_NNT_PRICE[0]
-                )
+            sold += s.price
         return sold
 
     def concession_tally(self):
@@ -443,24 +426,58 @@ class Sale(SaleBase):
     unique_code = models.CharField(max_length=16)
 
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    
+    number = models.IntegerField()
+
     def save(self, *args, **kwargs):
         if not self.unique_code:
             self.unique_code = rand_16()
         super(Sale, self).save(*args, **kwargs)
 
 
-class ExternalPricing(models.Model):
+class PricingBase(models.Model):
+
+    class Meta:
+        abstract =True
+
+    concession_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.CONCESSION_PRICE[0])
+    public_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.PUBLIC_PRICE[0])
+    member_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MEMBER_PRICE[0])
+
+
+class InHousePricing(PricingBase):
+
+    class Meta:
+        verbose_name = 'In House Pricing'
+        verbose_name_plural = 'In House Pricing'
+
+    season_ticket_price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    matinee_freshers_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_PRICE[0])
+    matinee_freshers_nnt_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_NNT_PRICE[0])
+
+    def save(self, *args, **kwargs):
+        super(InHousePricing, self).save(*args, **kwargs)
+
+
+class FringePricing(PricingBase):
+
+    class Meta:
+        verbose_name = 'Fringe Pricing'
+        verbose_name_plural = 'Fringe Pricing'
+
+    season_ticket_price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        super(FringePricing, self).save(*args, **kwargs)
+
+
+class ExternalPricing(PricingBase):
 
     class Meta:
         verbose_name = 'External Pricing'
         verbose_name_plural = 'External Pricing'
 
     show = models.ForeignKey(Show)
-
-    concession_price = models.IntegerField()
-    public_price = models.IntegerField()
-    member_price = models.IntegerField()
 
     allow_season_tickets = models.BooleanField(default=True)
     allow_fellow_tickets = models.BooleanField(default=True)
@@ -469,3 +486,23 @@ class ExternalPricing(models.Model):
 
     def save(self, *args, **kwargs):
         super(ExternalPricing, self).save(*args, **kwargs)
+
+
+class StuFFPricing(PricingBase):
+
+    class Meta:
+        verbose_name = 'StuFF Pricing'
+        verbose_name_plural = 'StuFF Pricing'
+
+    def save(self, *args, **kwargs):
+        super(StuFFPricing, self).save(*args, **kwargs)
+
+
+class StuFFEventPricing(PricingBase):
+
+    class Meta:
+        verbose_name = 'StuFF Event Pricing'
+        verbose_name_plural = 'StuFF Event Pricing'
+
+    def save(self, *args, **kwargs):
+        super(StuFFPricing, self).save(*args, **kwargs)
