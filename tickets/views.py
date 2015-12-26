@@ -208,13 +208,9 @@ def SaleReportFull(request, show_name):
     show = Show.objects.get(id=show_name)
     occurrence = Occurrence.objects.filter(show=show)
     report['sale'] = Sale.objects.filter(id__in=occurrence)
-    # sale = dict()
-    # i = 0
-    # for oc in occurrence:
-    #     sale[i] = Sale.objects.filter(occurrence=oc)
-    #     report[i].append(oc.id)
-    #     i += 1
 
+    report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
+    report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
     report['number_concession'] = [config.CONCESSION_PRICE[0]]
     report['number_public'] = [config.PUBLIC_PRICE[0]]
@@ -223,7 +219,12 @@ def SaleReportFull(request, show_name):
     report['number_matinee_freshers'] = [config.MATINEE_FRESHERS_PRICE[0]]
     report['number_matinee_freshers_nnt'] = [config.MATINEE_FRESHERS_NNT_PRICE[0]]
 
-    
+    report['concession_price'] = config.CONCESSION_PRICE[0]
+    report['public_price'] = config.PUBLIC_PRICE[0]
+    report['fringe_price'] = config.FRINGE_PRICE[0]
+    report['external_price'] = config.EXTERNAL_PRICE[0]
+    report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
+    report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
 
     context = {
         'show': show,
