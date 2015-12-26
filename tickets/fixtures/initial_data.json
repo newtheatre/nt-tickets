@@ -3,9 +3,8 @@
   "model": "tickets.category",
   "pk": 1,
   "fields": {
-    "name": "test_catagory",
-    "category": "IN_HOUSE",
-    "slug": "test_slug",
+    "name": "In House",
+    "slug": "in_house",
     "sort": 1
   }
 },
@@ -14,7 +13,6 @@
   "pk": 2,
   "fields": {
     "name": "Fringe",
-    "category": "IN_HOUSE",
     "slug": "fringe",
     "sort": 2
   }
@@ -23,9 +21,8 @@
   "model": "tickets.category",
   "pk": 3,
   "fields": {
-    "name": "In House",
-    "category": "IN_HOUSE",
-    "slug": "in_house",
+    "name": "External",
+    "slug": "external",
     "sort": 3
   }
 },
@@ -33,10 +30,18 @@
   "model": "tickets.category",
   "pk": 4,
   "fields": {
-    "name": "External",
-    "category": "IN_HOUSE",
-    "slug": "ext",
+    "name": "StuFF",
+    "slug": "stuff",
     "sort": 4
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 5,
+  "fields": {
+    "name": "StuFF Events",
+    "slug": "stuff_events",
+    "sort": 5
   }
 },
 {
