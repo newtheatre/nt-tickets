@@ -12,10 +12,11 @@ You will need:
 
 - Pop your database details into configuration/development.py staging.py or production.py
 - Change configuration/enviroment.py to match what enviroment you'd like to use
-- pip install -r requirements.txt (google any compilation errors, usually you're just missing a package, or two)
-- python manage.py migrate, create the database
-- python manage.py createsuperuser, make yourself an admin
-- bin/start.sh, you can modify this file to change the default port (8000)
+- `pip install -r requirements.txt` (google any compilation errors, usually you're just missing a package, or two)
+- `python manage.py migrate`, create the database
+- Running `python manage.py loaddata initial_category` will load the correct categories into the database
+- Run `python manage.py createsuperuser`, to make yourself an admin
+- `bin/start.sh`, you can modify this file to change the default port (8000)
 
 ## To Configure
 

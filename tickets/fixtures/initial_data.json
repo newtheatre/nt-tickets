@@ -1,0 +1,322 @@
+[
+{
+  "model": "tickets.category",
+  "pk": 1,
+  "fields": {
+    "name": "test_catagory",
+    "category": "IN_HOUSE",
+    "slug": "test_slug",
+    "sort": 1
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 2,
+  "fields": {
+    "name": "Fringe",
+    "category": "IN_HOUSE",
+    "slug": "fringe",
+    "sort": 2
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 3,
+  "fields": {
+    "name": "In House",
+    "category": "IN_HOUSE",
+    "slug": "in_house",
+    "sort": 3
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 4,
+  "fields": {
+    "name": "External",
+    "category": "IN_HOUSE",
+    "slug": "ext",
+    "sort": 4
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 1,
+  "fields": {
+    "name": "test_show",
+    "slug": "as",
+    "location": "New Theatre",
+    "description": "as meor",
+    "long_description": "as meor mero",
+    "poster": "posters/test_poster_2BkVRhf.jpg",
+    "poster_wall": "posters/test_poster_2BkVRhf_h284p3b.jpg",
+    "poster_page": "posters/test_poster_2BkVRhf_STADuVI.jpg",
+    "poster_tiny": "posters/test_poster_2BkVRhf_rWt8LFY.jpg",
+    "start_date": "2015-12-20",
+    "end_date": "2018-12-20",
+    "category": 3
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 2,
+  "fields": {
+    "name": "test_show_wrong_cat",
+    "slug": "test_show_2",
+    "location": "New Theatre",
+    "description": "info",
+    "long_description": "more info",
+    "poster": "posters/test_poster_PBLnD3X.jpg",
+    "poster_wall": "posters/test_poster_PBLnD3X_UFQHCUT.jpg",
+    "poster_page": "posters/test_poster_PBLnD3X_VT8LluI.jpg",
+    "poster_tiny": "posters/test_poster_PBLnD3X_UpA3iHE.jpg",
+    "start_date": "2015-12-21",
+    "end_date": "2017-12-21",
+    "category": 1
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 3,
+  "fields": {
+    "name": "test_show_past",
+    "slug": "test_show_past",
+    "location": "New Theatre",
+    "description": "It's only a description thing",
+    "long_description": "It's only a long description thing",
+    "poster": "",
+    "poster_wall": "",
+    "poster_page": "",
+    "poster_tiny": "",
+    "start_date": "2013-12-21",
+    "end_date": "2014-12-21",
+    "category": 1
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 4,
+  "fields": {
+    "name": "test_show_fringe",
+    "slug": "test_show_fringe",
+    "location": "New Theatre",
+    "description": "a show",
+    "long_description": "a show long",
+    "poster": "posters/test_poster_EzU9QP2.jpg",
+    "poster_wall": "posters/test_poster_EzU9QP2_KO3P4H0.jpg",
+    "poster_page": "posters/test_poster_EzU9QP2_KzsdCbv.jpg",
+    "poster_tiny": "posters/test_poster_EzU9QP2_X5mvzoK.jpg",
+    "start_date": "2015-12-24",
+    "end_date": "2016-12-24",
+    "category": 2
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 5,
+  "fields": {
+    "name": "Test Show External",
+    "slug": "test-show-external",
+    "location": "New Theatre",
+    "description": "A description",
+    "long_description": "A long description",
+    "poster": "",
+    "poster_wall": "",
+    "poster_page": "",
+    "poster_tiny": "",
+    "start_date": "2015-12-25",
+    "end_date": "2016-12-25",
+    "category": 4
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 1,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-20",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "706eebc00ade7c0e"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 2,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-22",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "63fbd5c85e804171"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 3,
+  "fields": {
+    "show": 2,
+    "date": "2015-12-21",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "be34f283da3378e1"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 4,
+  "fields": {
+    "show": 1,
+    "date": "2015-12-25",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "c6d24536e986f130"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 5,
+  "fields": {
+    "show": 2,
+    "date": "2016-12-23",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "9bcdcbd85719cdb6"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 6,
+  "fields": {
+    "show": 4,
+    "date": "2016-12-24",
+    "time": "19:30:00",
+    "maximum_sell": 30,
+    "hours_til_close": 2,
+    "unique_code": "2e93c6cd539728bb"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 7,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-25",
+    "time": "14:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "11b2e3128b7e1028"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 8,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-25",
+    "time": "19:00:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "982cd66a6f9c9a48"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 9,
+  "fields": {
+    "show": 5,
+    "date": "2016-12-25",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "22968a8bc97c8fd5"
+  }
+},
+{
+  "model": "tickets.ticket",
+  "pk": 1,
+  "fields": {
+    "occurrence": 1,
+    "stamp": "2015-12-21T19:52:58.428",
+    "person_name": "hj",
+    "email_address": "h@h.com",
+    "quantity": 1,
+    "cancelled": true,
+    "collected": false,
+    "unique_code": "f2617183588cfff4"
+  }
+},
+{
+  "model": "tickets.ticket",
+  "pk": 2,
+  "fields": {
+    "occurrence": 1,
+    "stamp": "2015-12-25T16:54:39.518",
+    "person_name": "jhl",
+    "email_address": "1@1.com",
+    "quantity": 10,
+    "cancelled": false,
+    "collected": true,
+    "unique_code": "4edaba51a3fc6ea3"
+  }
+},
+{
+  "model": "tickets.ticket",
+  "pk": 3,
+  "fields": {
+    "occurrence": 1,
+    "stamp": "2015-12-25T16:37:08.047",
+    "person_name": "aksj",
+    "email_address": "1@1.com",
+    "quantity": 1,
+    "cancelled": false,
+    "collected": true,
+    "unique_code": "a292d47ea4183593"
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 88,
+  "fields": {
+    "number_concession": 1,
+    "number_member": 0,
+    "number_public": 1,
+    "number_season": 1,
+    "number_fellow": 1,
+    "number_external": 0,
+    "number_fringe": 0,
+    "number_matinee_freshers": 0,
+    "number_matinee_freshers_nnt": 0,
+    "occurrence": 1,
+    "ticket": "None",
+    "stamp": "2015-12-26T14:26:18.443",
+    "unique_code": "f454d80e21848975",
+    "price": "13.00"
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 89,
+  "fields": {
+    "number_concession": 1,
+    "number_member": 0,
+    "number_public": 1,
+    "number_season": 1,
+    "number_fellow": 1,
+    "number_external": 0,
+    "number_fringe": 0,
+    "number_matinee_freshers": 1,
+    "number_matinee_freshers_nnt": 1,
+    "occurrence": 7,
+    "ticket": "None",
+    "stamp": "2015-12-26T14:34:45.945",
+    "unique_code": "d9fa248f9c7fdf87",
+    "price": "17.50"
+  }
+}
+]
