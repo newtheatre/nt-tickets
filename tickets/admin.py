@@ -120,13 +120,38 @@ class OccurrenceAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    fields = ['name', 'slug', 'sort']
-    list_display = ('name', 'slug', 'sort')
+    fields = ['name', 'slug', 'sort',]
+    list_display = ('name', 'slug', 'sort',)
     ordering = ['sort']
     search_fields = ['show']
 
+class ExternalPriceAdmin(admin.ModelAdmin):
+    fields = [
+        'show',
+        'concession_price',
+        'member_price',
+        'public_price',
+        'allow_season_tickets',
+        'allow_fellow_tickets',
+        'allow_half_matinee',
+        'allow_half_nnt_matinee'
+        ]
+
+    list_display = [
+        'show', 
+        'concession_price',
+        'member_price',
+        'public_price',
+        'allow_season_tickets',
+        'allow_fellow_tickets',
+        'allow_half_matinee',
+        'allow_half_nnt_matinee'
+        ]
+
+    search_fields = ['show']
 
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
+admin.site.register(ExternalPricing, ExternalPriceAdmin)
