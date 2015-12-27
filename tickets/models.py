@@ -268,6 +268,7 @@ class Occurrence(models.Model):
         return self.date.strftime('%A %d %B ') + \
             self.time.strftime('%-I%p').lower()
 
+    # Total number of tickets reserved
     def tickets_sold(self):
         tickets = Ticket.objects.filter(occurrence=self).filter(cancelled=False)
         sold = 0
@@ -275,12 +276,14 @@ class Occurrence(models.Model):
             sold += ticket.quantity
         return sold
 
+    # Find if all the tickets have been reserved
     def sold_out(self):
         if self.tickets_sold() >= self.maximum_sell:
             return True
         else:
             return False
 
+    # Total tickets sold
     def total_tickets_sold(self):
         sale = Sale.objects.filter(occurrence=self)
         sold = 0
@@ -288,6 +291,7 @@ class Occurrence(models.Model):
             sold += s.number
         return sold
 
+    # Returns the total profit from ticket sales
     def total_sales(self):
         sale = Sale.objects.filter(occurrence=self)
         sold = 0
@@ -413,23 +417,7 @@ class Ticket(models.Model):
             " for " + self.person_name
 
 
-class SaleBase(models.Model):
-
-    class Meta:
-        abstract = True
-
-    number_concession = models.IntegerField()
-    number_member = models.IntegerField()
-    number_public = models.IntegerField()
-    number_season = models.IntegerField()
-    number_season_sale = models.IntegerField()
-    number_fellow = models.IntegerField()
-    number_fringe = models.IntegerField()
-    number_matinee_freshers = models.IntegerField()
-    number_matinee_freshers_nnt = models.IntegerField()
-
-
-class Sale(SaleBase):
+class Sale(models.Model):
 
     class Meta:
         verbose_name = 'Sale'
@@ -443,6 +431,16 @@ class Sale(SaleBase):
 
     price = models.DecimalField(max_digits=6, decimal_places=2)
     number = models.IntegerField()
+
+    number_concession = models.IntegerField()
+    number_member = models.IntegerField()
+    number_public = models.IntegerField()
+    number_season = models.IntegerField()
+    number_season_sale = models.IntegerField()
+    number_fellow = models.IntegerField()
+    number_fringe = models.IntegerField()
+    number_matinee_freshers = models.IntegerField()
+    number_matinee_freshers_nnt = models.IntegerField()
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
