@@ -37,4 +37,6 @@ if settings.DEBUG:
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
     url(r'', include('django.contrib.staticfiles.urls')),
+
+    url(r'^404', tickets_views.ret404, name='404')
 ] + urlpatterns

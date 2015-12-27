@@ -13,84 +13,95 @@
 }
 
 /* line 13, ../sass/style.scss */
+#full-div {
+  width: 100vw;
+  height: 90vh;
+}
+
+/* line 18, ../sass/style.scss */
 .bold {
   font-weight: bold;
 }
 
-/* line 17, ../sass/style.scss */
+/* line 22, ../sass/style.scss */
 .nnt-orange {
   color: #ffc425;
 }
 
-/* line 22, ../sass/style.scss */
+/* line 27, ../sass/style.scss */
 .nnt-purple {
   color: #a54499;
 }
 
-/* line 27, ../sass/style.scss */
+/* line 32, ../sass/style.scss */
 #report-image {
   width: 141px;
   height: 200px;
 }
 
-/* line 32, ../sass/style.scss */
+/* line 37, ../sass/style.scss */
 #nav-logo {
   width: auto;
   height: 1.7em;
   padding-top: 0.2em;
 }
 
-/* line 38, ../sass/style.scss */
+/* line 43, ../sass/style.scss */
 #form-button-inline {
   padding-top: 1.6em;
 }
 
-/* line 42, ../sass/style.scss */
+/* line 47, ../sass/style.scss */
 #form-background {
   background-color: #424242;
 }
 
-/* line 46, ../sass/style.scss */
+/* line 51, ../sass/style.scss */
 #report-bar {
   padding-top: 0.4em;
 }
 
-/* line 50, ../sass/style.scss */
+/* line 55, ../sass/style.scss */
 #sale-percentage {
   background-color: #a54499;
 }
 
-/* line 55, ../sass/style.scss */
+/* line 60, ../sass/style.scss */
 .sale-text {
   font-size: 1.3em;
 }
 
-/* line 59, ../sass/style.scss */
+/* line 64, ../sass/style.scss */
 .report-text {
   font-size: 1.2em;
 }
 
-/* line 63, ../sass/style.scss */
+/* line 68, ../sass/style.scss */
 .small-text {
   font-size: 1.1em;
 }
 
-/* line 67, ../sass/style.scss */
+/* line 72, ../sass/style.scss */
+.large-text {
+  font-size: 7em;
+}
+
+/* line 76, ../sass/style.scss */
 #cancelled {
   background-color: #faf3d1 !important;
 }
 
-/* line 71, ../sass/style.scss */
+/* line 80, ../sass/style.scss */
 #collect {
   background-color: #c7e4f3 !important;
 }
 
-/* line 75, ../sass/style.scss */
+/* line 84, ../sass/style.scss */
 .pad-small {
   margin-top: 0.5em;
 }
 
-/* line 79, ../sass/style.scss */
+/* line 88, ../sass/style.scss */
 .sale-container {
   margin: 1em 0.5em;
 }

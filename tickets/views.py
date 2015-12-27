@@ -9,7 +9,6 @@ from django.template import Context, RequestContext
 from django.core import serializers
 import json
 
-
 from django.views import generic
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -25,15 +24,14 @@ import settings
 import mailchimp_util
 
 
-def login(request, **kwargs):
-    if request.user.is_authenticated():
-        next = request.REQUEST.get('next', '/')
-        return HttpResponseRedirect(request.REQUEST.get('next', '/'))
-    else:
-        from django.contrib.auth.views import login
+# def login(request, **kwargs):
+#     if request.user.is_authenticated():
+#         next = request.REQUEST.get('next', '/')
+#         return HttpResponseRedirect(request.REQUEST.get('next', '/'))
+#     else:
+#         from django.contrib.auth.views import login
 
-        return login(request, authentication_form=forms.LoginForm)
-
+#         return login(request, authentication_form=forms.LoginForm)
 
 def ShowIndex(request):
     report = dict()
