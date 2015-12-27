@@ -75,6 +75,7 @@
 
 		{% if report.have_form %}
 
+
 		<div class="row">
 			<div class="col s12">
 				<div class="card tiny grey darken-3">
@@ -88,7 +89,6 @@
 							There have been <span class="nnt-purple bold">{{ report.sold }}</span> tickets sold
 						{% endif %}
 						</p>
-
 						<p class="center-align light white-text flow-text">
 						{% if report.how_many_sold == 0 %}
 							Huh, there are no tickets reserved! Maybe someone needs to publicise more!
@@ -114,7 +114,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="row">
 			<form class="col s12" action="." method="post">
 			{% csrf_token %}
@@ -136,6 +135,7 @@
 						<input type="hidden" value="{{ report.concession_price }}" id="concession_price">
 						<input type="hidden" value="{{ report.member_price }}" id="member_price">
 						<input type="hidden" value="{{ report.public_price }}" id="public_price">
+						<input type="hidden" value="{{ report.season_price }}" id="season_price">
 						<input type="hidden" value="{{ report.fringe_price }}" id="fringe_price">
 						<input type="hidden" value="{{ report.external_price }}" id="external_price">
 						<input type="hidden" value="{{ report.matinee_freshers_price }}" id="matinee_freshers_price">
@@ -143,13 +143,13 @@
 					</div>
 					{% if report.category|stringformat:"s" == "In House" %}
 						<div class="input-field col s4">
-							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_concession.name }}">{{ S_form.number_concession.label }}</label>
+							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="{{ S_form.number_member.name }}">{{ S_form.number_member.label }}</label>
 						</div>
 
 						<div class="input-field col s4">
-							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_member.name }}">{{ S_form.number_member.label }}</label>
+							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="{{ S_form.number_concession.name }}">{{ S_form.number_concession.label }}</label>
 						</div>
 
 						<div class="input-field col s4">
@@ -163,13 +163,13 @@
 						</div>
 
 						<div class="input-field col s4">
-							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
 						</div>
 
 						<div class="input-field col s4">
-							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
+							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
 						</div>
 					{% if report.time|stringformat:"s" == report.default_time %}
 						<div class="col s12">
@@ -206,13 +206,13 @@
 						</div>
 
 						<div class="input-field col s3">
-							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
 						</div>
 
 						<div class="input-field col s3">
-							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
+							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
 						</div>
 
 						<div class="col s12">
@@ -223,10 +223,38 @@
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
 					{% elif report.category|stringformat:"s" == "External" %}
-						<div class="input-field col s6">
-							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-							<label for="{{ S_form.number_fringe.name }}">{{ S_form.number_fringe.label }}</label>
+						<div class="input-field col s4">
+							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_member.name }}">Member Tickets {{ pricing.member_price }}</label>
 						</div>
+						<div class="input-field col s4">
+							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_concession.name }}">Concession Ticets {{ pricing.concession_price }}</label>
+						</div>
+
+						<div class="input-field col s4">
+							<input name="{{ S_form.number_public.name }}" id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+							<label for="{{ S_form.number_public.name }}">Public Tickets {{ pricing.public_price }}</label>
+						</div>
+
+						{% if pricing.allow_season_tickets %}
+							<div class="input-field col s4">
+								<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
+							</div>
+
+							<div class="input-field col s4">
+								<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
+							</div>
+						{% endif %}
+						{% if pricing.allow_fellow_tickets %}
+							<div class="input-field col s4">
+								<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+								<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+							</div>
+						{% endif %}
+
 					{% else %}
 						<p class="white-text">This show does not have an appropriate category applied to it</p>
 						<p class="white-text">{{ report.category }}, {{ report.cat_id }}</p>
@@ -367,6 +395,7 @@
 	    	var external_price = document.getElementById("external_price").value;
 	    	var matinee_freshers_price = document.getElementById("matinee_freshers_price").value;
 	    	var matinee_freshers_nnt_price = document.getElementById("matinee_freshers_nnt_price").value;
+	    	var season_price = document.getElementById("season_price").value;
 
 	        var num_concession = document.getElementById("concession").value * concession_price;
 	        var num_member = document.getElementById("member").value * member_price;
@@ -377,6 +406,7 @@
 	        var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value * matinee_freshers_nnt_price;
 	        var num_season = document.getElementById("season").value * 0;
 	        var num_fellow = document.getElementById("fellow").value * 0;
+	        var num_season_sale = document.getElementById("season_sales").value * season_price;
 
 	        var x = 
 	        	+num_concession +
@@ -387,7 +417,8 @@
 	        	+num_matinee_freshers +
 	        	+num_matinee_freshers_nnt +
 	        	+num_season +
-	        	+num_fellow;
+	        	+num_fellow +
+	        	+num_season_sale;
 	        	
 	        document.getElementById("out").innerHTML = x;
 	    });
