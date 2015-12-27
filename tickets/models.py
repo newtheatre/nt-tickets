@@ -443,6 +443,14 @@ class PricingBase(models.Model):
     public_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.PUBLIC_PRICE[0])
     member_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MEMBER_PRICE[0])
 
+class SeasonTicketPricing(models.Model):
+
+    class Meta:
+        verbose_name = 'Season Ticket Pricing'
+        verbose_name_plural = 'Season Ticket Pricing'
+
+    season_ticket_price = models.DecimalField(max_digits=6, decimal_places=2)
+
 
 class InHousePricing(PricingBase):
 
@@ -464,8 +472,6 @@ class FringePricing(PricingBase):
     class Meta:
         verbose_name = 'Fringe Pricing'
         verbose_name_plural = 'Fringe Pricing'
-
-    season_ticket_price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def save(self, *args, **kwargs):
         super(FringePricing, self).save(*args, **kwargs)
