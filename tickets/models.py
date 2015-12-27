@@ -295,6 +295,14 @@ class Occurrence(models.Model):
             sold += s.price
         return sold
 
+    def member_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        member = 0
+        for s in sale:
+            if s.number_member > 0:
+                member += s.number_member
+        return member
+
     def concession_tally(self):
         sale = Sale.objects.filter(occurrence=self)
         concession = 0
@@ -318,6 +326,14 @@ class Occurrence(models.Model):
             if s.number_season > 0:
                 season += s.number_season
         return season
+
+    def season_sale_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        season_sale = 0
+        for s in sale:
+            if s.number_season_sale > 0:
+                season_sale += s.number_season_sale
+        return season_sale
 
     def fellow_tally(self):
         sale = Sale.objects.filter(occurrence=self)
@@ -406,6 +422,7 @@ class SaleBase(models.Model):
     number_member = models.IntegerField()
     number_public = models.IntegerField()
     number_season = models.IntegerField()
+    number_season_sale = models.IntegerField()
     number_fellow = models.IntegerField()
     number_fringe = models.IntegerField()
     number_matinee_freshers = models.IntegerField()
