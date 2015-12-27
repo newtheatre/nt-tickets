@@ -54,7 +54,7 @@ class SaleForm(forms.Form):
     unique_ticket = forms.CharField(max_length=16)
 
     number_concession = forms.IntegerField(label="Concession Tickets " + config.CONCESSION_PRICE[1])
-    number_member = forms.IntegerField(label="Member Tickets" + config.MEMBER_PRICE[1])
+    number_member = forms.IntegerField(label="Member Tickets " + config.MEMBER_PRICE[1])
     number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])
     number_season = forms.IntegerField(label="Season Pass Tickets")
     number_season_sales = forms.IntegerField(label="Season Pass Ticket Sales " + config.SEASON_TICKET_PRICE[1])
