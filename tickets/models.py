@@ -407,7 +407,6 @@ class SaleBase(models.Model):
     number_public = models.IntegerField()
     number_season = models.IntegerField()
     number_fellow = models.IntegerField()
-    number_external = models.IntegerField()
     number_fringe = models.IntegerField()
     number_matinee_freshers = models.IntegerField()
     number_matinee_freshers_nnt = models.IntegerField()
