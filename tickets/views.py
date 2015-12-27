@@ -61,10 +61,8 @@ def ShowIndex(request):
 def ShowReport(request, show_name, occ_id):
     report = dict()
     occurrence_fin = dict()
-    show_list = get_object_or_404(Show, id=show_name)
+    show = get_object_or_404(Show, id=show_name)
     occurrence = Occurrence.objects.get_available_show(show=show_name)
-
-    show = show_list
 
     report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
     report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
@@ -76,6 +74,14 @@ def ShowReport(request, show_name, occ_id):
     report['external_price'] = config.EXTERNAL_PRICE[0]
     report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
     report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
+
+    report['season_price'] = SeasonTicketPricing.objects.get(id=1).season_ticket_price
+
+    # Try and get an external pricing object, if there is one return 0
+    try:
+        pricing = ExternalPricing.objects.get(show_id=show_name)
+    except:
+        pricing = 0
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -94,6 +100,7 @@ def ShowReport(request, show_name, occ_id):
         report['category'] = occ_fin.show.category
         report['total_sales'] = occ_fin.total_sales()
         report['sold'] = occ_fin.total_tickets_sold()
+   
     else:
         report['have_form'] = False
 
@@ -194,6 +201,7 @@ def ShowReport(request, show_name, occ_id):
         'R_form': R_form,
         'occ_id': occ_id,
         'show_name': show_name,
+        'pricing': pricing,
     }
 
     return render_to_response('show_report.html', context, context_instance=RequestContext(request))
