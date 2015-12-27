@@ -10,6 +10,11 @@
 	margin: 0px 2em;
 }
 
+#full-div {
+	width: 100vw;
+	height: 90vh;
+}
+
 .bold {
 	font-weight: bold;
 }
@@ -62,6 +67,10 @@
 
 .small-text {
 	font-size: 1.1em;
+}
+
+.large-text {
+	font-size: 7em;
 }
 
 #cancelled {
