@@ -59,7 +59,7 @@
     "poster_tiny": "posters/test_poster_2BkVRhf_rWt8LFY.jpg",
     "start_date": "2015-12-20",
     "end_date": "2018-12-20",
-    "category": 3
+    "category": 1
   }
 },
 {
@@ -131,7 +131,7 @@
     "poster_tiny": "",
     "start_date": "2015-12-25",
     "end_date": "2016-12-25",
-    "category": 4
+    "category": 3
   }
 },
 {
@@ -243,6 +243,18 @@
   }
 },
 {
+  "model": "tickets.occurrence",
+  "pk": 10,
+  "fields": {
+    "show": 5,
+    "date": "2016-12-27",
+    "time": "14:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "efcc4812ff9aa66b"
+  }
+},
+{
   "model": "tickets.ticket",
   "pk": 1,
   "fields": {
@@ -286,42 +298,44 @@
 },
 {
   "model": "tickets.sale",
-  "pk": 88,
+  "pk": 90,
   "fields": {
     "number_concession": 1,
-    "number_member": 0,
-    "number_public": 1,
-    "number_season": 1,
-    "number_fellow": 1,
-    "number_external": 0,
+    "number_member": 1,
+    "number_public": 0,
+    "number_season": 0,
+    "number_season_sale": 0,
+    "number_fellow": 0,
     "number_fringe": 0,
     "number_matinee_freshers": 0,
     "number_matinee_freshers_nnt": 0,
     "occurrence": 1,
     "ticket": "None",
-    "stamp": "2015-12-26T14:26:18.443",
-    "unique_code": "f454d80e21848975",
-    "price": "13.00"
+    "stamp": "2015-12-26T21:04:35.939",
+    "unique_code": "dc42bf8d693fb810",
+    "price": "9.00",
+    "number": 2
   }
 },
 {
-  "model": "tickets.sale",
-  "pk": 89,
+  "model": "tickets.seasonticketpricing",
+  "pk": 1,
   "fields": {
-    "number_concession": 1,
-    "number_member": 0,
-    "number_public": 1,
-    "number_season": 1,
-    "number_fellow": 1,
-    "number_external": 0,
-    "number_fringe": 0,
-    "number_matinee_freshers": 1,
-    "number_matinee_freshers_nnt": 1,
-    "occurrence": 7,
-    "ticket": "None",
-    "stamp": "2015-12-26T14:34:45.945",
-    "unique_code": "d9fa248f9c7fdf87",
-    "price": "17.50"
+    "season_ticket_price": "40.00"
+  }
+},
+{
+  "model": "tickets.externalpricing",
+  "pk": 1,
+  "fields": {
+    "concession_price": "10.00",
+    "public_price": "8.00",
+    "member_price": "5.00",
+    "show": 5,
+    "allow_season_tickets": true,
+    "allow_fellow_tickets": true,
+    "allow_half_matinee": true,
+    "allow_half_nnt_matinee": true
   }
 }
 ]
