@@ -137,7 +137,6 @@
 						<input type="hidden" value="{{ report.public_price }}" id="public_price">
 						<input type="hidden" value="{{ report.season_price }}" id="season_price">
 						<input type="hidden" value="{{ report.fringe_price }}" id="fringe_price">
-						<input type="hidden" value="{{ report.external_price }}" id="external_price">
 						<input type="hidden" value="{{ report.matinee_freshers_price }}" id="matinee_freshers_price">
 						<input type="hidden" value="{{ report.matinee_freshers_nnt_price }}" id="matinee_freshers_nnt_price">
 					</div>
@@ -174,7 +173,6 @@
 					{% if report.time|stringformat:"s" == report.default_time %}
 						<div class="col s12">
 							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
-							<input name="{{ S_form.number_external.name }}" id="external" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
@@ -191,7 +189,6 @@
 
 						<div class="col s12">
 							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
-							<input name="{{ S_form.number_external.name }}" id="external" type="hidden" value="0">
 						</div>
 					{% endif %}
 					{% elif report.category|stringformat:"s" == "Fringe" %}
@@ -218,23 +215,26 @@
 						<div class="col s12">
 							<input name="{{ S_form.number_concession.name }}" id="concession" type="hidden" value="0">
 							<input name="{{ S_form.number_public.name }}" id="public" type="hidden" value="0">
-							<input name="{{ S_form.number_external.name }}" id="external" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
 					{% elif report.category|stringformat:"s" == "External" %}
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-							<label for="{{ S_form.number_member.name }}">Member Tickets {{ pricing.member_price }}</label>
+							<label for="{{ S_form.number_member.name }}">Member Tickets £{{ pricing.member_price }}</label>
 						</div>
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-							<label for="{{ S_form.number_concession.name }}">Concession Ticets {{ pricing.concession_price }}</label>
+							<label for="{{ S_form.number_concession.name }}">Concession Tickets £{{ pricing.concession_price }}</label>
 						</div>
 
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_public.name }}" id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
-							<label for="{{ S_form.number_public.name }}">Public Tickets {{ pricing.public_price }}</label>
+							<label for="{{ S_form.number_public.name }}">Public Tickets £{{ pricing.public_price }}</label>
+						</div>
+
+						<div class="col s12">
+							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
 						</div>
 
 						{% if pricing.allow_season_tickets %}
@@ -247,11 +247,47 @@
 								<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 								<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
 							</div>
+						{% else %}
+							<div class="col s12">
+								<input name="{{ S_form.number_season.name }}" id="season" type="hidden" value="0">
+								<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="hidden" value="0">
+							</div>
 						{% endif %}
 						{% if pricing.allow_fellow_tickets %}
 							<div class="input-field col s4">
 								<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
 								<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+							</div>
+						{% else %}
+							<div class="col s12">
+								<input name="{{ S_form.number_fellow.name }}" id="fellow" type="hidden" value="0">
+							</div>
+						{% endif %}
+						{% if report.time|stringformat:"s" == report.default_time_matinee %}
+							{% if pricing.allow_half_matinee %}
+								<div class="input-field col s6">
+									<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+									<label for="{{ S_form.number_matinee_freshers.name }}">{{ S_form.number_matinee_freshers.label }}</label>
+								</div>
+							{% else %}
+								<div class="col s12">
+									<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
+								</div>
+							{% endif %}
+							{% if pricing.allow_half_nnt_matinee %}
+								<div class="input-field col s6">
+									<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0">
+									<label for="{{ S_form.number_matinee_freshers_nnt.name }}">{{ S_form.number_matinee_freshers_nnt.label }}</label>
+								</div>
+							{% else %}
+								<div class="col s12">
+									<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
+								</div>
+							{% endif %}
+						{% else %}
+							<div class="col s12">
+								<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
+								<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
 							</div>
 						{% endif %}
 
@@ -392,7 +428,6 @@
 	    	var member_price = document.getElementById("member_price").value;
 	    	var public_price = document.getElementById("public_price").value;
 	    	var fringe_price = document.getElementById("fringe_price").value;
-	    	var external_price = document.getElementById("external_price").value;
 	    	var matinee_freshers_price = document.getElementById("matinee_freshers_price").value;
 	    	var matinee_freshers_nnt_price = document.getElementById("matinee_freshers_nnt_price").value;
 	    	var season_price = document.getElementById("season_price").value;
@@ -401,7 +436,6 @@
 	        var num_member = document.getElementById("member").value * member_price;
 	        var num_public = document.getElementById("public").value * public_price;
 	        var num_fringe = document.getElementById("fringe").value * fringe_price;
-	        var num_external = document.getElementById("external").value * external_price;
 	        var num_matinee_freshers = document.getElementById("matinee_freshers").value * matinee_freshers_price;
 	        var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value * matinee_freshers_nnt_price;
 	        var num_season = document.getElementById("season").value * 0;
@@ -413,7 +447,6 @@
 	        	+num_member +
 	        	+num_public +
 	        	+num_fringe +
-	        	+num_external +
 	        	+num_matinee_freshers +
 	        	+num_matinee_freshers_nnt +
 	        	+num_season +

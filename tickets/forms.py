@@ -61,7 +61,6 @@ class SaleForm(forms.Form):
     number_season = forms.IntegerField(label="Season Pass Tickets")
     number_season_sales = forms.IntegerField(label="Season Pass Ticket Sales £" + str(season_price.season_ticket_price))
     number_fellow = forms.IntegerField(label="Fellow Tickets")
-    number_external = forms.IntegerField(label="External Tickets " + config.EXTERNAL_PRICE[1])
 
     number_fringe = forms.IntegerField(label="Fringe Tickets " + config.FRINGE_PRICE[1])
     

@@ -71,7 +71,6 @@ def ShowReport(request, show_name, occ_id):
     report['member_price'] = config.MEMBER_PRICE[0]
     report['public_price'] = config.PUBLIC_PRICE[0]
     report['fringe_price'] = config.FRINGE_PRICE[0]
-    report['external_price'] = config.EXTERNAL_PRICE[0]
     report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
     report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
 
@@ -97,9 +96,14 @@ def ShowReport(request, show_name, occ_id):
         report['how_many_reserved'] = occ_fin.tickets_sold()
         report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
 
-        report['category'] = occ_fin.show.category
+        category = occ_fin.show.category
+        report['category'] = category
         report['total_sales'] = occ_fin.total_sales()
         report['sold'] = occ_fin.total_tickets_sold()
+
+        if category.name == 'External':
+            report['matinee_freshers_price'] = pricing.public_price / 2
+            report['matinee_freshers_nnt_price'] = pricing.member_price / 2
    
     else:
         report['have_form'] = False
@@ -130,7 +134,6 @@ def ShowReport(request, show_name, occ_id):
             s.number_public = S_form.cleaned_data['number_public']
             s.number_season = S_form.cleaned_data['number_season']
             s.number_fellow = S_form.cleaned_data['number_fellow']
-            s.number_external = S_form.cleaned_data['number_external']
 
             s.number_fringe = S_form.cleaned_data['number_fringe']
 
@@ -141,7 +144,6 @@ def ShowReport(request, show_name, occ_id):
                 S_form.cleaned_data['number_concession'] * config.CONCESSION_PRICE[0] +
                 S_form.cleaned_data['number_member'] * config.MEMBER_PRICE[0] +
                 S_form.cleaned_data['number_public'] * config.PUBLIC_PRICE[0] +
-                S_form.cleaned_data['number_external'] * config.EXTERNAL_PRICE[0] +
                 S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] +
                 S_form.cleaned_data['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0]+
                 S_form.cleaned_data['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
@@ -151,7 +153,6 @@ def ShowReport(request, show_name, occ_id):
                 S_form.cleaned_data['number_concession'] +
                 S_form.cleaned_data['number_member'] +
                 S_form.cleaned_data['number_public'] +
-                S_form.cleaned_data['number_external'] +
                 S_form.cleaned_data['number_fringe'] +
                 S_form.cleaned_data['number_matinee_freshers'] +
                 S_form.cleaned_data['number_matinee_freshers_nnt'] +
@@ -240,22 +241,37 @@ def SaleReportFull(request, show_name):
     report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
     report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
+    category = show.category
+
+    # Ticket Numbers
     report['number_concession'] = [config.CONCESSION_PRICE[0]]
     report['number_public'] = [config.PUBLIC_PRICE[0]]
-    report['number_external'] = [config.EXTERNAL_PRICE[0]]
     report['number_fringe'] = [config.FRINGE_PRICE[0]]
     report['number_matinee_freshers'] = [config.MATINEE_FRESHERS_PRICE[0]]
     report['number_matinee_freshers_nnt'] = [config.MATINEE_FRESHERS_NNT_PRICE[0]]
 
+    # Ticket Prices
+    report['member_price'] = config.MEMBER_PRICE[0]
     report['concession_price'] = config.CONCESSION_PRICE[0]
     report['public_price'] = config.PUBLIC_PRICE[0]
     report['fringe_price'] = config.FRINGE_PRICE[0]
-    report['external_price'] = config.EXTERNAL_PRICE[0]
     report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
     report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
 
+    report['season_price'] = SeasonTicketPricing.objects.get(id=1).season_ticket_price
+
+    try:
+        pricing = ExternalPricing.objects.get(show_id=show_name)
+    except:
+        pricing = 0
+
+    if category.name == 'External':
+        report['matinee_freshers_price'] = pricing.public_price / 2
+        report['matinee_freshers_nnt_price'] = pricing.member_price / 2
+
     context = {
         'show': show,
+        'pricing': pricing,
         'occurrence': occurrence,
         'report': report,
     }
