@@ -125,6 +125,7 @@ class CategoryAdmin(admin.ModelAdmin):
     ordering = ['sort']
     search_fields = ['show']
 
+
 class ExternalPriceAdmin(admin.ModelAdmin):
     fields = [
         'show',
@@ -148,10 +149,23 @@ class ExternalPriceAdmin(admin.ModelAdmin):
         'allow_half_nnt_matinee'
         ]
 
-    search_fields = ['show']
+
+class SeasonPriceAdmin(admin.ModelAdmin):
+    fields = ['season_ticket_price']
+
+    list_display = ['season_ticket_price']
+
+    def has_add_permission(self, request):
+        num_objects = self.model.objects.count()
+        if num_objects >= 1:
+          return False
+        else:
+          return True
+
 
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(ExternalPricing, ExternalPriceAdmin)
+admin.site.register(SeasonTicketPricing, SeasonPriceAdmin)
