@@ -53,13 +53,16 @@ class SaleForm(forms.Form):
     ticket = forms.CharField(label='Reservation', max_length=80)
     unique_ticket = forms.CharField(max_length=16)
 
-    season_price = SeasonTicketPricing.objects.get(id=1)
+    try:
+        season_price = SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    except:
+        season_price = 0
 
     number_concession = forms.IntegerField(label="Concession Tickets " + config.CONCESSION_PRICE[1])
     number_member = forms.IntegerField(label="Member Tickets " + config.MEMBER_PRICE[1])
     number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])
     number_season = forms.IntegerField(label="Season Pass Tickets")
-    number_season_sales = forms.IntegerField(label="Season Pass Ticket Sales £" + str(season_price.season_ticket_price))
+    number_season_sales = forms.IntegerField(label="Season Pass Ticket Sales £" + str(season_price))
     number_fellow = forms.IntegerField(label="Fellow Tickets")
 
     number_fringe = forms.IntegerField(label="Fringe Tickets " + config.FRINGE_PRICE[1])
