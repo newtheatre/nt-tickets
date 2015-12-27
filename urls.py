@@ -25,10 +25,10 @@ urlpatterns = [
 
     # Admin frontend urls
     url(r'^$', login_required(tickets_views.ShowIndex), name='index'),
-    url(r'^show/(?P<show_name>[0-9])/$', tickets_views.ShowReport, name='show_report'),
-    url(r'^show/(?P<show_name>[0-9])/(?P<occ_id>[0-9])/$', tickets_views.ShowReport, name='show_report_full'),
+    url(r'^show/(?P<show_name>\d+)/$', tickets_views.ShowReport, name='show_report'),
+    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/$', tickets_views.ShowReport, name='show_report_full'),
     url(r'^report/$', tickets_views.SaleReport, name='sale_report'),
-    url(r'^report/(?P<show_name>[0-9])/$', tickets_views.SaleReportFull, name='sale_report_full'),
+    url(r'^report/(?P<show_name>\d+)/$', tickets_views.SaleReportFull, name='sale_report_full'),
 
 ] 
 
