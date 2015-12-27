@@ -58,17 +58,30 @@ class SaleForm(forms.Form):
     except:
         season_price = 0
 
-    number_concession = forms.IntegerField(label="Concession Tickets " + config.CONCESSION_PRICE[1])
-    number_member = forms.IntegerField(label="Member Tickets " + config.MEMBER_PRICE[1])
-    number_public = forms.IntegerField(label="Public Tickets " + config.PUBLIC_PRICE[1])
+    number_concession = forms.IntegerField(label="Concession Tickets " + \
+        config.CONCESSION_PRICE[1])
+
+    number_member = forms.IntegerField(label="Member Tickets " + \
+        config.MEMBER_PRICE[1])
+
+    number_public = forms.IntegerField(label="Public Tickets " + \
+        config.PUBLIC_PRICE[1])
+
     number_season = forms.IntegerField(label="Season Pass Tickets")
-    number_season_sales = forms.IntegerField(label="Season Pass Ticket Sales £" + str(season_price))
+
+    number_season_sales = forms.IntegerField(label="Season Pass Ticket Sales £" + \
+        str(season_price))
+
     number_fellow = forms.IntegerField(label="Fellow Tickets")
 
-    number_fringe = forms.IntegerField(label="Fringe Tickets " + config.FRINGE_PRICE[1])
+    number_fringe = forms.IntegerField(label="Fringe Tickets " + \
+        config.FRINGE_PRICE[1])
     
-    number_matinee_freshers = forms.IntegerField(label="Matinee Fresher Tickets " + config.MATINEE_FRESHERS_PRICE[1])
-    number_matinee_freshers_nnt = forms.IntegerField(label="Matinee Member Fresher Tickets " + config.MATINEE_FRESHERS_NNT_PRICE[1])
+    number_matinee_freshers = forms.IntegerField(label="Matinee Fresher Tickets " + \
+        config.MATINEE_FRESHERS_PRICE[1])
+    
+    number_matinee_freshers_nnt = forms.IntegerField(label="Matinee Member Fresher Tickets " + \
+        config.MATINEE_FRESHERS_NNT_PRICE[1])
 
 
     def at_least_one(self):
