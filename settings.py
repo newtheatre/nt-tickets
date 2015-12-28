@@ -140,6 +140,7 @@ INSTALLED_APPS = (
 
     'bootstrap_toolkit',
     'tickets',
+    'pricing',
 )
 
 # A sample logging configuration. The only tangible logging
