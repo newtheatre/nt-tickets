@@ -118,9 +118,10 @@ def ShowReport(request, show_name, occ_id):
     else:
         report['current'] = False
 
+    S_form = SaleForm
+
     # If the a form has been submitted
     if request.method == 'POST':
-        # S_form = SaleForm(request.POST)
         R_form = ReserveForm(request.POST)
 
         # s = Sale()
@@ -188,7 +189,6 @@ def ShowReport(request, show_name, occ_id):
                 report['reservation'] = 'None'
 
     else:
-        S_form = SaleForm()
         R_form = ReserveForm()
         report['reservation'] = 'None'
         report['unique_ticket'] = 'None'
@@ -238,30 +238,27 @@ def ShowReportAJAX(request, show_name, occ_id):
         s.number_matinee_freshers = request.POST.get('number_matinee_freshers')
         s.number_matinee_freshers_nnt = request.POST.get('number_matinee_freshers_nnt')
 
-        s.price = 0
-        # s.price = (
-        #     request.POST.get['number_concession'] * config.CONCESSION_PRICE[0] +
-        #     request.POST.get['number_member'] * config.MEMBER_PRICE[0] +
-        #     request.POST.get['number_public'] * config.PUBLIC_PRICE[0] +
-        #     request.POST.get['number_season_sales'] * 1.00 +
-        #     request.POST.get['number_fringe'] * config.FRINGE_PRICE[0] +
-        #     request.POST.get['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0] +
-        #     request.POST.get['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
-        #     )
-        s.number = 0
-        # s.number = (
-        #     request.POST.get['number_concession'] +
-        #     request.POST.get['number_member'] +
-        #     request.POST.get['number_public'] +
-        #     request.POST.get['number_fringe'] +
-        #     request.POST.get['number_matinee_freshers'] +
-        #     request.POST.get['number_matinee_freshers_nnt'] +
-        #     request.POST.get['number_season'] +
-        #     request.POST.get['number_season_sales'] +
-        #     request.POST.get['number_fellow']
-        #     )
+        s.price = (
+            float(request.POST.get('number_concession')) * float(config.CONCESSION_PRICE[0]) +
+            float(request.POST.get('number_member')) * float(config.MEMBER_PRICE[0]) +
+            float(request.POST.get('number_public')) * float(config.PUBLIC_PRICE[0]) +
+            float(request.POST.get('number_season_sales')) * float(SeasonTicketPricing.objects.get(id=1).season_ticket_price) +
+            float(request.POST.get('number_fringe')) * float(config.FRINGE_PRICE[0]) +
+            float(request.POST.get('number_matinee_freshers')) * config.MATINEE_FRESHERS_PRICE[0] +
+            float(request.POST.get('number_matinee_freshers_nnt')) * float(config.MATINEE_FRESHERS_NNT_PRICE[0])
+            )
 
-        s.unique_code = rand_16()
+        s.number = (
+            float(request.POST.get('number_concession')) +
+            float(request.POST.get('number_member')) +
+            float(request.POST.get('number_public')) +
+            float(request.POST.get('number_fringe')) +
+            float(request.POST.get('number_matinee_freshers')) +
+            float(request.POST.get('number_matinee_freshers_nnt')) +
+            float(request.POST.get('number_season')) +
+            float(request.POST.get('number_season_sales')) +
+            float(request.POST.get('number_fellow'))
+            )
 
         s.save()
         response_data = {}
