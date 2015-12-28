@@ -84,21 +84,21 @@ class SaleForm(forms.Form):
         config.MATINEE_FRESHERS_NNT_PRICE[1])
 
 
-    def at_least_one(self):
-        total_sale = \
-            self.cleaned_data.get('number_concession') + \
-            self.cleaned_data.get('number_public') + \
-            self.cleaned_data.get('number_season') + \
-            self.cleaned_data.get('number_fellow') + \
-            self.cleaned_data.get('number_external') + \
-            self.cleaned_data.get('number_fringe') + \
-            self.cleaned_data.get('number_matinee_freshers') + \
-            self.cleaned_data.get('number_matinee_freshers_nnt')
+    # def at_least_one(self):
+    #     total_sale = \
+    #         self.cleaned_data.get('number_concession') + \
+    #         self.cleaned_data.get('number_public') + \
+    #         self.cleaned_data.get('number_season') + \
+    #         self.cleaned_data.get('number_fellow') + \
+    #         self.cleaned_data.get('number_external') + \
+    #         self.cleaned_data.get('number_fringe') + \
+    #         self.cleaned_data.get('number_matinee_freshers') + \
+    #         self.cleaned_data.get('number_matinee_freshers_nnt')
 
-        if total_sale == 0:
-            raise ValidationError("Please input at least one sale")
+    #     if total_sale == 0:
+    #         raise ValidationError("Please input at least one sale")
 
-        return 
+    #     return 
 
 class ReserveForm(forms.Form):
     unique_ticket = forms.CharField(max_length=16)

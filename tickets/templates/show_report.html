@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
 	{% include 'favicon.html' %}
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,7 @@
 	<link href="{{ STATIC_URL }}stylesheets/style.css" rel="stylesheet" />
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/bin/materialize.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/csrf.js"></script>
 </head>
 <body id="background">
 	<header>
@@ -31,6 +32,7 @@
 			</nav>
 		</div>
 	</header>
+
 	<main>
 	<div class="container">
 		<div class="row">
@@ -99,7 +101,7 @@
 						leaving <span class="bold">{{ report.how_many_left }}</span> tickets left 
 						out of <span class="bold">{{ report.max }}</span>.
 						</p>
-						<!-- <div class="progress" id="report-bar">
+						<div class="progress" id="report-bar">
 							{% if report.sale_percentage >= report.reserve_percentage %}
 								<div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
 					     	<div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
@@ -107,19 +109,23 @@
 				     		<div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
 			     			<div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
 					     {% endif %}
-					  </div> -->
+					  </div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<form class="col s12" action="." method="post">
+			<form class="col s12" action="." method="post" id="sale-form">
 			{% csrf_token %}
 				<div class="row" id="form-background">
 					<div class="input-field col s12">
+					<!-- Hidden Unique Ticket ID -->
 						<input name="{{ S_form.unique_ticket.name }}" 
-							type="hidden" value="{{ report.unique_ticket }}">
+									type="hidden" 
+									value="{{ report.unique_ticket }}"
+									id="unique_ticket">
 					</div>
+					<!-- Ticket Reservation -->
 					<div class="input-field col s9">
 						<input name="{{ S_form.ticket.name }}" type="text" id="reservation" class="validate" value="None">
 						<label for="{{ S_form.ticket.name }}">{{ S_form.ticket.label }}</label>
@@ -140,39 +146,48 @@
 						<input type="hidden" value="{{ report.matinee_freshers_nnt_price }}" id="matinee_freshers_nnt_price">
 					</div>
 					{% if report.category|stringformat:"s" == "In House" %}
+						<!-- Member Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_member.name }}">{{ S_form.number_member.label }}</label>
 						</div>
 
+						<!-- Concession Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_concession.name }}">{{ S_form.number_concession.label }}</label>
 						</div>
 
+						<!-- Public Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_public.name }}" id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_public.name }}">{{ S_form.number_public.label }}</label>
 						</div>
 
+						<!-- Season Ticket Numbers -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
 						</div>
 
+						<!-- Season Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
 						</div>
 
+						<!-- Fellow Ticket Numbers -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
 						</div>
 					{% if report.time|stringformat:"s" == report.default_time %}
 						<div class="col s12">
+							<!-- Hidden Fringe Ticket Sales -->
 							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
+							<!-- Hidden Matinee Fresher Ticket Sales -->
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
+							<!-- Hidden Matinee Fresher Member Ticket Sales -->
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
 					{% elif report.time|stringformat:"s" == report.default_time_matinee %}
@@ -451,9 +466,19 @@
 	        	+num_fellow +
 	        	+num_season_sale;
 	        	
-	        document.getElementById("out").innerHTML = x;
+	        	xf = parseFloat(x).toFixed(2);
+	        document.getElementById("out").innerHTML = xf;
 	    });
 	});
+	</script>
+
+	<!-- Submit post on form submit -->
+	<script>
+		$('#sale-form').on('submit', function(event){
+		    event.preventDefault();
+		    console.log("form submitted!")  // sanity check
+		    create_post();
+		});
 	</script>
 
 	<script>
@@ -465,8 +490,10 @@
 
 	<script>
 		$(document).ready(function(){
-		  document.getElementById("out").innerHTML = 0;
+			xf = parseFloat(0).toFixed(2)
+		  document.getElementById("out").innerHTML = xf;
 		});
 	</script>
+	<script src="{{ STATIC_URL }}js/main.js"></script>
 </body>
 </html>

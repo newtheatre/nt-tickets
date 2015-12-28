@@ -23,6 +23,7 @@ import datetime
 import settings
 import mailchimp_util
 
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, requires_csrf_token
 
 # def login(request, **kwargs):
 #     if request.user.is_authenticated():
@@ -56,6 +57,8 @@ def ShowIndex(request):
     return render_to_response('show_index.html', context, context_instance=RequestContext(request)) 
 
 
+@ensure_csrf_cookie
+@requires_csrf_token
 def ShowReport(request, show_name, occ_id):
     report = dict()
     occurrence_fin = dict()
@@ -117,68 +120,65 @@ def ShowReport(request, show_name, occ_id):
 
     # If the a form has been submitted
     if request.method == 'POST':
-        S_form = SaleForm(request.POST)
+        # S_form = SaleForm(request.POST)
         R_form = ReserveForm(request.POST)
 
-        if S_form.is_valid():
-            s = Sale()
-            s.occurrence = occ_fin
-            s.ticket = S_form.cleaned_data['ticket']
-            
-            if S_form.cleaned_data['unique_ticket'] != 'None':
-                T = Ticket.objects.get(unique_code=S_form.cleaned_data['unique_ticket'])
-                T.collected = True
-                T.save()
+        # s = Sale()
+        # s.occurrence = occ_fin
+        # s.ticket = request.POST.get['ticket']
+        
+        # if request.POST.get['unique_ticket'] != 'None':
+        #     T = Ticket.objects.get(unique_code=request.POST.get['unique_ticket'])
+        #     T.collected = True
+        #     T.save()
 
-            s.number_concession = S_form.cleaned_data['number_concession']
-            s.number_member = S_form.cleaned_data['number_member']
-            s.number_public = S_form.cleaned_data['number_public']
-            s.number_season = S_form.cleaned_data['number_season']
-            s.number_season_sale = S_form.cleaned_data['number_season_sales']
-            s.number_fellow = S_form.cleaned_data['number_fellow']
+        # s.number_concession = request.POST.get['number_concession']
+        # s.number_member = request.POST.get['number_member']
+        # s.number_public = request.POST.get['number_public']
+        # s.number_season = request.POST.get['number_season']
+        # s.number_season_sale = request.POST.get['number_season_sales']
+        # s.number_fellow = request.POST.get['number_fellow']
 
-            s.number_fringe = S_form.cleaned_data['number_fringe']
+        # s.number_fringe = request.POST.get['number_fringe']
 
-            s.number_matinee_freshers = S_form.cleaned_data['number_matinee_freshers']
-            s.number_matinee_freshers_nnt = S_form.cleaned_data['number_matinee_freshers_nnt']
+        # s.number_matinee_freshers = request.POST.get['number_matinee_freshers']
+        # s.number_matinee_freshers_nnt = request.POST.get['number_matinee_freshers_nnt']
 
-            s.price = (
-                S_form.cleaned_data['number_concession'] * config.CONCESSION_PRICE[0] +
-                S_form.cleaned_data['number_member'] * config.MEMBER_PRICE[0] +
-                S_form.cleaned_data['number_public'] * config.PUBLIC_PRICE[0] +
-                S_form.cleaned_data['number_season_sales'] * 1.00 +
-                S_form.cleaned_data['number_fringe'] * config.FRINGE_PRICE[0] +
-                S_form.cleaned_data['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0] +
-                S_form.cleaned_data['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
-                )
+        # s.price = (
+        #     request.POST.get['number_concession'] * config.CONCESSION_PRICE[0] +
+        #     request.POST.get['number_member'] * config.MEMBER_PRICE[0] +
+        #     request.POST.get['number_public'] * config.PUBLIC_PRICE[0] +
+        #     request.POST.get['number_season_sales'] * 1.00 +
+        #     request.POST.get['number_fringe'] * config.FRINGE_PRICE[0] +
+        #     request.POST.get['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0] +
+        #     request.POST.get['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
+        #     )
 
-            s.number = (
-                S_form.cleaned_data['number_concession'] +
-                S_form.cleaned_data['number_member'] +
-                S_form.cleaned_data['number_public'] +
-                S_form.cleaned_data['number_fringe'] +
-                S_form.cleaned_data['number_matinee_freshers'] +
-                S_form.cleaned_data['number_matinee_freshers_nnt'] +
-                S_form.cleaned_data['number_season'] +
-                S_form.cleaned_data['number_season_sales'] +
-                S_form.cleaned_data['number_fellow']
-                )
+        # s.number = (
+        #     request.POST.get['number_concession'] +
+        #     request.POST.get['number_member'] +
+        #     request.POST.get['number_public'] +
+        #     request.POST.get['number_fringe'] +
+        #     request.POST.get['number_matinee_freshers'] +
+        #     request.POST.get['number_matinee_freshers_nnt'] +
+        #     request.POST.get['number_season'] +
+        #     request.POST.get['number_season_sales'] +
+        #     request.POST.get['number_fellow']
+        #     )
 
-            s.unique_code = rand_16()
+        # s.unique_code = rand_16()
 
-            s.save()
+        # s.save()
 
-            report['reservation'] = 'None'
+        # report['reservation'] = 'None'
 
-            S_form = SaleForm()
+        if occ_id > '0':
+            report['sold'] = occ_fin.total_tickets_sold()
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
+            report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
+            report['total_sales'] = occ_fin.total_sales()
 
-            if occ_id > '0':
-                report['sold'] = occ_fin.total_tickets_sold()
-                report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
-                report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
-                report['total_sales'] = occ_fin.total_sales()
-
-        elif R_form.is_valid():
+        if R_form.is_valid():
             report['unique_ticket'] = R_form.cleaned_data['unique_ticket']
 
             try:
@@ -211,6 +211,71 @@ def ShowReport(request, show_name, occ_id):
     }
 
     return render_to_response('show_report.html', context, context_instance=RequestContext(request))
+
+
+def ShowReportAJAX(request, show_name, occ_id):
+    if request.method == 'POST':
+
+        s = Sale()
+        occ_fin = Occurrence.objects.get(id=occ_id)
+        s.occurrence = occ_fin
+        s.ticket = request.POST.get('reservation')
+        
+        # if request.POST.get['unique_ticket'] != 'None':
+        #     T = Ticket.objects.get(unique_code=request.POST.get['unique_ticket'])
+        #     T.collected = True
+        #     T.save()
+
+        s.number_concession = request.POST.get('number_concession')
+        s.number_member = request.POST.get('number_member')
+        s.number_public = request.POST.get('number_public')
+        s.number_season = request.POST.get('number_season')
+        s.number_season_sale = request.POST.get('number_season_sales')
+        s.number_fellow = request.POST.get('number_fellow')
+
+        s.number_fringe = request.POST.get('number_fringe')
+
+        s.number_matinee_freshers = request.POST.get('number_matinee_freshers')
+        s.number_matinee_freshers_nnt = request.POST.get('number_matinee_freshers_nnt')
+
+        s.price = 0
+        # s.price = (
+        #     request.POST.get['number_concession'] * config.CONCESSION_PRICE[0] +
+        #     request.POST.get['number_member'] * config.MEMBER_PRICE[0] +
+        #     request.POST.get['number_public'] * config.PUBLIC_PRICE[0] +
+        #     request.POST.get['number_season_sales'] * 1.00 +
+        #     request.POST.get['number_fringe'] * config.FRINGE_PRICE[0] +
+        #     request.POST.get['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0] +
+        #     request.POST.get['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
+        #     )
+        s.number = 0
+        # s.number = (
+        #     request.POST.get['number_concession'] +
+        #     request.POST.get['number_member'] +
+        #     request.POST.get['number_public'] +
+        #     request.POST.get['number_fringe'] +
+        #     request.POST.get['number_matinee_freshers'] +
+        #     request.POST.get['number_matinee_freshers_nnt'] +
+        #     request.POST.get['number_season'] +
+        #     request.POST.get['number_season_sales'] +
+        #     request.POST.get['number_fellow']
+        #     )
+
+        s.unique_code = rand_16()
+
+        s.save()
+        response_data = {}
+        response_data['result'] = 'Create post successful!'
+
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"nothing to see": "this isn't happening"}),
+            content_type="application/json"
+        )
 
 
 def SaleReport(request):
