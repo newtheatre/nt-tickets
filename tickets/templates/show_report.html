@@ -90,9 +90,7 @@
 						{% endif %}
 						</p>
 						<p class="center-align light white-text flow-text">
-						{% if report.how_many_sold == 0 %}
-							Huh, there are no tickets reserved! Maybe someone needs to publicise more!
-						{% elif report.how_many_sold == 1 %}
+						{% if report.how_many_reserved == 1 %}
 							There is <span class="nnt-orange bold">{{ report.how_many_reserved }}</span> ticket reserved, 
 						{% else %}
 							There are <span class="nnt-orange bold">{{ report.how_many_reserved }}</span> tickets reserved, 
@@ -101,15 +99,15 @@
 						leaving <span class="bold">{{ report.how_many_left }}</span> tickets left 
 						out of <span class="bold">{{ report.max }}</span>.
 						</p>
-						<div class="progress" id="report-bar">
+						<!-- <div class="progress" id="report-bar">
 							{% if report.sale_percentage >= report.reserve_percentage %}
-							<div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
+								<div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
 					     	<div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
-					     	{% else %}
+					     {% else %}
 				     		<div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
 			     			<div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
-					      	{% endif %}
-					  </div>
+					     {% endif %}
+					  </div> -->
 					</div>
 				</div>
 			</div>
@@ -119,15 +117,16 @@
 			{% csrf_token %}
 				<div class="row" id="form-background">
 					<div class="input-field col s12">
-						<input name="{{ S_form.unique_ticket.name }}" type="hidden" class="validate" value="{{ report.unique_ticket }}">
+						<input name="{{ S_form.unique_ticket.name }}" 
+							type="hidden" value="{{ report.unique_ticket }}">
 					</div>
 					<div class="input-field col s9">
-						<input name="{{ S_form.ticket.name }}" type="text" readonly="True" class="validate" value="{{ report.reservation }}">
+						<input name="{{ S_form.ticket.name }}" type="text" id="reservation" class="validate" value="None">
 						<label for="{{ S_form.ticket.name }}">{{ S_form.ticket.label }}</label>
 					</div>
 
-					<div class="col s3" id="form-button-inline">
-						<button class="btn nnt purple waves-effec waves-light modal-trigger" href="#modal2">Reservation</button>
+					<div class="col s3 center-align" id="form-button-inline">
+						<button class="btn nnt purple waves-effect waves-dark modal-trigger" href="#modal2">Reservation</button>
 					</div>
 
 					<!-- Hidden inputs for ticket prices -->
@@ -293,26 +292,26 @@
 
 					{% else %}
 						<p class="white-text">This show does not have an appropriate category applied to it</p>
-						<p class="white-text">{{ report.category }}, {{ report.cat_id }}</p>
+						<p class="white-text">{{ report.category }}</p>
 					{% endif %}
 				</div>
 				<div class="row">
 					<div class="col s12">
 						<div class="card tiny grey darken-3 valign-wrapper">
-							<div class="col s3">
+							<div class="col s3 center-align">
 								<span class="valign nnt-orange sale-text">Total sales: <span class="nnt-orange bold">£{{ report.total_sales }}</span></span>
 							</div>
-							<div class="col s3">
+							<div class="col s3 center-align">
 								<span class="nnt-orange sale-text">Order Total: <span class="bold">£</span><span class="bold" id="out"></span></span>
 							</div>
-							<div class="col s3">
-								<button type="reset" class="btn nnt purple valign" onclick="resetButton()">Reset</button>
+							<div class="col s3 center-align">
+								<button type="reset" class="btn nnt purple waves-effect waves-dark" onclick="resetButton()">Reset</button>
 							</div>
-							<div class="col s3"> 
+							<div class="col s3 center-align"> 
 							{% if report.how_many_left == 0 %}
-								<button type="button" class="disabled btn nnt purple valign">Sell Tickets</button>
+								<button type="button" class="disabled btn nnt purple">Sell Tickets</button>
 							{% else %}
-								<button type="submit" class="btn nnt purple valign">Sell Tickets</button>
+								<button type="submit" class="btn nnt purple waves-effect waves-dark">Sell Tickets</button>
 							{% endif %}
 							</div>
 						</div>
@@ -412,8 +411,7 @@
 		$(document).ready(function(){
 	    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
 		    $('.modal-trigger').leanModal({
-		      dismissible: true, // Modal can be dismissed by clicking outside of the modal
-		      opacity: .5, // Opacity of modal background
+		      dismissible: true, // Click outside of the modal to dismiss
 		      in_duration: 300, // Transition in duration
 		      out_duration: 300, // Transition out duration
 		    }
@@ -461,6 +459,7 @@
 	<script>
 	function resetButton() {
 		document.getElementById("out").innerHTML = 0;
+		// document.getElementById("reservation").innerHTML = "None";
 	}
 	</script>
 
