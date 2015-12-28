@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.template import RequestContext
 from django.conf.urls import url
 from django.shortcuts import render_to_response
+from django.contrib.sites.models import Site
 
 from tickets.models import *
+import pricing.models as pricing
 from tickets.forms import ReportForm, CancelForm
 
 
@@ -126,20 +128,39 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['show']
 
 
-class ExternalPriceAdmin(admin.ModelAdmin):
+class InHousePriceAdmin(admin.ModelAdmin):
     fields = [
-        'show',
         'concession_price',
         'member_price',
         'public_price',
-        'allow_season_tickets',
-        'allow_fellow_tickets',
-        'allow_half_matinee',
-        'allow_half_nnt_matinee'
-        ]
+        'matinee_freshers_price',
+        'matinee_freshers_nnt_price'
+    ]
 
-    list_display = [
-        'show', 
+    def has_add_permission(self, request):
+        num_objects = self.model.objects.count()
+        if num_objects >= 1:
+          return False
+        else:
+          return True
+
+
+class FringePriceAdmin(admin.ModelAdmin):
+    fields = [
+        'fringe_price'
+    ]
+
+    def has_add_permission(self, request):
+        num_objects = self.model.objects.count()
+        if num_objects >= 1:
+          return False
+        else:
+          return True
+
+
+class ExternalPriceAdmin(admin.ModelAdmin):
+    fields = [
+        'show',
         'concession_price',
         'member_price',
         'public_price',
@@ -163,9 +184,18 @@ class SeasonPriceAdmin(admin.ModelAdmin):
           return True
 
 
+class StuFFPriceAdmin(admin.ModelAdmin):
+    fields = ['concession_price', 'public_price', 'member_price']
+
+
+admin.site.unregister(Site)
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
-admin.site.register(ExternalPricing, ExternalPriceAdmin)
-admin.site.register(SeasonTicketPricing, SeasonPriceAdmin)
+admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
+admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
+admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)
+admin.site.register(pricing.FringePricing, FringePriceAdmin)
+admin.site.register(pricing.StuFFPricing, StuFFPriceAdmin)
+
