@@ -17,6 +17,9 @@ from django.shortcuts import render_to_response
 from tickets.models import *
 from tickets.forms import *
 
+# import pricing.models as pricing
+from pricing.models import *
+
 import configuration.customise as config
 
 import datetime
