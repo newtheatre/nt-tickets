@@ -28,6 +28,7 @@ function create_post() {
             $('#matinee_freshers').val('0');
             $('#matinee_freshers_nnt').val('0');
             $('#season').val('0');
+            $('#fellow').val('0');
             $('#season_sales').val('0');
             $('#unique_ticket').val('0');
             $('#reservation').val('None');
