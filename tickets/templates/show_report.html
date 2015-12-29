@@ -317,7 +317,7 @@
 					<div class="col s12">
 						<div class="card tiny grey darken-3 valign-wrapper">
 							<div class="col s3 center-align">
-								<span class="valign nnt-orange sale-text">Total sales: <span class="nnt-orange bold">£{{ report.total_sales }}</span></span>
+								<span class="valign nnt-orange sale-text">Total sales: <span id="sale-final">{% ShowSales report %}</span></span>
 							</div>
 							<div class="col s3 center-align">
 								<span class="nnt-orange sale-text">Order Total: <span class="bold">£</span><span class="bold" id="out"></span></span>
@@ -329,7 +329,7 @@
 							{% if report.how_many_left == 0 %}
 								<button type="button" class="disabled btn nnt purple">Sell Tickets</button>
 							{% else %}
-								<button type="submit" class="btn nnt purple waves-effect waves-dark">Sell Tickets</button>
+								<button type="submit" class="btn nnt purple waves-effect waves-dark" onclick="resetButton()">Sell Tickets</button>
 							{% endif %}
 							</div>
 						</div>
@@ -496,7 +496,8 @@
 	<!-- Reset sale tally on reset -->
 	<script>
 	function resetButton() {
-		document.getElementById("out").innerHTML = 0;
+		xr = parseFloat(0).toFixed(2);
+		document.getElementById("out").innerHTML = xr;
 		// document.getElementById("reservation").innerHTML = "None";
 	}
 	</script>
