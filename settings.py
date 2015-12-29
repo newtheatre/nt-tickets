@@ -115,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -137,11 +138,40 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     # 'south',
     'mathfilters',
+    'admin_reorder',
 
     'bootstrap_toolkit',
     'tickets',
     'pricing',
 )
+
+# Reording of admin models
+# For more info see django-modeladmin-reorder
+ADMIN_REORDER = (
+    'auth',
+
+    {
+    'app': 'tickets',
+    'models': (
+        'tickets.Category',
+        'tickets.Show',
+        'tickets.Occurrence',
+        'tickets.Ticket',
+        )
+    },
+
+    {
+    'app': 'pricing',
+    'models': (
+        'pricing.SeasonTicketPricing',
+        'pricing.InHousePricing',
+        'pricing.FringePricing',
+        'pricing.ExternalPricing',
+        'pricing.StuFFPricing',
+        'pricing.StuFFEventPricing',
+        )    
+    },
+    )
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
