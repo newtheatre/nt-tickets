@@ -8,5 +8,6 @@ markdown2 == 2.3.0
 wsgiref == 0.1.2
 django-recaptcha == 1.0.4
 django-mathfilters == 0.3.0
+django-modeladmin-reorder == 0.1.2
 
 coverage == 4.0.3
