@@ -14,10 +14,9 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.shortcuts import render_to_response
 
+# Import models
 from tickets.models import *
 from tickets.forms import *
-
-# import pricing.models as pricing
 from pricing.models import *
 
 import configuration.customise as config
@@ -26,7 +25,6 @@ import datetime
 import settings
 import mailchimp_util
 
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, requires_csrf_token
 
 # def login(request, **kwargs):
 #     if request.user.is_authenticated():
@@ -36,6 +34,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, requir
 #         from django.contrib.auth.views import login
 
 #         return login(request, authentication_form=forms.LoginForm)
+
 
 def ShowIndex(request):
     report = dict()
@@ -60,8 +59,6 @@ def ShowIndex(request):
     return render_to_response('show_index.html', context, context_instance=RequestContext(request)) 
 
 
-@ensure_csrf_cookie
-@requires_csrf_token
 def ShowReport(request, show_name, occ_id):
     report = dict()
     occurrence_fin = dict()
@@ -127,55 +124,6 @@ def ShowReport(request, show_name, occ_id):
     if request.method == 'POST':
         R_form = ReserveForm(request.POST)
 
-        # s = Sale()
-        # s.occurrence = occ_fin
-        # s.ticket = request.POST.get['ticket']
-        
-        # if request.POST.get['unique_ticket'] != 'None':
-        #     T = Ticket.objects.get(unique_code=request.POST.get['unique_ticket'])
-        #     T.collected = True
-        #     T.save()
-
-        # s.number_concession = request.POST.get['number_concession']
-        # s.number_member = request.POST.get['number_member']
-        # s.number_public = request.POST.get['number_public']
-        # s.number_season = request.POST.get['number_season']
-        # s.number_season_sale = request.POST.get['number_season_sales']
-        # s.number_fellow = request.POST.get['number_fellow']
-
-        # s.number_fringe = request.POST.get['number_fringe']
-
-        # s.number_matinee_freshers = request.POST.get['number_matinee_freshers']
-        # s.number_matinee_freshers_nnt = request.POST.get['number_matinee_freshers_nnt']
-
-        # s.price = (
-        #     request.POST.get['number_concession'] * config.CONCESSION_PRICE[0] +
-        #     request.POST.get['number_member'] * config.MEMBER_PRICE[0] +
-        #     request.POST.get['number_public'] * config.PUBLIC_PRICE[0] +
-        #     request.POST.get['number_season_sales'] * 1.00 +
-        #     request.POST.get['number_fringe'] * config.FRINGE_PRICE[0] +
-        #     request.POST.get['number_matinee_freshers'] * config.MATINEE_FRESHERS_PRICE[0] +
-        #     request.POST.get['number_matinee_freshers_nnt'] * config.MATINEE_FRESHERS_NNT_PRICE[0]
-        #     )
-
-        # s.number = (
-        #     request.POST.get['number_concession'] +
-        #     request.POST.get['number_member'] +
-        #     request.POST.get['number_public'] +
-        #     request.POST.get['number_fringe'] +
-        #     request.POST.get['number_matinee_freshers'] +
-        #     request.POST.get['number_matinee_freshers_nnt'] +
-        #     request.POST.get['number_season'] +
-        #     request.POST.get['number_season_sales'] +
-        #     request.POST.get['number_fellow']
-        #     )
-
-        # s.unique_code = rand_16()
-
-        # s.save()
-
-        # report['reservation'] = 'None'
-
         if occ_id > '0':
             report['sold'] = occ_fin.total_tickets_sold()
             report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
@@ -213,21 +161,27 @@ def ShowReport(request, show_name, occ_id):
         'pricing': pricing,
     }
 
-    return render_to_response('show_report.html', context, context_instance=RequestContext(request))
+    return render_to_response(
+        'show_report.html', 
+        context, 
+        context_instance=RequestContext(request)
+        )
 
 
 def ShowReportAJAX(request, show_name, occ_id):
+    report = dict()
+
     if request.method == 'POST':
 
         s = Sale()
         occ_fin = Occurrence.objects.get(id=occ_id)
         s.occurrence = occ_fin
         s.ticket = request.POST.get('reservation')
-        
-        # if request.POST.get['unique_ticket'] != 'None':
-        #     T = Ticket.objects.get(unique_code=request.POST.get['unique_ticket'])
-        #     T.collected = True
-        #     T.save()
+
+        if request.POST.get('unique_ticket') != 'None':
+            T = Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
+            T.collected = True
+            T.save()
 
         s.number_concession = request.POST.get('number_concession')
         s.number_member = request.POST.get('number_member')
@@ -264,12 +218,24 @@ def ShowReportAJAX(request, show_name, occ_id):
             )
 
         s.save()
-        response_data = {}
-        response_data['result'] = 'Create post successful!'
 
-        return HttpResponse(
-            json.dumps(response_data),
-            content_type="application/json"
+        if occ_id > '0':
+            report['sold'] = occ_fin.total_tickets_sold()
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
+            report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
+            report['total_sales'] = occ_fin.total_sales()
+            report['how_many_reserved'] = occ_fin.tickets_sold()
+            report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
+            report['max'] = occ_fin.maximum_sell
+
+        context = {
+            'report': report,
+        }
+
+        return render_to_response(
+        'sale_overview.html', 
+        context, 
+        context_instance=RequestContext(request)
         )
     else:
         return HttpResponse(
@@ -346,7 +312,11 @@ def SaleReportFull(request, show_name):
         'report': report,
     }
 
-    return render_to_response('sale_report_full.html', context, context_instance=RequestContext(request))
+    return render_to_response(
+        'sale_report_full.html', 
+        context, 
+        context_instance=RequestContext(request)
+        )
 
 
 def defaultFNI(request):
