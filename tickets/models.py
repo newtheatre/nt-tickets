@@ -8,6 +8,8 @@ from markdown2 import Markdown
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.template.defaultfilters import slugify
+from django.core.exceptions import ValidationError
+from django.core.validators import *
 
 from tickets.func import rand_16
 
@@ -30,7 +32,10 @@ class Category(models.Model):
         help_text='Will be used in class names, so you can style categories differently.'
         )
     sort = models.IntegerField(
-        help_text='Low to high, sorts the sidebar.'
+        help_text='Low to high, sorts the sidebar.',
+        validators=[
+                MinValueValidator(6, 'Minimum values is 6')
+            ]
         )
 
     def __str__(self): 
