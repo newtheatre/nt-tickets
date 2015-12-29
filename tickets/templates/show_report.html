@@ -309,8 +309,10 @@
 						{% endif %}
 
 					{% else %}
-						<p class="white-text">This show does not have an appropriate category applied to it</p>
-						<p class="white-text">{{ report.category }}</p>
+						<div class="col s12">
+							<p class="light red-text center-align report-text">Invalid category applied ({{ report.category }})</p>
+							<br>
+						</div>
 					{% endif %}
 				</div>
 				<div class="row">
