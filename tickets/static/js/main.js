@@ -20,18 +20,9 @@ function create_post() {
 
     // handle a successful response
     success : function(data) {
-      // remove the value from the input
-      $('#member').val('0');
-      $('#concession').val('0');
-      $('#public').val('0');
-      $('#fringe').val('0');
-      $('#matinee_freshers').val('0');
-      $('#matinee_freshers_nnt').val('0');
-      $('#season').val('0');
-      $('#fellow').val('0');
-      $('#season_sales').val('0');
-      $('#unique_ticket').val('None');
-      $('#reservation').val('None');
+      // Reset sale form
+      $("#sale-form")[0].reset();
+      // Update sale overview
       $('#sale-update').html(data);
       console.log("success"); // sanity check after AJAX
     },
