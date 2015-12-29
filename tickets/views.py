@@ -183,41 +183,54 @@ def ShowReportAJAX(request, show_name, occ_id):
             T.collected = True
             T.save()
 
-        s.number_concession = request.POST.get('number_concession')
-        s.number_member = request.POST.get('number_member')
-        s.number_public = request.POST.get('number_public')
-        s.number_season = request.POST.get('number_season')
-        s.number_season_sale = request.POST.get('number_season_sales')
-        s.number_fellow = request.POST.get('number_fellow')
+        number_concession = float(request.POST.get('number_concession'))
+        number_member = float(request.POST.get('number_member'))
+        number_public = float(request.POST.get('number_public'))
+        number_season = float(request.POST.get('number_season'))
+        number_season_sale = float(request.POST.get('number_season_sales'))
+        number_fellow = float(request.POST.get('number_fellow'))
+        number_fringe = float(request.POST.get('number_fringe'))
+        number_matinee_freshers = float(request.POST.get('number_matinee_freshers'))
+        number_matinee_freshers_nnt = float(request.POST.get('number_matinee_freshers_nnt'))
 
-        s.number_fringe = request.POST.get('number_fringe')
+        s.number_concession = number_concession
+        s.number_member = number_member
+        s.number_public = number_public
+        s.number_season = number_season
+        s.number_season_sale = number_season_sale
+        s.number_fellow = number_fellow
+        s.number_fringe = number_fringe
+        s.number_matinee_freshers = number_matinee_freshers
+        s.number_matinee_freshers_nnt = number_matinee_freshers_nnt
 
-        s.number_matinee_freshers = request.POST.get('number_matinee_freshers')
-        s.number_matinee_freshers_nnt = request.POST.get('number_matinee_freshers_nnt')
-
-        s.price = (
-            float(request.POST.get('number_concession')) * float(config.CONCESSION_PRICE[0]) +
-            float(request.POST.get('number_member')) * float(config.MEMBER_PRICE[0]) +
-            float(request.POST.get('number_public')) * float(config.PUBLIC_PRICE[0]) +
-            float(request.POST.get('number_season_sales')) * float(SeasonTicketPricing.objects.get(id=1).season_ticket_price) +
-            float(request.POST.get('number_fringe')) * float(config.FRINGE_PRICE[0]) +
-            float(request.POST.get('number_matinee_freshers')) * config.MATINEE_FRESHERS_PRICE[0] +
-            float(request.POST.get('number_matinee_freshers_nnt')) * float(config.MATINEE_FRESHERS_NNT_PRICE[0])
+        price = (
+            number_concession * float(config.CONCESSION_PRICE[0]) +
+            number_member * float(config.MEMBER_PRICE[0]) +
+            number_public * float(config.PUBLIC_PRICE[0]) +
+            number_season * float(SeasonTicketPricing.objects.get(id=1).season_ticket_price) +
+            number_fringe * float(config.FRINGE_PRICE[0]) +
+            number_matinee_freshers * config.MATINEE_FRESHERS_PRICE[0] +
+            number_matinee_freshers_nnt * float(config.MATINEE_FRESHERS_NNT_PRICE[0])
             )
 
-        s.number = (
-            float(request.POST.get('number_concession')) +
-            float(request.POST.get('number_member')) +
-            float(request.POST.get('number_public')) +
-            float(request.POST.get('number_fringe')) +
-            float(request.POST.get('number_matinee_freshers')) +
-            float(request.POST.get('number_matinee_freshers_nnt')) +
-            float(request.POST.get('number_season')) +
-            float(request.POST.get('number_season_sales')) +
-            float(request.POST.get('number_fellow'))
+        number = (
+            number_concession +
+            number_member +
+            number_public +
+            number_fringe +
+            number_matinee_freshers +
+            number_matinee_freshers_nnt +
+            number_season +
+            number_season_sale +
+            number_fellow
             )
 
-        s.save()
+        s.number = number
+        s.price = price
+
+        # Don't write to the database unless there is at least one sale
+        if number != 0:
+            s.save()
 
         if occ_id > '0':
             report['sold'] = occ_fin.total_tickets_sold()
@@ -233,7 +246,7 @@ def ShowReportAJAX(request, show_name, occ_id):
         }
 
         return render_to_response(
-        'sale_overview.html', 
+        'sale_overview_full.html',
         context, 
         context_instance=RequestContext(request)
         )
