@@ -144,6 +144,9 @@ class InHousePriceAdmin(admin.ModelAdmin):
         else:
           return True
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class FringePriceAdmin(admin.ModelAdmin):
     fields = [
@@ -156,6 +159,9 @@ class FringePriceAdmin(admin.ModelAdmin):
           return False
         else:
           return True
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class ExternalPriceAdmin(admin.ModelAdmin):
@@ -183,9 +189,16 @@ class SeasonPriceAdmin(admin.ModelAdmin):
         else:
           return True
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class StuFFPriceAdmin(admin.ModelAdmin):
     fields = ['concession_price', 'public_price', 'member_price']
+
+
+class StuFFEventPriceAdmin(admin.ModelAdmin):
+    fields = ['show', 'concession_price', 'public_price', 'member_price']
 
 
 admin.site.unregister(Site)
@@ -198,4 +211,5 @@ admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
 admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)
 admin.site.register(pricing.FringePricing, FringePriceAdmin)
 admin.site.register(pricing.StuFFPricing, StuFFPriceAdmin)
+admin.site.register(pricing.StuFFEventPricing, StuFFEventPriceAdmin)
 
