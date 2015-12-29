@@ -23,8 +23,10 @@ function create_post() {
       // Reset sale form
       $("#sale-form")[0].reset();
       // Update sale overview
-      $('#sale-update').html(data);
+      $('#sale-update').html($('#div-1', data).html());
+      $('#sale-final').html($('#div-2', data).html());
       console.log("success"); // sanity check after AJAX
+      console.log(data);
     },
 
     // handle a non-successful response

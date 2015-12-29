@@ -5,10 +5,20 @@ register = template.Library()
 
 # Sale overview element on show report page
 @register.inclusion_tag('sale_overview.html')
-def ShowSaleOverview(price):
-    report = price
+def ShowSaleOverview(report):
+    report = report
 
     context = {
-        'report': report
+        'report': report,
     }
     return context
+
+
+@register.inclusion_tag('sale_final.html')
+def ShowSales(report):
+  report = report
+
+  context = {
+    'report': report
+  }
+  return context
