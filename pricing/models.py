@@ -93,21 +93,35 @@ class ExternalPricing(PricingBase):
         super(ExternalPricing, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class StuFFPricing(PricingBase):
 
     class Meta:
         verbose_name = 'StuFF Pricing'
         verbose_name_plural = 'StuFF Pricing'
 
+    show = models.ForeignKey(Show)
+
+    def __str__(self):
+      s = 'Pricing for: '  + self.show.name
+      return s
+
     def save(self, *args, **kwargs):
         super(StuFFPricing, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class StuFFEventPricing(PricingBase):
 
     class Meta:
         verbose_name = 'StuFF Event Pricing'
         verbose_name_plural = 'StuFF Event Pricing'
+
+    show = models.ForeignKey(Show)
+
+    def __str__(self):
+      s = 'Pricing for: ' + self.show.name
+      return s
 
     def save(self, *args, **kwargs):
         super(StuFFPricing, self).save(*args, **kwargs)
