@@ -27,7 +27,12 @@ urlpatterns = [
     url(r'^$', login_required(tickets_views.ShowIndex), name='index'),
     url(r'^show/(?P<show_name>\d+)/$', tickets_views.ShowReport, name='show_report'),
     url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/$', tickets_views.ShowReport, name='show_report_full'),
-    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/sale/$', tickets_views.ShowReportAJAX, name='show_report_ajax'),
+
+    # AJAX url handlers
+    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/sale/$', tickets_views.SaleInputAJAX, name='sale_ajax'),
+    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/reserve/$', tickets_views.ReserveInputAJAX, name='reserve_ajax'),
+
+    # Sale report urls
     url(r'^report/$', tickets_views.SaleReport, name='sale_report'),
     url(r'^report/(?P<show_name>\d+)/$', tickets_views.SaleReportFull, name='sale_report_full'),
 

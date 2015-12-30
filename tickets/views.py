@@ -155,7 +155,7 @@ def ShowReport(request, show_name, occ_id):
         'show': show,
         'occurrence': occurrence,
         'S_form': S_form,
-        'R_form': R_form,
+        # 'R_form': R_form,
         'occ_id': occ_id,
         'show_name': show_name,
         'pricing': pricing,
@@ -168,7 +168,7 @@ def ShowReport(request, show_name, occ_id):
         )
 
 
-def ShowReportAJAX(request, show_name, occ_id):
+def SaleInputAJAX(request, show_name, occ_id):
     report = dict()
 
     if request.method == 'POST':
@@ -177,6 +177,7 @@ def ShowReportAJAX(request, show_name, occ_id):
         occ_fin = Occurrence.objects.get(id=occ_id)
         s.occurrence = occ_fin
         s.ticket = request.POST.get('reservation')
+        report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
 
         if request.POST.get('unique_ticket') != 'None':
             T = Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
@@ -257,6 +258,33 @@ def ShowReportAJAX(request, show_name, occ_id):
         )
 
 
+def ReserveInputAJAX(request, show_name, occ_id):
+    report = dict()
+
+    if request.method == 'POST':
+        if occ_id > 0:
+            unique_code = request.POST.get('unique_code')
+            # runique_code = unique_code
+
+            try:
+                ticket = Ticket.objects.get(unique_code=unique_code)
+                reservation = ticket.person_name
+            except Ticket.DoesNotExist:
+                reservation = 'None'
+
+        context = {
+            'unique_code': unique_code,
+            'reservation': reservation,
+        }
+        return HttpResponse(json.dumps(context), content_type='application/json')
+
+    else:
+        return HttpResponse(
+            json.dumps({"nothing to see": "this isn't happening"}),
+            content_type="application/json"
+        )
+
+
 def SaleReport(request):
     report = dict()
     show = dict()
@@ -279,7 +307,12 @@ def SaleReport(request):
         'report': report,
     }
 
-    return render_to_response('sale_report.html', context, context_instance=RequestContext(request))
+    return render_to_response(
+        'sale_report.html',
+        context,
+        context_instance=RequestContext(request)
+        )
+
 
 def SaleReportFull(request, show_name):
     report = dict()

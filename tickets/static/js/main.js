@@ -1,5 +1,5 @@
 // AJAX for posting
-function create_post() {
+function sell_tickets() {
   console.log("create post is working!") // sanity check before AJAX
   $.ajax({
     url : "sale/", // the endpoint
@@ -25,15 +25,43 @@ function create_post() {
       // Update sale overview
       $('#sale-update').html($('#div-1', data).html());
       $('#sale-final').html($('#div-2', data).html());
-      console.log("success"); // sanity check after AJAX
-      console.log(data);
+      $('#reservation_modal_container').html($('#div-3', data).html());
+
+      // console.log(data);
+      console.log("Sell success"); // sanity check after AJAX
     },
 
     // handle a non-successful response
     error : function(xhr,errmsg,err) {
       $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-        " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+        " <a href='#' class='close'>&times;</a></div>"); // add the error to the DOM
       console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
     }
+  });
+};
+
+function collect_tickets(id) {
+  console.log('Collect tickets is working')  // Sanity check
+  $.ajax({
+    url : "reserve/",
+    type : "post",
+    data : {
+      unique_code : $('#' + id).val(),
+    },
+
+    // Handle a successful response
+    success : function(data) {
+      $('#reservation').val(data.reservation);
+      $('#unique_ticket').val(data.unique_code);
+      // console.log(data);
+      console.log('Collect success');  // Sanity check after AJAX
+    },
+
+    // Handle and error
+    error : function(xhr,errmsg,err) {
+      $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+        " <a href='#' class='close'>&times;</a></div>"); // add the error to the DOM
+      console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    },
   });
 };
