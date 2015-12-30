@@ -93,6 +93,13 @@
 		</div>
 		<!-- Sale input form -->
 		<div class="row">
+			{% if report.pricing_error %}
+				<div class="col s12" id="form-background">
+					<p class="light red-text center-align report-text pad-medium">
+						Pricing for this show could not be retrieved from the database!
+					</p>
+				</div>
+			{% else %}
 			<form class="col s12" action="." method="post" id="sale-form">
 			{% csrf_token %}
 				<div class="row" id="form-background">
@@ -116,49 +123,77 @@
 
 					<!-- Hidden inputs for ticket prices -->
 					<div class="input-field col s12">	
-						<input type="hidden" value="{{ report.concession_price }}" id="concession_price">
-						<input type="hidden" value="{{ report.member_price }}" id="member_price">
-						<input type="hidden" value="{{ report.public_price }}" id="public_price">
-						<input type="hidden" value="{{ report.season_price }}" id="season_price">
-						<input type="hidden" value="{{ report.fringe_price }}" id="fringe_price">
-						<input type="hidden" value="{{ report.matinee_freshers_price }}" id="matinee_freshers_price">
-						<input type="hidden" value="{{ report.matinee_freshers_nnt_price }}" id="matinee_freshers_nnt_price">
+						{% if pricing.concession_price %}
+							<input type="hidden" value="{{ pricing.concession_price }}" id="concession_price">
+						{% else %}
+							<input type="hidden" value="0" id="concession_price">
+						{% endif %}
+						{% if pricing.member_price %}
+							<input type="hidden" value="{{ pricing.member_price }}" id="member_price">
+						{% else %}
+							<input type="hidden" value="0" id="member_price">
+						{% endif %}
+						{% if pricing.public_price %}
+							<input type="hidden" value="{{ pricing.public_price }}" id="public_price">
+						{% else %}
+							<input type="hidden" value="0" id="public_price">
+						{% endif %}
+						{% if report.season_price %}
+							<input type="hidden" value="{{ report.season_price }}" id="season_price">
+						{% else %}
+							<input type="hidden" value="0" id="season_price">
+						{% endif %}
+						{% if pricing.fringe_price %}
+							<input type="hidden" value="{{ pricing.fringe_price }}" id="fringe_price">
+						{% else %}
+							<input type="hidden" value="0" id="fringe_price">
+						{% endif %}
+						{% if pricing.matinee_freshers_price %}
+							<input type="hidden" value="{{ pricing.matinee_freshers_price }}" id="matinee_freshers_price">
+						{% else %}
+							<input type="hidden" value="0" id="matinee_freshers_price">
+						{% endif %}
+						{% if pricing.matinee_freshers_nnt_price %}
+							<input type="hidden" value="{{ pricing.matinee_freshers_nnt_price }}" id="matinee_freshers_nnt_price">
+						{% else %}
+							<input type="hidden" value="0" id="matinee_freshers_nnt_price">
+						{% endif %}
 					</div>
-					{% if report.category|stringformat:"s" == "In House" %}
+					{% if report.category.id == 1 %}
 						<!-- Member Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_member.name }}">{{ S_form.number_member.label }}</label>
+							<label for="{{ S_form.number_member.name }}">Member Tickets £{{ pricing.member_price }}</label>
 						</div>
 
 						<!-- Concession Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_concession.name }}" id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_concession.name }}">{{ S_form.number_concession.label }}</label>
+							<label for="{{ S_form.number_concession.name }}">Concession Tickets £{{ pricing.concession_price }}</label>
 						</div>
 
 						<!-- Public Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_public.name }}" id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_public.name }}">{{ S_form.number_public.label }}</label>
+							<label for="{{ S_form.number_public.name }}">Public Tickets £{{ pricing.public_price }}</label>
 						</div>
 
 						<!-- Season Ticket Numbers -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
+							<label for="{{ S_form.number_season.name }}">Season Pass Tickets</label>
 						</div>
 
 						<!-- Season Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
+							<label for="{{ S_form.number_season_sales.name }}">Season Pass Ticket Sales £{{ report.season_price }}</label>
 						</div>
 
 						<!-- Fellow Ticket Numbers -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+							<label for="{{ S_form.number_fellow.name }}">Fellow Tickets</label>
 						</div>
 					{% if report.time|stringformat:"s" == report.default_time %}
 						<div class="col s12">
@@ -173,13 +208,13 @@
 						<!-- Matinee Fresher Ticket Sales -->
 						<div class="input-field col s6">
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_matinee_freshers.name }}">{{ S_form.number_matinee_freshers.label }}</label>
+							<label for="{{ S_form.number_matinee_freshers.name }}">Matinee Fresher Tickets £{{ pricing.matinee_freshers_price }}</label>
 						</div>
 
 						<!-- Matinee Fresher Member Ticket Sales -->
 						<div class="input-field col s6">
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_matinee_freshers_nnt.name }}">{{ S_form.number_matinee_freshers_nnt.label }}</label>
+							<label for="{{ S_form.number_matinee_freshers_nnt.name }}">Matinee Member Fresher Tickets £{{ pricing.matinee_freshers_nnt_price }}</label>
 						</div>
 
 						<!-- Hidden Fringe Ticket Sales -->
@@ -187,29 +222,29 @@
 							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="hidden" value="0">
 						</div>
 					{% endif %}
-					{% elif report.category|stringformat:"s" == "Fringe" %}
+					{% elif report.category.id == 2 %}
 						<!-- Fringe Ticket Sales -->
 						<div class="input-field col s3">
 							<input name="{{ S_form.number_fringe.name }}" id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_fringe.name }}">{{ S_form.number_fringe.label }}</label>
+							<label for="{{ S_form.number_fringe.name }}">Fringe Tickets £{{ pricing.fringe_price }}</label>
 						</div>
 
 						<!-- Season Ticket Numbers -->
 						<div class="input-field col s3">
 							<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
+							<label for="{{ S_form.number_season.name }}">Season Pass Tickets</label>
 						</div>
 
 						<!-- Season Ticket Sales -->
 						<div class="input-field col s3">
 							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_season_sales.name }}">{{ report.season_price }}</label>
+							<label for="{{ S_form.number_season_sales.name }}">Season Pass Ticket Sales £{{ report.season_price }}</label>
 						</div>
 
 						<!-- Fellow Ticket Numbers -->
 						<div class="input-field col s3">
 							<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+							<label for="{{ S_form.number_fellow.name }}">Fellow Tickets</label>
 						</div>
 
 						<!-- Hidden Sale Inputs -->
@@ -220,7 +255,7 @@
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
-					{% elif report.category|stringformat:"s" == "External" %}
+					{% elif report.category.id == 3 %}
 						<!-- Member Ticket Sales -->
 						<div class="input-field col s4">
 							<input name="{{ S_form.number_member.name }}" id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
@@ -248,7 +283,7 @@
 							<!-- Season Ticket Numbers -->
 							<div class="input-field col s4">
 								<input name="{{ S_form.number_season.name }}" id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-								<label for="{{ S_form.number_season.name }}">{{ S_form.number_season.label }}</label>
+								<label for="{{ S_form.number_season.name }}">Season Pass Tickets</label>
 							</div>
 
 							<!-- Season Ticket Sales -->
@@ -269,7 +304,7 @@
 							<!-- Fellow Ticket Numbers -->
 							<div class="input-field col s4">
 								<input name="{{ S_form.number_fellow.name }}" id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-								<label for="{{ S_form.number_fellow.name }}">{{ S_form.number_fellow.label }}</label>
+								<label for="{{ S_form.number_fellow.name }}">Fellow Tickets</label>
 							</div>
 						{% else %}
 							<!-- Hidden Inputs -->
@@ -283,7 +318,7 @@
 								<!-- Matinee Fresher Ticket Sales -->
 								<div class="input-field col s6">
 									<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-									<label for="{{ S_form.number_matinee_freshers.name }}">{{ S_form.number_matinee_freshers.label }}</label>
+									<label for="{{ S_form.number_matinee_freshers.name }}">Matinee Fresher Tickets £{{ report.matinee_freshers_price }}</label>
 								</div>
 							{% else %}
 								<!-- Hidden Inputs -->
@@ -296,7 +331,7 @@
 								<!-- Matinee Fresher Member Ticket Sales -->
 								<div class="input-field col s6">
 									<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-									<label for="{{ S_form.number_matinee_freshers_nnt.name }}">{{ S_form.number_matinee_freshers_nnt.label }}</label>
+									<label for="{{ S_form.number_matinee_freshers_nnt.name }}">Matinee Member Fresher Tickets £{{ report.matinee_freshers_nnt_price }}</label>
 								</div>
 							{% else %}
 								<!--  -->
@@ -341,6 +376,7 @@
 					</div>
 				</div>
 			</form>
+			{% endif %}
 		</div>
 		{% else %}
 			<div class="hidden">

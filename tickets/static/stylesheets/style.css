@@ -52,56 +52,67 @@
 }
 
 /* line 47, ../sass/style.scss */
-#form-background {
-  background-color: #424242;
+.z-depth-1, #form-background {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 }
 
 /* line 51, ../sass/style.scss */
+#form-background {
+  background-color: #424242;
+  border-radius: 2px;
+}
+
+/* line 57, ../sass/style.scss */
 #report-bar {
   padding-top: 0.4em;
 }
 
-/* line 55, ../sass/style.scss */
+/* line 61, ../sass/style.scss */
 #sale-percentage {
   background-color: #a54499;
 }
 
-/* line 60, ../sass/style.scss */
+/* line 66, ../sass/style.scss */
 .sale-text {
   font-size: 1.3em;
 }
 
-/* line 64, ../sass/style.scss */
+/* line 70, ../sass/style.scss */
 .report-text {
   font-size: 1.2em;
 }
 
-/* line 68, ../sass/style.scss */
+/* line 74, ../sass/style.scss */
 .small-text {
   font-size: 1.1em;
 }
 
-/* line 72, ../sass/style.scss */
+/* line 78, ../sass/style.scss */
 .large-text {
   font-size: 7em;
 }
 
-/* line 76, ../sass/style.scss */
+/* line 82, ../sass/style.scss */
 #cancelled {
   background-color: #faf3d1 !important;
 }
 
-/* line 80, ../sass/style.scss */
+/* line 86, ../sass/style.scss */
 #collect {
   background-color: #c7e4f3 !important;
 }
 
-/* line 84, ../sass/style.scss */
+/* line 90, ../sass/style.scss */
 .pad-small {
   margin-top: 0.5em;
 }
 
-/* line 88, ../sass/style.scss */
+/* line 94, ../sass/style.scss */
+.pad-medium {
+  margin-top: 1em;
+}
+
+/* line 98, ../sass/style.scss */
 .sale-container {
   margin: 1em 0.5em;
 }
