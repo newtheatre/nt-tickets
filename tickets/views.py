@@ -1,6 +1,6 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage
@@ -61,7 +61,6 @@ def ShowIndex(request):
 
 def ShowReport(request, show_name, occ_id):
     report = dict()
-    occurrence_fin = dict()
     show = get_object_or_404(Show, id=show_name)
     occurrence = Occurrence.objects.get_available_show(show=show_name)
 
@@ -79,12 +78,6 @@ def ShowReport(request, show_name, occ_id):
     report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
 
     report['season_price'] = SeasonTicketPricing.objects.get(id=1).season_ticket_price
-
-    # Try and get an external pricing object, if there is one return 0
-    try:
-        pricing = ExternalPricing.objects.get(show_id=show_name)
-    except:
-        pricing = 0
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -112,12 +105,39 @@ def ShowReport(request, show_name, occ_id):
         category = occ_fin.show.category
         report['category'] = category
 
-        if category.name == 'External':
-            report['matinee_freshers_price'] = pricing.public_price / 2
-            report['matinee_freshers_nnt_price'] = pricing.member_price / 2
-   
+        # In House Pricing
+        if category.id == 1:
+            try:
+                pricing = InHousePricing.objects.get(id=1)
+                report['pricing_error'] = False
+            except ObjectDoesNotExist:
+                pricing = 0
+                report['pricing_error'] = True
+
+        # Fringe Pricing
+        elif category.id == 2:
+            try:
+                pricing = FringePricing.objects.get(id=1)
+                report['pricing_error'] = False
+            except ObjectDoesNotExist:
+                pricing = 0
+                report['pricing_error'] = True
+
+        # External Pricing
+        elif category.id == 3:
+            try:
+                pricing = ExternalPricing.objects.get(show_id=show_name)
+                report['matinee_freshers_price'] = pricing.public_price / 2
+                report['matinee_freshers_nnt_price'] = pricing.member_price / 2
+                report['pricing_error'] = False
+            except ObjectDoesNotExist:
+                pricing = 0
+                report['pricing_error'] = True
+
     else:
         report['have_form'] = False
+        report['pricing_error'] = False
+        pricing = 0
 
     # Testing if the show is current
     if show.is_current():
@@ -138,8 +158,8 @@ def ShowReport(request, show_name, occ_id):
     }
 
     return render_to_response(
-        'show_report.html', 
-        context, 
+        'show_report.html',
+        context,
         context_instance=RequestContext(request)
         )
 
@@ -151,9 +171,23 @@ def SaleInputAJAX(request, show_name, occ_id):
 
         s = Sale()
         occ_fin = Occurrence.objects.get(id=occ_id)
+        show = get_object_or_404(Show, id=show_name)
         s.occurrence = occ_fin
         s.ticket = request.POST.get('reservation')
         report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
+
+        category = show.category
+
+        if category.id == 1:
+            pricing = InHousePricing.objects.get(id=1)
+
+        # Fringe Pricing
+        elif category.id == 2:
+            pricing = FringePricing.objects.get(id=1)
+
+        # External Pricing
+        elif category.id == 3:
+            pricing = ExternalPricing.objects.get(show_id=show_name)
 
         number_concession = float(request.POST.get('number_concession'))
         number_member = float(request.POST.get('number_member'))
@@ -175,14 +209,46 @@ def SaleInputAJAX(request, show_name, occ_id):
         s.number_matinee_freshers = number_matinee_freshers
         s.number_matinee_freshers_nnt = number_matinee_freshers_nnt
 
+        try:
+            concession_sale = number_concession * float(pricing.concession_price)
+        except Exception:
+            concession_sale = float(0)
+
+        try:
+            member_sale = number_member * float(pricing.member_price)
+        except Exception:
+            member_sale = float(0)
+
+        try:
+            public_sale = number_public * float(pricing.public_price)
+        except Exception:
+            public_sale = float(0)
+
+        season_sale = number_season * float(SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+
+        try:
+            fringe_sale = number_fringe * float(pricing.fringe_price)
+        except Exception:
+            fringe_sale = float(0)
+
+        try:
+            matinee_fresher_sale = number_matinee_freshers * float(pricing.matinee_freshers_price)
+        except Exception:
+            matinee_fresher_sale = float(0)
+
+        try:
+            matinee_fresher_nnt_sale = number_matinee_freshers_nnt * float(pricing.matinee_freshers_nnt_price)
+        except Exception:
+            matinee_fresher_nnt_sale = float(0)
+
         price = (
-            number_concession * float(config.CONCESSION_PRICE[0]) +
-            number_member * float(config.MEMBER_PRICE[0]) +
-            number_public * float(config.PUBLIC_PRICE[0]) +
-            number_season * float(SeasonTicketPricing.objects.get(id=1).season_ticket_price) +
-            number_fringe * float(config.FRINGE_PRICE[0]) +
-            number_matinee_freshers * config.MATINEE_FRESHERS_PRICE[0] +
-            number_matinee_freshers_nnt * float(config.MATINEE_FRESHERS_NNT_PRICE[0])
+            concession_sale +
+            member_sale +
+            public_sale +
+            season_sale +
+            fringe_sale +
+            matinee_fresher_sale +
+            matinee_fresher_nnt_sale
             )
 
         number = (
@@ -224,7 +290,7 @@ def SaleInputAJAX(request, show_name, occ_id):
 
         return render_to_response(
         'sale_overview_full.html',
-        context, 
+        context,
         context_instance=RequestContext(request)
         )
     else:
