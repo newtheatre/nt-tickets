@@ -86,6 +86,7 @@
 					<div class="card-content" id="sale-update">
 						{% ShowSaleOverview report %}
 						<!-- See sale_overview.html -->
+						<!-- and show_tags.py -->
 					</div>
 				</div>
 			</div>
@@ -202,7 +203,7 @@
 						<!-- Season Ticket Sales -->
 						<div class="input-field col s3">
 							<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()" onclick="this.focus();this.select()">
-							<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
+							<label for="{{ S_form.number_season_sales.name }}">{{ report.season_price }}</label>
 						</div>
 
 						<!-- Fellow Ticket Numbers -->
@@ -214,6 +215,7 @@
 						<!-- Hidden Sale Inputs -->
 						<div class="col s12">
 							<input name="{{ S_form.number_concession.name }}" id="concession" type="hidden" value="0">
+							<input name="{{ S_form.number_member.name }}" id="member" type="hidden" value="0">
 							<input name="{{ S_form.number_public.name }}" id="public" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers.name }}" id="matinee_freshers" type="hidden" value="0">
 							<input name="{{ S_form.number_matinee_freshers_nnt.name }}" id="matinee_freshers_nnt" type="hidden" value="0">
@@ -252,7 +254,7 @@
 							<!-- Season Ticket Sales -->
 							<div class="input-field col s4">
 								<input name="{{ S_form.number_season_sales.name }}" id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-								<label for="{{ S_form.number_season_sales.name }}">{{ S_form.number_season_sales.label }}</label>
+								<label for="{{ S_form.number_season_sales.name }}">Season Pass Ticket Sales £{{ report.season_price }}</label>
 							</div>
 						{% else %}
 
@@ -451,7 +453,7 @@
 	<script>
 		$('#sale-form').on('submit', function(event){
 			event.preventDefault();
-			console.log("Sell form submitted")  // sanity check
+			// console.log("Sell form submitted")  // sanity check
 			sell_tickets();
 		});
 	</script>
@@ -461,8 +463,7 @@
 			event.preventDefault();
 			// $('#reserve-form').on('submit', function(){
 				var id = $(this).attr('id');
-				console.log(id);
-				console.log("Collect form submitted");  // sanity check
+				// console.log("Collect form submitted");  // sanity check
 				collect_tickets(id);
 				return false;
 			});

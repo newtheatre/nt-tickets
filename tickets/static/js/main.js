@@ -1,6 +1,6 @@
 // AJAX for posting
 function sell_tickets() {
-  console.log("create post is working!") // sanity check before AJAX
+  // console.log("create post is working!") // sanity check before AJAX
   $.ajax({
     url : "sale/", // the endpoint
     type : "POST", // http method
@@ -28,7 +28,7 @@ function sell_tickets() {
       $('#reservation_modal_container').html($('#div-3', data).html());
 
       // console.log(data);
-      console.log("Sell success"); // sanity check after AJAX
+      // console.log("Sell success"); // sanity check after AJAX
     },
 
     // handle a non-successful response
@@ -41,7 +41,7 @@ function sell_tickets() {
 };
 
 function collect_tickets(id) {
-  console.log('Collect tickets is working')  // Sanity check
+  // console.log('Collect tickets is working')  // Sanity check
   $.ajax({
     url : "reserve/",
     type : "post",
@@ -54,7 +54,7 @@ function collect_tickets(id) {
       $('#reservation').val(data.reservation);
       $('#unique_ticket').val(data.unique_code);
       // console.log(data);
-      console.log('Collect success');  // Sanity check after AJAX
+      // console.log('Collect success');  // Sanity check after AJAX
     },
 
     // Handle and error
