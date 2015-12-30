@@ -2,7 +2,7 @@ Django == 1.9
 Pillow == 3.0.0
 argparse == 1.4.0
 django-bootstrap-toolkit == 2.15.0
-gunicorn == 19.4.1
+gunicorn == 19.4.3
 mailchimp == 2.0.9
 markdown2 == 2.3.0
 wsgiref == 0.1.2
