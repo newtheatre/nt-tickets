@@ -80,6 +80,9 @@ class ExternalPricing(PricingBase):
 
     show = models.ForeignKey(Show)
 
+    matinee_freshers_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_PRICE[0])
+    matinee_freshers_nnt_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_NNT_PRICE[0])
+
     allow_season_tickets = models.BooleanField(default=True)
     allow_fellow_tickets = models.BooleanField(default=True)
     allow_half_matinee = models.BooleanField(default=True)
