@@ -98,12 +98,19 @@ def ShowReport(request, show_name, occ_id):
 
         report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
         report['how_many_reserved'] = occ_fin.tickets_sold()
+        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
+
+        report['sold'] = occ_fin.total_tickets_sold()
+        report['total_sales'] = occ_fin.total_sales()
+
         report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
+        report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
+
+        report['reservation'] = 'None'
+        report['unique_ticket'] = 'None'
 
         category = occ_fin.show.category
         report['category'] = category
-        report['total_sales'] = occ_fin.total_sales()
-        report['sold'] = occ_fin.total_tickets_sold()
 
         if category.name == 'External':
             report['matinee_freshers_price'] = pricing.public_price / 2
@@ -120,42 +127,11 @@ def ShowReport(request, show_name, occ_id):
 
     S_form = SaleForm
 
-    # If the a form has been submitted
-    if request.method == 'POST':
-        R_form = ReserveForm(request.POST)
-
-        if occ_id > '0':
-            report['sold'] = occ_fin.total_tickets_sold()
-            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
-            report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
-            report['total_sales'] = occ_fin.total_sales()
-
-        if R_form.is_valid():
-            report['unique_ticket'] = R_form.cleaned_data['unique_ticket']
-
-            try:
-                ticket = Ticket.objects.get(unique_code=R_form.cleaned_data['unique_ticket'])
-                report['reservation'] = ticket.person_name
-            except Ticket.DoesNotExist:
-                report['reservation'] = 'None'
-
-    else:
-        R_form = ReserveForm()
-        report['reservation'] = 'None'
-        report['unique_ticket'] = 'None'
-
-        if occ_id > '0':
-            report['sold'] = occ_fin.total_tickets_sold()
-            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
-            report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
-            report['total_sales'] = occ_fin.total_sales()
-
     context = {
         'report': report,
         'show': show,
         'occurrence': occurrence,
         'S_form': S_form,
-        # 'R_form': R_form,
         'occ_id': occ_id,
         'show_name': show_name,
         'pricing': pricing,
@@ -171,18 +147,13 @@ def ShowReport(request, show_name, occ_id):
 def SaleInputAJAX(request, show_name, occ_id):
     report = dict()
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
 
         s = Sale()
         occ_fin = Occurrence.objects.get(id=occ_id)
         s.occurrence = occ_fin
         s.ticket = request.POST.get('reservation')
         report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
-
-        if request.POST.get('unique_ticket') != 'None':
-            T = Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
-            T.collected = True
-            T.save()
 
         number_concession = float(request.POST.get('number_concession'))
         number_member = float(request.POST.get('number_member'))
@@ -233,6 +204,11 @@ def SaleInputAJAX(request, show_name, occ_id):
         if number != 0:
             s.save()
 
+            if request.POST.get('unique_ticket') != 'None':
+                T = Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
+                T.collected = True
+                T.save()
+
         if occ_id > '0':
             report['sold'] = occ_fin.total_tickets_sold()
             report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
@@ -252,16 +228,13 @@ def SaleInputAJAX(request, show_name, occ_id):
         context_instance=RequestContext(request)
         )
     else:
-        return HttpResponse(
-            json.dumps({"nothing to see": "this isn't happening"}),
-            content_type="application/json"
-        )
+        return render(request, '404.html')
 
 
 def ReserveInputAJAX(request, show_name, occ_id):
     report = dict()
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         if occ_id > 0:
             unique_code = request.POST.get('unique_code')
             # runique_code = unique_code
@@ -279,10 +252,7 @@ def ReserveInputAJAX(request, show_name, occ_id):
         return HttpResponse(json.dumps(context), content_type='application/json')
 
     else:
-        return HttpResponse(
-            json.dumps({"nothing to see": "this isn't happening"}),
-            content_type="application/json"
-        )
+        return render(request, '404.html')
 
 
 def SaleReport(request):
