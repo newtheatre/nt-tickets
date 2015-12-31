@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -8,6 +9,7 @@ from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.core import serializers
 import json
+import csv
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -426,6 +428,103 @@ def SaleReportFull(request, show_name):
         context, 
         context_instance=RequestContext(request)
         )
+
+
+@login_required
+def DownloadReport(request, show_name):
+    response = HttpResponse(content_type='text/csv')
+    occurrence = Occurrence.objects.filter(show_id=show_name)
+    show = get_object_or_404(Show, id=show_name)
+
+    category = show.category
+
+    if category.id == 1:
+        pricing = InHousePricing.objects.get(id=1)
+
+    # Fringe Pricing
+    elif category.id == 2:
+        pricing = FringePricing.objects.get(id=1)
+
+    # External Pricing
+    elif category.id == 3:
+        pricing = ExternalPricing.objects.get(show_id=show_name)
+
+    try:
+        concession_sale = float(pricing.concession_price)
+    except Exception:
+        concession_sale = float(0)
+
+    try:
+        member_sale = float(pricing.member_price)
+    except Exception:
+        member_sale = float(0)
+
+    try:
+        public_sale = float(pricing.public_price)
+    except Exception:
+        public_sale = float(0)
+
+    season_sale = float(SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+
+    try:
+        fringe_sale = float(pricing.fringe_price)
+    except Exception:
+        fringe_sale = float(0)
+
+    try:
+        matinee_fresher_sale = float(pricing.matinee_freshers_price)
+    except Exception:
+        matinee_fresher_sale = float(0)
+
+    try:
+        matinee_fresher_nnt_sale = float(pricing.matinee_freshers_nnt_price)
+    except Exception:
+        matinee_fresher_nnt_sale = float(0)
+
+    response['Content-Disposition'] = 'attachment; filename=Show_Report.csv'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        show.name, 
+        'Total Sales: £' + str(show.show_sales()), 
+        'Total Tickets Sold: ' + str(show.total_tickets_sold_show()), 
+        'Total Tickets Reserved: ' + str(show.total_tickets_reserved()),
+        'Out of a possible: ' + str(show.total_possible())
+        ])
+    writer.writerow([
+        'Show Day', 
+        'Show Time',
+        'Member Tickets',
+        'Concession Tickets',
+        'Public Tickets',
+        'Season Tickets',
+        'Season Ticket Sales',
+        'Fellow Tickets'
+        ])
+
+    for oc in occurrence:
+        writer.writerow([
+            oc.day_formatted(), 
+            oc.time_formatted(), 
+            oc.member_tally(), 
+            oc.concession_tally(), 
+            oc.public_tally(),
+            oc.season_tally(),
+            oc.season_sale_tally(),
+            oc.fellow_tally(),
+            ])
+        writer.writerow([
+            oc.day_formatted(),
+            'TOTALS:',
+            oc.member_tally() * member_sale,
+            oc.concession_tally() * concession_sale, 
+            oc.public_tally() * public_sale,
+            '-',
+            oc.season_sale_tally() * season_sale,
+            '-',
+            ])
+
+    return response
 
 
 def defaultFNI(request):
