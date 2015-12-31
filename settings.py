@@ -100,6 +100,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'tickets.context_processors.customise_processor',
+                'tickets.context_processors.recaptcha',
             ],
             'loaders': [
                 # insert your TEMPLATE_LOADERS here
@@ -206,6 +207,7 @@ LOGGING = {
     }
 }
 
+# Recaptcha Stuff
 RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
 RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
 

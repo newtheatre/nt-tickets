@@ -1,4 +1,7 @@
 {% extends 'show_base.html' %}
+{% block head %}
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}
 {% block content %}
   <div class="valign-wrapper" id="full-div">
     <div class="container center-align">
@@ -14,6 +17,10 @@
             <div class="input-field col s12">
               <input name="{{ form.password.name }}" type="password" class="validate">
               <label for="{{ form.password.name }}">Password</label>
+            </div>
+            <div class="col s12">
+              <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_PUBLIC_KEY }}"></div>
+              <br>
             </div>
             <button type="submit" value="login" class="btn nnt purple waves-effect waves-dark pad-bottom">
               Login
