@@ -9,6 +9,9 @@ from django.template import Context, RequestContext
 from django.core import serializers
 import json
 
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 from django.views import generic
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -26,16 +29,22 @@ import settings
 import mailchimp_util
 
 
-# def login(request, **kwargs):
-#     if request.user.is_authenticated():
-#         next = request.REQUEST.get('next', '/')
-#         return HttpResponseRedirect(request.REQUEST.get('next', '/'))
-#     else:
-#         from django.contrib.auth.views import login
+def login(request, **kwargs):
+    if request.user.is_authenticated():
+        next = request.REQUEST.get('next', '/')
+        return HttpResponseRedirect(request.REQUEST.get('next', '/'))
+    else:
+        from django.contrib.auth.views import login
 
-#         return login(request, authentication_form=forms.LoginForm)
+        return login(request, authentication_form=forms.LoginForm)
 
 
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('registration/logout.html')
+
+
+@login_required
 def ShowIndex(request):
     report = dict()
     show = dict()
@@ -58,7 +67,7 @@ def ShowIndex(request):
 
     return render_to_response('show_index.html', context, context_instance=RequestContext(request)) 
 
-
+@login_required
 def ShowReport(request, show_name, occ_id):
     report = dict()
     show = get_object_or_404(Show, id=show_name)
@@ -163,7 +172,7 @@ def ShowReport(request, show_name, occ_id):
         context_instance=RequestContext(request)
         )
 
-
+@login_required
 def SaleInputAJAX(request, show_name, occ_id):
     report = dict()
 
@@ -296,7 +305,7 @@ def SaleInputAJAX(request, show_name, occ_id):
     else:
         return render(request, '404.html')
 
-
+@login_required
 def ReserveInputAJAX(request, show_name, occ_id):
     report = dict()
 
@@ -320,7 +329,7 @@ def ReserveInputAJAX(request, show_name, occ_id):
     else:
         return render(request, '404.html')
 
-
+@login_required
 def SaleReport(request):
     report = dict()
     show = dict()
@@ -349,7 +358,7 @@ def SaleReport(request):
         context_instance=RequestContext(request)
         )
 
-
+@login_required
 def SaleReportFull(request, show_name):
     report = dict()
     show = Show.objects.get(id=show_name)
@@ -361,31 +370,49 @@ def SaleReportFull(request, show_name):
 
     category = show.category
 
-    # Ticket Numbers
-    report['number_concession'] = [config.CONCESSION_PRICE[0]]
-    report['number_public'] = [config.PUBLIC_PRICE[0]]
-    report['number_fringe'] = [config.FRINGE_PRICE[0]]
-    report['number_matinee_freshers'] = [config.MATINEE_FRESHERS_PRICE[0]]
-    report['number_matinee_freshers_nnt'] = [config.MATINEE_FRESHERS_NNT_PRICE[0]]
+    if category.id == 1:
+        pricing = InHousePricing.objects.get(id=1)
+
+    # Fringe Pricing
+    elif category.id == 2:
+        pricing = FringePricing.objects.get(id=1)
+
+    # External Pricing
+    elif category.id == 3:
+        pricing = ExternalPricing.objects.get(show_id=show_name)
 
     # Ticket Prices
-    report['member_price'] = config.MEMBER_PRICE[0]
-    report['concession_price'] = config.CONCESSION_PRICE[0]
-    report['public_price'] = config.PUBLIC_PRICE[0]
-    report['fringe_price'] = config.FRINGE_PRICE[0]
-    report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
-    report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
-
-    report['season_price'] = SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    try:
+        report['concession_price'] = float(pricing.concession_price)
+    except Exception:
+        report['concession_price'] = float(0)
 
     try:
-        pricing = ExternalPricing.objects.get(show_id=show_name)
-    except:
-        pricing = 0
+        report['member_price'] = float(pricing.member_price)
+    except Exception:
+        report['member_price'] = float(0)
 
-    if category.name == 'External':
-        report['matinee_freshers_price'] = pricing.public_price / 2
-        report['matinee_freshers_nnt_price'] = pricing.member_price / 2
+    try:
+        report['public_price'] = float(pricing.public_price)
+    except Exception:
+        report['public_price'] = float(0)
+
+    try:
+        report['fringe_price'] = float(pricing.fringe_price)
+    except Exception:
+        report['fringe_price'] = float(0)
+
+    try:
+        report['matinee_freshers_price'] = float(pricing.matinee_freshers_price)
+    except Exception:
+        report['matinee_freshers_price'] = float(0)
+
+    try:
+        report['matinee_freshers_nnt_price'] = float(pricing.matinee_freshers_nnt_price)
+    except Exception:
+        report['matinee_freshers_nnt_price'] = float(0)
+
+    report['season_price'] = SeasonTicketPricing.objects.get(id=1).season_ticket_price
 
     context = {
         'show': show,
