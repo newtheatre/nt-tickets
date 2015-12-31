@@ -48,6 +48,11 @@ class CancelForm(forms.Form):
     occurrence = forms.CharField(max_length=80)
 
 
+class DownloadForm(forms.Form):
+    occurrence = forms.CharField(max_length=16)
+
+
+# Admin-Frontend Forms
 class SaleForm(forms.Form):
 
     ticket = forms.CharField(label='Reservation', max_length=80)
@@ -83,22 +88,6 @@ class SaleForm(forms.Form):
     number_matinee_freshers_nnt = forms.IntegerField(label="Matinee Member Fresher Tickets " + \
         config.MATINEE_FRESHERS_NNT_PRICE[1])
 
-
-    # def at_least_one(self):
-    #     total_sale = \
-    #         self.cleaned_data.get('number_concession') + \
-    #         self.cleaned_data.get('number_public') + \
-    #         self.cleaned_data.get('number_season') + \
-    #         self.cleaned_data.get('number_fellow') + \
-    #         self.cleaned_data.get('number_external') + \
-    #         self.cleaned_data.get('number_fringe') + \
-    #         self.cleaned_data.get('number_matinee_freshers') + \
-    #         self.cleaned_data.get('number_matinee_freshers_nnt')
-
-    #     if total_sale == 0:
-    #         raise ValidationError("Please input at least one sale")
-
-    #     return 
 
 class ReserveForm(forms.Form):
     unique_ticket = forms.CharField(max_length=16)
