@@ -8,6 +8,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.core import serializers
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 import csv
 
@@ -49,18 +50,27 @@ def logout_view(request):
 @login_required
 def ShowIndex(request):
     report = dict()
-    show = dict()
-    show_list = Show.objects.all()
+    shows = Show.objects.all()
+    show_list = []
 
-    number = 0
-
-    for sh in show_list:
+    number_shows = 0
+    for sh in shows:
         if sh.is_current():
-            number = number + 1
-            report['number'] = number
+            number_shows += 1
+            report['number_shows'] = number_shows
+            show_list.append(sh)
 
-    report['show'] = show_list
-    show = show_list
+    paginator = Paginator(show_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        show = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        show = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        show = paginator.page(paginator.num_pages)
 
     context = {
         'show': show,
@@ -334,19 +344,26 @@ def ReserveInputAJAX(request, show_name, occ_id):
 @login_required
 def SaleReport(request):
     report = dict()
-    show = dict()
-    show_list = Show.objects.all()
+    shows = Show.objects.all()
+    show_list = []
     occurrence = Occurrence.objects.all
 
-    number = 0
-
-    for sh in show_list:
+    number_shows = 0
+    for sh in shows:
         if sh.is_current():
-            number = number + 1
-            report['number'] = number
+            number_shows += 1
+            report['number_shows'] = number_shows
+            show_list.append(sh)
 
-    report['show'] = show_list
-    show = show_list
+    paginator = Paginator(show_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        show = paginator.page(page)
+    except PageNotAnInteger:
+        show = paginator.page(1)
+    except EmptyPage:
+        show = paginator.page(paginator.num_pages)
 
     context = {
         'show': show,
