@@ -19,7 +19,6 @@ class TicketAdmin(admin.ModelAdmin):
         my_urls = [
             url(r'$', self.admin_site.admin_view(self.report_index)),
             url(r'\d+/report/$', self.admin_site.admin_view(self.review)),
-            url(r'^dl_tickets/(?P<show_name>\d+)/$', self.admin_site.admin_view(self.DownloadTickets)),
         ]
         return my_urls + urls
 
