@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,6 +17,11 @@
   <header>
   {% block header %}
     <div class="navbar-fixed">
+      <ul id="dropdown1" class="dropdown-content">
+        <li><a href="/admin">Admin Login</a></li>
+        <li class="divider"></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
       <nav>
         <div class="nav-wrapper">
           <a href="/" class="brand-logo center">
@@ -27,7 +33,16 @@
               <li><a href="/report">Sale Reports</a></li>
             </ul>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/admin">Admin Login</a></li>
+              {% if user.is_authenticated %}
+                <li>
+                <a class="dropdown-button" href="#!" data-activates="dropdown1">
+                  Welcome, {{ user.username }}
+                <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                </li>
+              {% else %}
+                <li><a href="/login/">Login</li>
+              {% endif %}
               </ul>
           </div>
         </div>
@@ -39,6 +54,11 @@
   {% block content %}
   {% endblock %}
   </main>
+  <script>
+    $(document).ready(function(){
+      $(".dropdown-button").dropdown();
+    });
+  </script>
   {% block footer %}
   {% endblock %}
 </body>
