@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Create your views here.
+
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404
@@ -435,6 +435,7 @@ def DownloadReport(request, show_name):
     response = HttpResponse(content_type='text/csv')
     occurrence = Occurrence.objects.filter(show_id=show_name)
     show = get_object_or_404(Show, id=show_name)
+    response['Content-Disposition'] = 'attachment; filename=Show_Report.csv'
 
     category = show.category
 
@@ -480,8 +481,6 @@ def DownloadReport(request, show_name):
         matinee_fresher_nnt_sale = float(pricing.matinee_freshers_nnt_price)
     except Exception:
         matinee_fresher_nnt_sale = float(0)
-
-    response['Content-Disposition'] = 'attachment; filename=Show_Report.csv'
 
     writer = csv.writer(response)
     writer.writerow([
