@@ -1,0 +1,27 @@
+{% extends 'show_base.html' %}
+{% block content %}
+  <div class="valign-wrapper" id="full-div">
+    <div class="container center-align">
+      <div class="row">
+        <div class="col s6 offset-s3" id="form-background">
+        <h4 class="light nnt-orange">Login</h4>
+          <form class="col s12" action="." method="post">
+          {% csrf_token %}
+            <div class="input-field col s12">
+              <input name="{{ form.username.name }}" type="text" class="validate">
+              <label for="{{ form.username.name }}">Username</label>
+            </div>
+            <div class="input-field col s12">
+              <input name="{{ form.password.name }}" type="password" class="validate">
+              <label for="{{ form.password.name }}">Password</label>
+            </div>
+            <button type="submit" value="login" class="btn nnt purple waves-effect waves-dark pad-bottom">
+              Login
+            </button>
+            <input type="hidden" name="next" value="{{ next }}" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
