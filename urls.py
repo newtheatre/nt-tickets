@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 
 from tickets import views as tickets_views
 
@@ -20,11 +20,16 @@ urlpatterns = [
     url(r'^list/(?P<slug>[-_\w]+)/$', tickets_views.DetailShow.as_view(), name='detail'),
     url(r'^sidebar/$', tickets_views.sidebar, name='sidebar'),
 
+    # Auth views
+    # url(r'^login/$', tickets_views.LoginView, name='login'),
+    url(r'^login/$', auth_views.login),
+    url(r'^logout/$', auth_views.logout),
+
     # Admin urls
     url(r'^admin/', include(admin.site.urls)),
 
     # Admin frontend urls
-    url(r'^$', login_required(tickets_views.ShowIndex), name='index'),
+    url(r'^$', tickets_views.ShowIndex, name='index'),
     url(r'^show/(?P<show_name>\d+)/$', tickets_views.ShowReport, name='show_report'),
     url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/$', tickets_views.ShowReport, name='show_report_full'),
 
