@@ -28,6 +28,9 @@ DATABASES = {
 
 SITE_URL = "http://localhost:8000"
 
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -132,10 +135,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs',
     # 'south',
     'mathfilters',
     'admin_reorder',
@@ -143,6 +142,11 @@ INSTALLED_APPS = (
     'bootstrap_toolkit',
     'tickets',
     'pricing',
+
+    # Uncomment the next line to enable the admin:
+    'django.contrib.admin',
+    # Uncomment the next line to enable admin documentation:
+    'django.contrib.admindocs',
 )
 
 # Reording of admin models
