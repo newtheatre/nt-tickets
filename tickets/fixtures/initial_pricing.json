@@ -1,0 +1,26 @@
+},
+{
+  "model": "pricing.seasonticketpricing",
+  "pk": 1,
+  "fields": {
+    "season_ticket_price": "40.00"
+  }
+},
+{
+  "model": "pricing.inhousepricing",
+  "pk": 1,
+  "fields": {
+    "concession_price": "5.00",
+    "public_price": "8.00",
+    "member_price": "5.00",
+    "matinee_freshers_price": "2.50",
+    "matinee_freshers_nnt_price": "2.00"
+  }
+},
+{
+  "model": "pricing.fringepricing",
+  "pk": 1,
+  "fields": {
+    "fringe_price": "3.00"
+  }
+},
