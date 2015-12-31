@@ -51,7 +51,16 @@
       <div class="actions">
         <br>
         <button type="submit" class="btn primary">Search</button>
-      </div></form>
+      </div>
+    </form>
+    {% if report.have_report %}
+      <form action="." method="post">
+      {% csrf_token %}
+        <input type="text" name="{{ D_form.occurrence.name }}" value="{{ occurrence.unique_code }}">
+        <button type="submit" class="btn btn-info float-right" style="margin-right: 3.3em;">
+        Download</button>
+      </form>
+    {% endif %}
     </div>
     <div class="report-col">
       {% if occurrence.show.poster %}<img src="{{occurrence.show.poster_tiny.url}}" style="float:right" />{% endif %}

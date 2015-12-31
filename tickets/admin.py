@@ -3,10 +3,12 @@ from django.template import RequestContext
 from django.conf.urls import url
 from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
+from django.http import HttpResponse
+import csv
 
 from tickets.models import *
 import pricing.models as pricing
-from tickets.forms import ReportForm, CancelForm
+from tickets.forms import ReportForm, CancelForm, DownloadForm
 
 
 class TicketAdmin(admin.ModelAdmin):
@@ -17,6 +19,7 @@ class TicketAdmin(admin.ModelAdmin):
         my_urls = [
             url(r'$', self.admin_site.admin_view(self.report_index)),
             url(r'\d+/report/$', self.admin_site.admin_view(self.review)),
+            url(r'^dl_tickets/(?P<show_name>\d+)/$', self.admin_site.admin_view(self.DownloadTickets)),
         ]
         return my_urls + urls
 
@@ -26,8 +29,9 @@ class TicketAdmin(admin.ModelAdmin):
         occurrence = ""
 
         if request.method == 'POST':
-            R_form = ReportForm(request.POST)
-            C_form = CancelForm(request.POST)
+            R_form = ReportForm(request.POST)       # Report Form
+            C_form = CancelForm(request.POST)       # Cancellation Form
+            D_form = DownloadForm(request.POST)     # Download Form
             if R_form.is_valid():
                 occurrence = R_form.cleaned_data['occurrence']
                 report['tickets'] = Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
@@ -53,16 +57,63 @@ class TicketAdmin(admin.ModelAdmin):
                 report['have_report'] = True
 
                 R_form = ReportForm(initial={'occurrence': occurrence})
+            elif D_form.is_valid():
+                occurrence_id = D_form.cleaned_data['occurrence']
+                occurrence = Occurrence.objects.get(unique_code=occurrence_id)
+                tickets = Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
+
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename=Reservation_Report.csv'
+
+                writer = csv.writer(response)
+
+                writer.writerow([
+                    occurrence.show.name,
+                    occurrence.day_formatted(),
+                    occurrence.time_formatted(),
+                    'Total Reserved: ' + str(occurrence.tickets_sold()),
+                    'Out of: ' + str(occurrence.maximum_sell)
+                    ])
+
+                writer.writerow([
+                    'Person Name',
+                    'Quantity Reserved',
+                    'TimeStamp',
+                    'Cancelled?',
+                    'Collected?'
+                    ])
+
+                for tick in tickets:
+                    writer.writerow([
+                        tick.person_name,
+                        tick.quantity,
+                        tick.stamp,
+                        tick.cancelled,
+                        tick.collected
+                        ])
+
+
+                report['tickets'] = Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
+                report['how_many_sold'] = occurrence.tickets_sold()
+                report['how_many_left'] = occurrence.maximum_sell-occurrence.tickets_sold()
+                report['percentage'] = (report['how_many_sold']/float(occurrence.maximum_sell))*100
+                report['have_report'] = True
+
+                R_form = ReportForm(initial={'occurrence': occurrence})
+                
+                return response
             else:
                 pass
 
         else:
             R_form = ReportForm()
             C_form = CancelForm()
+            D_form = DownloadForm()
 
         return render_to_response('admin/tickets_index.html', {
             'R_form': R_form,
             'C_form': C_form,
+            'D_form': D_form,
             'occurrence': occurrence,
             'report': report,
         }, context_instance=RequestContext(request))
