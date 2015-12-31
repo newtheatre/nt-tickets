@@ -4,6 +4,8 @@ $primary-color-light: lighten($primary-color, 15%) !default;
 $primary-color-dark: darken($primary-color, 5%) !default;
 $primary-color-dark-2: darken($primary-color, 20%) !default;
 
+$primary-grey: color("nnt", "grey") !default;
+
 $secondary-color: color("nnt", "orange") !default;
 $secondary-color-light: lighten($secondary-color, 15%) !default;
 $secondary-color-dark: darken($secondary-color, 15%) !default;
@@ -50,7 +52,7 @@ $datepicker-selected: $secondary-color !default;
 $datepicker-selected-outfocus: desaturate(lighten($secondary-color, 35%), 15%) !default;
 
 /*** Dropdown ***/
-$dropdown-bg-color: #fff !default;
+$dropdown-bg-color: $primary-color-dark-2 !default;
 $dropdown-hover-bg-color: #eee !default;
 $dropdown-color: $secondary-color !default;
 $dropdown-item-height: 50px !default;

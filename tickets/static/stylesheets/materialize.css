@@ -3325,7 +3325,7 @@ ul li {
 .divider {
   height: 1px;
   overflow: hidden;
-  background-color: #e0e0e0;
+  background-color: #292629;
 }
 
 /* line 103, ../sass/components/_global.scss */
@@ -9828,7 +9828,7 @@ button.btn-floating {
 
 /* line 1, ../sass/components/_dropdown.scss */
 .dropdown-content {
-  background-color: #fff;
+  background-color: #5d2656;
   margin: 0;
   display: none;
   min-width: 100px;

@@ -79,6 +79,10 @@
   font-size: 7em;
 }
 
+.medium-text {
+  font-size: 4em;
+}
+
 #cancelled {
   background-color: #faf3d1 !important;
 }
@@ -93,6 +97,15 @@
 
 .pad-medium {
   margin-top: 1em;
+}
+
+.pad-bottom {
+  margin-top: 0.2em;
+  margin-bottom: 1em;
+}
+
+.login-pad-top {
+  margin: 0em 2em;
 }
 
 .sale-container {
