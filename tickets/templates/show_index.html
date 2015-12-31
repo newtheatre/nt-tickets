@@ -3,12 +3,12 @@
 {% block content %}
 	<div class="container">
 		<div class="row">
-	        <div class="col s12">
-	        	{% if show.number == 1 %}
-	        		{% if not show.is_current %}
-	        			<p>There are no showings at the moment</p>
-	        		{% endif %}
-				{% elif show.number == 0 %}
+			<div class="col s12">
+				{% if report.number_shows == 1 %}
+					{% if not show.is_current %}
+						<p>There are no showings at the moment</p>
+					{% endif %}
+				{% elif report.number_shows == 0 %}
 					<p>There are no shows at the moment<p>
 				{% else %}
 					{% for sh in show %}
@@ -39,5 +39,20 @@
 				{% endif %}
 			</div>
 		</div>
+		<ul class="pagination center-align">
+			{% if show.has_previous %}
+				<li class="waves-effect"><a href="?page={{ show.previous_page_number }}"><i class="material-icons nnt-purple">chevron_left</i></a></li>
+			{% else %}
+				<li class="disabled"><i class="material-icons grey-text">chevron_left</i></li>
+			{% endif %}
+
+			<li class="nnt-orange">{{ show.number }} of {{ show.paginator.num_pages }}</li>
+
+			{% if show.has_next %}
+				<li class="waves-effect"><a href="?page={{ show.next_page_number }}"><i class="material-icons nnt-purple">chevron_right</i></a></li>
+			{% else %}
+				<li class="disabled"><i class="material-icons grey-text">chevron_right</i></li>
+			{% endif %}
+			</ul>
 	</div>
 {% endblock %}
