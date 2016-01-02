@@ -28,16 +28,6 @@ class Index(generic.TemplateView):
     template_name = 'index.html'
 
 
-def login(request, **kwargs):
-    if request.user.is_authenticated():
-        next = request.REQUEST.get('next', '/')
-        return HttpResponseRedirect(request.REQUEST.get('next', '/'))
-    else:
-        from django.contrib.auth.views import login
-
-        return login(request, authentication_form=forms.LoginForm)
-
-
 def defaultFNI(request):
     html = "<html><body><h1>nt_tickets</h1><p>Function not implemented.</p></body></html>"
     return HttpResponse(html)

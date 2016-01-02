@@ -166,7 +166,10 @@ class OccurrenceManager(models.Manager):
                 pass
                 break
             else:
-                ret.append((oc.id, oc.datetime_formatted()))
+                ret.append(( 
+                    oc.id,
+                    oc.datetime_formatted(),
+                    ))
         return ret
 
 
@@ -239,6 +242,7 @@ class Ticket(models.Model):
     email_address = models.EmailField(max_length=80)
     quantity = models.IntegerField(default=1)
     cancelled = models.BooleanField(default=False)
+    collected = models.BooleanField(default=False)
     unique_code = models.CharField(max_length=16)
 
     def save(self, *args, **kwargs):
