@@ -210,10 +210,6 @@ class OccurrenceManager(models.Manager):
                 ret.append(( 
                     oc.id, 
                     oc.datetime_formatted(), 
-                    oc.day_formatted(), 
-                    oc.unique_code, 
-                    oc.time_formatted(), 
-                    oc.tickets_sold() 
                     ))
         return ret
 

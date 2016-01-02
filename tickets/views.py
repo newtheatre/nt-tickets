@@ -567,18 +567,36 @@ def book_landing(request, show_id):
         form = BookingFormLanding(request.POST, show=show)    # A form bound to the POST data
         if form.is_valid():     # All validation rules pass
             t = Ticket()
-            t.person_name = form.cleaned_data['person_name']
-            t.email_address = form.cleaned_data['email_address']
-            t.show = show
+            person_name = form.cleaned_data['person_name']
+            email_address = form.cleaned_data['email_address']
+
+            t.person_name = person_name
+            t.email_address = email_address
+            # t.show = show
             occ_id = form.cleaned_data['occurrence']
-            t.occurrence = Occurrence.objects.get(pk=occ_id)
+            occurrence = Occurrence.objects.get(pk=occ_id)
+            t.occurrence = occurrence
             if t.occurrence.date < datetime.date.today():
                 return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
             t.quantity = form.cleaned_data['quantity']
             if t.occurrence.maximum_sell < (t.occurrence.tickets_sold()+t.quantity):
                 return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}) + "?err=sold_out")
 
-            t.save()
+            try:
+                tick = Ticket.objects.filter(
+                    person_name = person_name,
+                    email_address = email_address,
+                    occurrence = occurrence
+                    )
+
+                tick_ordered = tick.order_by('-stamp')[0]
+                if tick_ordered.stamp > datetime.datetime.now() - datetime.timedelta(0, 5, 0):
+                    return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}) + "?err=time")
+                else:
+                    t.save()
+            except IndexError:
+                t.save()
+
             request.session["ticket"] = t
 
             email_html = get_template('email/confirm.html').render(
