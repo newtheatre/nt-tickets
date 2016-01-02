@@ -1,0 +1,66 @@
+[
+{
+  "model": "tickets.show",
+  "pk": 1,
+  "fields": {
+    "name": "Test Show 1",
+    "slug": "test_show_1",
+    "location": "New Theatre",
+    "description": "Test show 1 description",
+    "long_description": "Test show 1 long description",
+    "category": 1
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 1,
+  "fields": {
+    "show": 1,
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "706eebc00ade7c0e"
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 1,
+  "fields": {
+    "occurrence": 1,
+    "ticket": "None",
+    "stamp": "2015-12-30T18:13:55.287",
+    "unique_code": "fb4206f5f2d7775c",
+    "price": "62.50",
+    "number": 8,
+    "number_concession": 1,
+    "number_member": 1,
+    "number_public": 1,
+    "number_season": 1,
+    "number_season_sale": 1,
+    "number_fellow": 1,
+    "number_fringe": 0,
+    "number_matinee_freshers": 1,
+    "number_matinee_freshers_nnt": 1
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 2,
+  "fields": {
+    "occurrence": 1,
+    "ticket": "None",
+    "stamp": "2015-12-30T18:14:40.047",
+    "unique_code": "54acf32e5cca0305",
+    "price": "58.00",
+    "number": 6,
+    "number_concession": 1,
+    "number_member": 1,
+    "number_public": 1,
+    "number_season": 1,
+    "number_season_sale": 1,
+    "number_fellow": 1,
+    "number_fringe": 0,
+    "number_matinee_freshers": 0,
+    "number_matinee_freshers_nnt": 0
+  }
+}
+]
