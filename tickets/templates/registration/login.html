@@ -22,10 +22,12 @@
               <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_PUBLIC_KEY }}"></div>
               <br>
             </div>
-            <button type="submit" value="login" class="btn nnt purple waves-effect waves-dark pad-bottom">
+            <button type="submit" class="btn nnt purple waves-effect waves-dark pad-bottom">
               Login
             </button>
-            <input type="hidden" name="next" value="{{ next }}" />
+            <div class="col s12">
+              <input type="hidden" name="next" value="{{ next }}">
+            </div>
           </form>
         </div>
       </div>
