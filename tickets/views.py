@@ -23,7 +23,6 @@ from django.shortcuts import render_to_response
 # Import models
 from tickets import models, forms
 from pricing import models
-from tickets.models import *
 
 import configuration.customise as config
 
@@ -704,7 +703,7 @@ class OrderedListView(ListView):
 
 
 class ListShows(OrderedListView):
-    model = Show
+    model = models.Show
     template_name = 'list_shows.html'
     context_object_name = 'shows'
     order_by = 'start_date'
@@ -717,11 +716,12 @@ class ListShows(OrderedListView):
 
     def get_queryset(self):
         today = datetime.date.today()
-        return super(ListShows, self).get_queryset().filter(end_date__gte=today).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
+        return super(ListShows, self).get_queryset().filter(end_date__gte=today)
+        #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
 
 class ListPastShows(OrderedListView):
-    model = Show
+    model = models.Show
     template_name = 'list_past_shows.html'
     context_object_name = 'shows'
     order_by = '-start_date'
@@ -738,7 +738,7 @@ class ListPastShows(OrderedListView):
 
 
 class DetailShow(DetailView):
-    model = Show
+    model = models.Show
     template_name = 'detail_show.html'
     context_object_name = 'show'
 
