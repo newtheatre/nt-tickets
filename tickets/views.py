@@ -23,6 +23,7 @@ from django.shortcuts import render_to_response
 # Import models
 from tickets import models, forms
 from pricing import models
+from tickets.models import *
 
 import configuration.customise as config
 
@@ -568,7 +569,7 @@ def book_landing(request, show_id):
     if request.method == 'POST':    # If the form has been submitted...
         form = forms.BookingFormLanding(request.POST, show=show)    # A form bound to the POST data
         if form.is_valid():     # All validation rules pass
-            t = Ticket()
+            t = models.Ticket()
             person_name = form.cleaned_data['person_name']
             email_address = form.cleaned_data['email_address']
 
@@ -703,7 +704,7 @@ class OrderedListView(ListView):
 
 
 class ListShows(OrderedListView):
-    model = models.Show
+    model = Show
     template_name = 'list_shows.html'
     context_object_name = 'shows'
     order_by = 'start_date'
@@ -720,7 +721,7 @@ class ListShows(OrderedListView):
 
 
 class ListPastShows(OrderedListView):
-    model = models.Show
+    model = Show
     template_name = 'list_past_shows.html'
     context_object_name = 'shows'
     order_by = '-start_date'
@@ -737,7 +738,7 @@ class ListPastShows(OrderedListView):
 
 
 class DetailShow(DetailView):
-    model = models.Show
+    model = Show
     template_name = 'detail_show.html'
     context_object_name = 'show'
 
