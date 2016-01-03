@@ -132,3 +132,15 @@
 .sale-container {
   margin: 1em 0.5em;
 }
+
+/* line 115, ../sass/style.scss */
+.g-recaptcha {
+  overflow: hidden;
+  width: 298px;
+  height: 74px;
+}
+
+/* line 121, ../sass/style.scss */
+iframe {
+  margin: -1px 0px 0px -2px;
+}
