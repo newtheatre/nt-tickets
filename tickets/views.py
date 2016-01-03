@@ -16,14 +16,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
-from django.views.generic.list import ListView
+from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.shortcuts import render_to_response
 
 # Import models
-from tickets.models import *
-from tickets.forms import *
-from pricing.models import *
+from tickets import models, forms
+from pricing import models
 
 import configuration.customise as config
 
@@ -50,7 +49,7 @@ def logout_view(request):
 @login_required
 def ShowIndex(request):
     report = dict()
-    shows = Show.objects.all()
+    shows = models.Show.objects.all()
     show_list = []
 
     number_shows = 0
@@ -82,8 +81,8 @@ def ShowIndex(request):
 @login_required
 def ShowReport(request, show_name, occ_id):
     report = dict()
-    show = get_object_or_404(Show, id=show_name)
-    occurrence = Occurrence.objects.get_available_show(show=show_name)
+    show = get_object_or_404(models.Show, id=show_name)
+    occurrence = models.Occurrence.objects.get_available_show(show=show_name)
 
     report['default_time'] = \
         config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
@@ -98,19 +97,19 @@ def ShowReport(request, show_name, occ_id):
     report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
     report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
 
-    report['season_price'] = SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
 
     # If there has been an occurrnece selected
     if occ_id > '0':
         report['have_form'] = True
-        occ_fin = Occurrence.objects.get(id=occ_id)
+        occ_fin = models.Occurrence.objects.get(id=occ_id)
 
         report['day'] = occ_fin.day_formatted()
         report['time'] = occ_fin.time_formatted()
 
         report['max'] = occ_fin.maximum_sell
 
-        report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
+        report['tickets'] = models.Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
         report['how_many_reserved'] = occ_fin.tickets_sold()
         report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
 
@@ -129,36 +128,39 @@ def ShowReport(request, show_name, occ_id):
         # In House Pricing
         if category.id == 1:
             try:
-                pricing = InHousePricing.objects.get(id=1)
+                pricing = models.InHousePricing.objects.get(id=1)
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
-                pricing = 0
+                pricing = []
                 report['pricing_error'] = True
 
         # Fringe Pricing
         elif category.id == 2:
             try:
-                pricing = FringePricing.objects.get(id=1)
+                pricing = models.FringePricing.objects.get(id=1)
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
-                pricing = 0
+                pricing = []
                 report['pricing_error'] = True
 
         # External Pricing
         elif category.id == 3:
             try:
-                pricing = ExternalPricing.objects.get(show_id=show_name)
+                pricing = models.ExternalPricing.objects.get(show_id=show_name)
                 report['matinee_freshers_price'] = pricing.public_price / 2
                 report['matinee_freshers_nnt_price'] = pricing.member_price / 2
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
-                pricing = 0
+                pricing = []
                 report['pricing_error'] = True
+
+        else:
+            pricing = []
 
     else:
         report['have_form'] = False
         report['pricing_error'] = False
-        pricing = 0
+        pricing = []
 
     # Testing if the show is current
     if show.is_current():
@@ -166,7 +168,7 @@ def ShowReport(request, show_name, occ_id):
     else:
         report['current'] = False
 
-    S_form = SaleForm
+    S_form = forms.SaleForm
 
     context = {
         'report': report,
@@ -191,24 +193,24 @@ def SaleInputAJAX(request, show_name, occ_id):
     if request.method == 'POST' and request.is_ajax():
 
         s = Sale()
-        occ_fin = Occurrence.objects.get(id=occ_id)
-        show = get_object_or_404(Show, id=show_name)
+        occ_fin = models.Occurrence.objects.get(id=occ_id)
+        show = get_object_or_404(models.Show, id=show_name)
         s.occurrence = occ_fin
         s.ticket = request.POST.get('reservation')
-        report['tickets'] = Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
+        report['tickets'] = models.Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
 
         category = show.category
 
         if category.id == 1:
-            pricing = InHousePricing.objects.get(id=1)
+            pricing = models.InHousePricing.objects.get(id=1)
 
         # Fringe Pricing
         elif category.id == 2:
-            pricing = FringePricing.objects.get(id=1)
+            pricing = models.FringePricing.objects.get(id=1)
 
         # External Pricing
         elif category.id == 3:
-            pricing = ExternalPricing.objects.get(show_id=show_name)
+            pricing = models.ExternalPricing.objects.get(show_id=show_name)
 
         number_concession = float(request.POST.get('number_concession'))
         number_member = float(request.POST.get('number_member'))
@@ -245,7 +247,7 @@ def SaleInputAJAX(request, show_name, occ_id):
         except Exception:
             public_sale = float(0)
 
-        season_sale = number_season * float(SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+        season_sale = number_season * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
 
         try:
             fringe_sale = number_fringe * float(pricing.fringe_price)
@@ -292,7 +294,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             s.save()
 
             if request.POST.get('unique_ticket') != 'None':
-                T = Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
+                T = models.Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
                 T.collected = True
                 T.save()
 
@@ -327,7 +329,7 @@ def ReserveInputAJAX(request, show_name, occ_id):
             # runique_code = unique_code
 
             try:
-                ticket = Ticket.objects.get(unique_code=unique_code)
+                ticket = models.Ticket.objects.get(unique_code=unique_code)
                 reservation = ticket.person_name
             except Ticket.DoesNotExist:
                 reservation = 'None'
@@ -344,9 +346,9 @@ def ReserveInputAJAX(request, show_name, occ_id):
 @login_required
 def SaleReport(request):
     report = dict()
-    shows = Show.objects.all()
+    shows = models.Show.objects.all()
     show_list = []
-    occurrence = Occurrence.objects.all
+    occurrence = models.Occurrence.objects.all
 
     number_shows = 0
     for sh in shows:
@@ -380,9 +382,9 @@ def SaleReport(request):
 @login_required
 def SaleReportFull(request, show_name):
     report = dict()
-    show = Show.objects.get(id=show_name)
-    occurrence = Occurrence.objects.filter(show=show)
-    report['sale'] = Sale.objects.filter(id__in=occurrence)
+    show = models.Show.objects.get(id=show_name)
+    occurrence = models.Occurrence.objects.filter(show=show)
+    report['sale'] = models.Sale.objects.filter(id__in=occurrence)
 
     report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
     report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
@@ -390,15 +392,15 @@ def SaleReportFull(request, show_name):
     category = show.category
 
     if category.id == 1:
-        pricing = InHousePricing.objects.get(id=1)
+        pricing = models.InHousePricing.objects.get(id=1)
 
     # Fringe Pricing
     elif category.id == 2:
-        pricing = FringePricing.objects.get(id=1)
+        pricing = models.FringePricing.objects.get(id=1)
 
     # External Pricing
     elif category.id == 3:
-        pricing = ExternalPricing.objects.get(show_id=show_name)
+        pricing = models.ExternalPricing.objects.get(show_id=show_name)
 
     # Ticket Prices
     try:
@@ -431,7 +433,7 @@ def SaleReportFull(request, show_name):
     except Exception:
         report['matinee_freshers_nnt_price'] = float(0)
 
-    report['season_price'] = SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
 
     context = {
         'show': show,
@@ -450,22 +452,22 @@ def SaleReportFull(request, show_name):
 @login_required
 def DownloadReport(request, show_name):
     response = HttpResponse(content_type='text/csv')
-    occurrence = Occurrence.objects.filter(show_id=show_name)
-    show = get_object_or_404(Show, id=show_name)
+    occurrence = models.Occurrence.objects.filter(show_id=show_name)
+    show = get_object_or_404(models.Show, id=show_name)
     response['Content-Disposition'] = 'attachment; filename=Show_Report.csv'
 
     category = show.category
 
     if category.id == 1:
-        pricing = InHousePricing.objects.get(id=1)
+        pricing = models.InHousePricing.objects.get(id=1)
 
     # Fringe Pricing
     elif category.id == 2:
-        pricing = FringePricing.objects.get(id=1)
+        pricing = models.FringePricing.objects.get(id=1)
 
     # External Pricing
     elif category.id == 3:
-        pricing = ExternalPricing.objects.get(show_id=show_name)
+        pricing = models.ExternalPricing.objects.get(show_id=show_name)
 
     try:
         concession_sale = float(pricing.concession_price)
@@ -482,7 +484,7 @@ def DownloadReport(request, show_name):
     except Exception:
         public_sale = float(0)
 
-    season_sale = float(SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+    season_sale = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
 
     try:
         fringe_sale = float(pricing.fringe_price)
@@ -549,7 +551,7 @@ def defaultFNI(request):
 
 
 def book_landing(request, show_id):
-    show = get_object_or_404(Show, id=show_id)
+    show = get_object_or_404(models.Show, id=show_id)
     if show.is_current() is False:
         return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
     step = 1
@@ -564,7 +566,7 @@ def book_landing(request, show_id):
         mc = True
 
     if request.method == 'POST':    # If the form has been submitted...
-        form = BookingFormLanding(request.POST, show=show)    # A form bound to the POST data
+        form = forms.BookingFormLanding(request.POST, show=show)    # A form bound to the POST data
         if form.is_valid():     # All validation rules pass
             t = Ticket()
             person_name = form.cleaned_data['person_name']
@@ -574,7 +576,7 @@ def book_landing(request, show_id):
             t.email_address = email_address
             # t.show = show
             occ_id = form.cleaned_data['occurrence']
-            occurrence = Occurrence.objects.get(pk=occ_id)
+            occurrence = models.Occurrence.objects.get(pk=occ_id)
             t.occurrence = occurrence
             if t.occurrence.date < datetime.date.today():
                 return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
@@ -583,7 +585,7 @@ def book_landing(request, show_id):
                 return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}) + "?err=sold_out")
 
             try:
-                tick = Ticket.objects.filter(
+                tick = models.Ticket.objects.filter(
                     person_name = person_name,
                     email_address = email_address,
                     occurrence = occurrence
@@ -633,7 +635,7 @@ def book_landing(request, show_id):
 
             return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))   # Redirect after POST
     else:
-        form = BookingFormLanding(show=show)    # An unbound form
+        form = forms.BookingFormLanding(show=show)    # An unbound form
 
     return render(request, 'book_landing.html', {
         'form': form,
@@ -648,7 +650,7 @@ def book_landing(request, show_id):
 
 def how_many_left(request):
     if 'occ' in request.GET:
-        occ = get_object_or_404(Occurrence, pk=request.GET['occ'])
+        occ = get_object_or_404(models.Occurrence, pk=request.GET['occ'])
 
         response_data = {}
         response_data['sold_out'] = occ.sold_out()
@@ -669,7 +671,7 @@ def how_many_left(request):
 
 
 def book_finish(request, show_id):
-    show = Show.objects.get(id=show_id)
+    show = models.Show.objects.get(id=show_id)
     ticket = request.session["ticket"]
 
     return render(request, 'book_finish.html', {
@@ -687,7 +689,7 @@ def book_error(request, show_id):
 
 
 def list(request):
-    shows = Show.objects.all()
+    shows = models.Show.objects.all()
 
     return render(request, 'list.html', {
         'shows': shows
@@ -701,7 +703,7 @@ class OrderedListView(ListView):
 
 
 class ListShows(OrderedListView):
-    model = Show
+    model = models.Show
     template_name = 'list_shows.html'
     context_object_name = 'shows'
     order_by = 'start_date'
@@ -718,7 +720,7 @@ class ListShows(OrderedListView):
 
 
 class ListPastShows(OrderedListView):
-    model = Show
+    model = models.Show
     template_name = 'list_past_shows.html'
     context_object_name = 'shows'
     order_by = '-start_date'
@@ -735,25 +737,25 @@ class ListPastShows(OrderedListView):
 
 
 class DetailShow(DetailView):
-    model = Show
+    model = models.Show
     template_name = 'detail_show.html'
     context_object_name = 'show'
 
 
 def sidebar(request):
-    categories = Category.objects.all().exclude(sort=0).order_by('sort')
+    categories = models.Category.objects.all().exclude(sort=0).order_by('sort')
     today = datetime.date.today()
     limit = today + config.SIDEBAR_FILTER_PERIOD
     current_shows = []
     for category in categories:
-        shows = Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
+        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
         if len(shows) > 0:
             current_shows.append(shows[0])
     return render(request, 'sidebar.html', {'shows': current_shows, 'settings': settings})
 
 
 def cancel(request, ref_id):
-    ticket = get_object_or_404(Ticket, unique_code=ref_id)
+    ticket = get_object_or_404(models.Ticket, unique_code=ref_id)
     if request.POST.get("id", "") == ticket.unique_code:
         ticket.cancelled = True
         ticket.save()
