@@ -33,8 +33,8 @@ import mailchimp_util
 
 def login(request, **kwargs):
     if request.user.is_authenticated():
-        next = request.REQUEST.get('next', '/')
-        return HttpResponseRedirect(request.REQUEST.get('next', '/'))
+        next = request.GET.get('next', '/')
+        return HttpResponseRedirect(request.GET.get('next', '/'))
     else:
         from django.contrib.auth.views import login
 
@@ -43,7 +43,7 @@ def login(request, **kwargs):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('registration/logout.html')
+    return render(request, 'registration/logout.html')
 
 
 @login_required
