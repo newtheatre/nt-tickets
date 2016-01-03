@@ -139,8 +139,9 @@ INSTALLED_APPS = (
     # 'south',
     'mathfilters',
     'admin_reorder',
-
     'bootstrap_toolkit',
+    'captcha',
+
     'tickets',
     'pricing',
 
@@ -210,6 +211,8 @@ LOGGING = {
 # Recaptcha Stuff
 RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
 RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
+
+NOCAPTCHA = True
 
 ACTUALLY_SEND_MAIL = False
 
