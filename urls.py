@@ -23,7 +23,7 @@ urlpatterns = [
     # Auth views
     # url(r'^login/$', tickets_views.LoginView, name='login'),
     url(r'^login/$', tickets_views.login, name='login'),
-    url(r'^logout/$', auth_views.logout),
+    url(r'^logout/$', tickets_views.logout_view, name='logout'),
 
     # Admin urls
     url(r'^admin/', include(admin.site.urls)),
