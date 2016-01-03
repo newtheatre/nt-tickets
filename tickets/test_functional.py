@@ -1,4 +1,5 @@
 from django.test import LiveServerTestCase
+from django.contrib.auth.models import User
 import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -7,6 +8,7 @@ from django.core.files import File
 from tickets.models import *
 
 import datetime
+import os
 
 
 class BookTest(LiveServerTestCase):
@@ -46,7 +48,7 @@ class BookTest(LiveServerTestCase):
   def test_book_show_quick(self):
     browser = self.browser
     show_id = Show.objects.get(name='Test Show').id
-    self.browser.get(self.live_server_url + '/book/' + str(show_id))
+    browser.get(self.live_server_url + '/book/' + str(show_id))
 
     # Check the title is correct
     title_text = browser.find_element_by_xpath(
@@ -129,24 +131,83 @@ class BookTest(LiveServerTestCase):
 
 
   def test_book_show_no_date(self):
+    browser = self.browser
     show_id = Show.objects.get(name='Test Show').id
-    self.browser.get(self.live_server_url + '/book/' + str(show_id))
+    browser.get(self.live_server_url + '/book/' + str(show_id))
 
     # Input correct details but no date or seats
-    name = self.browser.find_element_by_id('id_person_name')
+    name = browser.find_element_by_id('id_person_name')
     name.send_keys('Test Name1')
-    email = self.browser.find_element_by_id('id_email_address')
+    email = browser.find_element_by_id('id_email_address')
     email.send_keys('test@test.com')
 
     # Submit the form
-    self.browser.find_element_by_id('submit-btn').click()
+    browser.find_element_by_id('submit-btn').click()
     # Wait a little bit
     # self.browser.implicitly_wait(10)
-    occurrence_err = self.browser.find_element_by_xpath(
+    occurrence_err = browser.find_element_by_xpath(
       '//form[@class="submit-once"]/div[@class="col col_left"]/div[@class="control-group error required"][1]/div[@class="controls"]/p[@class="help-block"]'
       ).text
     self.assertEqual(occurrence_err, 'This field is required.')
 
 
-# class LoginTest(LiveServerTestCase):
+class LoginTest(LiveServerTestCase):
 
+  def setUp(self):
+    self.browser = webdriver.Chrome('bin/chromedriver')
+    os.environ['RECAPTCHA_TESTING'] = 'True'
+    User.objects.create_user(
+      username='Jim', 
+      email='jim@rash.com', 
+      password='correcthorsebatterystaple'
+      )
+
+  def tearDown(self):
+    self.browser.quit()
+    os.environ['RECAPTCHA_TESTING'] = 'False'
+
+  def test_login_correct(self):
+    browser = self.browser
+    browser.get(self.live_server_url + '/')
+
+    # Test that we've actually got a login page
+    self.assertIn('login', browser.current_url)
+
+    username = browser.find_element_by_xpath('//form/div[1]/input')
+    username.send_keys('Jim')
+    password = browser.find_element_by_xpath('//form/div[2]/input')
+    # Send the wrong password
+    password.send_keys('correcthorsebatterystapleerror')
+
+    self.browser.execute_script(
+      "return jQuery('#g-recaptcha-response').val('PASSED')")
+
+    # Submit the form
+    submit = browser.find_element_by_xpath('//button[@type="submit"]')
+    submit.click()
+
+    # Incase it takes a little bit to load
+    browser.implicitly_wait(3)
+    error_text = browser.find_element_by_xpath('//p[@class="red-text"]').text
+    # Make sure we got an error
+    self.assertIn('incorrect', error_text)
+
+    # Test that we're still on the login page
+    self.assertIn('login', browser.current_url)
+
+    username = browser.find_element_by_xpath('//form/div[1]/input')
+    username.send_keys('Jim')
+    password = browser.find_element_by_xpath('//form/div[2]/input')
+    # Send the correct password
+    password.send_keys('correcthorsebatterystaple')
+
+    self.browser.execute_script(
+      "return jQuery('#g-recaptcha-response').val('PASSED')")
+
+    # Submit the form
+    submit = browser.find_element_by_xpath('//button[@type="submit"]')
+    submit.click()
+
+    nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
+    # Check the username is in the nav text
+    self.assertIn('Jim', nav_text)
