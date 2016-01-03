@@ -209,5 +209,5 @@ class LoginTest(LiveServerTestCase):
     submit.click()
 
     nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
-    # Check the username is in the nav text
+    # Check the username is in the nav
     self.assertIn('Jim', nav_text)
