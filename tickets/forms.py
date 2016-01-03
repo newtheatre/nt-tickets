@@ -40,7 +40,7 @@ class ReportForm(forms.Form):
 
 
 class LoginForm(AuthenticationForm):
-    captcha = ReCaptchaField(label='Captcha')
+    captcha = ReCaptchaField(label='Captcha', attrs={"theme" : "dark", 'size': 'compact'})
 
 
 class CancelForm(forms.Form):
