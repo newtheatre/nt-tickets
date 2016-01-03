@@ -151,7 +151,41 @@ class BookTest(LiveServerTestCase):
     self.assertEqual(occurrence_err, 'This field is required.')
 
 
-class LoginTest(LiveServerTestCase):
+class ListTest(LiveServerTestCase):
+
+  def setUp(self):
+    self.browser = webdriver.Chrome('bin/chromedriver')
+
+    cat = Category.objects.create(name='Test Category', slug='test', sort=1)
+    start_date = datetime.date.today() + datetime.timedelta(days=2)
+    end_date = datetime.date.today() + datetime.timedelta(days=5)
+
+    # Create a show
+    Show.objects.create(
+      name='Test Show',
+      location='Somewhere',
+      description='Test show present',
+      long_description='Some more info',
+      poster=File(open('test/test_poster.jpg')),
+      start_date=start_date,
+      end_date=end_date,
+      category=cat
+      )
+
+  def tearDown(self):
+    self.browser.quit()
+
+  def test_list_view(self):
+    browser = self.browser
+
+    browser.get(self.live_server_url + '/list')
+
+    # Check that we have a title
+    title_text = browser.find_element_by_xpath('//li[@class="poster"][1]/h3').text
+    self.assertEqual(title_text, 'Test Show')
+
+
+class AuthTest(LiveServerTestCase):
 
   def setUp(self):
     self.browser = webdriver.Chrome('bin/chromedriver')
@@ -211,3 +245,26 @@ class LoginTest(LiveServerTestCase):
     nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
     # Check the username is in the nav
     self.assertIn('Jim', nav_text)
+
+    # Test login page with authenticated user
+    browser.get(self.live_server_url + '/login/')
+
+    nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
+    # Check the username is in the nav
+    self.assertIn('Jim', nav_text)
+
+    # Test login page with a page request with authenticated user
+    browser.get(self.live_server_url + '/login/?Pnext=/')
+    
+    nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
+    # Check the username is in the nav
+    self.assertIn('Jim', nav_text)
+
+    # test that we can logout as well
+    browser.get(self.live_server_url + '/')
+    browser.find_element_by_xpath('//ul[@id="dropdown1"]/li[3]/a').click()
+
+    logout = browser.find_element_by_xpath('//h4[@class="light nnt-orange medium-text"]').text
+    self.assertEqual(logout, 'Logged Out')
+
+
