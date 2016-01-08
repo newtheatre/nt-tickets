@@ -109,6 +109,7 @@ class Show(models.Model):
         else:
             return False
 
+    # Total profit from all occurrences in a show
     def show_sales(self):
         occs = Occurrence.objects.filter(show=self)
         total = 0
@@ -117,6 +118,7 @@ class Show(models.Model):
             total += sale
         return total
 
+    # Total number of tickets sold across all occurrences
     def total_tickets_sold_show(self):
         sale = Occurrence.objects.filter(show=self)
         total = 0
@@ -125,6 +127,7 @@ class Show(models.Model):
             total += ticket
         return total
 
+    # Total tickets reserved across all occurrences
     def total_tickets_reserved(self):
         occs = Occurrence.objects.filter(show=self)
         total = 0
@@ -133,6 +136,7 @@ class Show(models.Model):
             total += reserve
         return total
 
+    # Maximum tickets that can be reserved across a whole show
     def total_possible(self):
         occs = Occurrence.objects.filter(show=self)
         total = 0
@@ -141,6 +145,7 @@ class Show(models.Model):
             total += maximum
         return total
 
+    # Does a show have any occurrences
     def has_occurrences(self):
         occs = Occurrence.objects.filter(show=self)
         if len(occs) > 0:

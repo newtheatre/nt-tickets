@@ -1,5 +1,14 @@
 [
 {
+  "model": "tickets.category",
+  "pk": 1,
+  "fields": {
+    "name": "In House",
+    "slug": "in_house",
+    "sort": 1
+  }
+},
+{
   "model": "tickets.show",
   "pk": 1,
   "fields": {
@@ -8,6 +17,8 @@
     "location": "New Theatre",
     "description": "Test show 1 description",
     "long_description": "Test show 1 long description",
+    "start_date": "2015-12-25",
+    "end_date": "2016-12-25",
     "category": 1
   }
 },
@@ -16,6 +27,8 @@
   "pk": 1,
   "fields": {
     "show": 1,
+    "date": "2016-12-20",
+    "time": "19:30:00",
     "maximum_sell": 80,
     "hours_til_close": 2,
     "unique_code": "706eebc00ade7c0e"
