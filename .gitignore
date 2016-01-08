@@ -6,6 +6,9 @@ media/*
 env/
 NTenv/
 
+tickets/static/.sass-cache/*
+/fabfile/*
+
 htmlcov/
 *.coverage
 

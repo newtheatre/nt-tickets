@@ -1,0 +1,4 @@
+# Production only dependancies
+django-storages==1.1.8
+psycopg2==2.5.2
+boto==2.26.1
