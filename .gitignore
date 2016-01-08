@@ -11,4 +11,12 @@ NTenv/
 htmlcov/
 *.coverage
 
+fabfile/
+
 configuration/staging.py
+configuration/development.py
+
+# Elastic Beanstalk Files
+# .elasticbeanstalk/*
+# !.elasticbeanstalk/*.cfg.yml
+# !.elasticbeanstalk/*.global.yml
