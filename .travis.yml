@@ -9,3 +9,5 @@ script:
   - coverage run --omit=/home/travis/virtualenv/* manage.py test
 after_success:
  coveralls
+addons:
+  sauce_connect: true
