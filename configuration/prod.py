@@ -1,8 +1,6 @@
 from settings import *
 
-DEBUG = False
-
-TEMPLATE_DEBUG = True
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
