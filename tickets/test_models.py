@@ -3,7 +3,7 @@ from django.core.files import File
 from models import *
 from markdown2 import Markdown
 
-import datetime
+from datetime import date, timedelta, datetime
 
 
 class StaticPageTest(TestCase):
@@ -21,8 +21,8 @@ class BookTest(TestCase):
 
     def setUp(self):
         cat = Category.objects.create(name='Test Category', slug='test', sort=1)
-        start_date = datetime.date.today() + datetime.timedelta(days=2)
-        end_date = datetime.date.today() + datetime.timedelta(days=5)
+        start_date = date.today() + timedelta(days=2)
+        end_date = date.today() + timedelta(days=5)
         Show.objects.create(
             name='Test Show',
             location='Somewhere',
@@ -55,41 +55,32 @@ class BookTest(TestCase):
 
 
 class ShowTest(TestCase):
-    # load fixtures after other set up steps
-    # fixtures = ['test_sales.json']
 
-    def setUp(self):
+    # fixtures = ['test/test_sales.json']
+
+    @classmethod
+    def setUpTestData(self):
         cat = Category.objects.create(name='Test Category', slug='test', sort=1)
-        start_date = datetime.date.today() + datetime.timedelta(days=2)
-        end_date = datetime.date.today() + datetime.timedelta(days=5)
-        Show.objects.create(
-            name='Test Show',
-            location='Somewhere',
-            description='Some Info',
-            long_description='Some more info',
-            poster=File(open('test/test_poster.jpg')),
-            start_date=start_date,
-            end_date=end_date,
-            category=cat
-            )
+        today = date.today()
+        loc = 'Location 1'
+        desc = 'A show somewhere'
+        l_desc = 'A longer show somewhere'
 
-        Occurrence.objects.create(
-            show=Show.objects.get(pk=1),
-            date=start_date,
-            time=datetime.datetime.now(),
-            maximum_sell=2,
-            hours_til_close=2,
-            unique_code=rand_16(),
-            )
+        # Create some good shows
+        Show.objects.create(name='S1', category=cat, location=loc, description='show current', long_description=l_desc, start_date=today, end_date=today + timedelta(days=6))
+        Show.objects.create(name='S2', category=cat, location=loc, description='show past', long_description=l_desc, start_date=today - timedelta(days=6), end_date=today)
+
+        # Create an occurrence 
+        Occurrence.objects.create(show=Show.objects.get(name='S1'), date=today, time=datetime.now() + timedelta(hours=4), maximum_sell=2, hours_til_close=2)
 
         Ticket.objects.create(
             occurrence=Occurrence.objects.get(pk=1),
-            stamp=datetime.datetime.now(),
+            stamp=datetime.now(),
             person_name='testman',
             email_address='test@test.com',
             quantity=1,
             cancelled=False,
-            unique_code=rand_16(),
+            collected=False
             )
 
     def test_is_current_false(self):
@@ -129,7 +120,7 @@ class ShowTest(TestCase):
 
     def test_markdown(self):
         show = Show.objects.get(pk=1)
-        ld_md = '<p>Some more info</p>\n'
+        ld_md = '<p>Test show 1 long description</p>\n'
         self.assertEqual(show.long_markdown(), ld_md)
 
     def test_datetime_formatted(self):
@@ -177,7 +168,7 @@ class ShowTest(TestCase):
             stamp=datetime.datetime.now(),
             person_name='testman2',
             email_address='test@test.com',
-            quantity=1,
+            quantity=79,
             cancelled=False,
             unique_code=rand_16(),
             )
@@ -189,11 +180,11 @@ class ShowTest(TestCase):
 
         self.assertEqual(r, [])
 
-    # def test_show_sales(self):
-    #     show = Show.objects.get(pk=1)
-    #     occ = Occurrence.objects.get(pk=1)
+    def test_show_sales(self):
+        show = Show.objects.get(pk=1)
+        occ = Occurrence.objects.get(pk=1)
 
-    #     self.assertEqual(show.show_sales(), 14)
+        self.assertEqual(show.show_sales(), 1)
 
 class ShowClosed(TestCase):
     def setUp(self):
