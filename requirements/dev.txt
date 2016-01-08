@@ -1,0 +1,2 @@
+# For dependencies that are only required for development
+django==1.9.1
