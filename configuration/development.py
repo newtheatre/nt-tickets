@@ -21,7 +21,7 @@ EMAIL_HOST_USER = 'username'
 EMAIL_HOST_PASSWORD = 'password'
 EMAIL_USE_TLS = True
 
-MAX_DISCLOSURE = 10
+ACTUALLY_SEND_MAIL = False
 
 PUBLIC_CATEGORIES = ['theatre','uncut']
 
@@ -31,3 +31,6 @@ MAILCHIMP_LIST = '25469b2c40'
 
 ACTUALLY_SEND_MAIL = False
 DO_CHIMP = False
+
+MEDIA_URL = "/media/"
+STATIC_URL = "/static/"
