@@ -11,11 +11,14 @@ PROJECT_PATH = os.path.dirname(__file__)
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+    ('Harry Bridge', 'harry@harrybridge.co.uk'),
 )
 
 MANAGERS = ADMINS
 
-SITE_URL = "http://localhost:8000"
+MAILCHIMP_APIKEY ='b31a3a2589ed73cbea8f6d7db2e279ae-us12'
+
+MAX_DISCLOSURE = 80
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -28,7 +31,7 @@ TIME_ZONE = 'Europe/London'
 LANGUAGE_CODE = 'en-gb'
 DEFAULT_CHARSET = 'utf-8'
 
-SITE_ID = 1
+ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -44,15 +47,13 @@ USE_TZ = False
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, "media")
-MEDIA_URL = "/media/"
-
 
 STATIC_ROOT = os.path.join(PROJECT_PATH, "static")
-STATIC_URL = "/static/"
 
 # Additional locations of static files
 STATICFILES_DIRS = ()
 
+# Change the default serialiser
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # List of finder classes that know how to find static files in
@@ -159,10 +160,9 @@ LOGGING = {
     }
 }
 
+# Recaptcha keys
 RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
 RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
-
-ACTUALLY_SEND_MAIL = False
 
 # What enviroment are we in?
 if env.RUN_ENV == 'production':
