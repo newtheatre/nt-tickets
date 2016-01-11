@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # All common settings for nt_tickets project.
 import os
-import configuration.enviroment as env
+import configuration.environment as env
 
 
 def gettext(s):
