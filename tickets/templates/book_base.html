@@ -1,10 +1,12 @@
+{% load static from staticfiles %}
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{% block title %}nt_tickets Dev 0.2{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" media="screen" href="{{ STATIC_URL }}style.css" />
-	<link href="{{ STATIC_URL }}bootstrap.css" rel="stylesheet" />
+	<title>{% block title %}NT Tickets{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="{% static 'style.css' %}" />
+	<link href="{% static 'bootstrap.css' %}" rel="stylesheet" />
   <style type="text/css">
     .main {
       margin:10px;
