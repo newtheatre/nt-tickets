@@ -164,7 +164,7 @@ LOGGING = {
 RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
 RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
 
-# What enviroment are we in?
+# What environment are we in?
 if env.RUN_ENV == 'production':
     from configuration.production import *
 elif env.RUN_ENV == 'staging':
