@@ -2,7 +2,7 @@
 # All common settings for nt_tickets project.
 import os
 import configuration.environment as env
-
+import configuration.keys as keys
 
 def gettext(s):
     return s
@@ -16,7 +16,10 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-MAX_DISCLOSURE = 80
+MAX_DISCLOSURE = 10
+
+RECAPTCHA_PUBLIC_KEY = keys.RECAPTCHA_PUBLIC_KEY
+RECAPTCHA_PRIVATE_KEY = keys.RECAPTCHA_PRIVATE_KEY
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
