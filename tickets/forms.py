@@ -4,7 +4,6 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
-from captcha.fields import ReCaptchaField
 from tickets.models import *
 import settings
 
@@ -40,8 +39,8 @@ class ReportForm(forms.Form):
 
 
 class LoginForm(AuthenticationForm):
-    captcha = ReCaptchaField(label='Captcha', attrs={"theme" : "dark", 'size': 'compact'})
-
+    username = forms.CharField(max_length=80)
+    password = forms.CharField(max_length=80)
 
 class CancelForm(forms.Form):
     ticket = forms.CharField(max_length=16)
