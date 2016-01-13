@@ -10,5 +10,3 @@ script:
   - coverage run --omit='/home/travis/virtualenv/*','tickets/test_functional.py' manage.py test
 after_success:
  coveralls
-addons:
-  sauce_connect: true
