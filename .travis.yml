@@ -1,6 +1,8 @@
 language: python
 python:
   - "2.7"
+before_install:
+  openssl aes-256-cbc -K $encrypted_eab4b1048f57_key -iv $encrypted_eab4b1048f57_iv -in keys.py.enc -out configuration/keys.py -d
 install:
   - pip install -r requirements/common.txt
   - pip install -r requirements/prod.txt 
@@ -9,4 +11,4 @@ script:
   - python manage.py migrate
   - coverage run --omit='/home/travis/virtualenv/*','tickets/test_functional.py' manage.py test
 after_success:
- coveralls
+  coveralls
