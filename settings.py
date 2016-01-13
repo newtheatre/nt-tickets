@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # All common settings for nt_tickets project.
 import os
-import configuration.enviroment as env
+import configuration.environment as env
 
 
 def gettext(s):
@@ -11,22 +11,12 @@ PROJECT_PATH = os.path.dirname(__file__)
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+    ('Harry Bridge', 'harry@harrybridge.co.uk'),
 )
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',     # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db.sqlite3',                       # Or path to database file if using sqlite3.
-        'USER': '',                                 # Not used with sqlite3.
-        'PASSWORD': '',                             # Not used with sqlite3.
-        'HOST': '',                                 # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                                 # Set to empty string for default. Not used with sqlite3.
-    }
-}
-
-SITE_URL = "http://localhost:8000"
+MAX_DISCLOSURE = 80
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -58,16 +48,13 @@ USE_TZ = False
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, "media")
-MEDIA_URL = "http://localhost:8000/media/"
-
 
 STATIC_ROOT = os.path.join(PROJECT_PATH, "static")
-STATIC_URL = "/static/"
-STATIC_URL_IMG = "/static/images/"
 
 # Additional locations of static files
 STATICFILES_DIRS = ()
 
+# Change the default serialiser
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # List of finder classes that know how to find static files in
@@ -141,6 +128,7 @@ INSTALLED_APPS = (
     'admin_reorder',
     'bootstrap_toolkit',
     'captcha',
+    'storages',
 
     'tickets',
     'pricing',
@@ -208,16 +196,8 @@ LOGGING = {
     }
 }
 
-# Recaptcha Stuff
-RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
-RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
-
+# Recaptcha things
 NOCAPTCHA = True
-
-SAUCE_USERNAME = 'harrybridge'
-SAUCE_ACCESS_KEY = 'a6c1c00c-67c1-4117-95fc-65f89b966bfe'
-
-ACTUALLY_SEND_MAIL = False
 
 # What enviroment are we in?
 if env.RUN_ENV == 'production':
