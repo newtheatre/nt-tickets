@@ -7,7 +7,7 @@ install:
   - pip install coveralls
 script:
   - python manage.py migrate
-  - coverage run --omit=/home/travis/virtualenv/* manage.py test
+  - coverage run --omit='/home/travis/virtualenv/*','tickets/test_functional.py' manage.py test
 after_success:
  coveralls
 addons:
