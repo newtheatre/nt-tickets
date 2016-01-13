@@ -19,7 +19,7 @@ fabfile/
 
 configuration/staging.py
 # configuration/production.py
-configuration/development.py
+# configuration/development.py
 
 # Elastic Beanstalk Files
 # .elasticbeanstalk/*
