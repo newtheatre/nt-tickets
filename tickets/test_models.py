@@ -6,6 +6,7 @@ from markdown2 import Markdown
 from datetime import date, timedelta, datetime
 
 
+
 class StaticPageTest(TestCase):
 
     def test_list_view(self):
@@ -59,22 +60,24 @@ class ShowTest(TestCase):
     # fixtures = ['test/test_sales.json']
 
     @classmethod
-    def setUpTestData(self):
-        cat = Category.objects.create(name='Test Category', slug='test', sort=1)
-        today = date.today()
-        loc = 'Location 1'
-        desc = 'A show somewhere'
-        l_desc = 'A longer show somewhere'
+    def setUpTestData(cls):
+        cls.cat = Category.objects.create(name='Test Category', slug='test', sort=1)
+        cls.today = date.today()
+        cls.loc = 'Location 1'
+        cls.desc = 'A show somewhere'
+        cls.l_desc = 'A longer show somewhere'
+        cls.poster = File(open('test/test_poster.jpg'))
 
         # Create some good shows
-        Show.objects.create(name='S1', category=cat, location=loc, description='show current', long_description=l_desc, start_date=today, end_date=today + timedelta(days=6))
-        Show.objects.create(name='S2', category=cat, location=loc, description='show past', long_description=l_desc, start_date=today - timedelta(days=6), end_date=today)
+
+        cls.show = Show.objects.create(name='S1', category=cls.cat, location=cls.loc, description='show current', long_description=cls.l_desc, poster=cls.poster, start_date=cls.today, end_date=cls.today + timedelta(days=6))
+        # cls.show{2} = Show.objects.create(name='S2', category=cls.cat, location=cls.loc, description='show past', long_description=cls.l_desc, start_date=cls.today - timedelta(days=6), end_date=cls.today)
 
         # Create an occurrence 
-        Occurrence.objects.create(show=Show.objects.get(name='S1'), date=today, time=datetime.now() + timedelta(hours=4), maximum_sell=2, hours_til_close=2)
+        cls.occ = Occurrence.objects.create(show=cls.show, date=cls.today, time=datetime.now() + timedelta(hours=4), maximum_sell=2, hours_til_close=2)
 
-        Ticket.objects.create(
-            occurrence=Occurrence.objects.get(pk=1),
+        cls.ticket = Ticket.objects.create(
+            occurrence= cls.occ,
             stamp=datetime.now(),
             person_name='testman',
             email_address='test@test.com',
@@ -83,17 +86,19 @@ class ShowTest(TestCase):
             collected=False
             )
 
+        cls.sale = Sale.objects.create(occurrence=cls.occ, ticket='', price=1, number=2)
+
     def test_is_current_false(self):
-        show = Show.objects.get(pk=1)
-        show.end_date = datetime.date.today() + datetime.timedelta(days=-5)
+        show = self.show
+        show.end_date = date.today() + timedelta(days=-5)
         self.assertEqual(show.is_current(), False)
 
     def test_sold_out_true(self):
-        show = Show.objects.get(pk=1)
-        occ = Occurrence.objects.get(pk=1)
+        show = self.show
+        occ = self.occ
         Ticket.objects.create(
             occurrence=Occurrence.objects.get(pk=1),
-            stamp=datetime.datetime.now(),
+            stamp=datetime.now(),
             person_name='testman2',
             email_address='test@test.com',
             quantity=1,
@@ -120,7 +125,7 @@ class ShowTest(TestCase):
 
     def test_markdown(self):
         show = Show.objects.get(pk=1)
-        ld_md = '<p>Test show 1 long description</p>\n'
+        ld_md = '<p>A longer show somewhere</p>\n'
         self.assertEqual(show.long_markdown(), ld_md)
 
     def test_datetime_formatted(self):
@@ -165,13 +170,14 @@ class ShowTest(TestCase):
         occ = Occurrence.objects.get(pk=1)
         Ticket.objects.create(
             occurrence=Occurrence.objects.get(pk=1),
-            stamp=datetime.datetime.now(),
+            stamp=datetime.now(),
             person_name='testman2',
             email_address='test@test.com',
             quantity=79,
             cancelled=False,
             unique_code=rand_16(),
             )
+
 
         r = Occurrence.objects.get_available(show)
 
@@ -189,8 +195,8 @@ class ShowTest(TestCase):
 class ShowClosed(TestCase):
     def setUp(self):
         cat = Category.objects.create(name='Test Category', slug='test', sort=1)
-        start_date = datetime.date.today() + datetime.timedelta(days=2)
-        end_date = datetime.date.today() + datetime.timedelta(days=5)
+        start_date = date.today() + timedelta(days=2)
+        end_date = date.today() + timedelta(days=5)
         Show.objects.create(
             name='Test Show',
             location='Somewhere',
@@ -204,8 +210,8 @@ class ShowClosed(TestCase):
 
         Occurrence.objects.create(
             show=Show.objects.get(pk=1),
-            date=datetime.date.today(),
-            time=datetime.datetime.now(),
+            date=date.today(),
+            time=datetime.now(),
             maximum_sell=2,
             hours_til_close=2,
             unique_code=rand_16(),
@@ -213,7 +219,7 @@ class ShowClosed(TestCase):
 
         Ticket.objects.create(
             occurrence=Occurrence.objects.get(pk=1),
-            stamp=datetime.datetime.now(),
+            stamp=datetime.now(),
             person_name='testman',
             email_address='test@test.com',
             quantity=1,
