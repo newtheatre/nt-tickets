@@ -1,0 +1,92 @@
+<div>
+  <div id="div-1">
+    <p class="center-align light white-text flow-text">
+
+    {% if report.sold == 0 %}
+      No tickets have been sold yet
+    {% elif report.sold == 1 %}
+      There has been
+      <span class="nnt-purple bold">{{ report.sold }}</span>
+      ticket sold
+    {% else %}
+      There have been
+      <span class="nnt-purple bold">{{ report.sold }}</span>
+      tickets sold
+    {% endif %}
+    </p>
+    <p class="center-align light white-text flow-text">
+    {% if report.how_many_reserved == 1 %}
+      There is
+      <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
+      ticket reserved, 
+    {% else %}
+      There are
+      <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
+      tickets reserved, 
+    {% endif %}
+
+    leaving <span class="bold">{{ report.how_many_left }}</span> tickets left 
+    out of <span class="bold">{{ report.max }}</span>.
+    </p>
+    <div class="progress" id="report-bar">
+      {% if report.sale_percentage >= report.reserve_percentage %}
+        <div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
+        <div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
+      {% else %}
+        <div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
+        <div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
+      {% endif %}
+    </div>
+  </div>
+  <div id="div-2">
+    <span class="nnt-orange bold">£{{ report.total_sales }}</span>
+  </div>
+  <div id="div-3">
+    <table class="bordered">
+    <!-- Table header -->
+      <thead>
+        <tr>
+          <th data-field="name">Name</th>
+          <th data-field="quantity">Quantity</th>
+          <th data-field="add">Add</th>
+        </tr>
+      </thead>
+      <!-- Table body -->
+      <tbody>
+        {% for tick in report.tickets %}
+          <!-- Cancelled Tickets -->
+          {% if tick.cancelled %}
+          <tr bgcolor="#faf3d1">
+            <th class="grey-text"><strike>{{ tick.person_name }}</strike></th>
+            <th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
+            <th><button type="button" class="btn disabled nnt purple">Add</button></th>
+          </tr>
+          <!-- Collected Tickets -->
+          {% elif tick.collected %}
+          <tr bgcolor="#c7e4f3">
+            <th class="grey-text"><strike>{{ tick.person_name }}</strike></th>
+            <th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
+            <th><button type="button" class="btn disabled nnt purple">Add</button></th>
+          </tr>
+          <!-- Everything else -->
+          {% else %}
+          <tr>
+            <th>{{ tick.person_name }}</th>
+            <th class="teal-text">{{ tick.quantity }}</th>
+            <th>
+            <button 
+              type="submit" 
+              class="btn nnt purple waves-effect waves-dark modal-action modal-close" 
+              id="reserve_button" 
+              value="{{ tick.unique_code}}"
+              >
+            Add
+            </button>
+            </th>
+          </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

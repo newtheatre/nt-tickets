@@ -2,7 +2,7 @@
 # All common settings for nt_tickets project.
 import os
 import configuration.environment as env
-
+import configuration.keys as keys
 
 def gettext(s):
     return s
@@ -16,9 +16,15 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-MAILCHIMP_APIKEY ='b31a3a2589ed73cbea8f6d7db2e279ae-us12'
+MAX_DISCLOSURE = 10
 
-MAX_DISCLOSURE = 80
+RECAPTCHA_PUBLIC_KEY = keys.RECAPTCHA_PUBLIC_KEY
+RECAPTCHA_PRIVATE_KEY = keys.RECAPTCHA_PRIVATE_KEY
+
+MAILCHIMP_APIKEY = keys.MAILCHIMP_APIKEY
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -31,7 +37,7 @@ TIME_ZONE = 'Europe/London'
 LANGUAGE_CODE = 'en-gb'
 DEFAULT_CHARSET = 'utf-8'
 
-ID = 1
+SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -86,6 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'tickets.context_processors.customise_processor',
+                'tickets.context_processors.recaptcha',
             ],
             'loaders': [
                 # insert your TEMPLATE_LOADERS here
@@ -100,10 +107,11 @@ TEMPLATES = [
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -120,16 +128,49 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'south',
+    'mathfilters',
+    'admin_reorder',
+    'bootstrap_toolkit',
+    'captcha',
+    'storages',
+
+    'tickets',
+    'pricing',
+
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    # 'south',
-    'storages',
-    
-    'bootstrap_toolkit',
-    'tickets',
 )
+
+# Reording of admin models
+# For more info see django-modeladmin-reorder
+ADMIN_REORDER = (
+    'auth',
+
+    {
+    'app': 'tickets',
+    'models': (
+        'tickets.Category',
+        'tickets.Show',
+        'tickets.Occurrence',
+        'tickets.Ticket',
+        )
+    },
+
+    {
+    'app': 'pricing',
+    'models': (
+        'pricing.SeasonTicketPricing',
+        'pricing.InHousePricing',
+        'pricing.FringePricing',
+        'pricing.ExternalPricing',
+        'pricing.StuFFPricing',
+        'pricing.StuFFEventPricing',
+        )    
+    },
+    )
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -160,11 +201,10 @@ LOGGING = {
     }
 }
 
-# Recaptcha keys
-RECAPTCHA_PUBLIC_KEY = '6LcDUxMTAAAAAEVuflkG3Bgy-JNghA443cyyjGsE'
-RECAPTCHA_PRIVATE_KEY = '6LcDUxMTAAAAAKMUNVf7rR337OZElY9nMOkh7BuH'
+# Recaptcha things
+NOCAPTCHA = True
 
-# What environment are we in?
+# What enviroment are we in?
 if env.RUN_ENV == 'production':
     from configuration.production import *
 elif env.RUN_ENV == 'staging':

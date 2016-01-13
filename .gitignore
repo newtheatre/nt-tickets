@@ -1,5 +1,8 @@
 *.DS_Store
 
+*.sass-cache
+static/*
+
 db.sqlite3
 *.pyc
 media/*
@@ -12,7 +15,15 @@ tickets/static/.sass-cache/*
 htmlcov/
 *.coverage
 
-configuration/development.py
+fabfile/
+
 configuration/staging.py
 # configuration/production.py
+# configuration/development.py
+
+# Elastic Beanstalk Files
+# .elasticbeanstalk/*
+# !.elasticbeanstalk/*.cfg.yml
+# !.elasticbeanstalk/*.global.yml
+
 configuration/keys.py

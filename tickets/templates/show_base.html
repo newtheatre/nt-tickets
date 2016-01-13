@@ -1,0 +1,66 @@
+{% load static from staticfiles %}
+
+<!doctype html>
+<html lang="en">
+<head>
+  {% include 'favicon.html' %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NT Tickets{% endblock %}</title>
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="{% static 'stylesheets/materialize.css' %}" rel="stylesheet" />
+  <link href="{% static 'stylesheets/style.css' %}" rel="stylesheet" />
+  <script src="//code.jquery.com/jquery-latest.min.js"></script>
+  <script type="text/javascript" src="{% static 'js/bin/materialize.js' %}"></script>
+  {% block head %}
+  {% endblock %}
+</head>
+<body id="background">
+  <header>
+  {% block header %}
+    <div class="navbar-fixed">
+      <ul id="dropdown1" class="dropdown-content">
+        <li><a href="/admin">Admin Login</a></li>
+        <li class="divider"></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+      <nav>
+        <div class="nav-wrapper">
+          <a href="/" class="brand-logo center">
+            <img src="{% static 'images/nnt_tickets_white.png' %}" id="nav-logo">
+          </a>
+          <div class="nav-container">
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+              <li><a href="/">Home</a></li>
+              <li><a href="/report">Sale Reports</a></li>
+            </ul>
+              <ul id="nav-mobile" class="right hide-on-med-and-down">
+              {% if user.is_authenticated %}
+                <li>
+                <a class="dropdown-button" href="#!" data-activates="dropdown1">
+                  Welcome, {{ user.username }}
+                <i class="material-icons right">arrow_drop_down</i>
+                </a>
+                </li>
+              {% else %}
+                <li><a href="/login/">Login</a></li>
+              {% endif %}
+              </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  {% endblock %}
+  </header>
+  <main>
+  {% block content %}
+  {% endblock %}
+  </main>
+  <script>
+    $(document).ready(function(){
+      $(".dropdown-button").dropdown();
+    });
+  </script>
+  {% block footer %}
+  {% endblock %}
+</body>
+</html>

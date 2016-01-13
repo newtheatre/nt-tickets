@@ -8,10 +8,12 @@ from markdown2 import Markdown
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.template.defaultfilters import slugify
+from django.core.exceptions import ValidationError
+from django.core.validators import *
 
 from tickets.func import rand_16
 
-import configuration.customise
+import configuration.customise as config
 
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -30,10 +32,14 @@ class Category(models.Model):
         help_text='Will be used in class names, so you can style categories differently.'
         )
     sort = models.IntegerField(
-        help_text='Low to high, sorts the sidebar.'
+        help_text='Low to high, sorts the sidebar.',
+        validators=[
+                MinValueValidator(6, 'Minimum values is 6')
+            ]
         )
 
-    def __str__(self): return self.name
+    def __str__(self): 
+        return self.name
 
 
 @python_2_unicode_compatible
@@ -51,7 +57,7 @@ class Show(models.Model):
 
     location = models.CharField(
                     max_length=30,
-                    default=configuration.customise.DEFAULT_LOCATION,
+                    default=config.DEFAULT_LOCATION,
                     help_text='Will show up alongside show, you can hide this with CSS if needed.'
                     )
 
@@ -80,9 +86,12 @@ class Show(models.Model):
 
     category = models.ForeignKey('Category')
 
-    IMAGE_SIZES = {'poster_wall': (126, 178),
-                   'poster_page': (256, 362),
-                   'poster_tiny': (50, 71)}
+
+    IMAGE_SIZES = {
+                'poster_wall': (126, 178),
+                'poster_page': (256, 362),
+                'poster_tiny': (50, 71),
+               }
 
     def is_current(self):
         today = datetime.date.today()
@@ -100,6 +109,43 @@ class Show(models.Model):
         else:
             return False
 
+    # Total profit from all occurrences in a show
+    def show_sales(self):
+        occs = Occurrence.objects.filter(show=self)
+        total = 0
+        for oc in occs:
+            sale = oc.total_sales()
+            total += sale
+        return total
+
+    # Total number of tickets sold across all occurrences
+    def total_tickets_sold_show(self):
+        sale = Occurrence.objects.filter(show=self)
+        total = 0
+        for s in sale:
+            ticket = s.total_tickets_sold()
+            total += ticket
+        return total
+
+    # Total tickets reserved across all occurrences
+    def total_tickets_reserved(self):
+        occs = Occurrence.objects.filter(show=self)
+        total = 0
+        for oc in occs:
+            reserve = oc.tickets_sold()
+            total += reserve
+        return total
+
+    # Maximum tickets that can be reserved across a whole show
+    def total_possible(self):
+        occs = Occurrence.objects.filter(show=self)
+        total = 0
+        for oc in occs:
+            maximum = oc.maximum_sell
+            total += maximum
+        return total
+
+    # Does a show have any occurrences
     def has_occurrences(self):
         occs = Occurrence.objects.filter(show=self)
         if len(occs) > 0:
@@ -166,7 +212,32 @@ class OccurrenceManager(models.Manager):
                 pass
                 break
             else:
-                ret.append((oc.id, oc.datetime_formatted()))
+                ret.append(( 
+                    oc.id, 
+                    oc.datetime_formatted(), 
+                    ))
+        return ret
+
+    def get_available_show(self, show):
+        today = datetime.date.today()
+        time = datetime.datetime.now()
+        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
+        ret = []
+        for oc in occs:
+            hour = oc.time.hour
+            close_time = hour + (2 * oc.hours_til_close)
+            if oc.date == today and time.hour >= close_time:
+                pass
+                break
+            else:
+                ret.append(( 
+                    oc.id, 
+                    oc.datetime_formatted(), 
+                    oc.day_formatted(), 
+                    oc.unique_code, 
+                    oc.time_formatted(), 
+                    oc.tickets_sold() 
+                    ))
         return ret
 
 
@@ -179,14 +250,14 @@ class Occurrence(models.Model):
 
     show = models.ForeignKey(Show)
     date = models.DateField()
-    time = models.TimeField(default=configuration.customise.DEFAULT_TIME)
+    time = models.TimeField(default=config.DEFAULT_TIME)
     maximum_sell = models.PositiveIntegerField(
-                default=configuration.customise.DEFAULT_MAX_SELL,
+                default=config.DEFAULT_MAX_SELL,
                 help_text='The maximum number of tickets we will allow to be reserved.'
                 )
 
     hours_til_close = models.IntegerField(
-                default=configuration.customise.DEFAULT_HOURS_TIL_CLOSE,
+                default=config.DEFAULT_HOURS_TIL_CLOSE,
                 help_text='Hours before \'time\' that we will stop reservations being made.'
                 )
     unique_code = models.CharField(max_length=16)
@@ -197,12 +268,13 @@ class Occurrence(models.Model):
         return self.date.strftime('%A')
 
     def time_formatted(self):
-        return self.time.strftime('%-I%p').lower()
+        return self.time.strftime('%-I:%M %p').lower()
 
     def datetime_formatted(self):
         return self.date.strftime('%A %d %B ') + \
             self.time.strftime('%-I%p').lower()
 
+    # Total number of tickets reserved
     def tickets_sold(self):
         tickets = Ticket.objects.filter(occurrence=self).filter(cancelled=False)
         sold = 0
@@ -210,11 +282,108 @@ class Occurrence(models.Model):
             sold += ticket.quantity
         return sold
 
+    # Find if all the tickets have been reserved
     def sold_out(self):
         if self.tickets_sold() >= self.maximum_sell:
             return True
         else:
             return False
+
+    # Total tickets sold
+    def total_tickets_sold(self):
+        sale = Sale.objects.filter(occurrence=self)
+        sold = 0
+        for s in sale:
+            sold += s.number
+        return sold
+
+    # Returns the total profit from ticket sales
+    def total_sales(self):
+        sale = Sale.objects.filter(occurrence=self)
+        sold = 0
+        for s in sale:
+            sold += s.price
+        return sold
+
+    def member_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        member = 0
+        for s in sale:
+            if s.number_member > 0:
+                member += s.number_member
+        return member
+
+    def concession_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        concession = 0
+        for s in sale:
+            if s.number_concession > 0:
+                concession += s.number_concession
+        return concession
+
+    def public_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        public = 0
+        for s in sale:
+            if s.number_public > 0:
+                public += s.number_public
+        return public
+
+    def season_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        season = 0
+        for s in sale:
+            if s.number_season > 0:
+                season += s.number_season
+        return season
+
+    def season_sale_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        season_sale = 0
+        for s in sale:
+            if s.number_season_sale > 0:
+                season_sale += s.number_season_sale
+        return season_sale
+
+    def fellow_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        fellow = 0
+        for s in sale:
+            if s.number_fellow > 0:
+                fellow += s.number_fellow
+        return fellow
+
+    def external_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        external = 0
+        for s in sale:
+            if s.number_external > 0:
+                external += s.number_external
+        return external
+
+    def fringe_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        fringe = 0
+        for s in sale:
+            if s.number_fringe > 0:
+                fringe += s.number_fringe
+        return fringe
+
+    def matinee_freshers_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        matinee_freshers = 0
+        for s in sale:
+            if s.number_matinee_freshers > 0:
+                matinee_freshers += s.number_matinee_freshers
+        return matinee_freshers
+
+    def matinee_freshers_nnt_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        matinee_freshers_nnt = 0
+        for s in sale:
+            if s.number_matinee_freshers_nnt > 0:
+                matinee_freshers_nnt += s.number_matinee_freshers_nnt
+        return matinee_freshers_nnt
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
@@ -239,6 +408,7 @@ class Ticket(models.Model):
     email_address = models.EmailField(max_length=80)
     quantity = models.IntegerField(default=1)
     cancelled = models.BooleanField(default=False)
+    collected = models.BooleanField(default=False)
     unique_code = models.CharField(max_length=16)
 
     def save(self, *args, **kwargs):
@@ -251,3 +421,34 @@ class Ticket(models.Model):
             " on " + str(self.occurrence.date) + \
             " at " + str(self.occurrence.time) + \
             " for " + self.person_name
+
+
+class Sale(models.Model):
+
+    class Meta:
+        verbose_name = 'Sale'
+        verbose_name_plural = 'Sales'
+
+    occurrence = models.ForeignKey(Occurrence)
+    ticket = models.CharField(max_length=80)
+
+    stamp = models.DateTimeField(auto_now=True)
+    unique_code = models.CharField(max_length=16)
+
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    number = models.IntegerField()
+
+    number_concession = models.IntegerField(default=0)
+    number_member = models.IntegerField(default=0)
+    number_public = models.IntegerField(default=0)
+    number_season = models.IntegerField(default=0)
+    number_season_sale = models.IntegerField(default=0)
+    number_fellow = models.IntegerField(default=0)
+    number_fringe = models.IntegerField(default=0)
+    number_matinee_freshers = models.IntegerField(default=0)
+    number_matinee_freshers_nnt = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        if not self.unique_code:
+            self.unique_code = rand_16()
+        super(Sale, self).save(*args, **kwargs)

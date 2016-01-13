@@ -6,10 +6,11 @@ Book Tickets
 {% endblock %}
 
 {% block content %}
-<p class="lead">You're booking tickets for {{show.name}} at {{show.location}}.</p>
+<p class="lead" id="title_text">You're booking tickets for {{show.name}} at {{show.location}}.</p>
 <p>{{ message }}</p>
 
-<form action="." method="post">{% csrf_token %}
+<form method="post" class="submit-once">
+{% csrf_token %}
 	<div class="col col_left">
 		{{ form.occurrence|as_bootstrap }}
 		{{ form.quantity|as_bootstrap }}
@@ -25,8 +26,21 @@ Book Tickets
 	{% endif %}
 	<p class="text-info">If you have any special access requirements please contact {{ foh_contact }}.</p>
 	<div class="actions">
-        <button type="submit" class="btn btn-large btn-primary">Book Tickets</button>
+		<button type="submit" class="btn btn-large btn-primary" id="submit-btn">
+		Book Tickets</button>
 	</div>
 </form>
 
+{% endblock %}
+{% block footer %}
+<script>
+	$('form.submit-once').submit(function(e){
+		if( $(this).hasClass('form-submitted') ){
+			e.preventDefault();
+				return;
+			}
+		$(this).addClass('form-submitted');
+		document.getElementById('submit-btn').disabled = true;
+	});
+</script>
 {% endblock %}

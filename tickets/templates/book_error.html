@@ -6,10 +6,12 @@ Book Tickets
 
 {% block content %}
 <h1 style="color:red">Error</h1>
-{% ifequal err "sold_out" %}
+{% if err == "sold_out" %}
 <p>Sorry but the performance you selected is now sold out.</p>
-{%else%}
+{% elif err == "time" %}
+<p>Please wait at least 5 seconds before booking more tickets</p>
+{% else %}
 <p>Sorry but there's been an problem booking your tickets, please <a href="../">try again</a> from the beginning.</p>
 <p>If this happens again send your request to {{customise.ORG_CONTACT}} instead.</p>
-{%endifequal%}
+{% endif %}
 {% endblock %}
