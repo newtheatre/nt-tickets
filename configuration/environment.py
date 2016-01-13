@@ -1,1 +1,1 @@
-RUN_ENV = 'devleopment'
+RUN_ENV = 'development'
