@@ -1,0 +1,41 @@
+<div>
+  <div id="div-1">
+    <p class="center-align light white-text flow-text">
+
+    {% if report.sold == 0 %}
+      No tickets have been sold yet
+    {% elif report.sold == 1 %}
+      There has been
+      <span class="nnt-purple bold">{{ report.sold }}</span>
+      ticket sold
+    {% else %}
+      There have been
+      <span class="nnt-purple bold">{{ report.sold }}</span>
+      tickets sold
+    {% endif %}
+    </p>
+    <p class="center-align light white-text flow-text">
+    {% if report.how_many_reserved == 1 %}
+      There is
+      <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
+      ticket reserved, 
+    {% else %}
+      There are
+      <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
+      tickets reserved, 
+    {% endif %}
+
+    leaving <span class="bold">{{ report.how_many_left }}</span> tickets left 
+    out of <span class="bold">{{ report.max }}</span>.
+    </p>
+    <div class="progress" id="report-bar">
+      {% if report.sale_percentage >= report.reserve_percentage %}
+        <div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
+        <div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
+      {% else %}
+        <div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
+        <div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>

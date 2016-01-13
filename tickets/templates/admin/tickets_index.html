@@ -5,6 +5,7 @@
 
 {% block extrastyle %}
 {{ block.super }}
+{% include 'favicon.html' %}
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/changelists.css' %}" />
 <link href="{% static 'bootstrap-admin.css' %}" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="{% static 'admin.css' %}" />
@@ -51,7 +52,18 @@
       <div class="actions">
         <br>
         <button type="submit" class="btn primary">Search</button>
-      </div></form>
+        </form>
+        {% if report.have_report %}
+          {% ifnotequal report.how_many_sold 0 %}
+            <form action="." method="post">
+            {% csrf_token %}
+              <input type="hidden" name="{{ D_form.occurrence.name }}" value="{{ occurrence.unique_code }}">
+              <button type="submit" class="btn btn-info" style="margin-top: 1.5em;">
+              Download CSV</button>
+            </form>
+          {% endifnotequal %}
+        {% endif %}
+      </div>
     </div>
     <div class="report-col">
       {% if occurrence.show.poster %}<img src="{{occurrence.show.poster_tiny.url}}" style="float:right" />{% endif %}
@@ -77,12 +89,12 @@
           <th>Cancel Tickets</th>
         </tr>
         {% for sale in report.tickets %}
-        <tr {% if sale.cancelled %}class="cancelled warning"{%endif%} id="sale-{{forloop.counter}}">
+        <tr {% if sale.cancelled %}class="cancelled warning"{% elif sale.collected %} class="info cancelled"{%endif%} id="sale-{{forloop.counter}}">
           <td>{{sale.person_name}}</td>
-          <td><span class="badge {% if sale.cancelled %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td>
+          <td><span class="badge {% if sale.cancelled or sale.collected %}badge-inverse{%else%}badge-info{%endif%}">{{sale.quantity}}</span></td>
           <td>{{sale.stamp}}</td>
           <td>
-              <button type="button" {% if sale.cancelled %}class="btn btn-default disabled"{% else %}class="btn btn-danger"{%endif%} data-toggle="modal" data-target="#{{ sale.unique_code }}">Cancel</button>
+              <button type="button" {% if sale.cancelled or sale.collected %}class="btn btn-default disabled"{% else %}class="btn btn-danger"{%endif%} data-toggle="modal" data-target="#{{ sale.unique_code }}">Cancel</button>
           </td>
         </tr>
         {% endfor %}

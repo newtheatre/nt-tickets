@@ -1,0 +1,9 @@
+[run]
+omit = 
+  NTenv/*, 
+  tickets/migrations/*,
+  pricing/migrations/*,
+  configuration/*,
+  mailchimp_util.py,
+  pricing/__init__.py,
+  tickets/__init__.py

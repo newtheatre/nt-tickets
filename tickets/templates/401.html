@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	{% include 'favicon.html' %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>NT Tickets</title>
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="{{ STATIC_URL }}stylesheets/materialize.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}stylesheets/style.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/bin/materialize.js"></script>
+</head>
+<body id="background">
+	<header>
+		<div class="navbar-fixed">
+			<nav>
+			    <div class="nav-wrapper">
+			     	<a href="/" class="brand-logo center">
+			     	<img src="{{ STATIC_URL }}images/nnt_tickets_white.png" id="nav-logo">
+			     	</a>
+			     	<div class="nav-container">
+				     	<ul id="nav-mobile" class="left hide-on-med-and-down">
+				        	<li><a href="/">Home</a></li>
+				        	<li><a href="/report">Sale Reports</a></li>
+				      	</ul>
+				      	<ul id="nav-mobile" class="right hide-on-med-and-down">
+				      		<li><a href="/admin">Admin Login</a></li>
+				      	</ul>
+			      	</div>
+			    </div>
+			</nav>
+		</div>
+	</header>
+	<main>
+		<div class="valign-wrapper" id="full-div">
+		<div class="container center-align">
+			<div class="valign">
+				<h1 class="light nnt-orange large-text">OOPS ... 401</h1>
+				<br>
+				<h4 class="light nnt-orange">Looks like you're not authorised to view this page.</h4>
+				<br>
+				<br>
+				<a href="/"><button class="btn waves-effect waves-dark nnt purple">Home</button>
+			</h4>
+		</div>
+		</div>
+	</main>
+</body>
+</html>

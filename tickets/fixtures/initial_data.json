@@ -1,0 +1,1209 @@
+[
+{
+  "model": "contenttypes.contenttype",
+  "pk": 19,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 20,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 21,
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 22,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 23,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 24,
+  "fields": {
+    "app_label": "sites",
+    "model": "site"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 25,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 26,
+  "fields": {
+    "app_label": "tickets",
+    "model": "category"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 27,
+  "fields": {
+    "app_label": "tickets",
+    "model": "show"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 28,
+  "fields": {
+    "app_label": "tickets",
+    "model": "occurrence"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 29,
+  "fields": {
+    "app_label": "tickets",
+    "model": "ticket"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 30,
+  "fields": {
+    "app_label": "tickets",
+    "model": "sale"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 38,
+  "fields": {
+    "app_label": "pricing",
+    "model": "stuffpricing"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 39,
+  "fields": {
+    "app_label": "pricing",
+    "model": "stuffeventpricing"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 40,
+  "fields": {
+    "app_label": "pricing",
+    "model": "seasonticketpricing"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 41,
+  "fields": {
+    "app_label": "pricing",
+    "model": "inhousepricing"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 42,
+  "fields": {
+    "app_label": "pricing",
+    "model": "fringepricing"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 43,
+  "fields": {
+    "app_label": "pricing",
+    "model": "externalpricing"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "58uy0opj6eu2fm6i8vlbdfwbdw1pil0l",
+  "fields": {
+    "session_data": "YzVlMTQxNTM3NjFlOWIzZTFmZjQ4MWZkMTU4ODhmZWI1ZTAxZTQwYjqAAn1xAShVD19hdXRoX3VzZXJfaGFzaHECVSg5NGM0ZmVmYzkwYjg0ZDNjZmUwY2FlMTZjMThkNGRiMWRiMDJlODQ5VRJfYXV0aF91c2VyX2JhY2tlbmRxA1UpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBFUNX2F1dGhfdXNlcl9pZHEFWAEAAAAydS4=",
+    "expire_date": "2016-01-14T10:48:48.108"
+  }
+},
+{
+  "model": "sites.site",
+  "pk": 1,
+  "fields": {
+    "domain": "example.com",
+    "name": "example.com"
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 1,
+  "fields": {
+    "name": "In House",
+    "slug": "in_house",
+    "sort": 1
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 2,
+  "fields": {
+    "name": "Fringe",
+    "slug": "fringe",
+    "sort": 2
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 3,
+  "fields": {
+    "name": "External",
+    "slug": "external",
+    "sort": 3
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 4,
+  "fields": {
+    "name": "StuFF",
+    "slug": "stuff",
+    "sort": 4
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 5,
+  "fields": {
+    "name": "StuFF Events",
+    "slug": "stuff_events",
+    "sort": 5
+  }
+},
+{
+  "model": "tickets.category",
+  "pk": 6,
+  "fields": {
+    "name": "Wrong Category",
+    "slug": "wrong_cat",
+    "sort": 6
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 1,
+  "fields": {
+    "name": "test_show",
+    "slug": "as",
+    "location": "New Theatre",
+    "description": "as meor",
+    "long_description": "as meor mero",
+    "poster": "posters/test_poster_2BkVRhf.jpg",
+    "poster_wall": "posters/test_poster_2BkVRhf_h284p3b.jpg",
+    "poster_page": "posters/test_poster_2BkVRhf_STADuVI.jpg",
+    "poster_tiny": "posters/test_poster_2BkVRhf_rWt8LFY.jpg",
+    "start_date": "2015-12-20",
+    "end_date": "2018-12-20",
+    "category": 1
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 2,
+  "fields": {
+    "name": "test_show_wrong_cat",
+    "slug": "test_show_2",
+    "location": "New Theatre",
+    "description": "info",
+    "long_description": "more info",
+    "poster": "posters/test_poster_PBLnD3X.jpg",
+    "poster_wall": "posters/test_poster_PBLnD3X_UFQHCUT.jpg",
+    "poster_page": "posters/test_poster_PBLnD3X_VT8LluI.jpg",
+    "poster_tiny": "posters/test_poster_PBLnD3X_UpA3iHE.jpg",
+    "start_date": "2015-12-21",
+    "end_date": "2017-12-21",
+    "category": 6
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 3,
+  "fields": {
+    "name": "test_show_past",
+    "slug": "test_show_past",
+    "location": "New Theatre",
+    "description": "It's only a description thing",
+    "long_description": "It's only a long description thing",
+    "poster": "",
+    "poster_wall": "",
+    "poster_page": "",
+    "poster_tiny": "",
+    "start_date": "2013-12-21",
+    "end_date": "2014-12-21",
+    "category": 1
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 4,
+  "fields": {
+    "name": "test_show_fringe",
+    "slug": "test_show_fringe",
+    "location": "New Theatre",
+    "description": "a show",
+    "long_description": "a show long",
+    "poster": "posters/test_poster_EzU9QP2.jpg",
+    "poster_wall": "posters/test_poster_EzU9QP2_KO3P4H0.jpg",
+    "poster_page": "posters/test_poster_EzU9QP2_KzsdCbv.jpg",
+    "poster_tiny": "posters/test_poster_EzU9QP2_X5mvzoK.jpg",
+    "start_date": "2015-12-24",
+    "end_date": "2016-12-24",
+    "category": 2
+  }
+},
+{
+  "model": "tickets.show",
+  "pk": 5,
+  "fields": {
+    "name": "Test Show External",
+    "slug": "test-show-external",
+    "location": "New Theatre",
+    "description": "A description",
+    "long_description": "A long description",
+    "poster": "",
+    "poster_wall": "",
+    "poster_page": "",
+    "poster_tiny": "",
+    "start_date": "2015-12-25",
+    "end_date": "2016-12-25",
+    "category": 3
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 1,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-20",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "706eebc00ade7c0e"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 2,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-22",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "63fbd5c85e804171"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 3,
+  "fields": {
+    "show": 2,
+    "date": "2015-12-21",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "be34f283da3378e1"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 4,
+  "fields": {
+    "show": 1,
+    "date": "2015-12-25",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "c6d24536e986f130"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 5,
+  "fields": {
+    "show": 2,
+    "date": "2016-12-23",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "9bcdcbd85719cdb6"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 6,
+  "fields": {
+    "show": 4,
+    "date": "2016-12-24",
+    "time": "19:30:00",
+    "maximum_sell": 30,
+    "hours_til_close": 2,
+    "unique_code": "2e93c6cd539728bb"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 7,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-25",
+    "time": "14:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "11b2e3128b7e1028"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 8,
+  "fields": {
+    "show": 1,
+    "date": "2016-12-25",
+    "time": "19:00:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "982cd66a6f9c9a48"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 9,
+  "fields": {
+    "show": 5,
+    "date": "2016-12-25",
+    "time": "19:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "22968a8bc97c8fd5"
+  }
+},
+{
+  "model": "tickets.occurrence",
+  "pk": 10,
+  "fields": {
+    "show": 5,
+    "date": "2016-12-27",
+    "time": "14:30:00",
+    "maximum_sell": 80,
+    "hours_til_close": 2,
+    "unique_code": "efcc4812ff9aa66b"
+  }
+},
+{
+  "model": "tickets.ticket",
+  "pk": 1,
+  "fields": {
+    "occurrence": 1,
+    "stamp": "2015-12-30T15:00:57.910",
+    "person_name": "hj",
+    "email_address": "h@h.com",
+    "quantity": 1,
+    "cancelled": false,
+    "collected": true,
+    "unique_code": "f2617183588cfff4"
+  }
+},
+{
+  "model": "tickets.ticket",
+  "pk": 2,
+  "fields": {
+    "occurrence": 1,
+    "stamp": "2015-12-30T14:55:15.724",
+    "person_name": "jhl",
+    "email_address": "1@1.com",
+    "quantity": 10,
+    "cancelled": false,
+    "collected": false,
+    "unique_code": "4edaba51a3fc6ea3"
+  }
+},
+{
+  "model": "tickets.ticket",
+  "pk": 3,
+  "fields": {
+    "occurrence": 1,
+    "stamp": "2015-12-30T14:59:31.966",
+    "person_name": "aksj",
+    "email_address": "1@1.com",
+    "quantity": 1,
+    "cancelled": false,
+    "collected": true,
+    "unique_code": "a292d47ea4183593"
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 328,
+  "fields": {
+    "occurrence": 7,
+    "ticket": "None",
+    "stamp": "2015-12-30T18:13:55.287",
+    "unique_code": "fb4206f5f2d7775c",
+    "price": "62.50",
+    "number": 8,
+    "number_concession": 1,
+    "number_member": 1,
+    "number_public": 1,
+    "number_season": 1,
+    "number_season_sale": 1,
+    "number_fellow": 1,
+    "number_fringe": 0,
+    "number_matinee_freshers": 1,
+    "number_matinee_freshers_nnt": 1
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 329,
+  "fields": {
+    "occurrence": 6,
+    "ticket": "None",
+    "stamp": "2015-12-30T18:14:13.062",
+    "unique_code": "f3e7b504a03a03b5",
+    "price": "43.00",
+    "number": 4,
+    "number_concession": 0,
+    "number_member": 0,
+    "number_public": 0,
+    "number_season": 1,
+    "number_season_sale": 1,
+    "number_fellow": 1,
+    "number_fringe": 1,
+    "number_matinee_freshers": 0,
+    "number_matinee_freshers_nnt": 0
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 330,
+  "fields": {
+    "occurrence": 9,
+    "ticket": "None",
+    "stamp": "2015-12-30T18:14:40.047",
+    "unique_code": "54acf32e5cca0305",
+    "price": "58.00",
+    "number": 6,
+    "number_concession": 1,
+    "number_member": 1,
+    "number_public": 1,
+    "number_season": 1,
+    "number_season_sale": 1,
+    "number_fellow": 1,
+    "number_fringe": 0,
+    "number_matinee_freshers": 0,
+    "number_matinee_freshers_nnt": 0
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 331,
+  "fields": {
+    "occurrence": 1,
+    "ticket": "None",
+    "stamp": "2015-12-30T18:59:36.697",
+    "unique_code": "53a95e754aadccc9",
+    "price": "5.00",
+    "number": 1,
+    "number_concession": 0,
+    "number_member": 1,
+    "number_public": 0,
+    "number_season": 0,
+    "number_season_sale": 0,
+    "number_fellow": 0,
+    "number_fringe": 0,
+    "number_matinee_freshers": 0,
+    "number_matinee_freshers_nnt": 0
+  }
+},
+{
+  "model": "tickets.sale",
+  "pk": 332,
+  "fields": {
+    "occurrence": 1,
+    "ticket": "None",
+    "stamp": "2015-12-30T19:13:17.239",
+    "unique_code": "779472436d293aed",
+    "price": "58.00",
+    "number": 6,
+    "number_concession": 1,
+    "number_member": 1,
+    "number_public": 1,
+    "number_season": 1,
+    "number_season_sale": 1,
+    "number_fellow": 1,
+    "number_fringe": 0,
+    "number_matinee_freshers": 0,
+    "number_matinee_freshers_nnt": 0
+  }
+},
+{
+  "model": "pricing.seasonticketpricing",
+  "pk": 1,
+  "fields": {
+    "season_ticket_price": "40.00"
+  }
+},
+{
+  "model": "pricing.inhousepricing",
+  "pk": 1,
+  "fields": {
+    "concession_price": "5.00",
+    "public_price": "8.00",
+    "member_price": "5.00",
+    "matinee_freshers_price": "2.50",
+    "matinee_freshers_nnt_price": "2.00"
+  }
+},
+{
+  "model": "pricing.fringepricing",
+  "pk": 1,
+  "fields": {
+    "fringe_price": "3.00"
+  }
+},
+{
+  "model": "pricing.externalpricing",
+  "pk": 1,
+  "fields": {
+    "concession_price": "5.00",
+    "public_price": "8.00",
+    "member_price": "5.00",
+    "show": 5,
+    "matinee_freshers_price": "2.50",
+    "matinee_freshers_nnt_price": "2.00",
+    "allow_season_tickets": true,
+    "allow_fellow_tickets": true,
+    "allow_half_matinee": true,
+    "allow_half_nnt_matinee": true
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 19,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 19,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 19,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 20,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 20,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 20,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 61,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 21,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 62,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 21,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 63,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 21,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 64,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 22,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 65,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 22,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 66,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 22,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 67,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 23,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 68,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 23,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 23,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Can add site",
+    "content_type": 24,
+    "codename": "add_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Can change site",
+    "content_type": 24,
+    "codename": "change_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Can delete site",
+    "content_type": 24,
+    "codename": "delete_site"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 25,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 25,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 25,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can add Category",
+    "content_type": 26,
+    "codename": "add_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can change Category",
+    "content_type": 26,
+    "codename": "change_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can delete Category",
+    "content_type": 26,
+    "codename": "delete_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can add Show",
+    "content_type": 27,
+    "codename": "add_show"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can change Show",
+    "content_type": 27,
+    "codename": "change_show"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 81,
+  "fields": {
+    "name": "Can delete Show",
+    "content_type": 27,
+    "codename": "delete_show"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 82,
+  "fields": {
+    "name": "Can add Occurrence",
+    "content_type": 28,
+    "codename": "add_occurrence"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 83,
+  "fields": {
+    "name": "Can change Occurrence",
+    "content_type": 28,
+    "codename": "change_occurrence"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 84,
+  "fields": {
+    "name": "Can delete Occurrence",
+    "content_type": 28,
+    "codename": "delete_occurrence"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 85,
+  "fields": {
+    "name": "Can add Ticket",
+    "content_type": 29,
+    "codename": "add_ticket"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 86,
+  "fields": {
+    "name": "Can change Ticket",
+    "content_type": 29,
+    "codename": "change_ticket"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 87,
+  "fields": {
+    "name": "Can delete Ticket",
+    "content_type": 29,
+    "codename": "delete_ticket"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 88,
+  "fields": {
+    "name": "Can add Sale",
+    "content_type": 30,
+    "codename": "add_sale"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 89,
+  "fields": {
+    "name": "Can change Sale",
+    "content_type": 30,
+    "codename": "change_sale"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 90,
+  "fields": {
+    "name": "Can delete Sale",
+    "content_type": 30,
+    "codename": "delete_sale"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 112,
+  "fields": {
+    "name": "Can add StuFF Pricing",
+    "content_type": 38,
+    "codename": "add_stuffpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 113,
+  "fields": {
+    "name": "Can change StuFF Pricing",
+    "content_type": 38,
+    "codename": "change_stuffpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 114,
+  "fields": {
+    "name": "Can delete StuFF Pricing",
+    "content_type": 38,
+    "codename": "delete_stuffpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 115,
+  "fields": {
+    "name": "Can add StuFF Event Pricing",
+    "content_type": 39,
+    "codename": "add_stuffeventpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 116,
+  "fields": {
+    "name": "Can change StuFF Event Pricing",
+    "content_type": 39,
+    "codename": "change_stuffeventpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 117,
+  "fields": {
+    "name": "Can delete StuFF Event Pricing",
+    "content_type": 39,
+    "codename": "delete_stuffeventpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 118,
+  "fields": {
+    "name": "Can add Season Ticket Pricing",
+    "content_type": 40,
+    "codename": "add_seasonticketpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 119,
+  "fields": {
+    "name": "Can change Season Ticket Pricing",
+    "content_type": 40,
+    "codename": "change_seasonticketpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 120,
+  "fields": {
+    "name": "Can delete Season Ticket Pricing",
+    "content_type": 40,
+    "codename": "delete_seasonticketpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 121,
+  "fields": {
+    "name": "Can add In House Pricing",
+    "content_type": 41,
+    "codename": "add_inhousepricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 122,
+  "fields": {
+    "name": "Can change In House Pricing",
+    "content_type": 41,
+    "codename": "change_inhousepricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 123,
+  "fields": {
+    "name": "Can delete In House Pricing",
+    "content_type": 41,
+    "codename": "delete_inhousepricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 124,
+  "fields": {
+    "name": "Can add Fringe Pricing",
+    "content_type": 42,
+    "codename": "add_fringepricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 125,
+  "fields": {
+    "name": "Can change Fringe Pricing",
+    "content_type": 42,
+    "codename": "change_fringepricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 126,
+  "fields": {
+    "name": "Can delete Fringe Pricing",
+    "content_type": 42,
+    "codename": "delete_fringepricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 127,
+  "fields": {
+    "name": "Can add External Pricing",
+    "content_type": 43,
+    "codename": "add_externalpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 128,
+  "fields": {
+    "name": "Can change External Pricing",
+    "content_type": 43,
+    "codename": "change_externalpricing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 129,
+  "fields": {
+    "name": "Can delete External Pricing",
+    "content_type": 43,
+    "codename": "delete_externalpricing"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$Jrywgs2l3r4v$KTicL82odp2Wp5CDplCfO3s9fZxx+H5IFjtzykuTASA=",
+    "last_login": "2015-12-31T10:48:48.106",
+    "is_superuser": true,
+    "username": "harry",
+    "first_name": "",
+    "last_name": "",
+    "email": "harrybridge01@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2015-12-27T03:51:36.776",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2015-12-28T22:39:10.165",
+    "user": 2,
+    "content_type": 40,
+    "object_id": "1",
+    "object_repr": "SeasonTicketPricing object",
+    "action_flag": 1,
+    "change_message": "Added."
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2015-12-28T22:57:17.280",
+    "user": 2,
+    "content_type": 42,
+    "object_id": "1",
+    "object_repr": "FringePricing object",
+    "action_flag": 1,
+    "change_message": "Added."
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2015-12-28T23:02:43.553",
+    "user": 2,
+    "content_type": 43,
+    "object_id": "1",
+    "object_repr": "Pricing for:Test Show External",
+    "action_flag": 1,
+    "change_message": "Added."
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2015-12-28T23:05:40.682",
+    "user": 2,
+    "content_type": 41,
+    "object_id": "1",
+    "object_repr": "In House Pricing",
+    "action_flag": 1,
+    "change_message": "Added."
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2015-12-29T18:19:12.751",
+    "user": 2,
+    "content_type": 26,
+    "object_id": "6",
+    "object_repr": "Wrong Category",
+    "action_flag": 1,
+    "change_message": "Added."
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2015-12-29T18:19:16.708",
+    "user": 2,
+    "content_type": 27,
+    "object_id": "2",
+    "object_repr": "test_show_wrong_cat",
+    "action_flag": 2,
+    "change_message": "Changed category."
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2015-12-29T18:28:01.323",
+    "user": 2,
+    "content_type": 26,
+    "object_id": "6",
+    "object_repr": "Wrong Category",
+    "action_flag": 2,
+    "change_message": "No fields changed."
+  }
+}
+]

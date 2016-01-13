@@ -1,0 +1,85 @@
+{% extends 'show_base.html' %}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col s12">
+				{% if report.number_shows == 1 %}
+					{% if not show.is_current %}
+						<p>There are no showings at the moment</p>
+					{% endif %}
+				{% elif report.number_shows == 0 %}
+					<p>There are no shows at the moment</p>
+				{% else %}
+					{% for sh in show %}
+						{% if sh.is_current %}
+							<div class="card small grey darken-3">
+								<div class="row">
+									<div class="col s2">
+										<div class="card-image">
+											<a href="/report/{{ sh.id }}" rel="nofollow">
+											{% if sh.poster_page %}
+												<img class="responsive-img" src="{{ sh.poster_page.url }}"	id="report-image">
+											{% else %}
+												<img class="responsive-img" src="{{ STATIC_URL }}images/no_image.png" id="report-image">
+											{% endif %}
+											</a>
+										</div>
+									</div>
+									<div class="col s10">
+										<div class="card-content">
+											<span class="card-title light white-text">
+											{{ sh.name }}
+											</span>
+
+											<div class="row">
+												<div class="col s9">
+													<div class="col s12">
+														<span class="nnt-orange sale-text truncate">Total Sales: 
+														<span class="bold">£{{ sh.show_sales }}</span>
+														</span>
+													</div>
+													<div class="col s12">
+														<span class="nnt-purple sale-text truncate">Total Tickets Sold: 
+														<span class="bold">{{ sh.total_tickets_sold_show }}</span>
+														</span>
+													</div>
+													<div class="col s12">
+														<span class="nnt-orange sale-text truncate">
+														Total Tickets Reserved: <span class="bold">{{ sh.total_tickets_reserved }}</span>
+
+														(out of a possible of: <span class="bold">{{ sh.total_possible }})</span>
+														</span>
+													</div>
+												</div>
+												<div class="col s3">
+													<a href="download/{{ sh.id }}">
+													<button class="btn nnt purple waves-effect waves-dark">Download Report</button>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+		<ul class="pagination center-align">
+			{% if show.has_previous %}
+				<li class="waves-effect"><a href="?page={{ show.previous_page_number }}"><i class="material-icons nnt-purple">chevron_left</i></a></li>
+			{% else %}
+				<li class="disabled"><i class="material-icons grey-text">chevron_left</i></li>
+			{% endif %}
+
+			<li class="nnt-orange">{{ show.number }} of {{ show.paginator.num_pages }}</li>
+
+			{% if show.has_next %}
+				<li class="waves-effect"><a href="?page={{ show.next_page_number }}"><i class="material-icons nnt-purple">chevron_right</i></a></li>
+			{% else %}
+				<li class="disabled"><i class="material-icons grey-text">chevron_right</i></li>
+			{% endif %}
+			</ul>
+	</div>
+{% endblock %}
