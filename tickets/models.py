@@ -438,15 +438,15 @@ class Sale(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     number = models.IntegerField()
 
-    number_concession = models.IntegerField()
-    number_member = models.IntegerField()
-    number_public = models.IntegerField()
-    number_season = models.IntegerField()
-    number_season_sale = models.IntegerField()
-    number_fellow = models.IntegerField()
-    number_fringe = models.IntegerField()
-    number_matinee_freshers = models.IntegerField()
-    number_matinee_freshers_nnt = models.IntegerField()
+    number_concession = models.IntegerField(default=0)
+    number_member = models.IntegerField(default=0)
+    number_public = models.IntegerField(default=0)
+    number_season = models.IntegerField(default=0)
+    number_season_sale = models.IntegerField(default=0)
+    number_fellow = models.IntegerField(default=0)
+    number_fringe = models.IntegerField(default=0)
+    number_matinee_freshers = models.IntegerField(default=0)
+    number_matinee_freshers_nnt = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
