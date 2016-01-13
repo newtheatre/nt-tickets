@@ -8,6 +8,6 @@ install:
   - pip install -r requirements/prod.txt 
   - pip install coveralls
 script:
-  - coverage run --omit='/home/travis/virtualenv/*','tickets/test_functional.py' manage.py test
+  - coverage run --omit='/home/travis/virtualenv/*','/home/travis/build/newtheatre/nt-tickets/tickets/test_functional.py' manage.py test
 after_success:
   coveralls
