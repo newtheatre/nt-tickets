@@ -30,5 +30,18 @@ MAILCHIMP_LIST = '25469b2c40'
 ACTUALLY_SEND_MAIL = False
 DO_CHIMP = False
 
-MEDIA_URL = "/media/"
-STATIC_URL = "/static/"
+AWS_STORAGE_BUCKET_NAME = "nt-tickets"
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+STATICFILES_LOCATION = 'static'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
+AWS_S3_SECURE_URLS = False    # Use HTTP instead of HTTPS
+AWS_QUERYSTRING_AUTH = False    # Remove auth querystrings from the query
+
+MEDIAFILES_LOCATION = 'media'
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+
+ACTUALLY_SEND_MAIL = False
+DO_CHIMP = False
