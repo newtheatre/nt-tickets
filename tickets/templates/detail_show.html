@@ -1,4 +1,4 @@
-{% if show.poster %}<img src="{{show.poster_wall.url}}" style="float:left" />{% endif %}
+{% if show.poster %}<img src="{{ show.poster.poster_wall.url }}" style="float:left" />{% endif %}
 <h2>{{show.name}}</h2>
 <p class="meta">{{show.start_date|date:"j M"}} to {{show.end_date}}</p>
 <div class="venue cat-{{show.category.slug}}">Venue: {{show.location}}</div>
