@@ -30,7 +30,7 @@ MAILCHIMP_LIST = '25469b2c40'
 ACTUALLY_SEND_MAIL = False
 DO_CHIMP = False
 
-AWS_STORAGE_BUCKET_NAME = "nt-tickets"
+AWS_STORAGE_BUCKET_NAME = "nt-tickets-dev"
 STATICFILES_STORAGE = 'custom_storages.StaticStorage'
 STATICFILES_LOCATION = 'static'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
