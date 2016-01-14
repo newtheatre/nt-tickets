@@ -4,6 +4,8 @@ python:
 before_install:
   - openssl aes-256-cbc -K $encrypted_eab4b1048f57_key -iv $encrypted_eab4b1048f57_iv -in configuration/secrets.tar.enc -out configuration/secrets.tar -d
   - tar xvf configuration/secrets.tar
+env:
+  - AWS_CREDENTIAL_FILE=configuration/key.py
 install:
   - pip install -r requirements/common.txt
   - pip install -r requirements/prod.txt 
