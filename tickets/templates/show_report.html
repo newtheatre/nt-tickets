@@ -15,10 +15,10 @@
 						<div class="col s4 m3 l2">
 							<div class="card-image">
 								<a href="/" rel="nofollow">
-								{% if show.poster_page %}
-									<img class="responsive-img" src="{{ show.poster_page.url }}" id="report-image">
+								{% if show.poster %}
+									<img class="responsive-img" src="{{ show.poster.poster_page.url }}" id="report-image">
 								{% else %}
-									<img class="responsive-img" src="{{ STATIC_URL }}images/no_image.png" id="report-image">
+									<img class="responsive-img" src="{% static 'images/no_image.png' %}" id="report-image">
 								{% endif %}
 								</a>
 							</div>

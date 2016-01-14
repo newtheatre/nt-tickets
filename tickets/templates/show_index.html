@@ -1,9 +1,10 @@
 {% extends 'show_base.html' %}
-{% load staticfiles %}
+{% load static from staticfiles %}
 {% block content %}
 	<div class="container">
 		<div class="row">
 			<div class="col s12">
+
 				{% if report.number_shows == 1 %}
 					{% if not show.is_current %}
 						<p>There are no showings at the moment</p>
@@ -18,10 +19,10 @@
 									<div class="col s2">
 										<div class="card-image">
 											<a href="show/{{ sh.id }}/0" rel="nofollow">
-											{% if sh.poster_page %}
-												<img class="responsive-img" src="{{ sh.poster_page.url }}"	id="report-image">
+											{% if sh.poster %}
+												<img class="responsive-img" src="{{ sh.poster.poster_page.url }}" id="report-image">
 											{% else %}
-												<img class="responsive-img" src="{{ STATIC_URL }}images/no_image.png" id="report-image">
+												<img class="responsive-img" src="{% static 'images/no_image.png' %}" id="report-image">
 											{% endif %}
 											</a>
 										</div>
