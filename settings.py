@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'bootstrap_toolkit',
     'captcha',
     'storages',
+    'stdimage',
 
     'tickets',
     'pricing',
