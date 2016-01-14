@@ -2,7 +2,7 @@
 {% load show_tags %}
 {% load staticfiles %}
 {% block head %}
-	<script type="text/javascript" src="{{ STATIC_URL }}js/csrf.js"></script>
+	<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -485,5 +485,5 @@
 	}
 	</script>
 
-	<script src="{{ STATIC_URL }}js/main.js"></script>
+	<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
