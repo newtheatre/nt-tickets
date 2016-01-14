@@ -3,8 +3,7 @@ python:
   - "2.7"
 before_install:
   openssl aes-256-cbc -K $encrypted_eab4b1048f57_key -iv $encrypted_eab4b1048f57_iv -in configuration/keys.py.enc -out configuration/keys.py -d
-env:
-  RUN_ENV='development'
+  openssl aes-256-cbc -K $encrypted_a1f07c209ac7_key -iv $encrypted_a1f07c209ac7_iv -in configuration/environment.py.enc -out configuration/environment.py -d
 install:
   - pip install -r requirements/common.txt
   - pip install -r requirements/prod.txt 
