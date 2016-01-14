@@ -3,10 +3,11 @@ from django.db import models
 import datetime
 
 from PIL import Image
+from stdimage.models import StdImageField
+from stdimage.utils import UploadToClassNameDir
 from StringIO import StringIO
 from markdown2 import Markdown
 
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ValidationError
 from django.core.validators import *
@@ -71,27 +72,21 @@ class Show(models.Model):
                     '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.'
                     )
 
-    poster = models.ImageField(
-                    upload_to='posters',
+    poster = StdImageField(
+                    upload_to=UploadToClassNameDir(),
                     blank=True, null=True,
-                    help_text='Upload a large image, we will automatically create smaller versions to use.'
+                    help_text='Upload a large image, we will automatically create smaller versions to use.',
+                    variations={
+                        'poster_wall': (126, 178),
+                        'poster_page': (256, 362),
+                        'poster_tiny': (50, 71),
+                        }
                     )
-
-    poster_wall = models.ImageField(upload_to='posters', blank=True, null=True)
-    poster_page = models.ImageField(upload_to='posters', blank=True, null=True)
-    poster_tiny = models.ImageField(upload_to='posters', blank=True, null=True)
 
     start_date = models.DateField()
     end_date = models.DateField()
 
     category = models.ForeignKey('Category')
-
-
-    IMAGE_SIZES = {
-                'poster_wall': (126, 178),
-                'poster_page': (256, 362),
-                'poster_tiny': (50, 71),
-               }
 
     def is_current(self):
         today = datetime.date.today()
@@ -153,26 +148,6 @@ class Show(models.Model):
         else:
             return False
 
-    def gen_thumbs(self):
-        img = Image.open(self.poster.path)
-        if img.mode not in ('L', 'RGB'):    # Convert to RGB
-            img = img.convert('RGB')
-        for field_name, size in self.IMAGE_SIZES.iteritems():
-            field = getattr(self, field_name)
-            working = img.copy()
-            working.thumbnail(size, Image.ANTIALIAS)
-            fp = StringIO()
-            working.save(fp, "JPEG", quality=95)
-            cf = InMemoryUploadedFile(
-                fp, 
-                None, 
-                self.poster.name, 
-                'image/jpeg',
-                fp.len, 
-                None
-                )
-            field.save(name=field_name+"_"+self.poster.name, content=cf, save=True)
-
     def long_markdown(self):
         md = Markdown()
         return md.convert(self.long_description)
@@ -185,11 +160,6 @@ class Show(models.Model):
             orig = Show.objects.get(pk=self.pk)
             have_orig = True
         super(Show, self).save(*args, **kwargs)
-        if not self.poster_wall and not self.poster_page \
-        and not self.poster_tiny and self.poster:
-            self.gen_thumbs()
-        elif have_orig and self.poster != orig.poster:
-            self.gen_thumbs()
 
     def __str__(self):
         return self.name
