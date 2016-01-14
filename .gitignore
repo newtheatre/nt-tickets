@@ -18,6 +18,7 @@ htmlcov/
 fabfile/
 
 configuration/staging.py
+configuration/environment.py
 # configuration/production.py
 # configuration/development.py
 
