@@ -70,7 +70,12 @@
 
       <h2>Ticket Reservation Report</h2>
       {% if report.have_report %}
-      <p>For show <strong>{{ occurrence.show.name }}</strong> on <strong>{{ occurrence.datetime_formatted }}</strong>.</p>
+      <p>
+        For 
+        <strong>{{ occurrence.show.name }}</strong> on
+        <strong>{{ occurrence.day_formatted }}</strong> at
+        <strong>{{ occurrence.time_formatted }}</strong>.
+      </p>
       <p><strong>{{ report.how_many_sold }}</strong> reserved out of a maximum of {{ occurrence.maximum_sell }} leaving <strong>{{ report.how_many_left }}</strong> seats left.</p>
       <div class="progress progress-success">
         <div class="bar" style="width: {{report.percentage}}%"></div>

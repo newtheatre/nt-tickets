@@ -362,7 +362,7 @@ class Occurrence(models.Model):
         self.show.save()
 
     def __str__(self):
-        return self.show.name + " on " + str(self.date) + " at " + str(self.time)
+        return self.show.name + " on " + str(self.day_formatted()) + " at " + str(self.time_formatted())
 
 
 @python_2_unicode_compatible
