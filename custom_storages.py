@@ -15,3 +15,6 @@ if env.RUN_ENV == 'production':
 elif env.RUN_ENV == 'development':
   class MediaStorage(S3BotoStorage):
     location = settings.MEDIAFILES_LOCATION
+
+elif env.RUN_ENV == 'staging':
+  pass
