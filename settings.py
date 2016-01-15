@@ -206,8 +206,6 @@ LOGGING = {
     }
 }
 
-# Recaptcha things
-NOCAPTCHA = True
 
 # What enviroment are we in?
 if env.RUN_ENV == 'production':
