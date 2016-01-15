@@ -12,7 +12,7 @@ DATABASES = {
 }
 
 SITE_URL="http://localhost:8000"
-MEDIA_URL = "http://localhost:8000/media/"
+STATIC_URL = "/static/"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.example.com'
@@ -31,10 +31,8 @@ ACTUALLY_SEND_MAIL = False
 DO_CHIMP = False
 
 AWS_STORAGE_BUCKET_NAME = "nt-tickets-dev"
-STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-STATICFILES_LOCATION = 'static'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
 
 AWS_S3_SECURE_URLS = False    # Use HTTP instead of HTTPS
 AWS_QUERYSTRING_AUTH = False    # Remove auth querystrings from the query
