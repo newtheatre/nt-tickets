@@ -1,4 +1,7 @@
 {% extends 'show_base.html' %}
+{% block head %}
+  <title>{% block title %}Bye &middot; {% endblock %}</title>
+{% endblock %}
 {% block content %}
   <div class="valign-wrapper" id="full-div">
     <div class="container center-align">
@@ -7,7 +10,7 @@
           <h4 class="light nnt-orange medium-text">Logged Out</h4>
           <br>
           <p class="light nnt-orange sale-text">
-          Thank you for spending some time with us today, if you want you can...
+          So long and thanks for all the fish, if you want you can...
           </p>
           <br>
           <a href="/">

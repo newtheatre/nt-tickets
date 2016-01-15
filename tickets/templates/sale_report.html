@@ -1,5 +1,8 @@
 {% extends 'show_base.html' %}
 {% load static from staticfiles %}
+{% block head %}
+	<title>{% block title %}Sales &middot; {% endblock %}</title>
+{% endblock %}
 {% block content %}
 	<div class="container">
 		<div class="row">

@@ -9,6 +9,7 @@ from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import requests0 as requests
 import json
 import csv
 
@@ -26,6 +27,7 @@ from tickets import models, forms
 from pricing import models
 
 import configuration.customise as config
+import configuration.keys as keys
 
 import datetime
 import settings
@@ -76,6 +78,7 @@ def ShowIndex(request):
     }
 
     return render_to_response('show_index.html', context, context_instance=RequestContext(request)) 
+
 
 @login_required
 def ShowReport(request, show_name, occ_id):
@@ -184,6 +187,7 @@ def ShowReport(request, show_name, occ_id):
         context,
         context_instance=RequestContext(request)
         )
+
 
 @login_required
 def SaleInputAJAX(request, show_name, occ_id):
@@ -318,6 +322,7 @@ def SaleInputAJAX(request, show_name, occ_id):
     else:
         return render(request, '404.html')
 
+
 @login_required
 def ReserveInputAJAX(request, show_name, occ_id):
     report = dict()
@@ -341,6 +346,72 @@ def ReserveInputAJAX(request, show_name, occ_id):
 
     else:
         return render(request, '404.html')
+
+
+@login_required
+def GenReportAJAX(request):
+    if request.method == 'POST' and request.is_ajax():
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        name = request.POST.get('name')
+        label = request.POST.get('label')
+        path = request.POST.get('path')
+
+        if label == 'bug':
+            # bug
+            make_github_issue(
+                title=subject,
+                body=message + '.' + '\n >' + name  + '\n \n' +\
+                    '*This bug was submitted at:* ' + '**' + path + '**',
+                labels=['bug', 'ticket-bot']
+                )
+        elif label == 'improvment':
+            # improve
+            make_github_issue(
+                title=subject,
+                body=message + '.' + '\n >' + name + '\n \n' +\
+                    '*This improvment was suggested at:* ' + '**' + path + '**',
+                labels=['enhancement', 'ticket-bot']
+                )
+        else:
+            make_github_issue(
+                title=subject,
+                body=message + '.' + '\n >' + name + '\n \n' +\
+                    '*This issue was submitted at:* ' + '**' + path + '**',
+                labels=['ticket-bot']
+                )
+
+        return HttpResponse(json.dumps('success'), content_type='application/json')
+
+    else:
+        return HttpResponse(json.dumps('error'), content_type='application/json')
+
+
+def make_github_issue(title, body=None, labels=None):
+
+    # Github repo to POST data to
+    url = 'https://api.github.com/repos/%s/%s/issues' % (settings.REPO_OWNER, settings.REPO_NAME)
+
+    # Create an authenticated session to create the issue
+    session = requests.session(headers={'Authorization': 'token %s' % keys.TOKEN})
+
+    # Create our issue
+    issue = {'title': title,
+             'body': body,
+             'labels': labels}
+    # Add the issue to our repository
+    r = session.post(url, json.dumps(issue))
+
+    # Handle returned data from the server
+    if r.status_code == 201:
+        print 'Successfully created Issue "%s"' % title
+        content = json.loads(r.content)
+        print 'URL:', content['html_url']
+        print 'Number:', content['number']
+    else:
+        print 'Could not create Issue "%s"' % title
+        print 'Response:', r.content
+
 
 @login_required
 def SaleReport(request):
@@ -377,6 +448,7 @@ def SaleReport(request):
         context,
         context_instance=RequestContext(request)
         )
+
 
 @login_required
 def SaleReportFull(request, show_name):

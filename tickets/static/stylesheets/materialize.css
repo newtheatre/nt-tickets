@@ -10717,13 +10717,13 @@ textarea.materialize-textarea {
 /* line 278, ../sass/components/_form.scss */
 [type="radio"]:not(:checked) + label:before {
   border-radius: 50%;
-  border: 2px solid #5a5a5a;
+  border: 2px solid #a54499;
 }
 
 /* line 282, ../sass/components/_form.scss */
 [type="radio"]:not(:checked) + label:after {
   border-radius: 50%;
-  border: 2px solid #5a5a5a;
+  border: 2px solid #a54499;
   z-index: -1;
   transform: scale(0);
 }
@@ -10851,7 +10851,7 @@ form p:last-child {
   width: 18px;
   height: 18px;
   z-index: 0;
-  border: 2px solid #5a5a5a;
+  border: 2px solid #a54499;
   border-radius: 1px;
   margin-top: 2px;
   transition: .2s;
@@ -10934,7 +10934,7 @@ form p:last-child {
   height: 20px;
   width: 20px;
   background-color: transparent;
-  border: 2px solid #5a5a5a;
+  border: 2px solid #a54499;
   top: 0px;
   z-index: 0;
 }
