@@ -1,0 +1,78 @@
+{% load static from staticfiles %}
+
+<!-- Repoort Modal -->
+<div id="report-modal" class="modal grey darken-3">
+  <div class="modal-content">
+    <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">error_outline</i>
+    &nbsp;Report a problem with this page
+    </h4>
+    <p class="grey-text text-lighten-2">
+    You can use the form below to post to our public
+    <a href="https://github.com/newtheatre/nt-tickets/issues" class="nnt-purple bold" target="_blank">
+    issue tracker
+    </a>
+    about the page you're currently on -
+    <span class="bold">{{ request.get_full_path }}</span>
+    Let us know about bugs, typos or any other way this page could be improved.
+    </p>
+    <div class="row">
+      <form class="col s12" id="bug-form" action="." method="post">
+      {% csrf_token %}
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="subject" type="text" class="validate" required="" aria-required="true">
+            <label for="subject">Subject</label>
+          </div>
+          <div class="input-field col s12">
+            <textarea id="message" class="materialize-textarea nnt-purple" required="" aria-required="true"></textarea>
+            <label for="message">Message</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="name" type="text" required="" aria-required="true">
+            <label for="name">Name</label>
+          </div>
+          <div class="col s6">
+            <input name="group1" type="radio" id="bug" class="bug-radio" value="bug">
+            <label for="bug">Bug</label>
+          </div>
+          <div class="col s6">
+            <input name="group1" type="radio" id="improvment" class="bug-radio" value="improvment">
+            <label for="improvment">Improvment</label>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer grey darken-2">
+  <div class="row">
+    <div class="col s4 offset-s8">
+      <input type="hidden" value="{{ request.get_full_path}}" id="path">
+      <button class="modal-action modal-close waves-effect waves-red btn-flat red-text" id="cancel-btn" type="reset" style="float:left">Cancel</button>
+      <button class="waves-effect waves-green btn-flat green-text" type="submit" id="submit-btn" style="float:right">Submit</button>
+    </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+{% block footer %}
+  <!-- Reset the form if the cancel button is pressed -->
+  <script>
+    $('#cancel-btn').click(function() {
+      document.getElementById("bug-form").reset();
+      Materialize.updateTextFields();
+    });
+  </script>
+
+  <script>
+    $('#bug-form').on('submit', function(event){
+      event.preventDefault();
+      console.log("Sell form submitted")  // sanity check
+      gen_report();
+      $('#report-modal').closeModal()
+      document.getElementById("bug-form").reset();
+      Materialize.updateTextFields();
+    });
+  </script>
+
+  <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

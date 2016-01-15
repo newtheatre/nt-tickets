@@ -65,3 +65,31 @@ function collect_tickets(id) {
     },
   });
 };
+
+function gen_report() {
+  // console.log('Collect tickets is working')  // Sanity check
+  $.ajax({
+    url : "bug/",
+    type : "post",
+    data : {
+      subject : $('#subject').val(),
+      message : $('#message').val(),
+      name : $('#name').val(),
+      label : $(".bug-radio:checked").val(),
+      path : $('#path').val(),
+    },
+
+    // Handle a successful response
+    success : function(data) {
+      console.log(data);
+      console.log('Buggy success');  // Sanity check after AJAX
+    },
+
+    // Handle and error
+    error : function(xhr,errmsg,err) {
+      $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+        " <a href='#' class='close'>&times;</a></div>"); // add the error to the DOM
+      console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    },
+  });
+};
