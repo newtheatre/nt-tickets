@@ -134,13 +134,17 @@
 }
 
 /* line 115, ../sass/style.scss */
-.g-recaptcha {
-  overflow: hidden;
-  width: 298px;
-  height: 74px;
+#cancel-btn, #submit-btn {
+  background-color: transparent;
 }
 
-/* line 121, ../sass/style.scss */
+/* line 119, ../sass/style.scss */
+.dark-background {
+  background-color: #424242;
+  border-radius: 2px;
+}
+
+/* line 124, ../sass/style.scss */
 iframe {
   margin: -1px 0px 0px -2px;
 }
