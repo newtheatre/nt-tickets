@@ -11644,6 +11644,12 @@ select {
   border-color: #0f9d58;
 }
 
+/* line 89, ../sass/components/_preloader.scss */
+.spinner-purple,
+.spinner-purple-only {
+  border-color: #a54499;
+}
+
 /**
  * IMPORTANT NOTE ABOUT CSS ANIMATION PROPERTIES (keanulee):
  *
@@ -11657,40 +11663,48 @@ select {
  * specific properties properly, treats them as -webkit-animation, and overrides the
  * other animation rules. See https://github.com/Polymer/platform/issues/53.
  */
-/* line 102, ../sass/components/_preloader.scss */
+/* line 107, ../sass/components/_preloader.scss */
 .active .spinner-layer.spinner-blue {
   /* durations: 4 * ARCTIME */
   -webkit-animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, blue-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
   animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, blue-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
-/* line 108, ../sass/components/_preloader.scss */
+/* line 113, ../sass/components/_preloader.scss */
 .active .spinner-layer.spinner-red {
   /* durations: 4 * ARCTIME */
   -webkit-animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, red-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
   animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, red-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
-/* line 114, ../sass/components/_preloader.scss */
+/* line 119, ../sass/components/_preloader.scss */
 .active .spinner-layer.spinner-yellow {
   /* durations: 4 * ARCTIME */
   -webkit-animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, yellow-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
   animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, yellow-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
-/* line 120, ../sass/components/_preloader.scss */
+/* line 125, ../sass/components/_preloader.scss */
 .active .spinner-layer.spinner-green {
   /* durations: 4 * ARCTIME */
   -webkit-animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, green-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
   animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, green-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
-/* line 126, ../sass/components/_preloader.scss */
+/* line 131, ../sass/components/_preloader.scss */
+.active .spinner-layer.spinner-purple {
+  /* durations: 4 * ARCTIME */
+  -webkit-animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, purple-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+  animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, purple-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+}
+
+/* line 137, ../sass/components/_preloader.scss */
 .active .spinner-layer,
 .active .spinner-layer.spinner-blue-only,
 .active .spinner-layer.spinner-red-only,
 .active .spinner-layer.spinner-yellow-only,
-.active .spinner-layer.spinner-green-only {
+.active .spinner-layer.spinner-green-only,
+.active .spinner-layer.spinner-purple-only {
   /* durations: 4 * ARCTIME */
   opacity: 1;
   -webkit-animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
@@ -11911,7 +11925,7 @@ select {
  * Patch the gap that appear between the two adjacent div.circle-clipper while the
  * spinner is rotating (appears on Chrome 38, Safari 7.1, and IE 11).
  */
-/* line 229, ../sass/components/_preloader.scss */
+/* line 241, ../sass/components/_preloader.scss */
 .gap-patch {
   position: absolute;
   top: 0;
@@ -11922,13 +11936,13 @@ select {
   border-color: inherit;
 }
 
-/* line 239, ../sass/components/_preloader.scss */
+/* line 251, ../sass/components/_preloader.scss */
 .gap-patch .circle {
   width: 1000%;
   left: -450%;
 }
 
-/* line 244, ../sass/components/_preloader.scss */
+/* line 256, ../sass/components/_preloader.scss */
 .circle-clipper {
   display: inline-block;
   position: relative;
@@ -11937,7 +11951,7 @@ select {
   overflow: hidden;
   border-color: inherit;
 }
-/* line 252, ../sass/components/_preloader.scss */
+/* line 264, ../sass/components/_preloader.scss */
 .circle-clipper .circle {
   width: 200%;
   height: 100%;
@@ -11954,14 +11968,14 @@ select {
   right: 0;
   bottom: 0;
 }
-/* line 268, ../sass/components/_preloader.scss */
+/* line 280, ../sass/components/_preloader.scss */
 .circle-clipper.left .circle {
   left: 0;
   border-right-color: transparent !important;
   -webkit-transform: rotate(129deg);
   transform: rotate(129deg);
 }
-/* line 274, ../sass/components/_preloader.scss */
+/* line 286, ../sass/components/_preloader.scss */
 .circle-clipper.right .circle {
   left: -100%;
   border-left-color: transparent !important;
@@ -11969,14 +11983,14 @@ select {
   transform: rotate(-129deg);
 }
 
-/* line 284, ../sass/components/_preloader.scss */
+/* line 296, ../sass/components/_preloader.scss */
 .active .circle-clipper.left .circle {
   /* duration: ARCTIME */
   -webkit-animation: left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
   animation: left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
-/* line 290, ../sass/components/_preloader.scss */
+/* line 302, ../sass/components/_preloader.scss */
 .active .circle-clipper.right .circle {
   /* duration: ARCTIME */
   -webkit-animation: right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
@@ -12027,7 +12041,7 @@ select {
     transform: rotate(-130deg);
   }
 }
-/* line 320, ../sass/components/_preloader.scss */
+/* line 332, ../sass/components/_preloader.scss */
 #spinnerContainer.cooldown {
   /* duration: SHRINK_TIME */
   -webkit-animation: container-rotate 1568ms linear infinite, fade-out 400ms cubic-bezier(0.4, 0, 0.2, 1);

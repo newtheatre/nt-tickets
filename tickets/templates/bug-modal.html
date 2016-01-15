@@ -2,7 +2,7 @@
 
 <!-- Repoort Modal -->
 <div id="report-modal" class="modal grey darken-3">
-  <div class="modal-content">
+  <div class="modal-content" id='bug-modal-form'>
     <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">error_outline</i>
     &nbsp;Report a problem with this page
     </h4>
@@ -12,7 +12,7 @@
     issue tracker
     </a>
     about the page you're currently on -
-    <span class="bold">{{ request.get_full_path }}</span>
+    <span class="bold nnt-orange">{{ request.get_full_path }}</span>
     Let us know about bugs, typos or any other way this page could be improved.
     </p>
     <div class="row">
@@ -42,12 +42,51 @@
         </div>
     </div>
   </div>
+  <div class="modal-content" id="bug-modal-loader">
+    <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">loop</i>
+    &nbsp;Loading
+    </h4>
+    <div class="row">
+      <div class="col s12 center-align">
+        <div class="preloader-wrapper active">
+            <div class="spinner-layer spinner-purple-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="modal-content" id="bug-modal-success">
+    <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">done</i>
+    &nbsp;Thank you
+    </h4>
+    <p class="grey-text text-lighten-2">
+    Thank you for your help, you can view the progress of your report
+    <a href="" class="nnt-purple bold" target="_blank" id="success-path">here</a>
+    </p>
+  </div>
+  <div class="modal-content" id="bug-modal-error">
+    <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">error_outline</i>
+    &nbsp;Oops
+    </h4>
+    <p class="grey-text text-lighten-2">
+    Uh oh, there was an error processing your request the server returned this:
+    <span id="error-log" class="nnt-orange bold"></span>
+    </p>
+  </div>
   <div class="modal-footer grey darken-2">
   <div class="row">
     <div class="col s4 offset-s8">
       <input type="hidden" value="{{ request.get_full_path}}" id="path">
       <button class="modal-action modal-close waves-effect waves-red btn-flat red-text" id="cancel-btn" type="reset" style="float:left">Cancel</button>
       <button class="waves-effect waves-green btn-flat green-text" type="submit" id="submit-btn" style="float:right">Submit</button>
+      <button class="waves-effect waves-purple btn-flat nnt-text text-orange" type="button" id="close-btn" style="float:right">Close</button>
     </div>
     </div>
   </div>
@@ -55,6 +94,14 @@
 </div>
 
 {% block footer %}
+  <script>
+    $(document).ready(function(){
+      $('#bug-modal-success').hide();
+      $('#close-btn').hide();
+      $('#bug-modal-loader').hide();
+      $('#bug-modal-error').hide();
+    });
+  </script>
   <!-- Reset the form if the cancel button is pressed -->
   <script>
     $('#cancel-btn').click(function() {
@@ -64,11 +111,31 @@
   </script>
 
   <script>
+    $('#close-btn').click(function() {
+      $('#report-modal').closeModal();
+      document.getElementById("bug-form").reset();
+      $('#bug-modal-success').hide();
+      $('#close-btn').hide();
+      $('#bug-modal-loader').hide();
+      $('#bug-modal-error').hide();
+      $('#bug-modal-form').show();
+      $('#submit-btn').show();
+      $('#cancel-btn').show();
+      Materialize.updateTextFields();
+    });
+  </script>
+
+  <script>
     $('#bug-form').on('submit', function(event){
       event.preventDefault();
       console.log("Sell form submitted")  // sanity check
       gen_report();
-      $('#report-modal').closeModal()
+      //$('#report-modal').closeModal()
+      $('#bug-modal-form').hide();
+      $('#cancel-btn').hide();
+      $('#submit-btn').hide();
+      $('#bug-modal-loader').show();
+      $('#close-btn').show();
       document.getElementById("bug-form").reset();
       Materialize.updateTextFields();
     });

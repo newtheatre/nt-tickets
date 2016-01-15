@@ -83,6 +83,16 @@ function gen_report() {
     success : function(data) {
       console.log(data);
       console.log('Buggy success');  // Sanity check after AJAX
+      if (data.err == false) {
+        $('#bug-modal-loader').hide();
+        $('#bug-modal-success').show();
+        $('#success-path').attr('href', data.content.html_url);
+      }
+      else {
+        $('#bug-modal-loader').hide();
+        $('#bug-modal-error').show();
+        $('#error-log').html(data.content.message);
+      }
     },
 
     // Handle and error
