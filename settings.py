@@ -23,6 +23,10 @@ RECAPTCHA_PRIVATE_KEY = keys.RECAPTCHA_PRIVATE_KEY
 
 MAILCHIMP_APIKEY = keys.MAILCHIMP_APIKEY
 
+# The repository to add this issue to
+REPO_OWNER = 'newtheatre'
+REPO_NAME = 'nt-tickets'
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -91,8 +95,8 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request',
                 'tickets.context_processors.customise_processor',
-                'tickets.context_processors.recaptcha',
             ],
             'loaders': [
                 # insert your TEMPLATE_LOADERS here

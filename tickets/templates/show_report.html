@@ -2,7 +2,7 @@
 {% load show_tags %}
 {% load staticfiles %}
 {% block head %}
-	<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+	<title>{% block title %}{{ show.name }} &middot; {% endblock %}</title>
 {% endblock %}
 
 {% block content %}
@@ -394,7 +394,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+				<a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
 			</div>
 		</div>
 
@@ -405,12 +405,6 @@
 	<!-- Set up modal trigger and sale tally -->
 	<script>
 		$(document).ready(function(){
-			// the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-				$('.modal-trigger').leanModal({
-					dismissible: true, // Click outside of the modal to dismiss
-					in_duration: 300, // Transition in duration
-					out_duration: 300, // Transition out duration
-				});
 			xff = parseFloat(0).toFixed(2)
 			document.getElementById("out").innerHTML = xff;
 		});
@@ -473,7 +467,6 @@
 				collect_tickets(id);
 				return false;
 			});
-		// });
 	</script>
 
 	<!-- Reset sale tally on reset -->

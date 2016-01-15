@@ -5,12 +5,13 @@
 <head>
   {% include 'favicon.html' %}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}NT Tickets{% endblock %}</title>
+  <title>{% block title %}{% endblock %}NT Tickets</title>
   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="{% static 'stylesheets/materialize.css' %}" rel="stylesheet" />
   <link href="{% static 'stylesheets/style.css' %}" rel="stylesheet" />
   <script src="//code.jquery.com/jquery-latest.min.js"></script>
   <script type="text/javascript" src="{% static 'js/bin/materialize.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
   {% block head %}
   {% endblock %}
 </head>
@@ -29,9 +30,10 @@
             <img src="{% static 'images/nnt_tickets_white.png' %}" id="nav-logo">
           </a>
           <div class="nav-container">
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <ul class="left hide-on-med-and-down">
               <li><a href="/">Home</a></li>
               <li><a href="/report">Sale Reports</a></li>
+              <li><a href="#report-modal" class="modal-trigger">Report a bug</a></li>
             </ul>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
               {% if user.is_authenticated %}
@@ -52,15 +54,30 @@
   {% endblock %}
   </header>
   <main>
+  {% include 'bug-modal.html' %}
   {% block content %}
   {% endblock %}
   </main>
-  <script>
-    $(document).ready(function(){
-      $(".dropdown-button").dropdown();
-    });
-  </script>
-  {% block footer %}
-  {% endblock %}
+  <footer>
+    <script>
+      $(document).ready(function(){
+        $(".dropdown-button").dropdown();
+      });
+    </script>
+
+    <script>
+      $(document).ready(function(){
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal-trigger').leanModal({
+          dismissible: true, // Click outside of the modal to dismiss
+          in_duration: 300, // Transition in duration
+          out_duration: 300, // Transition out duration
+        });
+      });
+    </script>
+
+    {% block footer %}
+    {% endblock %}
+  </footer>
 </body>
 </html>

@@ -142,8 +142,8 @@ class ShowTest(TestCase):
     def test_occurrence_str(self):
         occ = Occurrence.objects.get(pk=1)
         occ_str = occ.show.name + \
-            " on " + str(occ.date) + \
-            " at " + str(occ.time)
+            " on " + str(occ.day_formatted()) + \
+            " at " + str(occ.time_formatted())
         self.assertEqual(occ.__str__(), occ_str)
 
     def test_ticket_str(self):
