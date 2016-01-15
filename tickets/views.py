@@ -351,6 +351,7 @@ def ReserveInputAJAX(request, show_name, occ_id):
 @login_required
 def GenReportAJAX(request):
     if request.method == 'POST' and request.is_ajax():
+        content = ''
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         name = request.POST.get('name')
@@ -359,7 +360,7 @@ def GenReportAJAX(request):
 
         if label == 'bug':
             # bug
-            make_github_issue(
+            content = make_github_issue(
                 title=subject,
                 body=message + '.' + '\n >' + name  + '\n \n' +\
                     '*This bug was submitted at:* ' + '**' + path + '**',
@@ -367,28 +368,28 @@ def GenReportAJAX(request):
                 )
         elif label == 'improvment':
             # improve
-            make_github_issue(
+            content = make_github_issue(
                 title=subject,
                 body=message + '.' + '\n >' + name + '\n \n' +\
                     '*This improvment was suggested at:* ' + '**' + path + '**',
                 labels=['enhancement', 'ticket-bot']
                 )
         else:
-            make_github_issue(
+            content = make_github_issue(
                 title=subject,
                 body=message + '.' + '\n >' + name + '\n \n' +\
                     '*This issue was submitted at:* ' + '**' + path + '**',
                 labels=['ticket-bot']
                 )
 
-        return HttpResponse(json.dumps('success'), content_type='application/json')
+        return HttpResponse(json.dumps(content), content_type='application/json')
 
     else:
-        return HttpResponse(json.dumps('error'), content_type='application/json')
+        return HttpResponse(json.dumps(content), content_type='application/json')
 
 
 def make_github_issue(title, body=None, labels=None):
-
+    git = dict()
     # Github repo to POST data to
     url = 'https://api.github.com/repos/%s/%s/issues' % (settings.REPO_OWNER, settings.REPO_NAME)
 
@@ -404,13 +405,13 @@ def make_github_issue(title, body=None, labels=None):
 
     # Handle returned data from the server
     if r.status_code == 201:
-        print 'Successfully created Issue "%s"' % title
-        content = json.loads(r.content)
-        print 'URL:', content['html_url']
-        print 'Number:', content['number']
+        git['content'] = json.loads(r.content)
+        git['err'] = False
+        return git
     else:
-        print 'Could not create Issue "%s"' % title
-        print 'Response:', r.content
+        git['content'] = json.loads(r.content)
+        git['err'] = True
+        return git
 
 
 @login_required
