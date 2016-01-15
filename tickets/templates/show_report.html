@@ -2,6 +2,7 @@
 {% load show_tags %}
 {% load staticfiles %}
 {% block head %}
+	<title>{% block title %}{{ show.name }} &middot; {% endblock %}</title>
 	<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
 {% endblock %}
 
