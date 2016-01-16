@@ -195,7 +195,7 @@ def SaleInputAJAX(request, show_name, occ_id):
 
     if request.method == 'POST' and request.is_ajax():
 
-        s = Sale()
+        s = models.Sale()
         occ_fin = models.Occurrence.objects.get(id=occ_id)
         show = get_object_or_404(models.Show, id=show_name)
         s.occurrence = occ_fin
@@ -330,7 +330,6 @@ def ReserveInputAJAX(request, show_name, occ_id):
     if request.method == 'POST' and request.is_ajax():
         if occ_id > 0:
             unique_code = request.POST.get('unique_code')
-            # runique_code = unique_code
 
             try:
                 ticket = models.Ticket.objects.get(unique_code=unique_code)
@@ -345,7 +344,7 @@ def ReserveInputAJAX(request, show_name, occ_id):
         return HttpResponse(json.dumps(context), content_type='application/json')
 
     else:
-        return render(request, '404.html')
+        return HttpResponse(json.dumps('error'), content_type='application/json')
 
 
 @login_required
