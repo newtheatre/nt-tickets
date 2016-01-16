@@ -365,6 +365,18 @@ class Occurrence(models.Model):
         return self.show.name + " on " + str(self.day_formatted()) + " at " + str(self.time_formatted())
 
 
+class TicketManager(models.Manager):
+
+    def get_collected(self, occurrence):
+        ticket = Ticket.objects.filter(collected='True', occurrence=occurrence)
+        quantity = 0
+
+        for tick in ticket:
+            quantity += tick.quantity
+
+        return quantity
+
+
 @python_2_unicode_compatible
 class Ticket(models.Model):
 
@@ -380,6 +392,7 @@ class Ticket(models.Model):
     cancelled = models.BooleanField(default=False)
     collected = models.BooleanField(default=False)
     unique_code = models.CharField(max_length=16)
+    objects = TicketManager()
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
