@@ -13,6 +13,11 @@
       <span class="nnt-purple bold">{{ report.sold }}</span>
       tickets sold
     {% endif %}
+    , leaving
+    <span class="bold">{{ report.how_many_sales_left }}</span>
+    tickets left to sell and
+    <span class="bold">{{ report.how_many_collected }}</span>
+    to collect.
     </p>
     <p class="center-align light white-text flow-text">
     {% if report.how_many_reserved == 1 %}

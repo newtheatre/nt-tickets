@@ -113,7 +113,9 @@ def ShowReport(request, show_name, occ_id):
 
         report['tickets'] = models.Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
         report['how_many_reserved'] = occ_fin.tickets_sold()
-        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
+        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
+        report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold() - occ_fin.tickets_sold()
+        report['how_many_collected'] = occ_fin.tickets_sold() - models.Ticket.objects.get_collected(occurrence=occ_fin)
 
         report['sold'] = occ_fin.total_tickets_sold()
         report['total_sales'] = occ_fin.total_sales()
@@ -303,7 +305,9 @@ def SaleInputAJAX(request, show_name, occ_id):
 
         if occ_id > '0':
             report['sold'] = occ_fin.total_tickets_sold()
-            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - occ_fin.total_tickets_sold()
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
+            report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold() - occ_fin.tickets_sold()
+            report['how_many_collected'] = occ_fin.tickets_sold() - models.Ticket.objects.get_collected(occurrence=occ_fin)
             report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
             report['total_sales'] = occ_fin.total_sales()
             report['how_many_reserved'] = occ_fin.tickets_sold()
@@ -320,7 +324,7 @@ def SaleInputAJAX(request, show_name, occ_id):
         context_instance=RequestContext(request)
         )
     else:
-        return render(request, '404.html')
+        return HttpResponse(json.dumps('error'), content_type='application/json')
 
 
 @login_required
@@ -330,6 +334,7 @@ def ReserveInputAJAX(request, show_name, occ_id):
     if request.method == 'POST' and request.is_ajax():
         if occ_id > 0:
             unique_code = request.POST.get('unique_code')
+            # runique_code = unique_code
 
             try:
                 ticket = models.Ticket.objects.get(unique_code=unique_code)
