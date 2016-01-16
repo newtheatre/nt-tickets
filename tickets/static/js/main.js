@@ -46,7 +46,7 @@ function collect_tickets(id) {
     url : "reserve/",
     type : "post",
     data : {
-      unique_code : $('#' + id).val(),
+      unique_code : $('#code_' + id).val(),
     },
 
     // Handle a successful response
