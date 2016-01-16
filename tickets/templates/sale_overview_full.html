@@ -73,15 +73,16 @@
           <tr>
             <th>{{ tick.person_name }}</th>
             <th class="teal-text">{{ tick.quantity }}</th>
-            <th>
-            <button 
-              type="submit" 
-              class="btn nnt purple waves-effect waves-dark modal-action modal-close" 
-              id="reserve_button" 
-              value="{{ tick.unique_code}}"
-              >
-            Add
-            </button>
+            <th><form class="reserve-form" id="reserve_{{ forloop.counter }}" method="post" action=".">
+              {% csrf_token %}
+              <input type="hidden" value="{{ tick.unique_code }}" id="code_reserve_{{ forloop.counter }}" readonly="true">
+              <button 
+                type="submit" 
+                class="btn nnt purple waves-effect waves-dark"
+                >
+                Add
+              </button>
+            </form>
             </th>
           </tr>
           {% endif %}

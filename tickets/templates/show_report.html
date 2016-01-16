@@ -384,14 +384,11 @@
 		<div id="modal2" class="modal modal-fixed-footer">
 			<div class="modal-content">
 				<h4>Reservations for {{ show.name }}</h4>
-				<form action="." method="post" id="reserve-form">
-				{% csrf_token %}
 					<div class="row">
 						<div class="col s12" id="reservation_modal_container">
 							{% ReservationModal report %}
 						</div>
 					</div>
-				</form>
 			</div>
 			<div class="modal-footer">
 				<a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
@@ -455,18 +452,20 @@
 			event.preventDefault();
 			// console.log("Sell form submitted")  // sanity check
 			sell_tickets();
+			return false;
 		});
 	</script>
 
 	<script>
-		$('.reserve_button').click(function(event){
+	  $(document).on('submit', '.reserve-form', function(event){
+			var id = $(this).attr('id');
 			event.preventDefault();
-			// $('#reserve-form').on('submit', function(){
-				var id = $(this).attr('id');
-				// console.log("Collect form submitted");  // sanity check
-				collect_tickets(id);
-				return false;
-			});
+			// console.log(id);
+			// console.log("Collect form submitted");  // sanity check
+			collect_tickets(id);
+			$('#modal2').closeModal();
+			return false;
+		});
 	</script>
 
 	<!-- Reset sale tally on reset -->
