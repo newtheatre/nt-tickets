@@ -11,7 +11,9 @@ $secondary-color-light: lighten($secondary-color, 15%) !default;
 $secondary-color-dark: darken($secondary-color, 15%) !default;
 $secondary-color-dark-2: darken($secondary-color, 30%) !default;
 $success-color: color("green", "base") !default;
+$info-color: color("light-blue", "lighten-3");
 $error-color: color("red", "base") !default;
+$error-color-light: lighten($error-color, 30%) !default;
 $link-color: color("light-blue", "darken-1") !default;
 
 /*** Badges ***/
@@ -19,6 +21,8 @@ $badge-bg-color: $secondary-color !default;
 
 /*** Buttons ***/
 $button-bg-color-disabled: #DFDFDF !default;
+$button-bg-color-disabled-col: $info-color !default;
+$button-bg-color-disabled-can: $error-color-light !default;
 $button-color: $secondary-color !default;
 $button-color-disabled: #9F9F9F !default;
 $button-color-flat: #343434 !default;
@@ -131,6 +135,7 @@ $tabs-bg-color: #fff !default;
 
 /*** Tables ***/
 $table-border-color: #d0d0d0 !default;
+$table-border-color-dark: $primary-grey !default;
 $table-striped-color: #f2f2f2 !default;
 
 /*** Toasts ***/
