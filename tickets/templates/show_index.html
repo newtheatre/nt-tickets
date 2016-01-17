@@ -5,12 +5,7 @@
 		{% include 'dev-text.html' %}
 		<div class="row">
 			<div class="col s12">
-
-				{% if report.number_shows == 1 %}
-					{% if not show.is_current %}
-						<p>There are no showings at the moment</p>
-					{% endif %}
-				{% elif report.number_shows == 0 %}
+				{% if report.number_shows == 0 %}
 					<p>There are no shows at the moment<p>
 				{% else %}
 					{% for sh in show %}
