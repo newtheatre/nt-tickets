@@ -282,7 +282,13 @@ ul.staggered-list li {
 /*********************
   Media Query Classes
 **********************/
-.hide-on-small-only, .hide-on-small-and-down {
+.hide-on-xsmall-only, .hide-on-xsmall-and-down {
+  @media #{$xsmall-and-down} {
+    display: none !important;
+  }
+}
+
+.hide-on-small-and-down {
   @media #{$small-and-down} {
     display: none !important;
   }
@@ -294,6 +300,11 @@ ul.staggered-list li {
 }
 .hide-on-med-and-up {
   @media #{$medium-and-up} {
+    display: none !important;
+  }
+}
+.hide-on-small-only {
+  @media only screen and (min-width: $xsmall-screen) and (max-width: $small-screen) {
     display: none !important;
   }
 }
@@ -322,6 +333,11 @@ ul.staggered-list li {
     display: block !important;
   }
 }
+.show-on-xsmall {
+  @media #{$xsmall-and-down} {
+    display: none !important;
+  }
+}
 .show-on-medium-and-up {
   @media #{$medium-and-up} {
     display: block !important;
@@ -337,6 +353,12 @@ ul.staggered-list li {
 // Center text on mobile
 .center-on-small-only {
   @media #{$small-and-down} {
+    text-align: center;
+  }
+}
+
+.center-on-xsmall-only {
+  @media #{$xsmall-and-down} {
     text-align: center;
   }
 }
