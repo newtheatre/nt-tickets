@@ -371,6 +371,11 @@ table {
     border-bottom: 1px solid $table-border-color;
   }
 
+  &.bordered-dark > thead > tr,
+  &.bordered-dark > tbody > tr {
+    border-bottom: 1px solid $table-border-color-dark;
+  }
+
   &.striped > tbody {
     > tr:nth-child(odd) {
       background-color: $table-striped-color;

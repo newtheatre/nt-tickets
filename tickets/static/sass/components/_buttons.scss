@@ -28,6 +28,36 @@
     color: $button-color-disabled;
   }
 }
+
+.btn.disabled-col {
+  background-color: $button-bg-color-disabled-col !important;
+  box-shadow: none;
+  color: $button-color-disabled !important;
+  cursor: default;
+  * {
+    pointer-events: none;
+  }
+
+  &:hover {
+    background-color: $button-bg-color-disabled-col;
+    color: $button-color-disabled;
+  }
+}
+
+.btn.disabled-can {
+  background-color: $button-bg-color-disabled-can !important;
+  box-shadow: none;
+  color: $button-color-disabled !important;
+  cursor: default;
+  * {
+    pointer-events: none;
+  }
+
+  &:hover {
+    background-color: $button-bg-color-disabled-can;
+    color: $button-color-disabled;
+  }
+}
 // Shared icon styles
 .btn, .btn-floating, .btn-large, .btn-flat {
   i {
