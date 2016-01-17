@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+
 // Mixins
 // @import "components/prefixer";
 @import "components/mixins";
@@ -38,3 +39,6 @@
 @import "components/date_picker/default.scss";
 @import "components/date_picker/default.date.scss";
 @import "components/date_picker/default.time.scss";
+
+//Import custom stylesheet
+@import "components/style";
