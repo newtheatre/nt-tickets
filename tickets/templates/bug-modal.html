@@ -4,7 +4,7 @@
 <div id="report-modal" class="modal grey darken-3">
   <div class="modal-content" id='bug-modal-form'>
     <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">error_outline</i>
-    &nbsp;Report a problem with this page
+    &nbsp;<span>Report a problem with this page</span>
     </h4>
     <p class="grey-text text-lighten-2">
     You can use the form below to post to our public
@@ -31,11 +31,11 @@
             <input id="name" type="text" required="" aria-required="true">
             <label for="name">Name</label>
           </div>
-          <div class="col s6">
+          <div class="col s12 m6">
             <input name="group1" type="radio" id="bug" class="bug-radio" value="bug">
             <label for="bug">Bug</label>
           </div>
-          <div class="col s6">
+          <div class="col s12 m6">
             <input name="group1" type="radio" id="improvment" class="bug-radio" value="improvment">
             <label for="improvment">Improvment</label>
           </div>
@@ -44,7 +44,7 @@
   </div>
   <div class="modal-content" id="bug-modal-loader">
     <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">loop</i>
-    &nbsp;Loading
+    &nbsp;<span>Loading</span>
     </h4>
     <div class="row">
       <div class="col s12 center-align">
@@ -64,7 +64,7 @@
   </div>
   <div class="modal-content" id="bug-modal-success">
     <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">done</i>
-    &nbsp;Thank you
+    &nbsp;<span>Thank you</span>
     </h4>
     <p class="grey-text text-lighten-2">
     Thank you for your help, you can view the progress of your report
@@ -73,7 +73,7 @@
   </div>
   <div class="modal-content" id="bug-modal-error">
     <h4 class="valign-wrapper nnt-orange"><i class="material-icons small valign nnt-purple">error_outline</i>
-    &nbsp;Oops
+    &nbsp;<span>Oops</span>
     </h4>
     <p class="grey-text text-lighten-2">
     Uh oh, there was an error processing your request the server returned this:
@@ -81,12 +81,12 @@
     </p>
   </div>
   <div class="modal-footer grey darken-2">
-  <div class="row">
-    <div class="col s4 offset-s8">
+  <div class="row" id="no-pad">
+    <div class="col s12 m6" style="float:right">
       <input type="hidden" value="{{ request.get_full_path}}" id="path">
-      <button class="modal-action modal-close waves-effect waves-red btn-flat red-text" id="cancel-btn" type="reset" style="float:left">Cancel</button>
-      <button class="waves-effect waves-green btn-flat green-text" type="submit" id="submit-btn" style="float:right">Submit</button>
-      <button class="waves-effect waves-purple btn-flat nnt-text text-orange" type="button" id="close-btn" style="float:right">Close</button>
+      <button class="waves-effect waves-green btn-flat green-text" type="submit" id="submit-btn" >Submit</button>
+      <button class="modal-action modal-close waves-effect waves-red btn-flat red-text" id="cancel-btn" type="reset" >Cancel</button>
+      <button class="waves-effect waves-purple btn-flat nnt-text text-orange" type="button" id="close-btn">Close</button>
     </div>
     </div>
   </div>
