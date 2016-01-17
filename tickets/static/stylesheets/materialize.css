@@ -3624,33 +3624,37 @@ table {
 table.bordered > thead > tr, table.bordered > tbody > tr {
   border-bottom: 1px solid #d0d0d0;
 }
-/* line 375, ../sass/components/_global.scss */
+/* line 374, ../sass/components/_global.scss */
+table.bordered-dark > thead > tr, table.bordered-dark > tbody > tr {
+  border-bottom: 1px solid #292629;
+}
+/* line 380, ../sass/components/_global.scss */
 table.striped > tbody > tr:nth-child(odd) {
   background-color: #f2f2f2;
 }
-/* line 379, ../sass/components/_global.scss */
+/* line 384, ../sass/components/_global.scss */
 table.striped > tbody > tr > td {
   border-radius: 0px;
 }
-/* line 384, ../sass/components/_global.scss */
+/* line 389, ../sass/components/_global.scss */
 table.highlight > tbody > tr {
   transition: background-color .25s ease;
 }
-/* line 386, ../sass/components/_global.scss */
+/* line 391, ../sass/components/_global.scss */
 table.highlight > tbody > tr:hover {
   background-color: #f2f2f2;
 }
-/* line 392, ../sass/components/_global.scss */
+/* line 397, ../sass/components/_global.scss */
 table.centered thead tr th, table.centered tbody tr td {
   text-align: center;
 }
 
-/* line 400, ../sass/components/_global.scss */
+/* line 405, ../sass/components/_global.scss */
 thead {
   border-bottom: 1px solid #d0d0d0;
 }
 
-/* line 404, ../sass/components/_global.scss */
+/* line 409, ../sass/components/_global.scss */
 td, th {
   padding: 15px 5px;
   display: table-cell;
@@ -3660,7 +3664,7 @@ td, th {
 }
 
 @media only screen and (max-width: 992px) {
-  /* line 415, ../sass/components/_global.scss */
+  /* line 420, ../sass/components/_global.scss */
   table.responsive-table {
     width: 100%;
     border-collapse: collapse;
@@ -3669,31 +3673,31 @@ td, th {
     position: relative;
     /* sort out borders */
   }
-  /* line 422, ../sass/components/_global.scss */
+  /* line 427, ../sass/components/_global.scss */
   table.responsive-table th,
   table.responsive-table td {
     margin: 0;
     vertical-align: top;
   }
-  /* line 428, ../sass/components/_global.scss */
+  /* line 433, ../sass/components/_global.scss */
   table.responsive-table th {
     text-align: left;
   }
-  /* line 429, ../sass/components/_global.scss */
+  /* line 434, ../sass/components/_global.scss */
   table.responsive-table thead {
     display: block;
     float: left;
   }
-  /* line 433, ../sass/components/_global.scss */
+  /* line 438, ../sass/components/_global.scss */
   table.responsive-table thead tr {
     display: block;
     padding: 0 10px 0 0;
   }
-  /* line 437, ../sass/components/_global.scss */
+  /* line 442, ../sass/components/_global.scss */
   table.responsive-table thead tr th::before {
     content: "\00a0";
   }
-  /* line 442, ../sass/components/_global.scss */
+  /* line 447, ../sass/components/_global.scss */
   table.responsive-table tbody {
     display: block;
     width: auto;
@@ -3701,52 +3705,52 @@ td, th {
     overflow-x: auto;
     white-space: nowrap;
   }
-  /* line 449, ../sass/components/_global.scss */
+  /* line 454, ../sass/components/_global.scss */
   table.responsive-table tbody tr {
     display: inline-block;
     vertical-align: top;
   }
-  /* line 454, ../sass/components/_global.scss */
+  /* line 459, ../sass/components/_global.scss */
   table.responsive-table th {
     display: block;
     text-align: right;
   }
-  /* line 458, ../sass/components/_global.scss */
+  /* line 463, ../sass/components/_global.scss */
   table.responsive-table td {
     display: block;
     min-height: 1.25em;
     text-align: left;
   }
-  /* line 463, ../sass/components/_global.scss */
+  /* line 468, ../sass/components/_global.scss */
   table.responsive-table tr {
     padding: 0 10px;
   }
-  /* line 466, ../sass/components/_global.scss */
+  /* line 471, ../sass/components/_global.scss */
   table.responsive-table thead {
     border: 0;
     border-right: 1px solid #d0d0d0;
   }
-  /* line 472, ../sass/components/_global.scss */
+  /* line 477, ../sass/components/_global.scss */
   table.responsive-table.bordered th {
     border-bottom: 0;
     border-left: 0;
   }
-  /* line 473, ../sass/components/_global.scss */
+  /* line 478, ../sass/components/_global.scss */
   table.responsive-table.bordered td {
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
   }
-  /* line 474, ../sass/components/_global.scss */
+  /* line 479, ../sass/components/_global.scss */
   table.responsive-table.bordered tr {
     border: 0;
   }
-  /* line 475, ../sass/components/_global.scss */
+  /* line 480, ../sass/components/_global.scss */
   table.responsive-table.bordered tbody tr {
     border-right: 1px solid #d0d0d0;
   }
 }
-/* line 484, ../sass/components/_global.scss */
+/* line 489, ../sass/components/_global.scss */
 .collection {
   margin: 0.5rem 0 1rem 0;
   border: 1px solid #e0e0e0;
@@ -3754,7 +3758,7 @@ td, th {
   overflow: hidden;
   position: relative;
 }
-/* line 491, ../sass/components/_global.scss */
+/* line 496, ../sass/components/_global.scss */
 .collection .collection-item {
   background-color: #fff;
   line-height: 1.5rem;
@@ -3762,13 +3766,13 @@ td, th {
   margin: 0;
   border-bottom: 1px solid #e0e0e0;
 }
-/* line 499, ../sass/components/_global.scss */
+/* line 504, ../sass/components/_global.scss */
 .collection .collection-item.avatar {
   min-height: 84px;
   padding-left: 72px;
   position: relative;
 }
-/* line 504, ../sass/components/_global.scss */
+/* line 509, ../sass/components/_global.scss */
 .collection .collection-item.avatar .circle {
   position: absolute;
   width: 42px;
@@ -3778,7 +3782,7 @@ td, th {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 513, ../sass/components/_global.scss */
+/* line 518, ../sass/components/_global.scss */
 .collection .collection-item.avatar i.circle {
   font-size: 18px;
   line-height: 42px;
@@ -3786,71 +3790,71 @@ td, th {
   background-color: #999;
   text-align: center;
 }
-/* line 522, ../sass/components/_global.scss */
+/* line 527, ../sass/components/_global.scss */
 .collection .collection-item.avatar .title {
   font-size: 16px;
 }
-/* line 526, ../sass/components/_global.scss */
+/* line 531, ../sass/components/_global.scss */
 .collection .collection-item.avatar p {
   margin: 0;
 }
-/* line 530, ../sass/components/_global.scss */
+/* line 535, ../sass/components/_global.scss */
 .collection .collection-item.avatar .secondary-content {
   position: absolute;
   top: 16px;
   right: 16px;
 }
-/* line 539, ../sass/components/_global.scss */
+/* line 544, ../sass/components/_global.scss */
 .collection .collection-item:last-child {
   border-bottom: none;
 }
-/* line 543, ../sass/components/_global.scss */
+/* line 548, ../sass/components/_global.scss */
 .collection .collection-item.active {
   background-color: #ffc425;
   color: white;
 }
-/* line 547, ../sass/components/_global.scss */
+/* line 552, ../sass/components/_global.scss */
 .collection .collection-item.active .secondary-content {
   color: #fff;
 }
-/* line 552, ../sass/components/_global.scss */
+/* line 557, ../sass/components/_global.scss */
 .collection a.collection-item {
   display: block;
   transition: .25s;
   color: #ffc425;
 }
-/* line 557, ../sass/components/_global.scss */
+/* line 562, ../sass/components/_global.scss */
 .collection a.collection-item:not(.active):hover {
   background-color: #ddd;
 }
-/* line 564, ../sass/components/_global.scss */
+/* line 569, ../sass/components/_global.scss */
 .collection.with-header .collection-header {
   background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
   padding: 10px 20px;
 }
-/* line 569, ../sass/components/_global.scss */
+/* line 574, ../sass/components/_global.scss */
 .collection.with-header .collection-item {
   padding-left: 30px;
 }
-/* line 572, ../sass/components/_global.scss */
+/* line 577, ../sass/components/_global.scss */
 .collection.with-header .collection-item.avatar {
   padding-left: 72px;
 }
 
-/* line 579, ../sass/components/_global.scss */
+/* line 584, ../sass/components/_global.scss */
 .secondary-content {
   float: right;
   color: #ffc425;
 }
 
-/* line 583, ../sass/components/_global.scss */
+/* line 588, ../sass/components/_global.scss */
 .collapsible .collection {
   margin: 0;
   border: none;
 }
 
-/* line 591, ../sass/components/_global.scss */
+/* line 596, ../sass/components/_global.scss */
 span.badge {
   min-width: 3rem;
   padding: 0 6px;
@@ -3862,7 +3866,7 @@ span.badge {
   right: 15px;
   box-sizing: border-box;
 }
-/* line 602, ../sass/components/_global.scss */
+/* line 607, ../sass/components/_global.scss */
 span.badge.new {
   font-weight: 300;
   font-size: 0.8rem;
@@ -3870,26 +3874,26 @@ span.badge.new {
   background-color: #ffc425;
   border-radius: 2px;
 }
-/* line 609, ../sass/components/_global.scss */
+/* line 614, ../sass/components/_global.scss */
 span.badge.new:after {
   content: " new";
 }
 
-/* line 613, ../sass/components/_global.scss */
+/* line 618, ../sass/components/_global.scss */
 nav ul a span.badge {
   position: static;
   margin-left: 4px;
   line-height: 0;
 }
 
-/* line 620, ../sass/components/_global.scss */
+/* line 625, ../sass/components/_global.scss */
 .video-container {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
 }
-/* line 626, ../sass/components/_global.scss */
+/* line 631, ../sass/components/_global.scss */
 .video-container iframe, .video-container object, .video-container embed {
   position: absolute;
   top: 0;
@@ -3898,7 +3902,7 @@ nav ul a span.badge {
   height: 100%;
 }
 
-/* line 636, ../sass/components/_global.scss */
+/* line 641, ../sass/components/_global.scss */
 .progress {
   position: relative;
   height: 4px;
@@ -3909,7 +3913,7 @@ nav ul a span.badge {
   margin: 0.5rem 0 1rem 0;
   overflow: hidden;
 }
-/* line 645, ../sass/components/_global.scss */
+/* line 650, ../sass/components/_global.scss */
 .progress .determinate {
   position: absolute;
   background-color: inherit;
@@ -3919,11 +3923,11 @@ nav ul a span.badge {
   background-color: #ffc425;
   transition: width .3s linear;
 }
-/* line 654, ../sass/components/_global.scss */
+/* line 659, ../sass/components/_global.scss */
 .progress .indeterminate {
   background-color: #ffc425;
 }
-/* line 656, ../sass/components/_global.scss */
+/* line 661, ../sass/components/_global.scss */
 .progress .indeterminate:before {
   content: '';
   position: absolute;
@@ -3934,7 +3938,7 @@ nav ul a span.badge {
   will-change: left, right;
   animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
 }
-/* line 668, ../sass/components/_global.scss */
+/* line 673, ../sass/components/_global.scss */
 .progress .indeterminate:after {
   content: '';
   position: absolute;
@@ -3978,37 +3982,37 @@ nav ul a span.badge {
 /*******************
   Utility Classes
 *******************/
-/* line 717, ../sass/components/_global.scss */
+/* line 722, ../sass/components/_global.scss */
 .hide {
   display: none !important;
 }
 
-/* line 722, ../sass/components/_global.scss */
+/* line 727, ../sass/components/_global.scss */
 .left-align {
   text-align: left;
 }
 
-/* line 725, ../sass/components/_global.scss */
+/* line 730, ../sass/components/_global.scss */
 .right-align {
   text-align: right;
 }
 
-/* line 728, ../sass/components/_global.scss */
+/* line 733, ../sass/components/_global.scss */
 .center, .center-align {
   text-align: center;
 }
 
-/* line 732, ../sass/components/_global.scss */
+/* line 737, ../sass/components/_global.scss */
 .left {
   float: left !important;
 }
 
-/* line 735, ../sass/components/_global.scss */
+/* line 740, ../sass/components/_global.scss */
 .right {
   float: right !important;
 }
 
-/* line 740, ../sass/components/_global.scss */
+/* line 745, ../sass/components/_global.scss */
 .no-select, input[type=range], input[type=range] + .thumb {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -4018,19 +4022,19 @@ nav ul a span.badge {
   user-select: none;
 }
 
-/* line 749, ../sass/components/_global.scss */
+/* line 754, ../sass/components/_global.scss */
 .circle {
   border-radius: 50%;
 }
 
-/* line 753, ../sass/components/_global.scss */
+/* line 758, ../sass/components/_global.scss */
 .center-block {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* line 759, ../sass/components/_global.scss */
+/* line 764, ../sass/components/_global.scss */
 .truncate {
   display: block;
   white-space: nowrap;
@@ -4038,7 +4042,7 @@ nav ul a span.badge {
   text-overflow: ellipsis;
 }
 
-/* line 766, ../sass/components/_global.scss */
+/* line 771, ../sass/components/_global.scss */
 .no-padding {
   padding: 0 !important;
 }
