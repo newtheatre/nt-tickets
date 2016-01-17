@@ -59,7 +59,7 @@
     $i: 1;
     @while $i <= $num-cols {
       $perc: unquote((100 / ($num-cols / $i)) + "%");
-      &.s#{$i} {
+      &.xs#{$i} {
         width: $perc;
         margin-left: auto;
         left: auto;
@@ -71,16 +71,46 @@
     $i: 1;
     @while $i <= $num-cols {
       $perc: unquote((100 / ($num-cols / $i)) + "%");
-      &.offset-s#{$i} {
+      &.offset-xs#{$i} {
         margin-left: $perc;
       }
-      &.pull-s#{$i} {
+      &.pull-xs#{$i} {
         right: $perc;
       }
-      &.push-s#{$i} {
+      &.push-xs#{$i} {
         left: $perc;
       }
       $i: $i + 1;
+    }
+
+    @media #{$small-and-up} {
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        &.s#{$i} {
+          width: $perc;
+          margin-left: auto;
+          left: auto;
+          right: auto;
+        }
+        $i: $i + 1;
+      }
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        &.offset-s#{$i} {
+          margin-left: $perc;
+        }
+        &.pull-s#{$i} {
+          right: $perc;
+        }
+        &.push-s#{$i} {
+          left: $perc;
+        }
+        $i: $i + 1;
+      }
     }
 
     @media #{$medium-and-up} {
