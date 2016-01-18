@@ -3520,7 +3520,7 @@ ul.staggered-list li {
 **********************/
 @media only screen and (max-width: 374px) {
   /* line 285, ../sass/components/_global.scss */
-  .hide-on-xsmall-only, .hide-on-xsmall-and-down {
+  .hide-on-xs-only, .hide-on-xs-and-down {
     display: none !important;
   }
 }
@@ -3590,7 +3590,7 @@ ul.staggered-list li {
 
 @media only screen and (max-width: 374px) {
   /* line 336, ../sass/components/_global.scss */
-  .show-on-xsmall {
+  .show-on-xs {
     display: none !important;
   }
 }
@@ -3618,7 +3618,7 @@ ul.staggered-list li {
 
 @media only screen and (max-width: 374px) {
   /* line 360, ../sass/components/_global.scss */
-  .center-on-xsmall-only {
+  .center-on-xs-only {
     text-align: center;
   }
 }
