@@ -310,10 +310,17 @@ def SaleInputAJAX(request, show_name, occ_id):
                 T.save()
 
         if occ_id > '0':
+            # How many tickets have been sold so far
             report['sold'] = occ_fin.total_tickets_sold()
-            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
-            report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold() - occ_fin.tickets_sold()
+            # Total number of tickets reserved
+            report['how_many_reserved'] = occ_fin.tickets_sold()
+            # How many tickets have been collected
             report['how_many_collected'] = occ_fin.tickets_sold() - models.Ticket.objects.get_collected(occurrence=occ_fin)
+            # How many un-reserved tickets are there left to sell
+            report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
+            # Maximum amount of free tickets to sell
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
+
             report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
             report['total_sales'] = occ_fin.total_sales()
             report['how_many_reserved'] = occ_fin.tickets_sold()
@@ -373,7 +380,8 @@ def GenReportAJAX(request):
             content = make_github_issue(
                 title=subject,
                 body=message + '.' + '\n >' + name  + '\n \n' +\
-                    '*This bug was submitted at:* ' + '**' + path + '**',
+                    '*This bug was submitted at:* ' +\
+                    '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
                 labels=['bug', 'ticket-bot']
                 )
         elif label == 'improvment':
@@ -381,14 +389,16 @@ def GenReportAJAX(request):
             content = make_github_issue(
                 title=subject,
                 body=message + '.' + '\n >' + name + '\n \n' +\
-                    '*This improvment was suggested at:* ' + '**' + path + '**',
+                    '*This improvment was suggested at:* ' +\
+                    '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
                 labels=['enhancement', 'ticket-bot']
                 )
         else:
             content = make_github_issue(
                 title=subject,
                 body=message + '.' + '\n >' + name + '\n \n' +\
-                    '*This issue was submitted at:* ' + '**' + path + '**',
+                    '*This issue was submitted at:* ' +\
+                    '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
                 labels=['ticket-bot']
                 )
 
