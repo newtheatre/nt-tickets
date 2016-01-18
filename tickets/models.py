@@ -406,11 +406,24 @@ class Ticket(models.Model):
             " for " + self.person_name
 
 
+class SaleManager(models.Manager):
+
+    def sold_not_reserved(self, occurrence):
+        sale = Sale.objects.filter(occurrence=occurrence, ticket='None')
+        number = 0
+
+        for s in sale:
+            number += s.number
+
+        return number
+
 class Sale(models.Model):
 
     class Meta:
         verbose_name = 'Sale'
         verbose_name_plural = 'Sales'
+
+    objects=SaleManager()
 
     occurrence = models.ForeignKey(Occurrence)
     ticket = models.CharField(max_length=80)

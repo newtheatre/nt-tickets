@@ -112,12 +112,18 @@ def ShowReport(request, show_name, occ_id):
         report['max'] = occ_fin.maximum_sell
 
         report['tickets'] = models.Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
-        report['how_many_reserved'] = occ_fin.tickets_sold()
-        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
-        report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold() - occ_fin.tickets_sold()
-        report['how_many_collected'] = occ_fin.tickets_sold() - models.Ticket.objects.get_collected(occurrence=occ_fin)
 
+        # How many tickets have been sold so far
         report['sold'] = occ_fin.total_tickets_sold()
+        # Total number of tickets reserved
+        report['how_many_reserved'] = occ_fin.tickets_sold()
+        # How many tickets have been collected
+        report['how_many_collected'] = occ_fin.tickets_sold() - models.Ticket.objects.get_collected(occurrence=occ_fin)
+        # How many un-reserved tickets are there left to sell
+        report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
+        # Maximum amount of free tickets to sell
+        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
+
         report['total_sales'] = occ_fin.total_sales()
 
         report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
