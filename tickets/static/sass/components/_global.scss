@@ -282,7 +282,7 @@ ul.staggered-list li {
 /*********************
   Media Query Classes
 **********************/
-.hide-on-xsmall-only, .hide-on-xsmall-and-down {
+.hide-on-xs-only, .hide-on-xs-and-down {
   @media #{$xsmall-and-down} {
     display: none !important;
   }
@@ -333,7 +333,7 @@ ul.staggered-list li {
     display: block !important;
   }
 }
-.show-on-xsmall {
+.show-on-xs {
   @media #{$xsmall-and-down} {
     display: none !important;
   }
@@ -357,7 +357,7 @@ ul.staggered-list li {
   }
 }
 
-.center-on-xsmall-only {
+.center-on-xs-only {
   @media #{$xsmall-and-down} {
     text-align: center;
   }

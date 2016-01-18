@@ -8,12 +8,12 @@
 {% block content %}
 	<!-- Top Card -->
 	<div class="container">
-		<div class="row">
+		<div class="row top-card">
 			<div class="col s12">
-				<div class="card small grey darken-3">
+				<div class="card small grey darken-3 top-card">
 					<div class="row">
-						<div class="col s4 m3 l2">
-							<div class="card-image">
+						<div class="col s4" id="poster-container">
+							<div class="card-image show-poster hide-on-xs-only">
 								<a href="/" rel="nofollow">
 								{% if show.poster %}
 									<img class="responsive-img" src="{{ show.poster.poster_page.url }}" id="report-image">
@@ -23,21 +23,36 @@
 								</a>
 							</div>
 						</div>
-						<div class="col s8 m9 l9">
 							<div class="card-content">
-								<h1 class="light white-text flow-text">
+								<h1 class="light white-text flow-text xsmall-text center-on-xs-only truncate">
 								{{ show.name }} 
 								{% if report.have_form %} 
 								on <strong>{{ report.day }}</strong> at <strong>{{ report.time }}</strong> 
 								{% endif %}
 								</h1>
-								<div class="row">
+								<div class="row hide-on-small-and-down">
 									<div class="col s6">
-										<button data-target="picker-modal" class="btn nnt purple modal-trigger waves-effect waves-dark">Choose Showing</button>
+										<button data-target="picker-modal" 
+										class="btn nnt purple modal-trigger waves-effect waves-dark">
+										<i class="material-icons left">payment</i>Choose Showing</button>
 									</div>
 									<div class="col s6">
 										<a href="/report/{{ show.id }}">
-											<button class="btn nnt purple waves-effect waves-dark">Sale Report</button>
+											<button class="btn nnt purple waves-effect waves-dark">
+											<i class="material-icons left">description</i>Sale Report</button>
+										</a>
+									</div>
+								</div>
+								<div class="row hide-on-med-and-up">
+									<div class="col s6 xs6 center-align">
+										<button data-target="picker-modal" 
+										class="btn nnt purple modal-trigger waves-effect waves-dark">
+										<i class="material-icons">payment</i></button>
+									</div>
+									<div class="col s6 xs6 center-align">
+										<a href="/report/{{ show.id }}">
+											<button class="btn nnt purple waves-effect waves-dark">
+											<i class="material-icons">description</i></button>
 										</a>
 									</div>
 								</div>
@@ -46,7 +61,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
 
 		{% if report.have_form %}
 		<!-- Sale report overview -->
@@ -355,19 +369,21 @@
 		{% endif %}
 
 		<!-- Occurrence Modal Structure -->
-		<div id="picker-modal" class="modal bottom-sheet">
+		<div id="picker-modal" class="modal bottom-sheet" style="display: block; overflow: scroll;">
 			<div class="modal-content">
 				<div class="row">
-					<h4>{{ show.name }}</h4>
+					<h4 class="truncate">{{ show.name }}</h4>
 						{% for oc in occurrence %}
 							<div class="col s12">
 								<a href="/show/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat">
-								{{ show.name }} on <strong>{{ oc.2 }}</strong> at <strong>{{ oc.4 }}</strong>
+								<span class="hide-on-xs-and-down">{{ show.name }} on</span><strong>{{ oc.2 }}</strong> at <strong>{{ oc.4 }}</strong>
+								<span class="hide-on-small-and-down">
 								{% if oc.5 == 1 %}
 								, <strong>{{ oc.5 }}</strong> ticket reserved
 								{% else %}
 									, <strong>{{ oc.5 }}</strong> tickets reserved
 								{% endif %}
+								</span>
 								</a>
 							</div>
 							<br>
