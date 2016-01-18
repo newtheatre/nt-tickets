@@ -26,6 +26,7 @@ MAILCHIMP_APIKEY = keys.MAILCHIMP_APIKEY
 # The repository to add this issue to
 REPO_OWNER = 'newtheatre'
 REPO_NAME = 'nt-tickets'
+BASE_URL= 'tickets.harrybridge.co.uk'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
