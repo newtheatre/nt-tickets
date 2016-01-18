@@ -37,7 +37,7 @@ urlpatterns = [
     # AJAX url handlers
     url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/sale/$', tickets_views.SaleInputAJAX, name='sale_ajax'),
     url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/reserve/$', tickets_views.ReserveInputAJAX, name='reserve_ajax'),
-    url(r'^bug/$', tickets_views.GenReportAJAX, name='bug_ajax'),
+    url(r'bug/$', tickets_views.GenReportAJAX, name='bug_ajax'),
 
     # Sale report urls
     url(r'^report/$', tickets_views.SaleReport, name='sale_report'),
