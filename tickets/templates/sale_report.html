@@ -6,7 +6,7 @@
 {% block content %}
 	<div class="container">
 		<div class="row">
-			<div class="col s12">
+			<div class="col xs12">
 				{% if report.number_shows == 0 %}
 					<p>There are no shows at the moment</p>
 				{% else %}
@@ -14,8 +14,8 @@
 						{% if sh.is_current %}
 							<div class="card small grey darken-3">
 								<div class="row">
-									<div class="col s2">
-										<div class="card-image">
+									<div class="col xs4" id="poster-container">
+										<div class="card-image show-poster">
 											<a href="/report/{{ sh.id }}" rel="nofollow">
 											{% if sh.poster %}
 												<img class="responsive-img" src="{{ sh.poster.poster_page.url }}" id="report-image">
@@ -25,47 +25,57 @@
 											</a>
 										</div>
 									</div>
-									<div class="col s10">
 										<div class="card-content">
-											<span class="card-title light white-text">
+											<h1 class="light white-text flow-text no-pad">
 											{{ sh.name }}
-											</span>
+											</h1>
 
-											<div class="row">
-												<div class="col s9">
+											<div class="row pad-medium">
+												<div class="col xs9 l8 no-pad">
 													<div class="col s12">
-														<span class="nnt-orange sale-text truncate">Total Sales: 
+														<span class="nnt-orange sale-text">
+														<span class="hide-on-small-and-down">Total Sales: </span>
+														<span class="hide-on-med-and-up">Profit: </span>
 														<span class="bold">£{{ sh.show_sales }}</span>
 														</span>
 													</div>
-													<div class="col s12">
-														<span class="nnt-purple sale-text truncate">Total Tickets Sold: 
+													<div class="col xs12">
+														<span class="nnt-purple sale-text">
+														<span class="hide-on-small-and-down">Total Tickets Sold: </span>
+														<span class="hide-on-med-and-up">Sold: </span>
 														<span class="bold">{{ sh.total_tickets_sold_show }}</span>
 														</span>
 													</div>
-													<div class="col s12">
-														<span class="nnt-orange sale-text truncate">
+													<div class="col xs12 hide-on-small-and-down">
+														<span class="nnt-orange sale-text">
 														Total Tickets Reserved: <span class="bold">{{ sh.total_tickets_reserved }}</span>
-
+														<span class="hide-on-med-and-down">
 														(out of a possible of: <span class="bold">{{ sh.total_possible }})</span>
+														</span>
 														</span>
 													</div>
 												</div>
-												<div class="col s3">
+												<div class="col xs3 l4 center-align hide-on-small-and-down">
 													<a href="download/{{ sh.id }}">
-													<button class="btn nnt purple waves-effect waves-dark">Download Report</button>
+													<button class="btn nnt purple waves-effect waves-dark">
+													<i class="material-icons left hide-on-med-and-down">file_download</i>
+													<i class="material-icons hide-on-large-only">file_download</i>
+													<span class="hide-on-med-and-down">
+													Download
+													</span></button>
 													</a>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
+									</div>
 						{% endif %}
 					{% endfor %}
 				{% endif %}
+								</div>
+							</div>
 			</div>
-		</div>
+
 		<ul class="pagination center-align">
 			{% if show.has_previous %}
 				<li class="waves-effect"><a href="?page={{ show.previous_page_number }}"><i class="material-icons nnt-purple">chevron_left</i></a></li>
@@ -81,5 +91,5 @@
 				<li class="disabled"><i class="material-icons grey-text">chevron_right</i></li>
 			{% endif %}
 			</ul>
-	</div>
+
 {% endblock %}
