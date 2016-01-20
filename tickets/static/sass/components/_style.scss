@@ -92,7 +92,7 @@
 }
 
 .pad-small {
-  margin-top: 0.5em;
+  margin-top: 0.5em !important;
 }
 
 .pad-medium {
@@ -138,12 +138,25 @@
   padding: 0 30px;
 }
 
+.bug-content {
+  padding: 10px !important;
+}
+
 @media #{$xsmall-and-down} {
-  .top-card {
+  .top-card, .bottom-card {
     height: 120px !important;
   }
   .xsmall-text {
     margin-top: 0px !important;
+  }
+}
+
+@media #{$small-and-down} {
+  .bottom-card {
+    height: 100px !important;
+  }
+  .bug-card {
+    height: 100px !important;
   }
 }
 

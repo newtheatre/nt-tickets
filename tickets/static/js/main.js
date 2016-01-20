@@ -24,7 +24,7 @@ function sell_tickets() {
       $("#sale-form")[0].reset();
       // Update sale overview
       $('#sale-update').html($('#div-1', data).html());
-      $('#sale-final').html($('#div-2', data).html());
+      $('.sale-final').html($('#div-2', data).html());
       $('#reservation_modal_container').html($('#div-3', data).html());
 
       // console.log(data);

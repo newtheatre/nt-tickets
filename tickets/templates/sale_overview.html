@@ -3,7 +3,7 @@
     <p class="center-align light white-text flow-text">
     
     {% if report.sold == 0 %}
-      No tickets sold yet
+      No tickets sold
     {% elif report.sold == 1 %}
       <span class="nnt-purple bold">{{ report.sold }}</span>
       ticket sold
@@ -27,7 +27,7 @@
     &verbar;
     &nbsp;
     <span class="bold">{{ report.how_many_sales_left }}</span>
-    free
+    tickets free
     </p>
     <div class="progress hide-on-small-and-down" id="report-bar">
       {% if report.sale_percentage >= report.reserve_percentage %}
