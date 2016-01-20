@@ -317,7 +317,7 @@ ul.staggered-list li {
     display: none !important;
   }
 }
-.hide-on-large-only {
+.hide-on-large-only, .hide-on-large-and-up {
   @media #{$large-and-up} {
     display: none !important;
   }

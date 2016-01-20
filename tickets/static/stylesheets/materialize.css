@@ -3569,7 +3569,7 @@ ul.staggered-list li {
 
 @media only screen and (min-width: 993px) {
   /* line 320, ../sass/components/_global.scss */
-  .hide-on-large-only {
+  .hide-on-large-only, .hide-on-large-and-up {
     display: none !important;
   }
 }
@@ -13472,54 +13472,55 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 }
 
 /* line 124, ../sass/components/_style.scss */
-#no-pad {
+.no-pad {
   margin: 0px 0px !important;
+  padding: 0px 0px !important;
 }
 
-/* line 128, ../sass/components/_style.scss */
+/* line 129, ../sass/components/_style.scss */
 .show-poster, #poster-container {
   width: 150px;
   max-width: 150px;
 }
 
-/* line 133, ../sass/components/_style.scss */
+/* line 134, ../sass/components/_style.scss */
 #mobile-nav a {
   color: #ffc425;
 }
 
-/* line 137, ../sass/components/_style.scss */
+/* line 138, ../sass/components/_style.scss */
 #mobile-nav-name {
   padding: 0 30px;
 }
 
-/* line 141, ../sass/components/_style.scss */
+/* line 142, ../sass/components/_style.scss */
 .bug-content {
   padding: 10px !important;
 }
 
 @media only screen and (max-width: 374px) {
-  /* line 146, ../sass/components/_style.scss */
+  /* line 147, ../sass/components/_style.scss */
   .top-card, .bottom-card {
     height: 120px !important;
   }
 
-  /* line 149, ../sass/components/_style.scss */
+  /* line 150, ../sass/components/_style.scss */
   .xsmall-text {
     margin-top: 0px !important;
   }
 }
 @media only screen and (max-width: 600px) {
-  /* line 155, ../sass/components/_style.scss */
+  /* line 156, ../sass/components/_style.scss */
   .bottom-card {
     height: 100px !important;
   }
 
-  /* line 158, ../sass/components/_style.scss */
+  /* line 159, ../sass/components/_style.scss */
   .bug-card {
     height: 100px !important;
   }
 }
-/* line 163, ../sass/components/_style.scss */
+/* line 164, ../sass/components/_style.scss */
 iframe {
   margin: -1px 0px 0px -2px;
 }
