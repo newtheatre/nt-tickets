@@ -287,9 +287,13 @@ ul.staggered-list li {
     display: none !important;
   }
 }
-
 .hide-on-small-and-down {
   @media #{$small-and-down} {
+    display: none !important;
+  }
+}
+.hide-on-small-and-up {
+  @media #{$small-and-up} {
     display: none !important;
   }
 }
