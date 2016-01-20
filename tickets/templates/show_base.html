@@ -8,7 +8,6 @@
   <title>{% block title %}{% endblock %}NT Tickets</title>
   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="{% static 'stylesheets/materialize.css' %}" rel="stylesheet" />
-  <link href="{% static 'stylesheets/style.css' %}" rel="stylesheet" />
   <script src="//code.jquery.com/jquery-latest.min.js"></script>
   <script type="text/javascript" src="{% static 'js/bin/materialize.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
@@ -29,24 +28,38 @@
           <a href="/" class="brand-logo center">
             <img src="{% static 'images/nnt_tickets_white.png' %}" id="nav-logo">
           </a>
+          <a href="#" data-activates="mobile-nav" class="button-collapse"><i class="material-icons">menu</i></a>
           <div class="nav-container">
             <ul class="left hide-on-med-and-down">
               <li><a href="/">Home</a></li>
               <li><a href="/report">Sale Reports</a></li>
               <li><a href="#report-modal" class="modal-trigger">Report a bug</a></li>
             </ul>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <ul class="right hide-on-med-and-down">
+            {% if user.is_authenticated %}
+              <li>
+              <a class="dropdown-button" href="#!" data-activates="dropdown1">
+                Welcome, {{ user.username }}
+              <i class="material-icons right">arrow_drop_down</i>
+              </a>
+              </li>
+            {% else %}
+              <li><a href="/login/">Login</a></li>
+            {% endif %}
+            </ul>
+            <ul class="side-nav grey darken-3" id="mobile-nav">
               {% if user.is_authenticated %}
-                <li>
-                <a class="dropdown-button" href="#!" data-activates="dropdown1">
-                  Welcome, {{ user.username }}
-                <i class="material-icons right">arrow_drop_down</i>
-                </a>
-                </li>
+              <li class="grey-text text-lighten-3" id="mobile-nav-name">Welcome, {{ user.username }}</li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/report">Sale Reports</a></li>
+              <li><a href="/admin">Admin Login</a></li>
+              <li><a href="#report-modal" class="modal-trigger">Report a bug</a></li>
+              <li><a href="/logout">Logout</a></li>
               {% else %}
-                <li><a href="/login/">Login</a></li>
+              <li class="grey-text text-lighten-3" id="mobile-nav-name">Not logged in</li>
+              <li><a href="/login/">Login</a></li>
               {% endif %}
-              </ul>
+            </ul>
           </div>
         </div>
       </nav>
@@ -73,6 +86,8 @@
           in_duration: 300, // Transition in duration
           out_duration: 300, // Transition out duration
         });
+        $(".button-collapse").sideNav();
+        $('.tooltipped').tooltip({delay: 50});
       });
     </script>
 
