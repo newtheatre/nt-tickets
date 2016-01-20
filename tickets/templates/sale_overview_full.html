@@ -1,39 +1,35 @@
 <div>
   <div id="div-1">
     <p class="center-align light white-text flow-text">
-
+    
     {% if report.sold == 0 %}
-      No tickets have been sold yet
+      No tickets sold
     {% elif report.sold == 1 %}
-      There has been
       <span class="nnt-purple bold">{{ report.sold }}</span>
       ticket sold
     {% else %}
-      There have been
       <span class="nnt-purple bold">{{ report.sold }}</span>
       tickets sold
     {% endif %}
-    , leaving
-    <span class="bold">{{ report.how_many_sales_left }}</span>
-    tickets left to sell and
-    <span class="bold">{{ report.how_many_collected }}</span>
-    to collect.
-    </p>
-    <p class="center-align light white-text flow-text">
-    {% if report.how_many_reserved == 1 %}
-      There is
+    &nbsp;
+    &verbar;
+    &nbsp;
+    {% if report.how_many_reserved == 0 %}
+      No tickets reserved
+    {% elif report.how_many_reserved == 1 %}
       <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
       ticket reserved, 
     {% else %}
-      There are
       <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
-      tickets reserved, 
+      tickets reserved
     {% endif %}
-
-    leaving <span class="bold">{{ report.how_many_left }}</span> tickets left 
-    out of <span class="bold">{{ report.max }}</span>.
+    &nbsp;
+    &verbar;
+    &nbsp;
+    <span class="bold">{{ report.how_many_sales_left }}</span>
+    tickets free
     </p>
-    <div class="progress" id="report-bar">
+    <div class="progress hide-on-small-and-down" id="report-bar">
       {% if report.sale_percentage >= report.reserve_percentage %}
         <div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
         <div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
@@ -44,13 +40,13 @@
     </div>
   </div>
   <div id="div-2">
-    <span class="nnt-orange bold">£{{ report.total_sales }}</span>
+    <span class="nnt-orange bold">£{{ report.total_sales|stringformat:".2f" }}</span>
   </div>
   <div id="div-3">
-    <table class="bordered">
+    <table class="bordered-dark">
     <!-- Table header -->
       <thead>
-        <tr>
+        <tr class="grey-text text-lighten-4">
           <th data-field="name">Name</th>
           <th data-field="quantity">Quantity</th>
           <th data-field="add">Add</th>
@@ -61,32 +57,32 @@
         {% for tick in report.tickets %}
           <!-- Cancelled Tickets -->
           {% if tick.cancelled %}
-          <tr bgcolor="#faf3d1">
-            <th class="grey-text"><strike>{{ tick.person_name }}</strike></th>
+          <tr>
+            <th class="red-text text-lighten-3"><strike>{{ tick.person_name }}</strike></th>
             <th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
-            <th><button type="button" class="btn disabled nnt purple">Add</button></th>
+            <th><button type="button" class="btn disabled">Add</button></th>
           </tr>
           <!-- Collected Tickets -->
           {% elif tick.collected %}
-          <tr bgcolor="#c7e4f3">
-            <th class="grey-text"><strike>{{ tick.person_name }}</strike></th>
+          <tr>
+            <th class="blue-text text-lighten-3"><strike>{{ tick.person_name }}</strike></th>
             <th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
-            <th><button type="button" class="btn disabled nnt purple">Add</button></th>
+            <th><button type="button" class="btn disabled">Add</button></th>
           </tr>
           <!-- Everything else -->
           {% else %}
           <tr>
-            <th>{{ tick.person_name }}</th>
-            <th class="teal-text">{{ tick.quantity }}</th>
+            <th class="nnt-text text-orange">{{ tick.person_name }}</th>
+            <th class="teal-text text-accent-4">{{ tick.quantity }}</th>
             <th><form class="reserve-form" id="reserve_{{ forloop.counter }}" method="post" action=".">
-              {% csrf_token %}
-              <input type="hidden" value="{{ tick.unique_code }}" id="code_reserve_{{ forloop.counter }}" readonly="true">
-              <button 
-                type="submit" 
-                class="btn nnt purple waves-effect waves-dark"
-                >
-                Add
-              </button>
+            {% csrf_token %}
+            <input type="hidden" value="{{ tick.unique_code }}" id="code_reserve_{{ forloop.counter }}" readonly="true">
+            <button 
+              type="submit" 
+              class="btn nnt purple waves-effect waves-dark"
+              >
+              Add
+            </button>
             </form>
             </th>
           </tr>

@@ -31,7 +31,7 @@
     float: none;
     padding: 0 $sidenav-padding-right;
     line-height: $sidenav-item-height;
-    &:hover, &.active { background-color: #ddd; }
+    &:hover, &.active { background-color: $sidenav-bg-color; }
   }
   a {
     color: #444;
@@ -40,6 +40,7 @@
     height: $sidenav-item-height;
     line-height: $sidenav-item-height;
     padding: 0 $sidenav-padding-right;
+    &:hover, &.active { background-color: $sidenav-bg-color; }
   }
 }
 
@@ -91,7 +92,7 @@
 
 .side-nav .collapsible-body li.active,
 .side-nav.fixed .collapsible-body li.active {
-  background-color: $primary-color;
+  background-color: $sidenav-bg-color;
   a {
     color: $sidenav-bg-color;
   }

@@ -282,8 +282,18 @@ ul.staggered-list li {
 /*********************
   Media Query Classes
 **********************/
-.hide-on-small-only, .hide-on-small-and-down {
+.hide-on-xs-only, .hide-on-xs-and-down {
+  @media #{$xsmall-and-down} {
+    display: none !important;
+  }
+}
+.hide-on-small-and-down {
   @media #{$small-and-down} {
+    display: none !important;
+  }
+}
+.hide-on-small-and-up {
+  @media #{$small-and-up} {
     display: none !important;
   }
 }
@@ -297,12 +307,17 @@ ul.staggered-list li {
     display: none !important;
   }
 }
+.hide-on-small-only {
+  @media only screen and (min-width: $xsmall-screen) and (max-width: $small-screen) {
+    display: none !important;
+  }
+}
 .hide-on-med-only {
   @media only screen and (min-width: $small-screen) and (max-width: $medium-screen) {
     display: none !important;
   }
 }
-.hide-on-large-only {
+.hide-on-large-only, .hide-on-large-and-up {
   @media #{$large-and-up} {
     display: none !important;
   }
@@ -322,6 +337,11 @@ ul.staggered-list li {
     display: block !important;
   }
 }
+.show-on-xs {
+  @media #{$xsmall-and-down} {
+    display: none !important;
+  }
+}
 .show-on-medium-and-up {
   @media #{$medium-and-up} {
     display: block !important;
@@ -337,6 +357,12 @@ ul.staggered-list li {
 // Center text on mobile
 .center-on-small-only {
   @media #{$small-and-down} {
+    text-align: center;
+  }
+}
+
+.center-on-xs-only {
+  @media #{$xsmall-and-down} {
     text-align: center;
   }
 }

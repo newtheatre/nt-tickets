@@ -7,8 +7,8 @@ before_install:
 env:
   - AWS_CREDENTIAL_FILE=configuration/keys.py
 install:
-  - pip install -r requirements/common.txt
-  - pip install -r requirements/prod.txt 
+  - pip install -r requirements/common-requirements.txt
+  - pip install -r requirements/prod-requirements.txt 
   - pip install coveralls
 script:
   - coverage run --omit='/home/travis/virtualenv/*' manage.py test tickets.test_models
