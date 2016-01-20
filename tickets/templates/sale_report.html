@@ -32,7 +32,7 @@
 
 											<div class="row pad-medium">
 												<div class="col xs9 l8 no-pad">
-													<div class="col s12">
+													<div class="col xs12">
 														<span class="nnt-orange sale-text">
 														<span class="hide-on-small-and-down">Total Sales: </span>
 														<span class="hide-on-med-and-up">Profit: </span>
@@ -54,26 +54,26 @@
 														</span>
 														</span>
 													</div>
-												</div>
-												<div class="col xs3 l4 center-align hide-on-small-and-down">
-													<a href="download/{{ sh.id }}">
-													<button class="btn nnt purple waves-effect waves-dark">
-													<i class="material-icons left hide-on-med-and-down">file_download</i>
-													<i class="material-icons hide-on-large-only">file_download</i>
-													<span class="hide-on-med-and-down">
-													Download
-													</span></button>
-													</a>
+													</div>
+													<div class="col xs3 l4 center-align hide-on-small-and-down">
+														<a href="download/{{ sh.id }}">
+														<button class="btn nnt purple waves-effect waves-dark">
+														<i class="material-icons left hide-on-med-and-down">file_download</i>
+														<i class="material-icons hide-on-large-only">file_download</i>
+														<span class="hide-on-med-and-down">
+														Download
+														</span></button>
+														</a>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-									</div>
+								{% endif %}
+							{% endfor %}
 						{% endif %}
-					{% endfor %}
-				{% endif %}
-								</div>
-							</div>
+					</div>
+				</div>
 			</div>
 
 		<ul class="pagination center-align">
@@ -90,6 +90,6 @@
 			{% else %}
 				<li class="disabled"><i class="material-icons grey-text">chevron_right</i></li>
 			{% endif %}
-			</ul>
+		</ul>
 
 {% endblock %}
