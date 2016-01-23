@@ -370,5 +370,3 @@ class SaleTest(TestCase):
         sold = Sale.objects.sold_not_reserved(occurrence=occ)
 
         self.assertEqual(sold, 18)
-
-
