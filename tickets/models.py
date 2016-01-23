@@ -173,11 +173,11 @@ class OccurrenceManager(models.Manager):
         occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
         ret = []
         for oc in occs:
-            hour = oc.time.hour
-            close_time = hour - oc.hours_til_close
+            combined = datetime.datetime.combine(oc.date, oc.time)
+            close_time = combined - datetime.timedelta(hours=oc.hours_til_close)
             if oc.sold_out():
                 break
-            if oc.date == today and time.hour >= close_time:
+            if oc.date <= today and time >= close_time:
                 break
             else:
                 ret.append(( 
@@ -192,9 +192,9 @@ class OccurrenceManager(models.Manager):
         occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
         ret = []
         for oc in occs:
-            hour = oc.time.hour
-            close_time = hour + (2 * oc.hours_til_close)
-            if oc.date == today and time.hour >= close_time:
+            combined = datetime.datetime.combine(oc.date, oc.time)
+            close_time = combined + datetime.timedelta(2 * oc.hours_til_close)
+            if oc.date <= today and time >= close_time:
                 pass
                 break
             else:
