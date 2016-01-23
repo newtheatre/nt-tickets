@@ -1,7 +1,7 @@
 <div class="valign-wrapper" id="full-div">
   <div class="container center-align">
     <div class="row">
-      <div class="col s6 offset-s3" id="form-background">
+      <div class="col s10 offset-s1 m8 offset-m2 l6 offset-l3" id="form-background">
       <h4 class="light nnt-orange">Login</h4>
       {% if form.errors %}
         <p class="red-text">Username or password incorrect.
@@ -9,10 +9,6 @@
       {% endif %}
         <form class="col s12" action="." method="post" role="form" autocomplete="off">
         {% csrf_token %}
-          <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
-          <input style="display:none" type="text" name="fakeusernameremembered"/>
-          <input style="display:none" type="password" name="fakepasswordremembered"/>
-
           <div class="input-field col s12">
             <input name="{{ form.username.name }}" type="text" class="validate">
             <label for="{{ form.username.name }}">Username</label>
@@ -24,7 +20,7 @@
           <button type="submit" value="login" class="btn nnt purple waves-effect waves-dark pad-bottom">
             Login
           </button>
-          <div class="col s12">
+          <div class="input-field col s12">
             <input type="hidden" name="next" value="{{ next }}">
           </div>
         </form>

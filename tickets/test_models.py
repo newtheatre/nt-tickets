@@ -57,45 +57,39 @@ class BookTest(TestCase):
 
 class ShowTest(TestCase):
 
-    # fixtures = ['test/test_sales.json']
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.cat = Category.objects.create(name='Test Category', slug='test', sort=1)
-        cls.today = date.today()
-        cls.loc = 'Location 1'
-        cls.desc = 'A show somewhere'
-        cls.l_desc = 'A longer show somewhere'
-        cls.poster = File(open('test/test_poster.jpg'))
+    def setUp(self):
+        cat = Category.objects.create(name='Test Category', slug='test', sort=1)
+        today = date.today()
+        now = datetime.now()
+        loc = 'Location 1'
+        desc = 'A show somewhere'
+        l_desc = 'A longer show somewhere'
+        poster = File(open('test/test_poster.jpg'))
 
         # Create some good shows
-
-        cls.show = Show.objects.create(name='S1', category=cls.cat, location=cls.loc, description='show current', long_description=cls.l_desc, poster=cls.poster, start_date=cls.today, end_date=cls.today + timedelta(days=6))
+        show = Show.objects.create(name='S1', category=cat, location=loc, description='show current', long_description=l_desc, poster=poster, start_date=today, end_date=today + timedelta(days=6))
         # cls.show{2} = Show.objects.create(name='S2', category=cls.cat, location=cls.loc, description='show past', long_description=cls.l_desc, start_date=cls.today - timedelta(days=6), end_date=cls.today)
 
         # Create an occurrence 
-        cls.occ = Occurrence.objects.create(show=cls.show, date=cls.today, time=datetime.now() + timedelta(hours=4), maximum_sell=2, hours_til_close=2)
+        occ = Occurrence.objects.create(show=show, date=today, time=datetime.now()+timedelta(hours=3), maximum_sell=2, hours_til_close=2)
 
-        cls.ticket = Ticket.objects.create(
-            occurrence= cls.occ,
-            stamp=datetime.now(),
+        ticket = Ticket.objects.create(
+            occurrence=occ,
             person_name='testman',
             email_address='test@test.com',
             quantity=1,
-            cancelled=False,
-            collected=False
             )
 
-        cls.sale = Sale.objects.create(occurrence=cls.occ, ticket='', price=1, number=2)
+        sale = Sale.objects.create(occurrence=occ, ticket='None', price=1, number=2)
 
     def test_is_current_false(self):
-        show = self.show
+        show = Show.objects.get(name='S1')
         show.end_date = date.today() + timedelta(days=-5)
         self.assertEqual(show.is_current(), False)
 
     def test_sold_out_true(self):
-        show = self.show
-        occ = self.occ
+        show = Show.objects.get(name='S1')
+        occ = Occurrence.objects.get(show=show)
         Ticket.objects.create(
             occurrence=Occurrence.objects.get(pk=1),
             stamp=datetime.now(),
@@ -106,30 +100,31 @@ class ShowTest(TestCase):
             unique_code=rand_16(),
             )
 
-        self.assertEqual(show.show_sold_out(), True)
-        self.assertEqual(occ.sold_out(), True)
+        self.assertTrue(show.show_sold_out())
+        self.assertTrue(occ.sold_out())
 
     def test_sold_out_false(self):
-        show = Show.objects.get(pk=1)
-        occ = Occurrence.objects.get(pk=1)
-        self.assertEqual(occ.sold_out(), False)
-        self.assertEqual(show.show_sold_out(), False)
+        show = Show.objects.get(name='S1')
+        occ = Occurrence.objects.get(show=show)
+        self.assertFalse(occ.sold_out())
+        self.assertFalse(show.show_sold_out())
 
     def test_has_occurrences_true(self):
-        show = Show.objects.get(pk=1)
-        self.assertEqual(show.has_occurrences(), True)
+        show = Show.objects.get(name='S1')
+        self.assertTrue(show.has_occurrences())
 
     def test_show_name(self):
-        show = Show.objects.get(pk=1)
+        show = Show.objects.get(name='S1')
         self.assertEqual(show.__str__(), show.name)
 
     def test_markdown(self):
-        show = Show.objects.get(pk=1)
+        show = Show.objects.get(name='S1')
         ld_md = '<p>A longer show somewhere</p>\n'
         self.assertEqual(show.long_markdown(), ld_md)
 
     def test_datetime_formatted(self):
-        occ = Occurrence.objects.get(pk=1)
+        show = Show.objects.get(name='S1')
+        occ = Occurrence.objects.get(show=show)
         day_format = occ.date.strftime('%A')
         time_format = occ.time.strftime('%-I:%M %p').lower()
         datetime_format = occ.date.strftime('%A %d %B ') + \
@@ -140,14 +135,17 @@ class ShowTest(TestCase):
         self.assertEqual(occ.datetime_formatted(), datetime_format)
 
     def test_occurrence_str(self):
-        occ = Occurrence.objects.get(pk=1)
+        show = Show.objects.get(name='S1')
+        occ = Occurrence.objects.get(show=show)
         occ_str = occ.show.name + \
             " on " + str(occ.day_formatted()) + \
             " at " + str(occ.time_formatted())
         self.assertEqual(occ.__str__(), occ_str)
 
     def test_ticket_str(self):
-        tick = Ticket.objects.get(pk=1)
+        show = Show.objects.get(name='S1')
+        occ = Occurrence.objects.get(show=show)
+        tick = Ticket.objects.get(occurrence=occ)
         tick_str = tick.occurrence.show.name + \
             " on " + str(tick.occurrence.date) + \
             " at " + str(tick.occurrence.time) + \
@@ -156,13 +154,14 @@ class ShowTest(TestCase):
         self.assertEqual(tick.__str__(), tick_str)
 
     def test_get_available(self):
-        show = Show.objects.get(pk=1)
-        occ = Occurrence.objects.get(pk=1)
-        datetime_format = occ.date.strftime('%A %d %B ') + \
+        show = Show.objects.get(name='S1')
+        occ = Occurrence.objects.get(show=show)
+        datetime_format = datetime_format = occ.date.strftime('%A %d %B ') + \
             occ.time.strftime('%-I%p').lower()
 
         r1 = Occurrence.objects.get_available(show)
 
+        self.assertEqual(occ.sold_out(), False)    # Sanity Check
         self.assertEqual(r1, [(1, datetime_format)])
 
     def test_get_available_sold_out(self):
