@@ -3,6 +3,7 @@
 import os
 import configuration.environment as env
 import configuration.keys as keys
+import raven
 
 def gettext(s):
     return s
@@ -139,6 +140,7 @@ INSTALLED_APPS = (
     'captcha',
     'storages',
     'stdimage',
+    'raven.contrib.django.raven_compat',
 
     'tickets',
     'pricing',
@@ -206,10 +208,17 @@ LOGGING = {
     }
 }
 
-
 # What enviroment are we in?
 if env.RUN_ENV == 'production':
     from configuration.production import *
+
+    # Only run Raven in production environment
+    RAVEN_CONFIG = {
+        'dsn': keys.DSN,
+        # If you are using git, you can also automatically configure the
+        # release based on the git info.
+        'release': raven.fetch_git_sha(os.path.dirname(__file__)),
+    }
 elif env.RUN_ENV == 'staging':
     from configuration.staging import *
 elif env.RUN_ENV == 'development':

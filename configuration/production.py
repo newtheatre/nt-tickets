@@ -31,4 +31,4 @@ DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 ACTUALLY_SEND_MAIL = False
 DO_CHIMP = False
 
-MAX_DISCLOSURE = 80
+MAX_DISCLOSURE = 10

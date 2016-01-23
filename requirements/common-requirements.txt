@@ -25,3 +25,4 @@ mailchimp == 2.0.9
 wsgiref == 0.1.2
 coverage == 4.0.3
 requests-transition==1.0.4
+raven==5.10.1
