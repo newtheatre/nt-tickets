@@ -281,7 +281,7 @@ class SaleTest(TestCase):
         # cls.show{2} = Show.objects.create(name='S2', category=cls.cat, location=cls.loc, description='show past', long_description=cls.l_desc, start_date=cls.today - timedelta(days=6), end_date=cls.today)
 
         # Create an occurrence 
-        cls.occ = Occurrence.objects.create(show=cls.show, date=today, time=datetime.now()+timedelta(hours=3), maximum_sell=2, hours_til_close=2)
+        cls.occ = Occurrence.objects.create(show=cls.show, date=today, time=datetime.now()+timedelta(hours=3), maximum_sell=80, hours_til_close=2)
 
         cls.ticket = Ticket.objects.create(
             occurrence=cls.occ,
@@ -290,17 +290,27 @@ class SaleTest(TestCase):
             quantity=1,
             )
 
-        cls.sale = Sale.objects.create(occurrence=cls.occ, ticket='None', price=1, number=2)
+        cls.sale = Sale.objects.create(occurrence=cls.occ, ticket='None', number=18, price=53,
+            number_concession=2,
+            number_member=2,
+            number_public=2,
+            number_season=2,
+            number_season_sale=2,
+            number_fellow=2,
+            number_fringe=2,
+            number_matinee_freshers=2,
+            number_matinee_freshers_nnt=2,
+            )
 
     def test_show_sales(self):
         show = self.show
         profit = show.show_sales()
-        self.assertEqual(profit, 1)
+        self.assertEqual(profit, 53)
 
     def test_total_tickets_sold_show(self):
         show = self.show
         tickets = show.total_tickets_sold_show()
-        self.assertEqual(tickets, 2)
+        self.assertEqual(tickets, 18)
 
     def test_total_tickets_reserved(self):
         show = self.show
@@ -310,5 +320,55 @@ class SaleTest(TestCase):
     def test_total_possible(self):
         show = self.show
         total = show.total_possible()
-        self.assertEqual(total, 2)
+        self.assertEqual(total, 80)
+
+    def test_tallys(self):
+        occ = self.occ
+        concession = occ.concession_tally()
+        member = occ.member_tally()
+        public = occ.public_tally()
+        season = occ.season_tally()
+        season_sale = occ.season_sale_tally()
+        fellow = occ.fellow_tally()
+        fringe = occ.fringe_tally()
+        mat_f = occ.matinee_freshers_tally()
+        mat_f_nnt = occ.matinee_freshers_nnt_tally()
+
+        tot = concession + member + public + season + season_sale + fellow + fringe + mat_f + mat_f_nnt
+
+        self.assertEqual(tot, 18)
+    
+    def test_collected(self):
+        occ = self.occ
+        Ticket.objects.create(
+            occurrence=occ,
+            person_name='testman2',
+            email_address='test@test.com',
+            quantity=1,
+            collected=1
+            )
+
+        coll = Ticket.objects.get_collected(occurrence=occ)
+
+        self.assertEqual(coll, 1)
+
+    def test_sold_not_reserved(self):
+        occ = self.occ
+
+        Sale.objects.create(occurrence=occ, ticket='testman', number=18, price=53,
+            number_concession=2,
+            number_member=2,
+            number_public=2,
+            number_season=2,
+            number_season_sale=2,
+            number_fellow=2,
+            number_fringe=2,
+            number_matinee_freshers=2,
+            number_matinee_freshers_nnt=2,
+            )
+
+        sold = Sale.objects.sold_not_reserved(occurrence=occ)
+
+        self.assertEqual(sold, 18)
+
 
