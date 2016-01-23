@@ -5,6 +5,7 @@ from markdown2 import Markdown
 # from django_any import any_model
 
 from datetime import date, timedelta, datetime
+from django.utils import timezone
 
 
 
@@ -72,7 +73,8 @@ class ShowTest(TestCase):
         # cls.show{2} = Show.objects.create(name='S2', category=cls.cat, location=cls.loc, description='show past', long_description=cls.l_desc, start_date=cls.today - timedelta(days=6), end_date=cls.today)
 
         # Create an occurrence 
-        occ = Occurrence.objects.create(show=show, date=today, time=datetime.now()+timedelta(hours=3), maximum_sell=2, hours_til_close=2)
+        occ_day = datetime.now()+timedelta(hours=4)
+        occ = Occurrence.objects.create(show=show, date=occ_day.date(), time=occ_day.time(), maximum_sell=2, hours_til_close=2)
 
         ticket = Ticket.objects.create(
             occurrence=occ,
@@ -157,7 +159,7 @@ class ShowTest(TestCase):
     def test_get_available(self):
         show = Show.objects.get(name='S1')
         occ = Occurrence.objects.get(show=show)
-        datetime_format = datetime_format = occ.date.strftime('%A %d %B ') + \
+        datetime_format = occ.date.strftime('%A %d %B ') + \
             occ.time.strftime('%-I%p').lower()
 
         r1 = Occurrence.objects.get_available(show)
