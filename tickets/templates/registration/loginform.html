@@ -2,12 +2,12 @@
   <div class="container center-align">
     <div class="row">
       <div class="col s10 offset-s1 m8 offset-m2 l6 offset-l3" id="form-background">
-      <h4 class="light nnt-orange">Login</h4>
-      {% if form.errors %}
-        <p class="red-text">Username or password incorrect.
-        Please try again</p>
-      {% endif %}
-        <form class="col s12" action="." method="post" role="form" autocomplete="off">
+        <h4 class="light nnt-orange">Login</h4>
+        {% if form.errors %}
+          <p class="red-text">Username or password incorrect.
+          Please try again</p>
+        {% endif %}
+        <form class="col s12" action="." method="post" role="form">
         {% csrf_token %}
           <div class="row">
             <div class="input-field col s12">
