@@ -11,6 +11,6 @@ install:
   - pip install -r requirements/prod-requirements.txt 
   - pip install coveralls
 script:
-  - coverage run --omit='/home/travis/virtualenv/*' manage.py test tickets.test_models
+  - coverage run --omit='/home/travis/virtualenv/*' manage.py test tickets.test_models pricing
 after_success:
   coveralls

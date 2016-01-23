@@ -193,9 +193,8 @@ class OccurrenceManager(models.Manager):
         ret = []
         for oc in occs:
             combined = datetime.datetime.combine(oc.date, oc.time)
-            close_time = combined + datetime.timedelta(2 * oc.hours_til_close)
+            close_time = combined + datetime.timedelta(hours=3)
             if oc.date <= today and time >= close_time:
-                pass
                 break
             else:
                 ret.append(( 
