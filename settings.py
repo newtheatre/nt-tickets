@@ -97,7 +97,6 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'django.core.context_processors.request',
-                'tickets.context_processors.customise_processor',
             ],
             'loaders': [
                 # insert your TEMPLATE_LOADERS here
