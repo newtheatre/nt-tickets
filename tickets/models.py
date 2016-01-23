@@ -321,14 +321,6 @@ class Occurrence(models.Model):
                 fellow += s.number_fellow
         return fellow
 
-    def external_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        external = 0
-        for s in sale:
-            if s.number_external > 0:
-                external += s.number_external
-        return external
-
     def fringe_tally(self):
         sale = Sale.objects.filter(occurrence=self)
         fringe = 0
