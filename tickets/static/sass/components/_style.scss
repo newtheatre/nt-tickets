@@ -143,22 +143,23 @@
   padding: 10px !important;
 }
 
-@media #{$xsmall-and-down} {
-  .top-card, .bottom-card {
+@media #{$small-and-down} {
+  .top-card {
     height: 120px !important;
   }
-  .xsmall-text {
-    margin-top: 0px !important;
-  }
-}
-
-@media #{$small-and-down} {
   .bottom-card {
-    height: 100px !important;
+    height: 130px !important;
   }
   .bug-card {
     height: 100px !important;
   }
+  .small-text {
+    margin-top: 0px !important;
+  }
+  .no-pad-on-small {
+  margin: 0px 0px !important;
+  padding: 0px 0px !important;
+}
 }
 
 iframe {
