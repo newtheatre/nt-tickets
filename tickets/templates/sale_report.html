@@ -6,7 +6,7 @@
 {% block content %}
 	<div class="container">
 		<div class="row">
-			<div class="col xs12">
+			<div class="col s12">
 				{% if report.number_shows == 0 %}
 					<p>There are no shows at the moment</p>
 				{% else %}
@@ -14,8 +14,8 @@
 						{% if sh.is_current %}
 							<div class="card small grey darken-3">
 								<div class="row">
-									<div class="col xs4" id="poster-container">
-										<div class="card-image show-poster">
+									<div class="col s4" id="poster-container">
+										<div class="card-image show-poster hide-on-small-and-down">
 											<a href="/report/{{ sh.id }}" rel="nofollow">
 											{% if sh.poster %}
 												<img class="responsive-img" src="{{ sh.poster.poster_page.url }}" id="report-image">
@@ -25,43 +25,58 @@
 											</a>
 										</div>
 									</div>
-										<div class="card-content">
-											<h1 class="light white-text flow-text no-pad">
+										<div class="card-content center-on-small-only">
+											<h1 class="card-title light white-text flow-text no-pad truncate">
 											{{ sh.name }}
 											</h1>
 
-											<div class="row pad-medium">
-												<div class="col xs9 l8 no-pad">
-													<div class="col xs12">
+											<div class="row pad-medium center-on-small-only no-pad-on-small">
+												<div class="col s12 m9 l8 no-pad">
+													<!-- Profit -->
+													<div class="col s12">
 														<span class="nnt-orange sale-text">
 														<span class="hide-on-small-and-down">Total Sales: </span>
 														<span class="hide-on-med-and-up">Profit: </span>
 														<span class="bold">£{{ sh.show_sales }}</span>
 														</span>
 													</div>
-													<div class="col xs12">
+													<!-- Tickets sold -->
+													<div class="col s12">
 														<span class="nnt-purple sale-text">
 														<span class="hide-on-small-and-down">Total Tickets Sold: </span>
 														<span class="hide-on-med-and-up">Sold: </span>
 														<span class="bold">{{ sh.total_tickets_sold_show }}</span>
 														</span>
 													</div>
-													<div class="col xs12 hide-on-small-and-down">
+													<!-- Tickets reserved -->
+													<div class="col s12">
 														<span class="nnt-orange sale-text">
-														Total Tickets Reserved: <span class="bold">{{ sh.total_tickets_reserved }}</span>
+														<span class="hide-on-small-and-down">Total Tickets Reserved: </span>
+														<span class="hide-on-med-and-up">Reserved: </span>
+														<span class="bold">{{ sh.total_tickets_reserved }}</span>
 														<span class="hide-on-med-and-down">
 														(out of a possible of: <span class="bold">{{ sh.total_possible }})</span>
 														</span>
 														</span>
 													</div>
 													</div>
-													<div class="col xs3 l4 center-align hide-on-small-and-down">
+													<div class="col s6 m3 l4 center-align pad-small">
 														<a href="download/{{ sh.id }}">
 														<button class="btn nnt purple waves-effect waves-dark">
 														<i class="material-icons left hide-on-med-and-down">file_download</i>
 														<i class="material-icons hide-on-large-only">file_download</i>
 														<span class="hide-on-med-and-down">
 														Download
+														</span></button>
+														</a>
+													</div>
+													<div class="col s6 m3 l4 center-align pad-small hide-on-med-and-up">
+														<a href="{{ sh.id }}">
+														<button class="btn nnt purple waves-effect waves-dark">
+														<i class="material-icons left hide-on-med-and-down">visibility</i>
+														<i class="material-icons hide-on-large-only">visibility</i>
+														<span class="hide-on-med-and-down">
+														View Report
 														</span></button>
 														</a>
 													</div>

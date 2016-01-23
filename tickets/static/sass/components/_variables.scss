@@ -91,22 +91,18 @@ $switch-unchecked-lever-bg: #818181 !default;
 
 /*** Global ***/
 // Media Query Ranges
-$xsmall-screen-up: 375px !default;
+
 $small-screen-up: 601px !default;
 $medium-screen-up: 993px !default;
 $large-screen-up: 1201px !default;
-$xsmall-screen: 374px !default;
 $small-screen: 600px !default;
 $medium-screen: 992px !default;
 $large-screen: 1200px !default;
 
-$small-and-up: "only screen and (min-width : #{$xsmall-screen-up})" !default;
 $medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
 $large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
-$xsmall-and-down: "only screen and (max-width : #{$xsmall-screen})" !default;
 $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
-$small-only: "only screen and (min-width : #{$xsmall-screen-up}) and (max-width : #{$small-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
 
 // Grid Variables
