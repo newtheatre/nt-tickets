@@ -13,8 +13,7 @@ import requests0 as requests
 import json
 import csv
 
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import login
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
@@ -39,7 +38,9 @@ def login(request, **kwargs):
         next = request.GET.get('next', '/')
         return HttpResponseRedirect(request.GET.get('next', '/'))
     else:
-        return login(request, authentication_form=forms.login_form)
+        from django.contrib.auth.views import login
+
+        return login(request)
 
 
 def logout_view(request):
