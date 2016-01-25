@@ -1,14 +1,54 @@
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 import time
+import factory
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ActionChains
 from django.core.files import File
-from tickets.models import *
+from . import models
 
 import datetime
 import os
+
+def UserFactory():
+  User.objects.create_user(
+    username='Jim', 
+    email='jim@rash.com', 
+    password = 'correcthorsebatterystaple',
+
+    is_superuser = True
+  )
+
+
+class ShowFactory(factory.django.DjangoModelFactory):
+  class Meta:
+    model = models.Show
+
+  category = models.Category.objects.create(name='Test Category', slug='test', sort=1)
+  start_date = datetime.date.today() + datetime.timedelta(days=2)
+  end_date = datetime.date.today() + datetime.timedelta(days=5)
+
+  name='Test Show'
+  location='Somewhere'
+  description='Test show present'
+  long_description='Some more info'
+  # poster=File(open('test/test_poster.jpg'))
+
+
+
+class OccurrenceFactory(factory.django.DjangoModelFactory):
+  class Meta:
+    model = models.Occurrence
+
+  show = factory.SubFactory(ShowFactory)
+  date = datetime.date.today() + datetime.timedelta(days=2)
+  time=datetime.datetime.now()
+  maximum_sell=2
+  hours_til_close=2
+
 
 
 class BookTest(LiveServerTestCase):
@@ -16,38 +56,16 @@ class BookTest(LiveServerTestCase):
   def setUp(self):
     self.browser = webdriver.Chrome('bin/chromedriver')
 
-    cat = Category.objects.create(name='Test Category', slug='test', sort=1)
-    start_date = datetime.date.today() + datetime.timedelta(days=2)
-    end_date = datetime.date.today() + datetime.timedelta(days=5)
-
-    # Create shows
-    Show.objects.create(
-      name='Test Show',
-      location='Somewhere',
-      description='Test show present',
-      long_description='Some more info',
-      poster=File(open('test/test_poster.jpg')),
-      start_date=start_date,
-      end_date=end_date,
-      category=cat
-      )
-
-    # Create an occurrence
-    Occurrence.objects.create(
-      show=Show.objects.get(name='Test Show'),
-      date=start_date,
-      time=datetime.datetime.now(),
-      maximum_sell=2,
-      hours_til_close=2,
-      unique_code=rand_16(),
-      )
+    OccurrenceFactory.create()
 
   def tearDown(self):
     self.browser.quit()
 
   def test_book_show_quick(self):
     browser = self.browser
-    show_id = Show.objects.get(name='Test Show').id
+    
+    show_id = models.Show.objects.get(name='Test Show').id
+
     browser.get(self.live_server_url + '/book/' + str(show_id))
 
     # Check the title is correct
@@ -60,7 +78,7 @@ class BookTest(LiveServerTestCase):
       )
 
     # Input correct details
-    occurrence = occurrence = Select(browser.find_element_by_id('id_occurrence'))
+    occurrence = Select(browser.find_element_by_id('id_occurrence'))
     occurrence.select_by_value(str(show_id))
     quantity = Select(browser.find_element_by_id('id_quantity'))
     quantity.select_by_value('1')
@@ -132,7 +150,7 @@ class BookTest(LiveServerTestCase):
 
   def test_book_show_no_date(self):
     browser = self.browser
-    show_id = Show.objects.get(name='Test Show').id
+    show_id = models.Show.objects.get(name='Test Show').id
     browser.get(self.live_server_url + '/book/' + str(show_id))
 
     # Input correct details but no date or seats
@@ -156,21 +174,7 @@ class ListTest(LiveServerTestCase):
   def setUp(self):
     self.browser = webdriver.Chrome('bin/chromedriver')
 
-    cat = Category.objects.create(name='Test Category', slug='test', sort=1)
-    start_date = datetime.date.today() + datetime.timedelta(days=2)
-    end_date = datetime.date.today() + datetime.timedelta(days=5)
-
-    # Create a show
-    Show.objects.create(
-      name='Test Show',
-      location='Somewhere',
-      description='Test show present',
-      long_description='Some more info',
-      poster=File(open('test/test_poster.jpg')),
-      start_date=start_date,
-      end_date=end_date,
-      category=cat
-      )
+    OccurrenceFactory.create()
 
   def tearDown(self):
     self.browser.quit()
@@ -181,24 +185,20 @@ class ListTest(LiveServerTestCase):
     browser.get(self.live_server_url + '/list')
 
     # Check that we have a title
-    title_text = browser.find_element_by_xpath('//li[@class="poster"][1]/h3').text
+    browser.implicitly_wait(3)
+    title_text = browser.find_element_by_id('show-title').text
     self.assertEqual(title_text, 'Test Show')
 
 
-class AuthTest(LiveServerTestCase):
+class AuthTest(StaticLiveServerTestCase):
 
   def setUp(self):
     self.browser = webdriver.Chrome('bin/chromedriver')
-    os.environ['RECAPTCHA_TESTING'] = 'True'
-    User.objects.create_user(
-      username='Jim', 
-      email='jim@rash.com', 
-      password='correcthorsebatterystaple'
-      )
+    self.browser.set_window_size(1200, 1000)
+    UserFactory()
 
   def tearDown(self):
     self.browser.quit()
-    os.environ['RECAPTCHA_TESTING'] = 'False'
 
   def test_login_correct(self):
     browser = self.browser
@@ -207,18 +207,17 @@ class AuthTest(LiveServerTestCase):
     # Test that we've actually got a login page
     self.assertIn('login', browser.current_url)
 
-    username = browser.find_element_by_xpath('//form/div[1]/input')
+    username = browser.find_element_by_id('username')
     username.send_keys('Jim')
-    password = browser.find_element_by_xpath('//form/div[2]/input')
+    password = browser.find_element_by_id('password')
     # Send the wrong password
     password.send_keys('correcthorsebatterystapleerror')
 
-    self.browser.execute_script(
-      "return jQuery('#g-recaptcha-response').val('PASSED')")
-
     # Submit the form
-    submit = browser.find_element_by_xpath('//button[@type="submit"]')
+
+    submit = browser.find_element_by_id('submit')
     submit.click()
+
 
     # Incase it takes a little bit to load
     browser.implicitly_wait(3)
@@ -229,17 +228,14 @@ class AuthTest(LiveServerTestCase):
     # Test that we're still on the login page
     self.assertIn('login', browser.current_url)
 
-    username = browser.find_element_by_xpath('//form/div[1]/input')
+    username = browser.find_element_by_id('username')
     username.send_keys('Jim')
-    password = browser.find_element_by_xpath('//form/div[2]/input')
+    password = browser.find_element_by_id('password')
     # Send the correct password
     password.send_keys('correcthorsebatterystaple')
 
-    self.browser.execute_script(
-      "return jQuery('#g-recaptcha-response').val('PASSED')")
-
     # Submit the form
-    submit = browser.find_element_by_xpath('//button[@type="submit"]')
+    submit = browser.find_element_by_id('submit')
     submit.click()
 
     nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
@@ -261,10 +257,48 @@ class AuthTest(LiveServerTestCase):
     self.assertIn('Jim', nav_text)
 
     # test that we can logout as well
-    browser.get(self.live_server_url + '/')
-    browser.find_element_by_xpath('//ul[@id="dropdown1"]/li[3]/a').click()
+    browser.get(self.live_server_url + '/login/')
+    drop = browser.find_element_by_xpath('//a[@class="dropdown-button"]')
+    logout = browser.find_element_by_xpath('//ul[@id="dropdown1"]/li[3]/a')
+    action_chains = ActionChains(browser)
+    action_chains.move_to_element(drop)
+    action_chains.click(drop)
+    action_chains.move_to_element(logout)
+    action_chains.click(logout)
+    action_chains.perform()
 
+    browser.implicitly_wait(5)
     logout = browser.find_element_by_xpath('//h4[@class="light nnt-orange medium-text"]').text
     self.assertEqual(logout, 'Logged Out')
 
 
+class IndexTest(StaticLiveServerTestCase):
+
+  def setUp(self):
+    self.browser = webdriver.Chrome('bin/chromedriver')
+    # Force desktop sizing
+    self.browser.set_window_size(1200, 1000)
+
+    UserFactory()
+    OccurrenceFactory.create()
+
+  def tearDown(self):
+    self.browser.quit()
+
+  def test_index(self):
+    browser = self.browser
+    browser.get(self.live_server_url + '/')
+
+    # Login
+    username = browser.find_element_by_id('username')
+    username.send_keys('Jim')
+    password = browser.find_element_by_id('password')
+    # Send the wrong password
+    password.send_keys('correcthorsebatterystaple')
+
+    # Submit the form
+    submit = browser.find_element_by_id('submit')
+    submit.click()
+
+    title = browser.find_element_by_id('title').text
+    self.assertEqual(title, 'Test Show')
