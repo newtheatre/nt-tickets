@@ -3,6 +3,7 @@
 {% load staticfiles %}
 {% block head %}
 	<title>{% block title %}{{ show.name }} &middot; {% endblock %}</title>
+	<script type="text/javascript" src="{% static 'js/mousetrap.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -479,7 +480,7 @@
 	<!-- Dynamic addition of sales -->
 	<script>
 	$(document).ready(function(){
-		$('input').keyup(function(){
+		$(document).keyup(function(){
 			var concession_price = document.getElementById("concession_price").value;
 			var member_price = document.getElementById("member_price").value;
 			var public_price = document.getElementById("public_price").value;
@@ -514,6 +515,106 @@
 			document.getElementById("out2").innerHTML = xf;
 		});
 	});
+	</script>
+
+	<!-- Member shortcut -->
+	<script>
+		var num_member = parseFloat(document.getElementById("member").value);
+		Mousetrap.bind('m', function() {
+			num_member = num_member + 1;
+			document.getElementById("member").value = num_member;
+		})
+
+		Mousetrap.bind('shift+m', function() {
+			if (num_member >= 1) {
+				num_member = num_member - 1;
+				document.getElementById("member").value = num_member;
+			}
+		})
+	</script>
+
+	<!-- Concession Shortcut -->
+	<script>
+		var num_concession = parseFloat(document.getElementById("concession").value);
+		Mousetrap.bind('c', function() {
+			num_concession = num_concession + 1;
+
+			document.getElementById("concession").value = num_concession;
+		})
+		Mousetrap.bind('shift+c', function() {
+			if (num_concession >= 1) {
+				num_concession = num_concession - 1;
+				document.getElementById("concession").value = num_concession;
+			}
+		})
+	</script>
+
+	<!-- Public Shortcut -->
+	<script>
+		var num_public = parseFloat(document.getElementById("public").value);
+		Mousetrap.bind('p', function() {
+			num_public = num_public + 1;
+
+			document.getElementById("public").value = num_public;
+		})
+
+		Mousetrap.bind('shift+p', function() {
+			if (num_public >= 1) {
+				num_public = num_public - 1;
+				document.getElementById("public").value = num_public;
+			}
+		})
+	</script>
+
+	<!-- Season Pass Shortcut -->
+	<script>
+		var num_season = parseFloat(document.getElementById("season").value);
+		Mousetrap.bind('s', function() {
+			num_season = num_season + 1;
+
+			document.getElementById("season").value = num_season;
+		})
+
+		Mousetrap.bind('shift+s', function() {
+			if (num_season >= 1) {
+				num_season = num_season - 1;
+				document.getElementById("season").value = num_season;
+			}
+		})
+	</script>
+
+	<!-- Season Pass Ticket Sales Shortcut -->
+	<script>
+		var num_season_sale = parseFloat(document.getElementById("season_sales").value);
+		Mousetrap.bind('t', function() {
+			num_season_sale = num_season_sale + 1;
+
+			document.getElementById("season_sales").value = num_season_sale;
+		})
+
+		Mousetrap.bind('shift+t', function() {
+			if (num_season_sale >= 1) {
+				num_season_sale = num_season_sale - 1;
+				document.getElementById("season_sales").value = num_season_sale;
+			}
+		})
+	</script>
+
+	<!-- Fellpw Shortcut -->
+	<script>
+		var num_fellow = parseFloat(document.getElementById("fellow").value);
+		Mousetrap.bind('f', function() {
+			num_fellow = num_fellow + 1;
+
+			document.getElementById("fellow").value = num_fellow;
+		})
+
+		Mousetrap.bind('shift+f', function() {
+			if (num_fellow >= 1) {
+				num_fellow = num_fellow - 1;
+				document.getElementById("fellow").value = num_fellow;
+			}
+		})
 	</script>
 
 	<!-- Submit post on form submit -->
