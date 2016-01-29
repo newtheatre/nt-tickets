@@ -10,6 +10,12 @@ install:
   - pip install -r requirements/common-requirements.txt
   - pip install -r requirements/prod-requirements.txt 
   - pip install coveralls
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+  - rackup  # start a Web server
+  - sleep 3 # give Web server some time to bind to sockets, etc
 script:
   - coverage run --omit='/home/travis/virtualenv/*' manage.py test tickets.test_models pricing
 after_success:
