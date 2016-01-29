@@ -7,8 +7,15 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from django.core.files import File
-from . import models
+from tickets import models
+from pricing import models
+
+from django.test.utils import override_settings
+from django.conf import settings
 
 import datetime
 import os
@@ -22,12 +29,19 @@ def UserFactory():
     is_superuser = True
   )
 
+class CategoryFactory(factory.django.DjangoModelFactory):
+  class Meta:
+    model = models.Category
+
+  name = 'In House'
+  slug = 'in_house'
+  sort = 1
 
 class ShowFactory(factory.django.DjangoModelFactory):
   class Meta:
     model = models.Show
 
-  category = models.Category.objects.create(name='Test Category', slug='test', sort=1)
+  category = factory.SubFactory(CategoryFactory)
   start_date = datetime.date.today() + datetime.timedelta(days=2)
   end_date = datetime.date.today() + datetime.timedelta(days=5)
 
@@ -261,10 +275,8 @@ class AuthTest(StaticLiveServerTestCase):
     drop = browser.find_element_by_xpath('//a[@class="dropdown-button"]')
     logout = browser.find_element_by_xpath('//ul[@id="dropdown1"]/li[3]/a')
     action_chains = ActionChains(browser)
-    action_chains.move_to_element(drop)
-    action_chains.click(drop)
-    action_chains.move_to_element(logout)
-    action_chains.click(logout)
+    action_chains.click(on_element=drop)
+    action_chains.click(on_element=logout)
     action_chains.perform()
 
     browser.implicitly_wait(5)
@@ -302,3 +314,85 @@ class IndexTest(StaticLiveServerTestCase):
 
     title = browser.find_element_by_id('title').text
     self.assertEqual(title, 'Test Show')
+
+    browser.get(self.live_server_url + '/?page=10')
+
+    page = browser.find_element_by_id('page').text
+    self.assertIn('1', page)
+
+
+class ReportTest(StaticLiveServerTestCase):
+  fixtures = ['initial_pricing.json']
+
+  def setUp(self):
+    self.browser = webdriver.Chrome('bin/chromedriver')
+    # Force desktop sizing
+    self.browser.set_window_size(1200, 1000)
+
+    self.browser.implicitly_wait(10)
+
+    UserFactory()
+    OccurrenceFactory.create(maximum_sell=80)
+
+  def tearDown(self):
+    self.browser.quit()
+
+  @override_settings(DEBUG=True)
+  def test_report(self):
+    show_id = models.Show.objects.get(name='Test Show').id
+
+    self.browser.get(self.live_server_url + '/')
+
+    # Login
+    username = self.browser.find_element_by_id('username')
+    username.send_keys('Jim')
+    password = self.browser.find_element_by_id('password')
+    # Send the wrong password
+    password.send_keys('correcthorsebatterystaple')
+
+    # Submit the form
+    submit = self.browser.find_element_by_id('submit')
+    submit.click()
+
+    # Navigate to the sale page
+    img = self.browser.find_element_by_xpath('//div[@class="card small grey darken-3"][1]//img[@id="report-image"]')
+    img.click()
+
+    # Get the choose showing modal
+    showing = self.browser.find_element_by_xpath('//div[@class="col s6 center-align"][1]/button')
+    showing.click()
+
+    wait = WebDriverWait(self.browser, 10)
+    element = wait.until(EC.element_to_be_clickable((By.ID,'picker-modal')))
+
+    modal = self.browser.find_element_by_id('picker-modal')
+    self.assertTrue(modal.is_displayed())
+
+    occ = self.browser.find_element_by_id('showing')
+    occ.click()
+
+    free_text = self.browser.find_element_by_xpath('//div[@id="sale-update"]//p').text
+    self.assertIn('No tickets sold', free_text)
+    self.assertIn('No tickets reserved', free_text)
+    self.assertIn('80 tickets free', free_text)
+
+    # Check selling tickets adds up properly
+    pricing = models.InHousePricing.objects.get(id=1)
+    member_price = pricing.member_price
+    concession_price = pricing.concession_price
+    public_price = pricing.public_price
+    mat_f_price = pricing.matinee_freshers_price
+    mat_f_nnt_price = pricing.matinee_freshers_nnt_price
+
+    out = self.browser.find_element_by_id('out1').text
+
+    member = self.browser.find_element_by_id('member')
+    action = ActionChains(self.browser)
+    action.click(on_element=member)
+    action.send_keys('1')
+    action.key_down(Keys.CONTROL)
+    action.key_up(Keys.CONTROL)
+    action.perform()
+    # member.click()
+    # member.send_keys('1')
+    # member.send_keys('tab')
