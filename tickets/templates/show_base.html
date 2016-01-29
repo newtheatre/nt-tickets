@@ -72,27 +72,30 @@
   {% endblock %}
   </main>
   <footer>
-    <script>
-      $(document).ready(function(){
-        $(".dropdown-button").dropdown();
-      });
-    </script>
-
-    <script>
-      $(document).ready(function(){
-        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-        $('.modal-trigger').leanModal({
-          dismissible: true, // Click outside of the modal to dismiss
-          in_duration: 300, // Transition in duration
-          out_duration: 300, // Transition out duration
-        });
-        $(".button-collapse").sideNav();
-        $('.tooltipped').tooltip({delay: 50});
-      });
-    </script>
-
-    {% block footer %}
-    {% endblock %}
+  {% block footer %}
+  {% endblock %}
   </footer>
+  <script>
+    $(document).ready(function(){
+      $(".dropdown-button").dropdown();
+    });
+  </script>
+
+  <script>
+    $(document).ready(function(){
+      // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+      $('.modal-trigger').leanModal({
+        dismissible: true, // Click outside of the modal to dismiss
+        in_duration: 300, // Transition in duration
+        out_duration: 300, // Transition out duration
+      });
+      $(".button-collapse").sideNav();
+      $('.tooltipped').tooltip({delay: 50});
+    });
+  </script>
+
+  {% block script %}
+  {% endblock %}
+    
 </body>
 </html>
