@@ -1,20 +1,27 @@
 language: python
 python:
-  - "2.7"
+- '2.7'
 before_install:
-  - openssl aes-256-cbc -K $encrypted_eab4b1048f57_key -iv $encrypted_eab4b1048f57_iv -in configuration/secrets.tar.enc -out configuration/secrets.tar -d
-  - tar xvf configuration/secrets.tar
+- openssl aes-256-cbc -K $encrypted_eab4b1048f57_key -iv $encrypted_eab4b1048f57_iv
+  -in configuration/secrets.tar.enc -out configuration/secrets.tar -d
+- tar xvf configuration/secrets.tar
 env:
+  matrix:
   - AWS_CREDENTIAL_FILE=configuration/keys.py
 install:
-  - pip install -r requirements/common-requirements.txt
-  - pip install -r requirements/prod-requirements.txt 
-  - pip install coveralls
+- pip install -r requirements/common-requirements.txt
+- pip install -r requirements/prod-requirements.txt
+- pip install coveralls
 before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- sleep 3
 script:
-  - coverage run --omit='/home/travis/virtualenv/*' manage.py test
-after_success:
-  coveralls
+- coverage run --omit='/home/travis/virtualenv/*' manage.py test
+after_success: coveralls
+addons:
+  sauce_connect:
+    username: "harrybridge"
+    access_key:
+      secure: aCVDzPKLbeqjd7xCMzhS9ENyuidsw4/wCxRKg5r4uy6vfHEaBMMXO7OF+yflJjAGkv5vhJ0vKVRUvNqGHVObgHBhNjEllI3slT2Us/RIRoSwZC4pqcqg4DNRS8D2pxscanyTyCoMdG43LcYI7QIZ91DDz/L8IEROPoXieCIwAi8i/6np5j+o3miwml2Q9QXRFCW3OlrzWzM342fnB+/PrMoyOu3/viB5TTHGtKDZzQv9GpRdsI9o5OKij64FFRGUKMctKI2QZHOII6k5EchMRIq/kYZI+NR4owk1dZcsXe1dJFYqmyOTUGH+DFH3VSNvJpVZJlcDHfDusV/vISFj6QI+0pDhPI+5KRCfXpQDggH29uah2HAiobBvbX9KnexHo9iWxkQ2ICd9ZGVb5WENCZXzIyGIrZXb5viazYMcyw1kgwS9eRgZVQ25iSHYB2GdCp+HWEmoEDkAk4kg6w2SdAM4e/w2v6ftoa/okwiHI1KQR9VdZupjTjxIWiAQxErkH15KL3jtzFfAlvxDz741upDUCKtN+thjKj+L3HyrJoQ4e/as6yXJlBso2CSR76aLfUThV5ua/BOHJtLO6sYR4FiZHURiJ9ZHjgSqcNQYjiIO4Ck9n6WCKTdCxLuZlD/s42jJqY0SkAf9dRMdS2aMaZtbYGTmmSvuW9Zdj2N6pOg=
+
