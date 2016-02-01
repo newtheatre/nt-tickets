@@ -209,78 +209,75 @@ class AuthTest(StaticLiveServerTestCase):
   def setUp(self):
     self.browser = webdriver.Chrome('bin/chromedriver')
     self.browser.set_window_size(1200, 1000)
+    self.browser.implicitly_wait(5)
     UserFactory()
 
   def tearDown(self):
     self.browser.quit()
 
   def test_login_correct(self):
-    browser = self.browser
-    browser.get(self.live_server_url + '/')
+    self.browser.get(self.live_server_url + '/')
 
     # Test that we've actually got a login page
-    self.assertIn('login', browser.current_url)
+    self.assertIn('login', self.browser.current_url)
 
-    username = browser.find_element_by_id('username')
+    username = self.browser.find_element_by_id('username')
     username.send_keys('Jim')
-    password = browser.find_element_by_id('password')
+    password = self.browser.find_element_by_id('password')
     # Send the wrong password
     password.send_keys('correcthorsebatterystapleerror')
 
     # Submit the form
 
-    submit = browser.find_element_by_id('submit')
+    submit = self.browser.find_element_by_id('submit')
     submit.click()
 
-
-    # Incase it takes a little bit to load
-    browser.implicitly_wait(3)
-    error_text = browser.find_element_by_xpath('//p[@class="red-text"]').text
+    error_text = self.browser.find_element_by_xpath('//p[@class="red-text"]').text
     # Make sure we got an error
     self.assertIn('incorrect', error_text)
 
     # Test that we're still on the login page
-    self.assertIn('login', browser.current_url)
+    self.assertIn('login', self.browser.current_url)
 
-    username = browser.find_element_by_id('username')
+    username = self.browser.find_element_by_id('username')
     username.send_keys('Jim')
-    password = browser.find_element_by_id('password')
+    password = self.browser.find_element_by_id('password')
     # Send the correct password
     password.send_keys('correcthorsebatterystaple')
 
     # Submit the form
-    submit = browser.find_element_by_id('submit')
+    submit = self.browser.find_element_by_id('submit')
     submit.click()
 
-    nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
+    nav_text = self.browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
     # Check the username is in the nav
     self.assertIn('Jim', nav_text)
 
     # Test login page with authenticated user
-    browser.get(self.live_server_url + '/login/')
+    self.browser.get(self.live_server_url + '/login/')
 
-    nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
+    nav_text = self.browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
     # Check the username is in the nav
     self.assertIn('Jim', nav_text)
 
     # Test login page with a page request with authenticated user
-    browser.get(self.live_server_url + '/login/?Pnext=/')
+    self.browser.get(self.live_server_url + '/login/?Pnext=/')
     
-    nav_text = browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
+    nav_text = self.browser.find_element_by_xpath('//a[@class="dropdown-button"]').text
     # Check the username is in the nav
     self.assertIn('Jim', nav_text)
 
     # test that we can logout as well
-    browser.get(self.live_server_url + '/login/')
-    drop = browser.find_element_by_xpath('//a[@class="dropdown-button"]')
-    logout = browser.find_element_by_xpath('//ul[@id="dropdown1"]/li[3]/a')
-    action_chains = ActionChains(browser)
+    self.browser.get(self.live_server_url + '/login/')
+    drop = self.browser.find_element_by_xpath('//a[@class="dropdown-button"]')
+    logout = self.browser.find_element_by_xpath('//ul[@id="dropdown1"]/li[3]/a')
+
+    action_chains = ActionChains(self.browser)
     action_chains.click(on_element=drop)
     action_chains.click(on_element=logout)
     action_chains.perform()
 
-    browser.implicitly_wait(5)
-    logout = browser.find_element_by_xpath('//h4[@class="light nnt-orange medium-text"]').text
+    logout = self.browser.find_element_by_xpath('//h4[@class="light nnt-orange medium-text"]').text
     self.assertEqual(logout, 'Logged Out')
 
 
