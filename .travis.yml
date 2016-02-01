@@ -15,6 +15,6 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
-  - coverage run --omit='/home/travis/virtualenv/*' manage.py test tickets.test_models pricing
+  - coverage run --omit='/home/travis/virtualenv/*' manage.py test
 after_success:
   coveralls
