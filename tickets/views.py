@@ -51,7 +51,10 @@ def logout_view(request):
 @login_required
 def ShowIndex(request):
     report = dict()
-    shows = models.Show.objects.all()
+
+    time_filter = datetime.date.today() - datetime.timedelta(days=30)
+    shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('-start_date')
+
     show_list = []
 
     number_shows = 0
@@ -61,7 +64,7 @@ def ShowIndex(request):
             report['number_shows'] = number_shows
             show_list.append(sh)
 
-    paginator = Paginator(show_list, 10)
+    paginator = Paginator(show_list, 5)
     page = request.GET.get('page')
 
     try:
