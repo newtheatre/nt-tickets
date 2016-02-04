@@ -24,7 +24,7 @@
 							</div>
 						</div>
 							<div class="card-content">
-								<h1 class="light white-text flow-text small-text center-on-small-only">
+								<h1 class="light white-text flow-text center-on-small-only" id="title">
 								{{ show.name }} 
 								{% if report.have_form %} 
 								on <strong>{{ report.day }}</strong> at <strong>{{ report.time }}</strong> 
@@ -147,7 +147,7 @@
 						{% endif %}
 					</div>
 					<!-- In House Shows -->
-					{% if report.category.id == 1 %}
+					{% if report.category|stringformat:"s" == "In House" %}
 						<!-- Member Ticket Sales -->
 						<div class="input-field col s12 s6 l4">
 							<input id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
@@ -209,7 +209,7 @@
 						</div>
 					{% endif %}
 					<!-- Fringe Shows -->
-					{% elif report.category.id == 2 %}
+					{% elif report.category|stringformat:"s" == "Fringe" %}
 						<!-- Fringe Ticket Sales -->
 						<div class="input-field col s12 s6 l3">
 							<input id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
@@ -243,7 +243,7 @@
 							<input id="matinee_freshers_nnt" type="hidden" value="0">
 						</div>
 					<!-- External Shows -->
-					{% elif report.category.id == 3 %}
+					{% elif report.category|stringformat:"s" == "External" %}
 						<!-- Member Ticket Sales -->
 						<div class="input-field col s12 s6 l4">
 							<input id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
@@ -424,7 +424,7 @@
 					<h4 class="truncate">{{ show.name }}</h4>
 						{% for oc in occurrence %}
 							<div class="col s12">
-								<a href="/show/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat">
+								<a href="/show/{{ show.id }}/{{ oc.0 }}" class="modal-action modal-close btn-flat" id="showing">
 								<span class="hide-on-small-and-down">{{ show.name }} on</span><strong>{{ oc.2 }}</strong> at <strong>{{ oc.4 }}</strong>
 								<span class="hide-on-small-and-down">
 								{% if oc.5 == 1 %}
@@ -466,7 +466,7 @@
 	</div>
 	
 {% endblock %}
-{% block footer %}
+{% block script %}
 	<!-- Set up modal trigger and sale tally -->
 	<script>
 		$(document).ready(function(){

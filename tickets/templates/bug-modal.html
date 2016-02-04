@@ -1,5 +1,5 @@
 {% load static from staticfiles %}
-
+{% block content %}
 <!-- Repoort Modal -->
 <div id="report-modal" class="modal grey darken-3">
   <div class="modal-content" id='bug-modal-form'>
@@ -92,8 +92,8 @@
   </div>
   </form>
 </div>
-
-{% block footer %}
+{% endblock %}
+{% block script %}
   <script>
     $(document).ready(function(){
       $('#bug-modal-success').hide();
