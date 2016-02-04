@@ -17,11 +17,5 @@ before_script:
 - sh -e /etc/init.d/xvfb start
 - sleep 3
 script:
-- coverage run --omit='/home/travis/virtualenv/*' manage.py test
+- coverage run --omit='/home/travis/virtualenv/*' manage.py test tickets.test_models pricing
 after_success: coveralls
-addons:
-  sauce_connect:
-    username: "harrybridge"
-    access_key:
-      secure: aCVDzPKLbeqjd7xCMzhS9ENyuidsw4/wCxRKg5r4uy6vfHEaBMMXO7OF+yflJjAGkv5vhJ0vKVRUvNqGHVObgHBhNjEllI3slT2Us/RIRoSwZC4pqcqg4DNRS8D2pxscanyTyCoMdG43LcYI7QIZ91DDz/L8IEROPoXieCIwAi8i/6np5j+o3miwml2Q9QXRFCW3OlrzWzM342fnB+/PrMoyOu3/viB5TTHGtKDZzQv9GpRdsI9o5OKij64FFRGUKMctKI2QZHOII6k5EchMRIq/kYZI+NR4owk1dZcsXe1dJFYqmyOTUGH+DFH3VSNvJpVZJlcDHfDusV/vISFj6QI+0pDhPI+5KRCfXpQDggH29uah2HAiobBvbX9KnexHo9iWxkQ2ICd9ZGVb5WENCZXzIyGIrZXb5viazYMcyw1kgwS9eRgZVQ25iSHYB2GdCp+HWEmoEDkAk4kg6w2SdAM4e/w2v6ftoa/okwiHI1KQR9VdZupjTjxIWiAQxErkH15KL3jtzFfAlvxDz741upDUCKtN+thjKj+L3HyrJoQ4e/as6yXJlBso2CSR76aLfUThV5ua/BOHJtLO6sYR4FiZHURiJ9ZHjgSqcNQYjiIO4Ck9n6WCKTdCxLuZlD/s42jJqY0SkAf9dRMdS2aMaZtbYGTmmSvuW9Zdj2N6pOg=
-
