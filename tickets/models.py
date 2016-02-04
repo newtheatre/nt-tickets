@@ -173,11 +173,11 @@ class OccurrenceManager(models.Manager):
         occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
         ret = []
         for oc in occs:
-            hour = oc.time.hour
-            close_time = hour - oc.hours_til_close
+            combined = datetime.datetime.combine(oc.date, oc.time)
+            close_time = combined - datetime.timedelta(hours=oc.hours_til_close)
             if oc.sold_out():
                 break
-            if oc.date == today and time.hour >= close_time:
+            if oc.date <= today and time >= close_time:
                 break
             else:
                 ret.append(( 
@@ -192,10 +192,9 @@ class OccurrenceManager(models.Manager):
         occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
         ret = []
         for oc in occs:
-            hour = oc.time.hour
-            close_time = hour + (2 * oc.hours_til_close)
-            if oc.date == today and time.hour >= close_time:
-                pass
+            combined = datetime.datetime.combine(oc.date, oc.time)
+            close_time = combined + datetime.timedelta(hours=3)
+            if oc.date <= today and time >= close_time:
                 break
             else:
                 ret.append(( 
@@ -320,14 +319,6 @@ class Occurrence(models.Model):
             if s.number_fellow > 0:
                 fellow += s.number_fellow
         return fellow
-
-    def external_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        external = 0
-        for s in sale:
-            if s.number_external > 0:
-                external += s.number_external
-        return external
 
     def fringe_tally(self):
         sale = Sale.objects.filter(occurrence=self)
