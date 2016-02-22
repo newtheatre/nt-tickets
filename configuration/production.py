@@ -5,17 +5,17 @@ ALLOWED_HOSTS = []
 DATABASES = {    
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'NTTDB',
+        'NAME': 'NT_TICKETS_DB',
         'USER' : 'tickets',
         'PASSWORD' : 'Tickets01',
-        'HOST' : 'nt-tickets-postgres-2.c9r4q51rnkwp.eu-west-1.rds.amazonaws.com',
+        'HOST' : 'nt-tickets-db.c3pyiadaokxt.eu-west-1.rds.amazonaws.com:5432',
         'PORT' : '5432',
     }
 }
 
 SITE_URL = 'newtheatre.org.uk'
 
-AWS_STORAGE_BUCKET_NAME = "nt-tickets"
+AWS_STORAGE_BUCKET_NAME = "nt-tickets-static"
 STATICFILES_STORAGE = 'custom_storages.StaticStorage'
 STATICFILES_LOCATION = 'static'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
