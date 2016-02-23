@@ -1,6 +1,6 @@
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [harrybridge.co.uk]
 
 DATABASES = {    
     'default': {
