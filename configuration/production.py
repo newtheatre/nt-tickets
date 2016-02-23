@@ -8,7 +8,7 @@ DATABASES = {
         'NAME': 'NT_TICKETS_DB',
         'USER' : 'tickets',
         'PASSWORD' : 'Tickets01',
-        'HOST' : 'nt-tickets-db.c3pyiadaokxt.eu-west-1.rds.amazonaws.com:5432',
+        'HOST' : 'nt-tickets-db.c3pyiadaokxt.eu-west-1.rds.amazonaws.com',
         'PORT' : '5432',
     }
 }
