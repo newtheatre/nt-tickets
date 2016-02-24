@@ -54,8 +54,8 @@ ADD ./deploy/supervisor_conf.d/webapp.conf /etc/supervisor/conf.d/webapp.conf
 
 ADD .      /var/projects/mysite
 WORKDIR /var/projects/mysite
-RUN pip install -r common-requirements.txt
-RUN pip install -r prod-requirements.txt
+RUN pip install -r requirements/common-requirements.txt
+RUN pip install -r requirements/prod-requirements.txt
 
 ##############################################################################
 # Run start.sh script when the container starts. 
