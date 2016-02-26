@@ -1,1 +1,0 @@
-# Common Django settings

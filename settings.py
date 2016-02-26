@@ -12,7 +12,6 @@ PROJECT_PATH = os.path.dirname(__file__)
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
-    ('Harry Bridge', 'harry@harrybridge.co.uk'),
 )
 
 MANAGERS = ADMINS
