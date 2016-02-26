@@ -263,7 +263,7 @@ class ShowReallyClosed(TestCase):
 
     def test_get_available_show_closed(self):
         show = self.show
-        r = Occurrence.objects.get_available_show(show)
+        r = Occurrence.objects.get_available(show)
         self.assertEqual(r, [])
 
 
