@@ -1,6 +1,6 @@
 DEBUG = False
 
-ALLOWED_HOSTS = ['harrybridge.co.uk', 'www.harrybridge.co.uk']
+ALLOWED_HOSTS = ['*']
 
 DATABASES = {    
     'default': {
