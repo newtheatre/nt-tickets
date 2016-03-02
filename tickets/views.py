@@ -53,7 +53,7 @@ def ShowIndex(request):
     report = dict()
 
     time_filter = datetime.date.today() - datetime.timedelta(days=30)
-    shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('-start_date')
+    shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
 
     show_list = []
 
