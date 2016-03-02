@@ -2,6 +2,7 @@
 
 *.sass-cache
 static/*
+media/*
 
 db.sqlite3
 *.pyc
