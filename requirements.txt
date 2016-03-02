@@ -1,4 +1,4 @@
-Django==1.9
+django==1.9
 django-bootstrap-toolkit==2.15.0
 django-mathfilters==0.3.0
 django-modeladmin-reorder==0.1.2
@@ -24,8 +24,10 @@ fabric==1.10.2
 boto==2.38.0
 argparse == 1.4.0
 mailchimp == 2.0.9
+django-smtp-ssl==1.0
 wsgiref == 0.1.2
 coverage == 4.0.3
 requests-transition==1.0.4
 raven==5.10.1
 factory_boy==2.6.0
+psycopg2==2.5.2
