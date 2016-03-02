@@ -180,8 +180,7 @@ class OccurrenceManager(models.Manager):
             if oc.date <= today and time >= close_time:
                 break
             else:
-                ret.append(( 
-                    time, close_time,
+                ret.append((
                     oc.id, 
                     oc.datetime_formatted(), 
                     ))
