@@ -26,7 +26,7 @@ MAILCHIMP_APIKEY = keys.MAILCHIMP_APIKEY
 # The repository to add this issue to
 REPO_OWNER = 'newtheatre'
 REPO_NAME = 'nt-tickets'
-BASE_URL= 'tickets.harrybridge.co.uk'
+BASE_URL= 'ticketing.newtheatre.org.uk'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -154,6 +154,7 @@ INSTALLED_APPS = (
 # For more info see django-modeladmin-reorder
 ADMIN_REORDER = (
     'auth',
+    'sites',
 
     {
     'app': 'tickets',
