@@ -28,7 +28,6 @@ AWS_S3_HOST = "s3-eu-west-1.amazonaws.com"
 # The repository to add this issue to
 REPO_OWNER = 'newtheatre'
 REPO_NAME = 'nt-tickets'
-BASE_URL= 'ticketing.newtheatre.org.uk'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'

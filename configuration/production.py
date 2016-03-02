@@ -13,7 +13,7 @@ DATABASES = {
     }
 }
 
-SITE_URL = 'newtheatre.org.uk'
+SITE_URL = 'ticketing.newtheatre.org.uk'
 
 AWS_STORAGE_BUCKET_NAME = "nt-tickets-static"
 STATICFILES_STORAGE = 'custom_storages.StaticStorage'
