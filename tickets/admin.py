@@ -251,7 +251,7 @@ class StuFFEventPriceAdmin(admin.ModelAdmin):
     fields = ['show', 'concession_price', 'public_price', 'member_price']
 
 
-admin.site.unregister(Site)
+# admin.site.unregister(Site)
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Occurrence, OccurrenceAdmin)
