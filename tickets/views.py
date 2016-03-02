@@ -842,13 +842,14 @@ class DetailShow(DetailView):
 def sidebar(request):
     categories = models.Category.objects.all().exclude(sort=0).order_by('sort')
     today = datetime.date.today()
-    limit = today + config.SIDEBAR_FILTER_PERIOD
+    limit = today + datetime.timedelta(weeks=config.SIDEBAR_FILTER_PERIOD)
+    exclude = config.SIDEBAR_FILTER_PERIOD
     current_shows = []
     for category in categories:
-        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
+        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=config.PUBLIC_CATEGORIES)
         if len(shows) > 0:
             current_shows.append(shows[0])
-    return render(request, 'sidebar.html', {'shows': current_shows, 'settings': settings})
+    return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude})
 
 
 def cancel(request, ref_id):

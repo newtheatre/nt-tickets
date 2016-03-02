@@ -3,7 +3,7 @@
 {% if show.sold_out %}
 <div class="book">Sorry all performances are sold out.</div>
 {%else%}
-<div class="book-button"><a class="book_tickets_link iframe cboxElement" href="{{settings.SITE_URL}}{% url 'book' show.id %}">Book Tickets</a></div>
+<div class="book-button"><a class="book_tickets_link iframe cboxElement" href="{{settings.BASE_URL}}{% url 'book' show.id %}">Book Tickets</a></div>
 {% endif %}
 {% endif %}
 {% endif %}
