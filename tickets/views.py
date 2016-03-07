@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.core import serializers
@@ -31,7 +31,6 @@ import configuration.keys as keys
 import datetime
 import settings
 import mailchimp_util
-
 
 def login(request, **kwargs):
     if request.user.is_authenticated():
@@ -709,25 +708,25 @@ def book_landing(request, show_id):
                 subject=email_subject,
                 body=email_html,
                 to=[t.email_address],
-                from_email="Box Office <boxoffice@newtheatre.org.uk>"
+                from_email="harry.bridge@newtheatre.org.uk"
                 )
             email.content_subtype = 'html'
-            if settings.ACTUALLY_SEND_MAIL:
-                email.send()
 
-            # Do MailChimp subscribe if using and if checked
-            if settings.DO_CHIMP:
-                if form.cleaned_data['add_to_mailinglist']:
-                    email = form.cleaned_data['email_address']
-                    fullname = form.cleaned_data['person_name']
-                    fullname_s = fullname.split(" ")
-                    if len(fullname_s) == 2:
-                        first = fullname_s[0]
-                        last = fullname_s[1]
-                    else:
-                        first = fullname
-                        last = ""
-                    mailchimp_util.subscribe(email, first, last)
+            email.send()
+
+            # # Do MailChimp subscribe if using and if checked
+            # if settings.DO_CHIMP:
+            #     if form.cleaned_data['add_to_mailinglist']:
+            #         email = form.cleaned_data['email_address']
+            #         fullname = form.cleaned_data['person_name']
+            #         fullname_s = fullname.split(" ")
+            #         if len(fullname_s) == 2:
+            #             first = fullname_s[0]
+            #             last = fullname_s[1]
+            #         else:
+            #             first = fullname
+            #             last = ""
+            #         mailchimp_util.subscribe(email, first, last)
 
             return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))   # Redirect after POST
     else:

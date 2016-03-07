@@ -15,6 +15,8 @@ DATABASES = {
 
 SITE_URL = 'ticketing.newtheatre.org.uk'
 
+PUBLIC_CATEGORIES = ['theatre','uncut']
+
 AWS_STORAGE_BUCKET_NAME = "nt-tickets-static"
 STATICFILES_STORAGE = 'custom_storages.StaticStorage'
 STATICFILES_LOCATION = 'static'
