@@ -150,37 +150,37 @@
 					<!-- In House Shows -->
 					{% if report.category.id == 1 %}
 						<!-- Member Ticket Sales -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="member">Member Tickets £{{ pricing.member_price }}</label>
 						</div>
 
 						<!-- Concession Ticket Sales -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="concession">Concession Tickets £{{ pricing.concession_price }}</label>
 						</div>
 
 						<!-- Public Ticket Sales -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="public">Public Tickets £{{ pricing.public_price }}</label>
 						</div>
 
 						<!-- Season Ticket Numbers -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season">Season Pass Tickets</label>
 						</div>
 
 						<!-- Season Ticket Sales -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season_sales">Season Ticket Sales £{{ report.season_price }}</label>
 						</div>
 
 						<!-- Fellow Ticket Numbers -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="fellow">Fellow Tickets</label>
 						</div>
@@ -193,13 +193,13 @@
 						</div>
 					{% elif report.time|stringformat:"s" == report.default_time_matinee %}
 						<!-- Matinee Fresher Ticket Sales -->
-						<div class="input-field col s12 s6">
+						<div class="input-field col s12 m6">
 							<input id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="matinee_freshers">Matinee Fresher Tickets £{{ pricing.matinee_freshers_price }}</label>
 						</div>
 
 						<!-- Matinee Fresher Member Ticket Sales -->
-						<div class="input-field col s12 s6">
+						<div class="input-field col s12 m6">
 							<input id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="matinee_freshers_nnt">Matinee Member Fresher Tickets £{{ pricing.matinee_freshers_nnt_price }}</label>
 						</div>
@@ -212,25 +212,25 @@
 					<!-- Fringe Shows -->
 					{% elif report.category.id == 2 %}
 						<!-- Fringe Ticket Sales -->
-						<div class="input-field col s12 s6 l3">
+						<div class="input-field col s12 m6 l3">
 							<input id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="fringe">Fringe Tickets £{{ pricing.fringe_price }}</label>
 						</div>
 
 						<!-- Season Ticket Numbers -->
-						<div class="input-field col s12 s6 l3">
+						<div class="input-field col s12 m6 l3">
 							<input id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season">Season Pass Tickets</label>
 						</div>
 
 						<!-- Season Ticket Sales -->
-						<div class="input-field col s12 s6 l3">
+						<div class="input-field col s12 m6 l3">
 							<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season_sales">Season Pass Ticket Sales £{{ report.season_price }}</label>
 						</div>
 
 						<!-- Fellow Ticket Numbers -->
-						<div class="input-field col s12 s6 l3">
+						<div class="input-field col s12 m6 l3">
 							<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="fellow">Fellow Tickets</label>
 						</div>
@@ -246,32 +246,32 @@
 					<!-- External Shows -->
 					{% elif report.category.id == 3 %}
 						<!-- Member Ticket Sales -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="member" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="member">Member Tickets £{{ pricing.member_price }}</label>
 						</div>
 
 						<!-- Concession Ticket Sales -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="concession" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="concession">Concession Tickets £{{ pricing.concession_price }}</label>
 						</div>
 
 						<!-- Public Ticket Sales -->
-						<div class="input-field col s12 s6 l4">
+						<div class="input-field col s12 m6 l4">
 							<input id="public" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="public">Public Tickets £{{ pricing.public_price }}</label>
 						</div>
 
 						{% if pricing.allow_season_tickets %}
 							<!-- Season Ticket Numbers -->
-							<div class="input-field col s12 s6 l4">
+							<div class="input-field col s12 m6 l4">
 								<input id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 								<label for="season">Season Pass Tickets</label>
 							</div>
 
 							<!-- Season Ticket Sales -->
-							<div class="input-field col s12 s6 l4">
+							<div class="input-field col s12 m6 l4">
 								<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 								<label for="season_sales">Season Pass Ticket Sales £{{ report.season_price }}</label>
 							</div>
@@ -300,7 +300,7 @@
 						{% if report.time|stringformat:"s" == report.default_time_matinee %}
 							{% if pricing.allow_half_matinee %}
 								<!-- Matinee Fresher Ticket Sales -->
-								<div class="input-field col s12 s6">
+								<div class="input-field col s12 m6">
 									<input id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 									<label for="matineee_freshers">Matinee Fresher Tickets £{{ report.matinee_freshers_price }}</label>
 								</div>
@@ -313,7 +313,7 @@
 							{% endif %}
 							{% if pricing.allow_half_nnt_matinee %}
 								<!-- Matinee Fresher Member Ticket Sales -->
-								<div class="input-field col s12 s6">
+								<div class="input-field col s12 m6">
 									<input id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 									<label for="matinee_freshers_nnt">Matinee Member Fresher Tickets £{{ report.matinee_freshers_nnt_price }}</label>
 								</div>
@@ -600,7 +600,7 @@
 		})
 	</script>
 
-	<!-- Fellpw Shortcut -->
+	<!-- Fellow Shortcut -->
 	<script>
 		var num_fellow = parseFloat(document.getElementById("fellow").value);
 		Mousetrap.bind('f', function() {
@@ -613,6 +613,40 @@
 			if (num_fellow >= 1) {
 				num_fellow = num_fellow - 1;
 				document.getElementById("fellow").value = num_fellow;
+			}
+		})
+	</script>
+
+	<!-- Matinee Freshers Shortcut -->
+	<script>
+		var num_matinee_freshers = parseFloat(document.getElementById("matinee_freshers").value);
+		Mousetrap.bind('b', function() {
+			num_matinee_freshers = num_matinee_freshers + 1;
+
+			document.getElementById("matinee_freshers").value = num_matinee_freshers;
+		})
+
+		Mousetrap.bind('shift+b', function() {
+			if (num_matinee_freshers >= 1) {
+				num_matinee_freshers = num_matinee_freshers - 1;
+				document.getElementById("matinee_freshers").value = num_matinee_freshers;
+			}
+		})
+	</script>
+
+	<!-- Matinee Freshers nnt Shortcut -->
+	<script>
+		var num_matinee_freshers_nnt = parseFloat(document.getElementById("matinee_freshers_nnt").value);
+		Mousetrap.bind('n', function() {
+			num_matinee_freshers_nnt = num_matinee_freshers_nnt + 1;
+
+			document.getElementById("matinee_freshers_nnt").value = num_matinee_freshers_nnt;
+		})
+
+		Mousetrap.bind('shift+n', function() {
+			if (num_matinee_freshers_nnt >= 1) {
+				num_matinee_freshers_nnt = num_matinee_freshers_nnt - 1;
+				document.getElementById("matinee_freshers_nnt").value = num_matinee_freshers_nnt;
 			}
 		})
 	</script>
