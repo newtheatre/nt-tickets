@@ -24,6 +24,23 @@ RECAPTCHA_PRIVATE_KEY = keys.RECAPTCHA_PRIVATE_KEY
 MAILCHIMP_APIKEY = keys.MAILCHIMP_APIKEY
 
 AWS_S3_HOST = "s3-eu-west-1.amazonaws.com"
+AWS_ACCESS_KEY_ID = keys.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = keys.AWS_SECRET_ACCESS_KEY
+
+# Email SES and seacucumber
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_SES_REGION_NAME = 'eu-west-1'
+AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
+AWS_SES_ACCESS_KEY_ID = keys.AWS_ACCESS_KEY_ID
+AWS_SES_SECRET_ACCESS_KEY = keys.AWS_SECRET_ACCESS_KEY
+
+# Cache
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.chache.backends.locmem.locMemCache',
+#         'LOCATION': 'unique-snowflake'
+#     }
+# }
 
 # The repository to add this issue to
 REPO_OWNER = 'newtheatre'
@@ -137,10 +154,10 @@ INSTALLED_APPS = (
     'mathfilters',
     'admin_reorder',
     'bootstrap_toolkit',
-    'captcha',
     'storages',
     'stdimage',
     'raven.contrib.django.raven_compat',
+    'django_ses',
 
     'tickets',
     'pricing',
