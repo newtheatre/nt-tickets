@@ -696,7 +696,7 @@ def book_landing(request, show_id):
 
             request.session["ticket"] = t
 
-            email_html = get_template('email/confirm.html').render(
+            email_html = get_template('email/confirm_inline.html').render(
                 Context({
                     'show': show,
                     'ticket': t,
