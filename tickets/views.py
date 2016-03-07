@@ -653,12 +653,6 @@ def book_landing(request, show_id):
     message = "Tickets for performances are reserved online and payed for on collection at the box office."
     foh_contact = 'foh@newtheatre.org.uk'
 
-    mailchimp = mailchimp_util.get_mailchimp_api()
-    if mailchimp is None:
-        mc = False
-    else:
-        mc = True
-
     if request.method == 'POST':    # If the form has been submitted...
         form = forms.BookingFormLanding(request.POST, show=show)    # A form bound to the POST data
         if form.is_valid():     # All validation rules pass
@@ -724,7 +718,6 @@ def book_landing(request, show_id):
         'step': step,
         'total': total,
         'message': message,
-        'mc': mc,
         'foh_contact': foh_contact,
     })
 

@@ -19,11 +19,9 @@ Book Tickets
 		{{ form.person_name|as_bootstrap }}
 		{{ form.email_address|as_bootstrap }}
 	</div>
-	{% if mc %}
-	<div class="clear">
+	<!-- <div class="clear">
 		{{ form.add_to_mailinglist|as_bootstrap }}
-	</div>
-	{% endif %}
+	</div> -->
 	<p class="text-info">If you have any special access requirements please contact {{ foh_contact }}.</p>
 	<div class="actions">
 		<button type="submit" class="btn btn-large btn-primary" id="submit-btn">
