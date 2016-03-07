@@ -24,7 +24,7 @@
 										</div>
 									</div>
 									<div class="card-content">
-										<h1 class="light white-text flow-text">{{ sh.name }}</h1>
+										<h1 class="light white-text flow-text" id="title">{{ sh.name }}</h1>
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">{{ sh.description }}</blockquote>
 									</div>
 								</div>
@@ -41,7 +41,7 @@
 				<li class="disabled"><i class="material-icons grey-text">chevron_left</i></li>
 			{% endif %}
 
-			<li class="nnt-orange">{{ show.number }} of {{ show.paginator.num_pages }}</li>
+			<li class="nnt-orange" id="page">{{ show.number }} of {{ show.paginator.num_pages }}</li>
 
 			{% if show.has_next %}
 				<li class="waves-effect"><a href="?page={{ show.next_page_number }}"><i class="material-icons nnt-purple">chevron_right</i></a></li>

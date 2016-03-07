@@ -2,14 +2,13 @@
 
 *.sass-cache
 static/*
+media/*
 
 db.sqlite3
 *.pyc
-media/*
 env/
 NTenv/
 
-tickets/static/.sass-cache/*
 /fabfile/*
 
 htmlcov/
@@ -22,9 +21,9 @@ configuration/environment.py
 # configuration/production.py
 # configuration/development.py
 
-# Elastic Beanstalk Files
-# .elasticbeanstalk/*
-# !.elasticbeanstalk/*.cfg.yml
-# !.elasticbeanstalk/*.global.yml
-
 configuration/keys.py
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

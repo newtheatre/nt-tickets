@@ -127,4 +127,4 @@ class StuFFEventPricing(PricingBase):
       return s
 
     def save(self, *args, **kwargs):
-        super(StuFFPricing, self).save(*args, **kwargs)
+        super(StuFFEventPricing, self).save(*args, **kwargs)

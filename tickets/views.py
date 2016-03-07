@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.core import serializers
@@ -13,8 +13,7 @@ import requests0 as requests
 import json
 import csv
 
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import login
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
@@ -33,13 +32,14 @@ import datetime
 import settings
 import mailchimp_util
 
-
 def login(request, **kwargs):
     if request.user.is_authenticated():
         next = request.GET.get('next', '/')
         return HttpResponseRedirect(request.GET.get('next', '/'))
     else:
-        return login(request, authentication_form=forms.login_form)
+        from django.contrib.auth.views import login
+
+        return login(request)
 
 
 def logout_view(request):
@@ -50,7 +50,10 @@ def logout_view(request):
 @login_required
 def ShowIndex(request):
     report = dict()
-    shows = models.Show.objects.all()
+
+    time_filter = datetime.date.today() - datetime.timedelta(days=30)
+    shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
+
     show_list = []
 
     number_shows = 0
@@ -60,7 +63,7 @@ def ShowIndex(request):
             report['number_shows'] = number_shows
             show_list.append(sh)
 
-    paginator = Paginator(show_list, 10)
+    paginator = Paginator(show_list, 5)
     page = request.GET.get('page')
 
     try:
@@ -693,7 +696,7 @@ def book_landing(request, show_id):
 
             request.session["ticket"] = t
 
-            email_html = get_template('email/confirm.html').render(
+            email_html = get_template('email/confirm_inline.html').render(
                 Context({
                     'show': show,
                     'ticket': t,
@@ -705,25 +708,25 @@ def book_landing(request, show_id):
                 subject=email_subject,
                 body=email_html,
                 to=[t.email_address],
-                from_email="Box Office <boxoffice@newtheatre.org.uk>"
+                from_email="harry.bridge@newtheatre.org.uk"
                 )
             email.content_subtype = 'html'
-            if settings.ACTUALLY_SEND_MAIL:
-                email.send()
 
-            # Do MailChimp subscribe if using and if checked
-            if settings.DO_CHIMP:
-                if form.cleaned_data['add_to_mailinglist']:
-                    email = form.cleaned_data['email_address']
-                    fullname = form.cleaned_data['person_name']
-                    fullname_s = fullname.split(" ")
-                    if len(fullname_s) == 2:
-                        first = fullname_s[0]
-                        last = fullname_s[1]
-                    else:
-                        first = fullname
-                        last = ""
-                    mailchimp_util.subscribe(email, first, last)
+            email.send()
+
+            # # Do MailChimp subscribe if using and if checked
+            # if settings.DO_CHIMP:
+            #     if form.cleaned_data['add_to_mailinglist']:
+            #         email = form.cleaned_data['email_address']
+            #         fullname = form.cleaned_data['person_name']
+            #         fullname_s = fullname.split(" ")
+            #         if len(fullname_s) == 2:
+            #             first = fullname_s[0]
+            #             last = fullname_s[1]
+            #         else:
+            #             first = fullname
+            #             last = ""
+            #         mailchimp_util.subscribe(email, first, last)
 
             return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))   # Redirect after POST
     else:
@@ -838,13 +841,14 @@ class DetailShow(DetailView):
 def sidebar(request):
     categories = models.Category.objects.all().exclude(sort=0).order_by('sort')
     today = datetime.date.today()
-    limit = today + config.SIDEBAR_FILTER_PERIOD
+    limit = today + datetime.timedelta(weeks=config.SIDEBAR_FILTER_PERIOD)
+    exclude = config.SIDEBAR_FILTER_PERIOD
     current_shows = []
     for category in categories:
-        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=settings.PUBLIC_CATEGORIES)
+        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=config.PUBLIC_CATEGORIES)
         if len(shows) > 0:
             current_shows.append(shows[0])
-    return render(request, 'sidebar.html', {'shows': current_shows, 'settings': settings})
+    return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude})
 
 
 def cancel(request, ref_id):

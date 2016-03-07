@@ -3,6 +3,7 @@
 import os
 import configuration.environment as env
 import configuration.keys as keys
+import raven
 
 def gettext(s):
     return s
@@ -11,7 +12,6 @@ PROJECT_PATH = os.path.dirname(__file__)
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
-    ('Harry Bridge', 'harry@harrybridge.co.uk'),
 )
 
 MANAGERS = ADMINS
@@ -23,10 +23,28 @@ RECAPTCHA_PRIVATE_KEY = keys.RECAPTCHA_PRIVATE_KEY
 
 MAILCHIMP_APIKEY = keys.MAILCHIMP_APIKEY
 
+AWS_S3_HOST = "s3-eu-west-1.amazonaws.com"
+AWS_ACCESS_KEY_ID = keys.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = keys.AWS_SECRET_ACCESS_KEY
+
+# Email SES and seacucumber
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_SES_REGION_NAME = 'eu-west-1'
+AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
+AWS_SES_ACCESS_KEY_ID = keys.AWS_ACCESS_KEY_ID
+AWS_SES_SECRET_ACCESS_KEY = keys.AWS_SECRET_ACCESS_KEY
+
+# Cache
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.chache.backends.locmem.locMemCache',
+#         'LOCATION': 'unique-snowflake'
+#     }
+# }
+
 # The repository to add this issue to
 REPO_OWNER = 'newtheatre'
 REPO_NAME = 'nt-tickets'
-BASE_URL= 'tickets.harrybridge.co.uk'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -97,7 +115,6 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'django.core.context_processors.request',
-                'tickets.context_processors.customise_processor',
             ],
             'loaders': [
                 # insert your TEMPLATE_LOADERS here
@@ -137,9 +154,10 @@ INSTALLED_APPS = (
     'mathfilters',
     'admin_reorder',
     'bootstrap_toolkit',
-    'captcha',
     'storages',
     'stdimage',
+    'raven.contrib.django.raven_compat',
+    'django_ses',
 
     'tickets',
     'pricing',
@@ -154,6 +172,7 @@ INSTALLED_APPS = (
 # For more info see django-modeladmin-reorder
 ADMIN_REORDER = (
     'auth',
+    'sites',
 
     {
     'app': 'tickets',
@@ -207,10 +226,17 @@ LOGGING = {
     }
 }
 
-
 # What enviroment are we in?
 if env.RUN_ENV == 'production':
     from configuration.production import *
+
+    # Only run Raven in production environment
+    RAVEN_CONFIG = {
+        'dsn': keys.DSN,
+        # If you are using git, you can also automatically configure the
+        # release based on the git info.
+        'release': raven.fetch_git_sha(os.path.dirname(__file__)),
+    }
 elif env.RUN_ENV == 'staging':
     from configuration.staging import *
 elif env.RUN_ENV == 'development':
