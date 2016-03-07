@@ -1,8 +1,10 @@
+{% load static from staticfiles %}
 <section class="show NO-show">
 <h2>No Shows Coming Up</h2>
-<img src="no_show.png" />
+<img src="{% static 'images/no_image.png' %}" />
 <div class="interior">
-<p>There are no shows coming up in the next x weeks at the Nottingham New Theatre, check back later for more information.</p>
+<p>
+There are no shows coming up in the next {{ exclude }} weeks at the Nottingham New Theatre, check back later for more information.</p>
 </div>
 </section>
 

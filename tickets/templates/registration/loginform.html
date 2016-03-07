@@ -11,14 +11,14 @@
         {% csrf_token %}
           <div class="row">
             <div class="input-field col s12">
-              <input name="{{ form.username.name }}" type="text" class="validate">
+              <input name="{{ form.username.name }}" type="text" class="validate" id="username">
               <label for="{{ form.username.name }}">Username</label>
             </div>
             <div class="input-field col s12">
-              <input name="{{ form.password.name }}" type="password" class="validate">
+              <input name="{{ form.password.name }}" type="password" class="validate" id="password">
               <label for="{{ form.password.name }}">Password</label>
             </div>
-            <button type="submit" value="login" class="btn nnt purple waves-effect waves-dark pad-bottom">
+            <button type="submit" value="login" class="btn nnt purple waves-effect waves-dark pad-bottom" id="submit">
               Login
             </button>
             <div class="input-field col s12">

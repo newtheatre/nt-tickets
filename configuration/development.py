@@ -12,14 +12,6 @@ DATABASES = {
 }
 
 SITE_URL="http://localhost:8000"
-STATIC_URL = "/static/"
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.example.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'username'
-EMAIL_HOST_PASSWORD = 'password'
-EMAIL_USE_TLS = True
 
 ACTUALLY_SEND_MAIL = False
 
@@ -27,12 +19,14 @@ PUBLIC_CATEGORIES = ['theatre','uncut']
 
 MAILCHIMP_LIST = '25469b2c40'
 
-ACTUALLY_SEND_MAIL = False
+ACTUALLY_SEND_MAIL = True
 DO_CHIMP = False
 
 AWS_STORAGE_BUCKET_NAME = "nt-tickets-dev"
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+STATICFILES_LOCATION = 'static'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-
+STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
 
 AWS_S3_SECURE_URLS = False    # Use HTTP instead of HTTPS
 AWS_QUERYSTRING_AUTH = False    # Remove auth querystrings from the query

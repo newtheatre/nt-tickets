@@ -1,157 +1,5 @@
 [
 {
-  "model": "contenttypes.contenttype",
-  "pk": 19,
-  "fields": {
-    "app_label": "auth",
-    "model": "permission"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 20,
-  "fields": {
-    "app_label": "auth",
-    "model": "group"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 21,
-  "fields": {
-    "app_label": "auth",
-    "model": "user"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 22,
-  "fields": {
-    "app_label": "contenttypes",
-    "model": "contenttype"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 23,
-  "fields": {
-    "app_label": "sessions",
-    "model": "session"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 24,
-  "fields": {
-    "app_label": "sites",
-    "model": "site"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 25,
-  "fields": {
-    "app_label": "admin",
-    "model": "logentry"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 26,
-  "fields": {
-    "app_label": "tickets",
-    "model": "category"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 27,
-  "fields": {
-    "app_label": "tickets",
-    "model": "show"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 28,
-  "fields": {
-    "app_label": "tickets",
-    "model": "occurrence"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 29,
-  "fields": {
-    "app_label": "tickets",
-    "model": "ticket"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 30,
-  "fields": {
-    "app_label": "tickets",
-    "model": "sale"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 38,
-  "fields": {
-    "app_label": "pricing",
-    "model": "stuffpricing"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 39,
-  "fields": {
-    "app_label": "pricing",
-    "model": "stuffeventpricing"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 40,
-  "fields": {
-    "app_label": "pricing",
-    "model": "seasonticketpricing"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 41,
-  "fields": {
-    "app_label": "pricing",
-    "model": "inhousepricing"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 42,
-  "fields": {
-    "app_label": "pricing",
-    "model": "fringepricing"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 43,
-  "fields": {
-    "app_label": "pricing",
-    "model": "externalpricing"
-  }
-},
-{
-  "model": "sessions.session",
-  "pk": "58uy0opj6eu2fm6i8vlbdfwbdw1pil0l",
-  "fields": {
-    "session_data": "YzVlMTQxNTM3NjFlOWIzZTFmZjQ4MWZkMTU4ODhmZWI1ZTAxZTQwYjqAAn1xAShVD19hdXRoX3VzZXJfaGFzaHECVSg5NGM0ZmVmYzkwYjg0ZDNjZmUwY2FlMTZjMThkNGRiMWRiMDJlODQ5VRJfYXV0aF91c2VyX2JhY2tlbmRxA1UpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBFUNX2F1dGhfdXNlcl9pZHEFWAEAAAAydS4=",
-    "expire_date": "2016-01-14T10:48:48.108"
-  }
-},
-{
   "model": "sites.site",
   "pk": 1,
   "fields": {
@@ -222,10 +70,6 @@
     "location": "New Theatre",
     "description": "as meor",
     "long_description": "as meor mero",
-    "poster": "posters/test_poster_2BkVRhf.jpg",
-    "poster_wall": "posters/test_poster_2BkVRhf_h284p3b.jpg",
-    "poster_page": "posters/test_poster_2BkVRhf_STADuVI.jpg",
-    "poster_tiny": "posters/test_poster_2BkVRhf_rWt8LFY.jpg",
     "start_date": "2015-12-20",
     "end_date": "2018-12-20",
     "category": 1
@@ -240,10 +84,6 @@
     "location": "New Theatre",
     "description": "info",
     "long_description": "more info",
-    "poster": "posters/test_poster_PBLnD3X.jpg",
-    "poster_wall": "posters/test_poster_PBLnD3X_UFQHCUT.jpg",
-    "poster_page": "posters/test_poster_PBLnD3X_VT8LluI.jpg",
-    "poster_tiny": "posters/test_poster_PBLnD3X_UpA3iHE.jpg",
     "start_date": "2015-12-21",
     "end_date": "2017-12-21",
     "category": 6
@@ -258,10 +98,6 @@
     "location": "New Theatre",
     "description": "It's only a description thing",
     "long_description": "It's only a long description thing",
-    "poster": "",
-    "poster_wall": "",
-    "poster_page": "",
-    "poster_tiny": "",
     "start_date": "2013-12-21",
     "end_date": "2014-12-21",
     "category": 1
@@ -276,10 +112,6 @@
     "location": "New Theatre",
     "description": "a show",
     "long_description": "a show long",
-    "poster": "posters/test_poster_EzU9QP2.jpg",
-    "poster_wall": "posters/test_poster_EzU9QP2_KO3P4H0.jpg",
-    "poster_page": "posters/test_poster_EzU9QP2_KzsdCbv.jpg",
-    "poster_tiny": "posters/test_poster_EzU9QP2_X5mvzoK.jpg",
     "start_date": "2015-12-24",
     "end_date": "2016-12-24",
     "category": 2
@@ -294,10 +126,6 @@
     "location": "New Theatre",
     "description": "A description",
     "long_description": "A long description",
-    "poster": "",
-    "poster_wall": "",
-    "poster_page": "",
-    "poster_tiny": "",
     "start_date": "2015-12-25",
     "end_date": "2016-12-25",
     "category": 3

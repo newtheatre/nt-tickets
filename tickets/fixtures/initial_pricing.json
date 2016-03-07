@@ -1,4 +1,4 @@
-},
+[
 {
   "model": "pricing.seasonticketpricing",
   "pk": 1,
@@ -23,4 +23,5 @@
   "fields": {
     "fringe_price": "3.00"
   }
-},
+}
+]

@@ -1,8 +1,13 @@
+{% load static from staticfiles %}
 {% for show in shows %}
 <section class="show {{show.category.slug}}-show">
-<h2>{{show.category}}</h2>
-{% if show.poster %}<img src="{{show.poster_page.url}}" />{% endif %}
-<div class="interior">
+<h2>{{ show.category }}</h2>
+{% if show.poster %}
+  <img src="{{ show.poster.poster_page.url }}">
+{% else %}
+  <img src="{% static 'images/no_image.png' %}">
+{% endif %}
+<div>
 <p>{% if show.start_date != show.end_date %}{{show.start_date|date:"j M"}} to {% endif %}{{show.end_date|date:"j M o"}}</p>
 <p>{{show.description}}</p>
 {% include 'book_button.html' %}
@@ -11,3 +16,4 @@
 {% empty %}
 {% include 'sidebar_blank.html' %}
 {% endfor %}
+
