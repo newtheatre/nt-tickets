@@ -30,7 +30,6 @@ import configuration.keys as keys
 
 import datetime
 import settings
-import mailchimp_util
 
 def login(request, **kwargs):
     if request.user.is_authenticated():
@@ -708,25 +707,12 @@ def book_landing(request, show_id):
                 subject=email_subject,
                 body=email_html,
                 to=[t.email_address],
-                from_email="harry.bridge@newtheatre.org.uk"
+                from_email="boxoffice@newtheatre.org.uk"
                 )
             email.content_subtype = 'html'
 
-            email.send()
-
-            # # Do MailChimp subscribe if using and if checked
-            # if settings.DO_CHIMP:
-            #     if form.cleaned_data['add_to_mailinglist']:
-            #         email = form.cleaned_data['email_address']
-            #         fullname = form.cleaned_data['person_name']
-            #         fullname_s = fullname.split(" ")
-            #         if len(fullname_s) == 2:
-            #             first = fullname_s[0]
-            #             last = fullname_s[1]
-            #         else:
-            #             first = fullname
-            #             last = ""
-            #         mailchimp_util.subscribe(email, first, last)
+            if settings.ACTUALLY_SEND_MAIL == True:
+                email.send()
 
             return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))   # Redirect after POST
     else:

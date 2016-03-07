@@ -2,7 +2,6 @@
 from django.db import models
 import datetime
 
-from PIL import Image
 from stdimage.models import StdImageField
 from stdimage.utils import UploadToClassNameDir
 from StringIO import StringIO
