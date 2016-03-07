@@ -26,8 +26,6 @@ ACTUALLY_SEND_MAIL = False
 
 PUBLIC_CATEGORIES = ['theatre','uncut']
 
-MAILCHIMP_LIST = '25469b2c40'
-
 ACTUALLY_SEND_MAIL = False
 DO_CHIMP = False
 
