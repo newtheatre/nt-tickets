@@ -24,8 +24,23 @@
 										</div>
 									</div>
 									<div class="card-content">
-										<h1 class="light white-text flow-text" id="title">{{ sh.name }}</h1>
-										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">{{ sh.description }}</blockquote>
+										<h1 class="light white-text flow-text" id="title" style="margin-top: 0;">{{ sh.name }}</h1>
+										<div class="col s6">
+											<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
+												Tickets Reserved: <span class="nnt-text nnt-orange">{{ sh.total_tickets_reserved }}</span>
+											</blockquote>
+											<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
+												Tickets Sold: <span class="nnt-text nnt-orange">{{ sh.total_tickets_sold_show }}</span>
+											</blockquote>
+										</div>
+										<div class="col s6">
+											<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
+												Total Available: <span class="nnt-text nnt-orange">{{ sh.total_possible}}</span>
+											</blockquote>
+											<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
+												Profit: <span class="nnt-text nnt-orange">£{{ sh.show_sales }}</span>
+											</blockquote>
+										</div>
 									</div>
 								</div>
 							</div>
