@@ -827,7 +827,7 @@ def sidebar(request):
         shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=config.PUBLIC_CATEGORIES)
         if len(shows) > 0:
             current_shows.append(shows[0])
-    return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude})
+    return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude, 'settings': settings})
 
 
 def cancel(request, ref_id):

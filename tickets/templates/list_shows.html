@@ -18,7 +18,7 @@
 		<div class="venue cat-{{ show.category.slug }}">Venue: {{ show.location }}</div>
 
 		<div class="category cat-{{ show.category.slug }}">{{ show.category }}</div>
-		{% include 'book_button.html' %}
+		{% include 'book_button.html' with settings=settings %}
 	</li>
 {% endfor %}
 </ul>
