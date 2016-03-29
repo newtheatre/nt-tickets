@@ -10,7 +10,7 @@
 <div>
 <p>{% if show.start_date != show.end_date %}{{show.start_date|date:"j M"}} to {% endif %}{{show.end_date|date:"j M o"}}</p>
 <p>{{show.description}}</p>
-{% include 'book_button.html' %}
+{% include 'book_button.html' with settings=settings %}
 </div>
 </section>
 {% empty %}

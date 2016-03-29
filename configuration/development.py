@@ -11,7 +11,7 @@ DATABASES = {
     }
 }
 
-SITE_URL="http://localhost:8000"
+BASE_URL="localhost:8000"
 
 PUBLIC_CATEGORIES = ['theatre','uncut']
 

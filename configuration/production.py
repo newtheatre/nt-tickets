@@ -13,7 +13,7 @@ DATABASES = {
     }
 }
 
-SITE_URL = 'ticketing.newtheatre.org.uk'
+BASE_URL = 'ticketing.newtheatre.org.uk'
 
 PUBLIC_CATEGORIES = ['theatre','uncut']
 
