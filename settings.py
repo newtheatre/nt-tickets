@@ -29,6 +29,10 @@ AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
 AWS_SES_ACCESS_KEY_ID = keys.AWS_ACCESS_KEY_ID
 AWS_SES_SECRET_ACCESS_KEY = keys.AWS_SECRET_ACCESS_KEY
 
+# Google Charts
+GOOGLECHARTS_API = "1.1"
+GOOGLECHARTS_PACKAGES = ["corechart"]
+
 # Cache
 # CACHES = {
 #     'default': {
@@ -153,6 +157,8 @@ INSTALLED_APPS = (
     'stdimage',
     'raven.contrib.django.raven_compat',
     'django_ses',
+    'googlecharts',
+
 
     'tickets',
     'pricing',

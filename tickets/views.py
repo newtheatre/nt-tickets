@@ -25,6 +25,7 @@ from django.shortcuts import render_to_response
 from tickets import models, forms
 from pricing import models
 
+
 import configuration.customise as config
 import configuration.keys as keys
 
@@ -720,6 +721,23 @@ def book_landing(request, show_id):
         'message': message,
         'foh_contact': foh_contact,
     })
+
+
+def graph_view(request):
+    all_shows = models.Show.objects.all().order_by('start_date')
+
+    out_data = {'values': [['foo', 32], ['bar', 64], ['baz', 96]]}
+
+    context = {
+        'all_shows': all_shows,
+        'out_data': out_data,
+        }
+
+    return render_to_response(
+        'graph_view.html', 
+        context, 
+        context_instance=RequestContext(request)
+        )
 
 
 def how_many_left(request):
