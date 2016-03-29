@@ -3,9 +3,9 @@
 <section class="show {{show.category.slug}}-show">
 <h2>{{ show.category }}</h2>
 {% if show.poster %}
-  <img src="{{ show.poster.poster_page.url }}">
+  <a href="http://newtheatre.org.uk/uk/whats-on"><img src="{{show.poster.poster_page.url}}" /></a>
 {% else %}
-  <img src="{% static 'images/no_image.png' %}">
+  <a href="http://newtheatre.org.uk/uk/whats-on"><img src="{% static 'images/no_image.png' %}" /></a>
 {% endif %}
 <div>
 <p>{% if show.start_date != show.end_date %}{{show.start_date|date:"j M"}} to {% endif %}{{show.end_date|date:"j M o"}}</p>
@@ -16,4 +16,3 @@
 {% empty %}
 {% include 'sidebar_blank.html' %}
 {% endfor %}
-
