@@ -230,8 +230,6 @@ class ExternalPriceAdmin(admin.ModelAdmin):
 class SeasonPriceAdmin(admin.ModelAdmin):
     fields = ['season_ticket_price']
 
-    list_display = ['season_ticket_price']
-
     def has_add_permission(self, request):
         num_objects = self.model.objects.count()
         if num_objects >= 1:
