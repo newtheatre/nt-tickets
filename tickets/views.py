@@ -94,14 +94,8 @@ def ShowReport(request, show_name, occ_id):
     report['default_time_matinee'] = \
         config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
-    report['concession_price'] = config.CONCESSION_PRICE[0]
-    report['member_price'] = config.MEMBER_PRICE[0]
-    report['public_price'] = config.PUBLIC_PRICE[0]
-    report['fringe_price'] = config.FRINGE_PRICE[0]
-    report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
-    report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
-
     report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -230,6 +224,7 @@ def SaleInputAJAX(request, show_name, occ_id):
         number_public = float(request.POST.get('number_public'))
         number_season = float(request.POST.get('number_season'))
         number_season_sale = float(request.POST.get('number_season_sales'))
+        number_season_sale_nnt = float(request.POST.get('number_season_sales_nnt'))
         number_fellow = float(request.POST.get('number_fellow'))
         number_fringe = float(request.POST.get('number_fringe'))
         number_matinee_freshers = float(request.POST.get('number_matinee_freshers'))
@@ -240,6 +235,7 @@ def SaleInputAJAX(request, show_name, occ_id):
         s.number_public = number_public
         s.number_season = number_season
         s.number_season_sale = number_season_sale
+        s.number_season_sale_nnt = number_season_sale_nnt
         s.number_fellow = number_fellow
         s.number_fringe = number_fringe
         s.number_matinee_freshers = number_matinee_freshers
@@ -260,7 +256,8 @@ def SaleInputAJAX(request, show_name, occ_id):
         except Exception:
             public_sale = float(0)
 
-        season_sale = number_season * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+        season_sale = number_season_sale * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+        season_sale_nnt = number_season_sale_nnt * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
 
         try:
             fringe_sale = number_fringe * float(pricing.fringe_price)
@@ -282,6 +279,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             member_sale +
             public_sale +
             season_sale +
+            season_sale_nnt +
             fringe_sale +
             matinee_fresher_sale +
             matinee_fresher_nnt_sale
@@ -296,6 +294,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_matinee_freshers_nnt +
             number_season +
             number_season_sale +
+            number_season_sale_nnt +
             number_fellow
             )
 
@@ -439,9 +438,11 @@ def make_github_issue(title, body=None, labels=None):
 @login_required
 def SaleReport(request):
     report = dict()
-    shows = models.Show.objects.all()
     show_list = []
     occurrence = models.Occurrence.objects.all
+
+    time_filter = datetime.date.today() - datetime.timedelta(days=30)
+    shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
 
     number_shows = 0
     for sh in shows:
@@ -528,6 +529,7 @@ def SaleReportFull(request, show_name):
         report['matinee_freshers_nnt_price'] = float(0)
 
     report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt
 
     context = {
         'show': show,
@@ -579,6 +581,7 @@ def DownloadReport(request, show_name):
         public_sale = float(0)
 
     season_sale = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+    season_sale_nnt = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
 
     try:
         fringe_sale = float(pricing.fringe_price)
@@ -611,6 +614,7 @@ def DownloadReport(request, show_name):
         'Public Tickets',
         'Season Tickets',
         'Season Ticket Sales',
+        'Member Season Ticket Sales',
         'Fellow Tickets'
         ])
 
@@ -623,6 +627,7 @@ def DownloadReport(request, show_name):
             oc.public_tally(),
             oc.season_tally(),
             oc.season_sale_tally(),
+            oc.season_sale_nnt_tally(),
             oc.fellow_tally(),
             ])
         writer.writerow([
@@ -633,6 +638,7 @@ def DownloadReport(request, show_name):
             oc.public_tally() * public_sale,
             '-',
             oc.season_sale_tally() * season_sale,
+            oc.season_sale_nnt_tally() * season_sale_nnt,
             '-',
             ])
 

@@ -89,7 +89,7 @@ class Show(models.Model):
 
     def is_current(self):
         today = datetime.date.today()
-        if today > self.end_date:
+        if today >= self.end_date:
             return False
         else:
             return True
@@ -311,6 +311,14 @@ class Occurrence(models.Model):
                 season_sale += s.number_season_sale
         return season_sale
 
+    def season_sale_nnt_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        season_sale_nnt = 0
+        for s in sale:
+            if s.number_season_sale_nnt > 0:
+                season_sale_nnt += s.number_season_sale_nnt
+        return season_sale_nnt
+
     def fellow_tally(self):
         sale = Sale.objects.filter(occurrence=self)
         fellow = 0
@@ -427,6 +435,7 @@ class Sale(models.Model):
     number_public = models.IntegerField(default=0)
     number_season = models.IntegerField(default=0)
     number_season_sale = models.IntegerField(default=0)
+    number_season_sale_nnt = models.IntegerField(default=0)
     number_fellow = models.IntegerField(default=0)
     number_fringe = models.IntegerField(default=0)
     number_matinee_freshers = models.IntegerField(default=0)

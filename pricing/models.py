@@ -27,6 +27,7 @@ class SeasonTicketPricing(models.Model):
         verbose_name_plural = 'Season Ticket Pricing'
 
     season_ticket_price = models.DecimalField(max_digits=6, decimal_places=2)
+    season_ticket_price_nnt = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
       s = 'Season Ticket Pricing'
