@@ -775,45 +775,45 @@ def graph_view(request):
 
     shows_by_month = json.dumps({
         'label': "Shows by month",
-        'fillColor': "rgba(220,220,220,0.2)",
-        'strokeColor': "rgba(220,220,220,1)",
-        'pointColor': "rgba(220,220,220,1)",
+        'fillColor': "rgba(255, 196, 37, 0.2)",
+        'strokeColor': "rgba(255, 196, 37, 1)",
+        'pointColor': "rgba(255, 196, 37, 1)",
         'pointStrokeColor': "#fff",
         'pointHighlightFill': "#fff",
-        'pointHighlightStroke': "rgba(220,220,220,1)",
+        'pointHighlightStroke': "rgba(255, 196, 37, 1)",
         'data': shows_date
     })
 
     tickets_sold = json.dumps({
         'label': "Tickets sold",
-        'fillColor': "rgba(151,187,205,0.2)",
-        'strokeColor': "rgba(151,187,205,1)",
-        'pointColor': "rgba(151,187,205,1)",
+        'fillColor': "rgba(226, 0, 19, 0.2)",
+        'strokeColor': "rgba(226, 0, 19, 1)",
+        'pointColor': "rgba(226, 0, 19, 1)",
         'pointStrokeColor': "#fff",
         'pointHighlightFill': "#fff",
-        'pointHighlightStroke': "rgba(151,187,205,1)",
+        'pointHighlightStroke': "rgba(226, 0, 19, 1)",
         'data': tickets_sold
         })
 
     profit = json.dumps({
         'label': "Show Profit",
-        'fillColor': "rgba(151,187,205,0.2)",
-        'strokeColor': "rgba(151,187,205,1)",
-        'pointColor': "rgba(151,187,205,1)",
+        'fillColor': "rgba(60, 216, 97, 0.2)",
+        'strokeColor': "rgba(60, 216, 97, 1)",
+        'pointColor': "rgba(60, 216, 97, 1)",
         'pointStrokeColor': "#fff",
         'pointHighlightFill': "#fff",
-        'pointHighlightStroke': "rgba(151,187,205,1)",
+        'pointHighlightStroke': "rgba(60, 216, 97, 1)",
         'data': profit
         })
 
     reserved_by_show = json.dumps({
         'label': "Shows by month",
-        'fillColor': "rgba(220,220,220,0.2)",
-        'strokeColor': "rgba(220,220,220,1)",
-        'pointColor': "rgba(220,220,220,1)",
+        'fillColor': "rgba(74, 174, 219, 0.2)",
+        'strokeColor': "rgba(74, 174, 219, 1)",
+        'pointColor': "rgba(74, 174, 219, 1)",
         'pointStrokeColor': "#fff",
         'pointHighlightFill': "#fff",
-        'pointHighlightStroke': "rgba(220,220,220,1)",
+        'pointHighlightStroke': "rgba(74, 174, 219, 1)",
         'data': reserved_per_show
     })
 
