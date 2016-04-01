@@ -730,6 +730,27 @@ def graph_view(request):
     shows_date = []
     tickets_sold = []
     profit = []
+    reserved_per_show = []
+
+    most_popular = dict()
+    least_popular = dict()
+
+    most_popular['number'] = 0
+    least_popular['number'] = 0
+
+    for sh in all_shows:
+        if sh.total_tickets_reserved() > most_popular['number']:
+            most_popular['number'] = sh.total_tickets_reserved()
+            most_popular['show'] = sh.name
+            most_popular['date'] = sh.date_formatted()
+
+    least_popular['number'] = most_popular['number']
+
+    for sh in all_shows:
+        if sh.total_tickets_reserved() < least_popular['number'] and sh.total_tickets_reserved() != 0:
+            least_popular['number'] = sh.total_tickets_reserved()
+            least_popular['show'] = sh.name
+            least_popular['date'] = sh.date_formatted()
 
     for i in range(1, 13):
         queryset = all_shows.filter(start_date__month=i)
@@ -743,6 +764,12 @@ def graph_view(request):
         profit.append(show_profit)
 
         shows_date.append(queryset.count())
+        try:
+            reserve_maths = sold / queryset.count()
+        except:
+            reserve_maths = 0
+
+        reserved_per_show.append(reserve_maths)
 
     months = json.dumps(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
 
@@ -779,12 +806,26 @@ def graph_view(request):
         'data': profit
         })
 
+    reserved_by_show = json.dumps({
+        'label': "Shows by month",
+        'fillColor': "rgba(220,220,220,0.2)",
+        'strokeColor': "rgba(220,220,220,1)",
+        'pointColor': "rgba(220,220,220,1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(220,220,220,1)",
+        'data': reserved_per_show
+    })
+
 
     context = {
         'months': months,
         'shows_by_month': shows_by_month,
         'tickets_sold': tickets_sold,
+        'reserved_by_show': reserved_by_show,
         'profit': profit,
+        'most_popular': most_popular,
+        'least_popular': least_popular,
         }
 
     return render_to_response(
