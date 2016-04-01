@@ -11,14 +11,21 @@
     <div class="col s12 center-align" id="show-chart-container">
       <canvas class="respondCanvas" id="show-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
     </div>
-    <div class="chart-toggles">
-
-      <input type="checkbox" id="shows" class="enabled" checked />
-      <label for="shows">Shows</label>
-
-      <input type="checkbox" id="tickets" class="enabled" checked />
-      <label for="tickets">Tickets</label>
-
+  </div>
+  <div class="chart-toggles">
+    <div class="row">
+      <div class="col s4 center-align">
+        <input type="checkbox" id="shows" class="enabled" checked />
+        <label for="shows" style="color: rgba(220,220,220,1)">Shows</label>
+      </div>
+      <div class="col s4 center-align">
+        <input type="checkbox" id="tickets" class="enabled" checked />
+        <label for="tickets" style="color: rgba(151,187,205,1)">Tickets</label>
+      </div>
+      <div class="col s4 center-align">
+        <input type="checkbox" id="profit" class="enabled" checked />
+        <label for="profit" style="color: rgba(151,187,205,1)">Profit</label>
+      </div>
     </div>
   </div>
 </div>
@@ -42,6 +49,7 @@ var options = {
 var enableCheck = function() {
   SHOn = $('#shows').hasClass('enabled')
   TOn = $('#tickets').hasClass('enabled')
+  POn = $('#profit').hasClass('enabled')
 
   if (SHOn) {
     data.shows = {{shows_by_month|safe}};
@@ -54,6 +62,11 @@ var enableCheck = function() {
   } else {
     data.tickets = {};
   }
+  if (POn) {
+    data.profit = {{profit|safe}};
+  } else {
+    data.profit = {};
+  }
 }
 
 var currentChart
@@ -65,6 +78,7 @@ $(document).ready(function() {
         datasets: [
           data.shows,
           data.tickets,
+          data.profit,
         ]
     };
     var NewChart = new Chart(chart).Line(data, options);
@@ -80,6 +94,7 @@ $('.chart-toggles input').click(function() {
         datasets: [
           data.shows,
           data.tickets,
+          data.profit,
         ]
     };
 

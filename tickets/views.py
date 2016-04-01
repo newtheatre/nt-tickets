@@ -10,7 +10,7 @@ from django.template import Context, RequestContext
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import requests0 as requests
-import json
+import simplejson as json
 import csv
 
 from django.contrib.auth import authenticate, logout
@@ -723,19 +723,24 @@ def book_landing(request, show_id):
     })
 
 
+@login_required
 def graph_view(request):
     all_shows = models.Show.objects.all().order_by('start_date')
 
     shows_date = []
     tickets_sold = []
+    profit = []
 
     for i in range(1, 13):
         queryset = all_shows.filter(start_date__month=i)
         sold = 0
+        show_profit = 0
         for sh in queryset:
             sold += sh.total_tickets_reserved()
+            show_profit += sh.show_sales()
 
         tickets_sold.append(sold)
+        profit.append(show_profit)
 
         shows_date.append(queryset.count())
 
@@ -763,11 +768,23 @@ def graph_view(request):
         'data': tickets_sold
         })
 
+    profit = json.dumps({
+        'label': "Show Profit",
+        'fillColor': "rgba(151,187,205,0.2)",
+        'strokeColor': "rgba(151,187,205,1)",
+        'pointColor': "rgba(151,187,205,1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(151,187,205,1)",
+        'data': profit
+        })
+
 
     context = {
         'months': months,
         'shows_by_month': shows_by_month,
         'tickets_sold': tickets_sold,
+        'profit': profit,
         }
 
     return render_to_response(
