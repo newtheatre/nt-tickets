@@ -6,10 +6,87 @@
 {% endblock %}
 
 {% block content %}
-    <div id="out"></div>
-    <div>
-       {{ out_data }}
+<div class="container">
+  <div class="row">
+    <div class="col s12 center-align" id="show-chart-container">
+      <canvas class="respondCanvas" id="show-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
     </div>
+    <div class="chart-toggles">
 
+      <input type="checkbox" id="shows" class="enabled" checked />
+      <label for="shows">Shows</label>
+
+      <input type="checkbox" id="tickets" class="enabled" checked />
+      <label for="tickets">Tickets</label>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+
+<script>
+// Get context with jQuery - using jQuery's .get() method.
+var chart = $("#show-chart").get(0).getContext("2d");
+
+var data = {}
+
+var options = {
+    scaleShowGridLines : true,
+    scaleGridLineColor : "rgba(100,100,100,0.3)",
+    bezierCurveTension : 0.4,
+  }
+
+var enableCheck = function() {
+  SHOn = $('#shows').hasClass('enabled')
+  TOn = $('#tickets').hasClass('enabled')
+
+  if (SHOn) {
+    data.shows = {{shows_by_month|safe}};
+  } else {
+    data.shows = {};
+  }
+
+  if (TOn) {
+    data.tickets = {{tickets_sold|safe}};
+  } else {
+    data.tickets = {};
+  }
+}
+
+var currentChart
+
+$(document).ready(function() {
+    enableCheck();
+    data = {
+        labels: {{months|safe}},
+        datasets: [
+          data.shows,
+          data.tickets,
+        ]
+    };
+    var NewChart = new Chart(chart).Line(data, options);
+    currentChart = NewChart
+});
+
+$('.chart-toggles input').click(function() {
+    currentChart.destroy();
+    $(this).toggleClass('enabled');
+    enableCheck();
+    data = {
+        labels: {{months|safe}},
+        datasets: [
+          data.shows,
+          data.tickets,
+        ]
+    };
+
+    var NewChart = new Chart(chart).Line(data, options);
+    currentChart = NewChart
+});
+
+</script>
 
 {% endblock %}

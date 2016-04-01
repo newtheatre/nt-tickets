@@ -726,11 +726,48 @@ def book_landing(request, show_id):
 def graph_view(request):
     all_shows = models.Show.objects.all().order_by('start_date')
 
-    out_data = {'values': [['foo', 32], ['bar', 64], ['baz', 96]]}
+    shows_date = []
+    tickets_sold = []
+
+    for i in range(1, 13):
+        queryset = all_shows.filter(start_date__month=i)
+        sold = 0
+        for sh in queryset:
+            sold += sh.total_tickets_reserved()
+
+        tickets_sold.append(sold)
+
+        shows_date.append(queryset.count())
+
+    months = json.dumps(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+
+    shows_by_month = json.dumps({
+        'label': "Shows by month",
+        'fillColor': "rgba(220,220,220,0.2)",
+        'strokeColor': "rgba(220,220,220,1)",
+        'pointColor': "rgba(220,220,220,1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(220,220,220,1)",
+        'data': shows_date
+    })
+
+    tickets_sold = json.dumps({
+        'label': "Tickets sold",
+        'fillColor': "rgba(151,187,205,0.2)",
+        'strokeColor': "rgba(151,187,205,1)",
+        'pointColor': "rgba(151,187,205,1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(151,187,205,1)",
+        'data': tickets_sold
+        })
+
 
     context = {
-        'all_shows': all_shows,
-        'out_data': out_data,
+        'months': months,
+        'shows_by_month': shows_by_month,
+        'tickets_sold': tickets_sold,
         }
 
     return render_to_response(
