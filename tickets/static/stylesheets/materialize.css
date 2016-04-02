@@ -13264,3 +13264,13 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 iframe {
   margin: -1px 0px 0px -2px;
 }
+
+/* line 169, ../sass/components/_style.scss */
+.dot {
+  background: #fff;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.6em;
+}

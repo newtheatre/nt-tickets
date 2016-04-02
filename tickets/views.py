@@ -738,6 +738,14 @@ def graph_view(request):
     most_popular['number'] = 0
     least_popular['number'] = 0
 
+    category_tally = dict()
+
+    category_tally['in_house'] = all_shows.filter(category=1).count()
+    category_tally['fringe'] = all_shows.filter(category=2).count()
+    category_tally['external'] = all_shows.filter(category=3).count()
+    category_tally['stuff'] = all_shows.filter(category=4).count()
+    category_tally['stuff_events'] = all_shows.filter(category=5).count()
+
     for sh in all_shows:
         if sh.total_tickets_reserved() > most_popular['number']:
             most_popular['number'] = sh.total_tickets_reserved()
@@ -823,6 +831,7 @@ def graph_view(request):
         'shows_by_month': shows_by_month,
         'tickets_sold': tickets_sold,
         'reserved_by_show': reserved_by_show,
+        'category_tally': category_tally,
         'profit': profit,
         'most_popular': most_popular,
         'least_popular': least_popular,
