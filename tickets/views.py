@@ -9,8 +9,10 @@ from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 import requests0 as requests
-import json
+import simplejson as json
 import csv
 
 from django.contrib.auth import authenticate, logout
@@ -24,6 +26,7 @@ from django.shortcuts import render_to_response
 # Import models
 from tickets import models, forms
 from pricing import models
+
 
 import configuration.customise as config
 import configuration.keys as keys
@@ -720,6 +723,149 @@ def book_landing(request, show_id):
         'message': message,
         'foh_contact': foh_contact,
     })
+
+
+@login_required
+@cache_page(60 * 30)
+def graph_view(request):
+    all_shows = models.Show.objects.all().order_by('start_date')
+
+    shows_date = []
+    tickets_sold = []
+    profit = []
+    reserved_per_show = []
+
+    most_popular = dict()
+    least_popular = dict()
+
+    most_popular['number'] = 0
+    least_popular['number'] = 0
+
+    category_tally = dict()
+
+    category_tally['in_house'] = all_shows.filter(category=1).count()
+    category_tally['fringe'] = all_shows.filter(category=2).count()
+    category_tally['external'] = all_shows.filter(category=3).count()
+    category_tally['stuff'] = all_shows.filter(category=4).count()
+    category_tally['stuff_events'] = all_shows.filter(category=5).count()
+
+    days = dict()
+    days['tally'] = [0, 0, 0, 0, 0, 0, 0, 0]
+    days['days'] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Saturday Matinee']
+
+    for i in range(1, 7):
+        for oc in models.Occurrence.objects.all().filter(date__week_day=i):
+            days['tally'][i-1] += oc.tickets_sold()
+
+    for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=16):
+            days['tally'][6] += oc.tickets_sold()
+
+    for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=14).filter(time__hour__lt=16):
+            days['tally'][7] += oc.tickets_sold()
+
+    day_max = max(xrange(len(days['tally'])),key=days['tally'].__getitem__)
+    day_min = min(xrange(len(days['tally'])),key=days['tally'].__getitem__)
+
+    days['max'] = [days['tally'][day_max], days['days'][day_max]]
+    days['min'] = [days['tally'][day_min], days['days'][day_min]]
+
+    for sh in all_shows:
+        if sh.total_tickets_reserved() > most_popular['number']:
+            most_popular['number'] = sh.total_tickets_reserved()
+            most_popular['show'] = sh.name
+            most_popular['date'] = sh.date_formatted()
+
+    least_popular['number'] = most_popular['number']
+
+    for sh in all_shows:
+        if sh.total_tickets_reserved() < least_popular['number'] and sh.total_tickets_reserved() != 0:
+            least_popular['number'] = sh.total_tickets_reserved()
+            least_popular['show'] = sh.name
+            least_popular['date'] = sh.date_formatted()
+
+    for i in range(1, 13):
+        queryset = all_shows.filter(start_date__month=i)
+        sold = 0
+        show_profit = 0
+        for sh in queryset:
+            sold += sh.total_tickets_reserved()
+            show_profit += sh.show_sales()
+
+        tickets_sold.append(sold)
+        profit.append(show_profit)
+
+        shows_date.append(queryset.count())
+        try:
+            reserve_maths = sold / queryset.count()
+        except:
+            reserve_maths = 0
+
+        reserved_per_show.append(reserve_maths)
+
+    months = json.dumps(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+
+    shows_by_month = json.dumps({
+        'label': "Shows by month",
+        'fillColor': "rgba(255, 196, 37, 0.2)",
+        'strokeColor': "rgba(255, 196, 37, 1)",
+        'pointColor': "rgba(255, 196, 37, 1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(255, 196, 37, 1)",
+        'data': shows_date
+    })
+
+    tickets_sold = json.dumps({
+        'label': "Tickets sold",
+        'fillColor': "rgba(226, 0, 19, 0.2)",
+        'strokeColor': "rgba(226, 0, 19, 1)",
+        'pointColor': "rgba(226, 0, 19, 1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(226, 0, 19, 1)",
+        'data': tickets_sold
+        })
+
+    profit = json.dumps({
+        'label': "Show Profit",
+        'fillColor': "rgba(60, 216, 97, 0.2)",
+        'strokeColor': "rgba(60, 216, 97, 1)",
+        'pointColor': "rgba(60, 216, 97, 1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(60, 216, 97, 1)",
+        'data': profit
+        })
+
+    reserved_by_show = json.dumps({
+        'label': "Shows by month",
+        'fillColor': "rgba(74, 174, 219, 0.2)",
+        'strokeColor': "rgba(74, 174, 219, 1)",
+        'pointColor': "rgba(74, 174, 219, 1)",
+        'pointStrokeColor': "#fff",
+        'pointHighlightFill': "#fff",
+        'pointHighlightStroke': "rgba(74, 174, 219, 1)",
+        'data': reserved_per_show
+    })
+
+
+    context = {
+        'months': months,
+        'shows_by_month': shows_by_month,
+        'tickets_sold': tickets_sold,
+        'reserved_by_show': reserved_by_show,
+        'category_tally': category_tally,
+        'days': days,
+        'profit': profit,
+        'most_popular': most_popular,
+        'least_popular': least_popular,
+        }
+
+    return render_to_response(
+        'graph_view.html', 
+        context, 
+        context_instance=RequestContext(request)
+        )
 
 
 def how_many_left(request):
