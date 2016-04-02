@@ -129,6 +129,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -157,8 +158,7 @@ INSTALLED_APPS = (
     'stdimage',
     'raven.contrib.django.raven_compat',
     'django_ses',
-    'googlecharts',
-
+    'debug_toolbar',
 
     'tickets',
     'pricing',
