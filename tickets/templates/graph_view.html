@@ -32,17 +32,20 @@
       </div>
       <div class="row">
         <div class="col s12 dark-background z-depth-1">
-          <h4 class="nnt-orange">Most Popular Show</h4>
+          <h4 class="nnt-orange light">Most Popular Show</h4>
           <p class="white-text"><strong>{{ most_popular.show }}</strong> on {{ most_popular.date }} with <span class="nnt-orange">{{ most_popular.number }}</span> tickets reserved.</p>
         </div>
       </div>
       <div class="row dark-background z-depth-1">
         <div class="col s12">
-          <h4 class="nnt-orange">Least Popular Show</h4>
+          <h4 class="nnt-orange light">Least Popular Show</h4>
           <p class="white-text"><strong>{{ least_popular.show }}</strong> on {{ least_popular.date }} with <span class="nnt-orange">{{ least_popular.number }}</span> tickets reserved.</p>
         </div>
       </div>
       <div class="row">
+        <div class="col s12 center-align">
+          <h4 class="nnt-orange light">Number of Shows per Category</h4>
+        </div>
         <div class="col s7 center-align" id="chart-container">
           <canvas class="respondCanvas" id="donut-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
         </div>
