@@ -746,6 +746,26 @@ def graph_view(request):
     category_tally['stuff'] = all_shows.filter(category=4).count()
     category_tally['stuff_events'] = all_shows.filter(category=5).count()
 
+    days = dict()
+    days['tally'] = [0, 0, 0, 0, 0, 0, 0, 0]
+    days['days'] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Saturday Matinee']
+
+    for i in range(1, 7):
+        for oc in models.Occurrence.objects.all().filter(date__week_day=i):
+            days['tally'][i-1] += oc.tickets_sold()
+
+    for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=16):
+            days['tally'][6] += oc.tickets_sold()
+
+    for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=14).filter(time__hour__lt=16):
+            days['tally'][7] += oc.tickets_sold()
+
+    day_max = max(xrange(len(days['tally'])),key=days['tally'].__getitem__)
+    day_min = min(xrange(len(days['tally'])),key=days['tally'].__getitem__)
+
+    days['max'] = [days['tally'][day_max], days['days'][day_max]]
+    days['min'] = [days['tally'][day_min], days['days'][day_min]]
+
     for sh in all_shows:
         if sh.total_tickets_reserved() > most_popular['number']:
             most_popular['number'] = sh.total_tickets_reserved()
@@ -832,6 +852,7 @@ def graph_view(request):
         'tickets_sold': tickets_sold,
         'reserved_by_show': reserved_by_show,
         'category_tally': category_tally,
+        'days': days,
         'profit': profit,
         'most_popular': most_popular,
         'least_popular': least_popular,
