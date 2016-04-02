@@ -6,6 +6,7 @@ media/*
 
 db.sqlite3
 *.pyc
+.idea/
 env/
 NTenv/
 
