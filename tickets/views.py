@@ -9,6 +9,8 @@ from django.template.loader import get_template
 from django.template import Context, RequestContext
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 import requests0 as requests
 import simplejson as json
 import csv
@@ -724,6 +726,7 @@ def book_landing(request, show_id):
 
 
 @login_required
+@cache_page(60 * 30)
 def graph_view(request):
     all_shows = models.Show.objects.all().order_by('start_date')
 
