@@ -8,59 +8,74 @@
 {% block content %}
 <div class="container">
   <div class="row">
+    <div class="col s12 center-align">
+      <h4 class="nnt-orange light">Show Statistics per Month</h4>
+    </div>
     <div class="col s12 center-align" id="chart-container">
       <canvas class="respondCanvas" id="show-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
     </div>
-    <div class="chart-toggles">
-      <div class="row">
-        <div class="col s3 center-align">
-          <input type="checkbox" id="shows" class="enabled" checked />
-          <label for="shows" style="color: rgba(255, 196, 37, 1)">Shows</label>
-        </div>
-        <div class="col s3 center-align">
-          <input type="checkbox" id="tickets" class="enabled" checked />
-          <label for="tickets" style="color: rgba(226, 0, 19, 1)">Tickets Reserved</label>
-        </div>
-        <div class="col s3 center-align">
-          <input type="checkbox" id="profit" class="enabled" checked />
-          <label for="profit" style="color: rgba(60, 216, 97, 1)">Profit</label>
-        </div>
-        <div class="col s3 center-align">
-          <input type="checkbox" id="reservedshow" class="enabled" checked />
-          <label for="reservedshow" style="color: rgba(74, 174, 219, 1)">Reserved Per Show</label>
-        </div>
+  </div>
+  <div class="chart-toggles">
+    <div class="row">
+      <div class="col s3 center-align">
+        <input type="checkbox" id="shows" class="enabled" checked />
+        <label for="shows" style="color: rgba(255, 196, 37, 1)">Shows</label>
       </div>
-      <div class="row">
-        <div class="col s12 dark-background z-depth-1">
-          <h4 class="nnt-orange light">Most Popular Show</h4>
-          <p class="white-text"><strong>{{ most_popular.show }}</strong> on {{ most_popular.date }} with <span class="nnt-orange">{{ most_popular.number }}</span> tickets reserved.</p>
-        </div>
+      <div class="col s3 center-align">
+        <input type="checkbox" id="tickets" class="enabled" checked />
+        <label for="tickets" style="color: rgba(226, 0, 19, 1)">Tickets Reserved</label>
       </div>
-      <div class="row dark-background z-depth-1">
-        <div class="col s12">
-          <h4 class="nnt-orange light">Least Popular Show</h4>
-          <p class="white-text"><strong>{{ least_popular.show }}</strong> on {{ least_popular.date }} with <span class="nnt-orange">{{ least_popular.number }}</span> tickets reserved.</p>
-        </div>
+      <div class="col s3 center-align">
+        <input type="checkbox" id="profit" class="enabled" checked />
+        <label for="profit" style="color: rgba(60, 216, 97, 1)">Profit</label>
       </div>
-      <div class="row">
-        <div class="col s12 center-align">
-          <h4 class="nnt-orange light">Number of Shows per Category</h4>
-        </div>
-        <div class="col s7 center-align" id="chart-container">
-          <canvas class="respondCanvas" id="donut-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
-        </div>
-        <div class="col s5 dark-background z-depth-1">
-          <ul>
-          <li class="white-text"><div class="dot" style="background-color: rgba(255, 196, 37, 1)"></div>In House</li>
-          <li class="white-text"><div class="dot" style="background-color: rgba(226, 0, 19, 1)"></div>Fringe</li>
-          <li class="white-text"><div class="dot" style="background-color: rgba(60, 216, 97, 1)"></div>External</li>
-          <li class="white-text"><div class="dot" style="background-color: rgba(74, 174, 219, 1)"></div>StuFF</li>
-          {% if category_tally.stuff_events %}
-          <li class="white-text"><div class="dot" style="background-color: rgba(175, 48, 146, 1)"></div>StuFF Events</li>
-          {% endif %}
-          </ul>
-        </div>
+      <div class="col s3 center-align">
+        <input type="checkbox" id="reservedshow" class="enabled" checked />
+        <label for="reservedshow" style="color: rgba(74, 174, 219, 1)">Reservations Per Show</label>
       </div>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Most Popular Show</h4>
+      <p class="white-text"><strong>{{ most_popular.show }}</strong> on {{ most_popular.date }} with <span class="nnt-orange">{{ most_popular.number }}</span> tickets reserved.</p>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Least Popular Show</h4>
+      <p class="white-text"><strong>{{ least_popular.show }}</strong> on {{ least_popular.date }} with <span class="nnt-orange">{{ least_popular.number }}</span> tickets reserved.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 center-align">
+      <h4 class="nnt-orange light">Number of Shows per Category</h4>
+    </div>
+    <div class="col s7 center-align" id="chart-container">
+      <canvas class="respondCanvas" id="donut-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
+    </div>
+    <div class="col s5 dark-background z-depth-1">
+      <ul>
+      <li class="white-text"><div class="dot" style="background-color: rgba(255, 196, 37, 1)"></div>In House</li>
+      <li class="white-text"><div class="dot" style="background-color: rgba(226, 0, 19, 1)"></div>Fringe</li>
+      <li class="white-text"><div class="dot" style="background-color: rgba(60, 216, 97, 1)"></div>External</li>
+      <li class="white-text"><div class="dot" style="background-color: rgba(74, 174, 219, 1)"></div>StuFF</li>
+      {% if category_tally.stuff_events %}
+      <li class="white-text"><div class="dot" style="background-color: rgba(175, 48, 146, 1)"></div>StuFF Events</li>
+      {% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Most Popular Day</h4>
+      <p class="white-text">The most popular day is {{ days.max.1 }} with a total of <span class="nnt-orange">{{ days.max.0 }}</span> tickets reserved</p>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Least Popular Day</h4>
+      <p class="white-text">The least popular day is {{ days.min.1 }} with a total of <span class="nnt-orange">{{ days.min.0 }}</span> tickets reserved</p>
     </div>
   </div>
 </div>
