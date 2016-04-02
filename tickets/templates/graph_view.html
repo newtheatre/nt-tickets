@@ -1,6 +1,5 @@
 {% extends 'show_base.html' %}
 {% load static from staticfiles %}
-{% load googlecharts %}
 {% block head %}
    
 {% endblock %}
@@ -38,13 +37,13 @@
   <div class="row dark-background z-depth-1">
     <div class="col s12">
       <h4 class="nnt-orange light">Most Popular Show</h4>
-      <p class="white-text"><strong>{{ most_popular.show }}</strong> on {{ most_popular.date }} with <span class="nnt-orange">{{ most_popular.number }}</span> tickets reserved.</p>
+      <p class="white-text"><strong>{{ most_popular.show }}</strong> starting on {{ most_popular.date }} with <span class="nnt-orange">{{ most_popular.number }}</span> tickets reserved.</p>
     </div>
   </div>
   <div class="row dark-background z-depth-1">
     <div class="col s12">
       <h4 class="nnt-orange light">Least Popular Show</h4>
-      <p class="white-text"><strong>{{ least_popular.show }}</strong> on {{ least_popular.date }} with <span class="nnt-orange">{{ least_popular.number }}</span> tickets reserved.</p>
+      <p class="white-text"><strong>{{ least_popular.show }}</strong> starting on {{ least_popular.date }} with <span class="nnt-orange">{{ least_popular.number }}</span> tickets reserved.</p>
     </div>
   </div>
   <div class="row">
