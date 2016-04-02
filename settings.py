@@ -34,12 +34,12 @@ GOOGLECHARTS_API = "1.1"
 GOOGLECHARTS_PACKAGES = ["corechart"]
 
 # Cache
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.chache.backends.locmem.locMemCache',
-#         'LOCATION': 'unique-snowflake'
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
 
 # The repository to add this issue to
 REPO_OWNER = 'newtheatre'
