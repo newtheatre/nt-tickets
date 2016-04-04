@@ -87,7 +87,7 @@ class ExternalPricing(PricingBase):
         verbose_name = 'External Pricing'
         verbose_name_plural = 'External Pricing'
 
-    show = models.ForeignKey(Show)
+    show = models.ForeignKey(Show, limit_choices_to={'category': 3})
 
     matinee_freshers_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_PRICE[0])
     matinee_freshers_nnt_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_NNT_PRICE[0])
