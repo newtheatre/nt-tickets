@@ -51,18 +51,14 @@ def logout_view(request):
 
 @login_required
 def ShowIndex(request):
-    report = dict()
 
     time_filter = datetime.date.today() - datetime.timedelta(days=30)
     shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
 
     show_list = []
 
-    number_shows = 0
     for sh in shows:
         if sh.is_current():
-            number_shows += 1
-            report['number_shows'] = number_shows
             show_list.append(sh)
 
     paginator = Paginator(show_list, 5)
@@ -79,7 +75,6 @@ def ShowIndex(request):
 
     context = {
         'show': show,
-        'report': report,
     }
 
     return render_to_response('show_index.html', context, context_instance=RequestContext(request)) 
@@ -441,19 +436,11 @@ def make_github_issue(title, body=None, labels=None):
 
 @login_required
 def SaleReport(request):
-    report = dict()
-    shows = models.Show.objects.all()
-    show_list = []
-    occurrence = models.Occurrence.objects.all
+    now = datetime.datetime.now()
+    time_filter = now - datetime.timedelta(weeks=4)
+    show_list = models.Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
 
-    number_shows = 0
-    for sh in shows:
-        if sh.is_current():
-            number_shows += 1
-            report['number_shows'] = number_shows
-            show_list.append(sh)
-
-    paginator = Paginator(show_list, 10)
+    paginator = Paginator(show_list, 5)
     page = request.GET.get('page')
 
     try:
@@ -465,8 +452,6 @@ def SaleReport(request):
 
     context = {
         'show': show,
-        'occurrence': occurrence,
-        'report': report,
     }
 
     return render_to_response(
