@@ -174,9 +174,17 @@ class OccurrenceAdmin(admin.ModelAdmin):
 
     search_fields = ['show']
 
+    
+
     def get_queryset(self, request):
         time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
         return Occurrence.objects.filter(date__gte=time_filter).order_by('date', 'time')
+
+    def get_form(self, request, obj=None, **kwargs):
+        time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
+        form = super(OccurrenceAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['show'].queryset = Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
+        return form
 
 
 class CategoryAdmin(admin.ModelAdmin):
