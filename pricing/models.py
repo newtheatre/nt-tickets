@@ -113,7 +113,7 @@ class StuFFPricing(models.Model):
         verbose_name_plural = 'StuFF Pricing'
 
     show = models.ForeignKey(Show, limit_choices_to={'category': 4})
-    ticket_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.CONCESSION_PRICE[0])
+    stuff_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.CONCESSION_PRICE[0])
 
     def __str__(self):
       s = 'Pricing for: '  + self.show.name

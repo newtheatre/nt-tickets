@@ -193,6 +193,18 @@ class CategoryAdmin(admin.ModelAdmin):
     ordering = ['sort']
     search_fields = ['show']
 
+    def has_add_permission(self, request):
+        if request.user.is_superuser:
+          return True
+        else:
+          return False
+
+    def has_change_permission(self, request):
+        if request.user.is_superuser:
+          return True
+        else:
+          return False
+
 
 class InHousePriceAdmin(admin.ModelAdmin):
     fields = [
