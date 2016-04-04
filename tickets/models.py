@@ -330,6 +330,14 @@ class Occurrence(models.Model):
                 fringe += s.number_fringe
         return fringe
 
+    def stuff_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        stuff = 0
+        for s in sale:
+            if s.number_stuff > 0:
+                stuff += s.number_stuff
+        return stuff
+
     def matinee_freshers_tally(self):
         sale = Sale.objects.filter(occurrence=self)
         matinee_freshers = 0
@@ -434,6 +442,8 @@ class Sale(models.Model):
     number_fringe = models.IntegerField(default=0)
     number_matinee_freshers = models.IntegerField(default=0)
     number_matinee_freshers_nnt = models.IntegerField(default=0)
+
+    number_stuff = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
