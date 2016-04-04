@@ -174,3 +174,41 @@ iframe {
   display: inline-block;
   margin-right: 0.6em;
 }
+
+.wrapper {
+  margin: 50px auto;
+  width: 280px;
+  height: 370px;
+  background: white;
+  @include box-shadow( 0px 0px 8px rgba(0,0,0,0.3) );
+  position: relative;
+  z-index: 90;
+}
+
+.ribbon-wrapper {
+  width: 85px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.ribbon {
+  text-align: center;
+  @include transform ( rotate(45deg) );
+  position: relative;
+  padding: 0.5em 0;
+  left: -8px;
+  top: 10px;
+  width: 130px;
+  @include box-shadow( 0px 0px 3px rgba(0,0,0,0.3) );
+
+  &.past {
+    background-color: color('red', 'base');
+  }
+  &.current {
+    background-color: color('green', 'base')
+  }
+}
+
