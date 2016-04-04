@@ -27,7 +27,6 @@ from django.shortcuts import render_to_response
 from tickets import models, forms
 from pricing import models
 
-
 import configuration.customise as config
 import configuration.keys as keys
 
