@@ -435,6 +435,8 @@ class Sale(models.Model):
     number_matinee_freshers = models.IntegerField(default=0)
     number_matinee_freshers_nnt = models.IntegerField(default=0)
 
+    number_stuff = models.IntegerField(default=0)
+
     def save(self, *args, **kwargs):
         if not self.unique_code:
             self.unique_code = rand_16()
