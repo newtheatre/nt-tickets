@@ -13274,3 +13274,51 @@ iframe {
   display: inline-block;
   margin-right: 0.6em;
 }
+
+/* line 178, ../sass/components/_style.scss */
+.wrapper {
+  margin: 50px auto;
+  width: 280px;
+  height: 370px;
+  background: white;
+  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 90;
+}
+
+/* line 188, ../sass/components/_style.scss */
+.ribbon-wrapper {
+  width: 85px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+/* line 197, ../sass/components/_style.scss */
+.ribbon {
+  text-align: center;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  position: relative;
+  padding: 0.5em 0;
+  left: -8px;
+  top: 10px;
+  width: 130px;
+  -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+/* line 207, ../sass/components/_style.scss */
+.ribbon.past {
+  background-color: #F44336;
+}
+/* line 210, ../sass/components/_style.scss */
+.ribbon.current {
+  background-color: #4CAF50;
+}
