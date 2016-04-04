@@ -17,6 +17,9 @@ SIDEBAR_FILTER_PERIOD = 4
 
 PUBLIC_CATEGORIES = ['in_house', 'fringe']
 
+# These are the default prices when new shows are created
+# They can be changed per show
+
 FRINGE_PRICE = [3.00, '£3.00']
 CONCESSION_PRICE = [5.00, '£5.00']
 MEMBER_PRICE = [4.00, '£4.00']
