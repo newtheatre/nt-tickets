@@ -80,7 +80,6 @@
 								{{ oc.day_formatted }} at {{ oc.time_formatted }}
 								</span>
 							</div>
-							<!-- In House Shows -->
 							{% if show.category.id == 1 %}
 							<div class="col s12 center-align" style="overflow: scroll;">
 								<table class="centered">
@@ -126,7 +125,6 @@
 									</tbody>
 								</table>
 							</div>
-							<!-- Fringe Shows -->
 							{% elif show.category.id == 2 %}
 								<div class="col s12 center-align">
 								<table class="centered">
@@ -154,7 +152,6 @@
 									</tbody>
 								</table>
 							</div>
-							<!-- External Shows -->
 							{% elif show.category.id == 3 %}
 								<div class="col s12 center-align">
 								<table class="centered">
@@ -220,24 +217,6 @@
 												<td class="nnt-orange bold">£{{ oc.matinee_freshers_nnt_tally|mul:report.matinee_freshers_nnt_price }}</td>
 												{% endif %}
 											{% endif %}
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							{% elif show.category.id == 4 %}
-							<div class="col s12 center-align">
-								<table class="centered">
-									<thead>
-										<tr>
-											<th class="nnt-purple bold">StuFF Tickets</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td class="nnt-orange bold">{{ oc.stuff_tally }}</td>
-										</tr>
-										<tr>
-											<td class="nnt-orange bold">£{{ oc.stuff_tally|mul:report.stuff_price }}</td>
 										</tr>
 									</tbody>
 								</table>
