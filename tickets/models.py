@@ -178,9 +178,9 @@ class OccurrenceManager(models.Manager):
             combined = datetime.datetime.combine(oc.date, oc.time)
             close_time = combined - datetime.timedelta(hours=oc.hours_til_close)
             if oc.sold_out():
-                break
+                pass
             if oc.date <= today and time >= close_time:
-                break
+                pass
             else:
                 ret.append((
                     oc.id, 
