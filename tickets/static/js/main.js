@@ -4,7 +4,7 @@ function sell_tickets() {
   $.ajax({
     url : "sale/", // the endpoint
     type : "POST", // http method
-    data : {
+    data : { 
       number_member : $('#member').val(),
       number_concession : $('#concession').val(),
       number_public : $('#public').val(),
@@ -14,7 +14,6 @@ function sell_tickets() {
       number_season : $('#season').val(),
       number_fellow : $('#fellow').val(),
       number_season_sales : $('#season_sales').val(),
-      number_stuff: $('#stuff').val(),
       unique_ticket : $('#unique_ticket').val(),
       reservation: $('#reservation').val()
     }, // data sent with the post request
