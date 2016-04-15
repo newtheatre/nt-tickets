@@ -168,7 +168,7 @@ class OccurrenceAdmin(admin.ModelAdmin):
                 )
 
     ordering = ['date', 'time']
-    search_fields = ['show']
+    search_fields = ['show__name']
 
 
 class CategoryAdmin(admin.ModelAdmin):
