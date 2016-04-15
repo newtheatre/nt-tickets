@@ -121,7 +121,9 @@ def ShowReport(request, show_name, occ_id):
         # How many un-reserved tickets are there left to sell
         report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
         # Maximum amount of free tickets to sell
-        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
+        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
+
+        report['left_to_sell'] = occ_fin.maximum_sell - occ_fin.tickets_sold() 
 
         report['total_sales'] = occ_fin.total_sales()
 
@@ -341,12 +343,10 @@ def SaleInputAJAX(request, show_name, occ_id):
 
 @login_required
 def ReserveInputAJAX(request, show_name, occ_id):
-    report = dict()
 
     if request.method == 'POST' and request.is_ajax():
         if occ_id > 0:
             unique_code = request.POST.get('unique_code')
-            # runique_code = unique_code
 
             try:
                 ticket = models.Ticket.objects.get(unique_code=unique_code)
