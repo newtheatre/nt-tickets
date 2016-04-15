@@ -359,17 +359,10 @@
 								<span class="hide-on-med-and-down">Reset</span></button>
 							</div>
 							<div class="col s6 m3 center-align"> 
-							{% if report.how_many_left == 0 %}
-								<button type="button" class="disabled btn nnt purple">
+								<button type="submit" class="btn nnt purple waves-effect waves-dark" id="sell_button">
 								<i class="material-icons left hide-on-med-and-down">shopping_cart</i>
 								<i class="material-icons hide-on-large-only">shopping_cart</i>
 								<span class="hide-on-med-and-down">Sell Tickets</span></button>
-							{% else %}
-								<button type="submit" class="btn nnt purple waves-effect waves-dark" onclick="resetButton()">
-								<i class="material-icons left hide-on-med-and-down">shopping_cart</i>
-								<i class="material-icons hide-on-large-only">shopping_cart</i>
-								<span class="hide-on-med-and-down">Sell Tickets</span></button>
-							{% endif %}
 							</div>
 						</div>
 					</div>
@@ -392,17 +385,10 @@
 										<span class="hide-on-med-and-down">Reset</span></button>
 									</div>
 									<div class="col s6 center-align pad-small"> 
-									{% if report.how_many_left == 0 %}
-										<button type="button" class="disabled btn nnt purple">
+										<button type="submit" class="btn nnt purple waves-effect waves-dark" onclick="resetButton()" id="sell_button">
 										<i class="material-icons left hide-on-med-and-down">shopping_cart</i>
 										<i class="material-icons hide-on-large-only">shopping_cart</i>
 										<span class="hide-on-med-and-down">Sell Tickets</span></button>
-									{% else %}
-										<button type="submit" class="btn nnt purple waves-effect waves-dark" onclick="resetButton()">
-										<i class="material-icons left hide-on-med-and-down">shopping_cart</i>
-										<i class="material-icons hide-on-large-only">shopping_cart</i>
-										<span class="hide-on-med-and-down">Sell Tickets</span></button>
-									{% endif %}
 									</div>
 								</div>
 							</div>
@@ -480,6 +466,7 @@
 	<!-- Dynamic addition of sales -->
 	<script>
 	$(document).ready(function(){
+		checkSell();
 		$(document).keyup(function(){
 			var concession_price = document.getElementById("concession_price").value;
 			var member_price = document.getElementById("member_price").value;
@@ -517,156 +504,15 @@
 	});
 	</script>
 
-	<!-- Member shortcut -->
 	<script>
-		var num_member = parseFloat(document.getElementById("member").value);
-		Mousetrap.bind('m', function() {
-			num_member = num_member + 1;
-			document.getElementById("member").value = num_member;
-		})
-
-		Mousetrap.bind('shift+m', function() {
-			if (num_member >= 1) {
-				num_member = num_member - 1;
-				document.getElementById("member").value = num_member;
-			}
-		})
+		function checkSell() {
+			if ( {{report.how_many_left}} == 0 ) {
+				$('#sell_button').prop("disabled", true);
+			};
+		};
 	</script>
 
-	<!-- Concession Shortcut -->
-	<script>
-		var num_concession = parseFloat(document.getElementById("concession").value);
-		Mousetrap.bind('c', function() {
-			num_concession = num_concession + 1;
-
-			document.getElementById("concession").value = num_concession;
-		})
-		Mousetrap.bind('shift+c', function() {
-			if (num_concession >= 1) {
-				num_concession = num_concession - 1;
-				document.getElementById("concession").value = num_concession;
-			}
-		})
-	</script>
-
-	<!-- Public Shortcut -->
-	<script>
-		var num_public = parseFloat(document.getElementById("public").value);
-		Mousetrap.bind('p', function() {
-			num_public = num_public + 1;
-
-			document.getElementById("public").value = num_public;
-		})
-
-		Mousetrap.bind('shift+p', function() {
-			if (num_public >= 1) {
-				num_public = num_public - 1;
-				document.getElementById("public").value = num_public;
-			}
-		})
-	</script>
-
-	<!-- Season Pass Shortcut -->
-	<script>
-		var num_season = parseFloat(document.getElementById("season").value);
-		Mousetrap.bind('s', function() {
-			num_season = num_season + 1;
-
-			document.getElementById("season").value = num_season;
-		})
-
-		Mousetrap.bind('shift+s', function() {
-			if (num_season >= 1) {
-				num_season = num_season - 1;
-				document.getElementById("season").value = num_season;
-			}
-		})
-	</script>
-
-	<!-- Season Pass Ticket Sales Shortcut -->
-	<script>
-		var num_season_sale = parseFloat(document.getElementById("season_sales").value);
-		Mousetrap.bind('t', function() {
-			num_season_sale = num_season_sale + 1;
-
-			document.getElementById("season_sales").value = num_season_sale;
-		})
-
-		Mousetrap.bind('shift+t', function() {
-			if (num_season_sale >= 1) {
-				num_season_sale = num_season_sale - 1;
-				document.getElementById("season_sales").value = num_season_sale;
-			}
-		})
-	</script>
-
-	<!-- Fellow Shortcut -->
-	<script>
-		var num_fellow = parseFloat(document.getElementById("fellow").value);
-		Mousetrap.bind('f', function() {
-			num_fellow = num_fellow + 1;
-
-			document.getElementById("fellow").value = num_fellow;
-		})
-
-		Mousetrap.bind('shift+f', function() {
-			if (num_fellow >= 1) {
-				num_fellow = num_fellow - 1;
-				document.getElementById("fellow").value = num_fellow;
-			}
-		})
-	</script>
-
-	<!-- Matinee Freshers Shortcut -->
-	<script>
-		var num_matinee_freshers = parseFloat(document.getElementById("matinee_freshers").value);
-		Mousetrap.bind('b', function() {
-			num_matinee_freshers = num_matinee_freshers + 1;
-
-			document.getElementById("matinee_freshers").value = num_matinee_freshers;
-		})
-
-		Mousetrap.bind('shift+b', function() {
-			if (num_matinee_freshers >= 1) {
-				num_matinee_freshers = num_matinee_freshers - 1;
-				document.getElementById("matinee_freshers").value = num_matinee_freshers;
-			}
-		})
-	</script>
-
-	<!-- Matinee Freshers nnt Shortcut -->
-	<script>
-		var num_matinee_freshers_nnt = parseFloat(document.getElementById("matinee_freshers_nnt").value);
-		Mousetrap.bind('n', function() {
-			num_matinee_freshers_nnt = num_matinee_freshers_nnt + 1;
-
-			document.getElementById("matinee_freshers_nnt").value = num_matinee_freshers_nnt;
-		})
-
-		Mousetrap.bind('shift+n', function() {
-			if (num_matinee_freshers_nnt >= 1) {
-				num_matinee_freshers_nnt = num_matinee_freshers_nnt - 1;
-				document.getElementById("matinee_freshers_nnt").value = num_matinee_freshers_nnt;
-			}
-		})
-	</script>
-
-	<!-- Fellow Shortcut -->
-	<script>
-		var num_fringe = parseFloat(document.getElementById("fringe").value);
-		Mousetrap.bind('d', function() {
-			num_fellow = num_fringe + 1;
-
-			document.getElementById("fringe").value = num_fringe;
-		})
-
-		Mousetrap.bind('shift+d', function() {
-			if (num_fringe >= 1) {
-				num_fringe = num_fringe - 1;
-				document.getElementById("fringe").value = num_fringe;
-			}
-		})
-	</script>
+	{% include 'shortcut.html' %}
 
 	<!-- Submit post on form submit -->
 	<script>
@@ -696,6 +542,7 @@
 		xr = parseFloat(0).toFixed(2);
 		document.getElementById("out1").innerHTML = xr;
 		document.getElementById("out2").innerHTML = xr;
+		checkSell();
 		// document.getElementById("reservation").innerHTML = "None";
 	}
 	</script>
