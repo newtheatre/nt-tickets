@@ -177,11 +177,7 @@ class OccurrenceManager(models.Manager):
         for oc in occs:
             combined = datetime.datetime.combine(oc.date, oc.time)
             close_time = combined - datetime.timedelta(hours=oc.hours_til_close)
-            if oc.sold_out():
-                pass
-            if oc.date <= today and time >= close_time:
-                pass
-            else:
+            if not oc.sold_out() and not (oc.date <= today and time >= close_time):
                 ret.append((
                     oc.id, 
                     oc.datetime_formatted(), 
@@ -399,7 +395,7 @@ class Ticket(models.Model):
 
 class SaleManager(models.Manager):
 
-    def sold_not_reserved(self, occurrence):
+    def sold_not_reserved(self, occurrence): 
         sale = Sale.objects.filter(occurrence=occurrence, ticket='None')
         number = 0
 
