@@ -367,7 +367,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- <p class="white-text">{{ report.how_many_left }}, {{ report.left_to_sell }}</p> -->
 				<div class="row hide-on-med-and-up">
 					<div class="col s12">
 						<div class="card tiny grey darken-3 bottom-card valign-wrapper">
@@ -507,7 +506,7 @@
 
 	<script>
 		function checkSell() {
-			if ( {{report.left_to_sell}} == 0 ) {
+			if ( {{report.how_many_left}} == 0 ) {
 				$('#sell_button').prop("disabled", true);
 			};
 		};
