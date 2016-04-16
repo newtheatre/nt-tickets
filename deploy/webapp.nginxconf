@@ -19,7 +19,7 @@ server {
 
     # the static dir auto-populated with the media of django apps
     location /static/ {
-        alias    /var/projects/mysite/static/;
+        alias    /var/projects/tickets/static/;
     }
 
 
@@ -58,7 +58,7 @@ server {
     # Error pages
     error_page 500 502 503 504 /500.html;
     location = /500.html {
-        root /var/projects/mysite/static/;
+        root /var/projects/tickets/static/;
     }
 }
 
