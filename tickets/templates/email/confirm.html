@@ -49,7 +49,6 @@
 <table class="twelve columns">
 <tr>
 <td class="poster">
-<!-- <img class="center" width="580" height="300" src="http://placehold.it/200x300"> -->
 {% if show.poster %}
 <img class="center" height="300" src="{{show.poster.poster_page.url}}" alt="poster">
 {% endif %}
@@ -74,8 +73,8 @@
 <table class="twelve columns">
 <tr>
 <td>
-<p>You've successfully reserved {{ticket.quantity}} {% if ticket.quantity == 1 %}ticket{% else %}tickets{% endif %} for the performance on <strong>{{ticket.occurrence.date|date:"l d F"}}</strong>, tickets can be collected from <strong>{{ticket.occurrence.time}}</strong></p>
-<p>We'd be sad not to see you but if can't attend please <a href="{{settings.SITE_URL}}{% url 'cancel' ticket.unique_code %}">cancel your tickets</a> so others can take your place.</p>
+<p>You've successfully reserved {{ticket.quantity}} {% if ticket.quantity == 1 %}ticket{% else %}tickets{% endif %} for the performance on <strong>{{ticket.occurrence.date|date:"l d F"}}</strong>, the show is due to begin at <strong>{{ticket.occurrence.time}}</strong> Tickets can be collected up to <strong>half an hour</strong> before the show starts.</p>
+<p>We'd be sad not to see you but if can't attend please <a href="http://{{settings.BASE_URL}}{% url 'cancel' ticket.unique_code %}">cancel your tickets</a> so others can take your place.</p>
 <p>Please don't hesitate to contact us if you have any questions.</p>
 </td>
 <td class="expander"></td>
@@ -131,7 +130,7 @@
 <tr>
 <td align="center">
 <center>
-<p style="text-align:center;"><a href="#">Terms</a> | <a href="#">Privacy</a></p>
+<!-- <p style="text-align:center;"><a href="#">Terms</a> | <a href="#">Privacy</a></p> -->
 </center>
 </td>
 <td class="expander"></td>
