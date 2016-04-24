@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^list/(?P<slug>[-_\w]+)/$', tickets_views.DetailShow.as_view(), name='detail'),
     url(r'^sidebar/$', tickets_views.sidebar, name='sidebar'),
 
+    url(r'^list-stuff-theatre/$', tickets_views.ListStuFFShows.as_view(), name='stuff-list'),
+
     # Auth views
     # url(r'^login/$', tickets_views.LoginView, name='login'),
     url(r'^login/$', tickets_views.login, name='login'),
