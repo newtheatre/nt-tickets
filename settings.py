@@ -29,13 +29,17 @@ AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
 AWS_SES_ACCESS_KEY_ID = keys.AWS_ACCESS_KEY_ID
 AWS_SES_SECRET_ACCESS_KEY = keys.AWS_SECRET_ACCESS_KEY
 
+# Google Charts
+GOOGLECHARTS_API = "1.1"
+GOOGLECHARTS_PACKAGES = ["corechart"]
+
 # Cache
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.chache.backends.locmem.locMemCache',
-#         'LOCATION': 'unique-snowflake'
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
 
 # The repository to add this issue to
 REPO_OWNER = 'newtheatre'
@@ -125,6 +129,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -153,6 +158,7 @@ INSTALLED_APPS = (
     'stdimage',
     'raven.contrib.django.raven_compat',
     'django_ses',
+    'debug_toolbar',
 
     'tickets',
     'pricing',

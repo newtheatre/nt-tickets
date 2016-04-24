@@ -1,8 +1,6 @@
 # Base python 2.7 build, inspired by https://github.com/Pakebo/eb-docker-django-simple
-# Python 2.7 | Django
 
 FROM python:2.7
-MAINTAINER Glyn Jackson (me@glynjackson.org)
 
 ##############################################################################
 # Environment variables
@@ -52,10 +50,9 @@ ADD ./deploy/supervisor_conf.d/webapp.conf /etc/supervisor/conf.d/webapp.conf
 # Install dependencies and run scripts.
 ##############################################################################
 
-ADD .      /var/projects/mysite
-WORKDIR /var/projects/mysite
-RUN pip install -r requirements/common-requirements.txt
-RUN pip install -r requirements/prod-requirements.txt
+ADD .      /var/projects/tickets
+WORKDIR /var/projects/tickets
+RUN pip install -r requirements.txt
 
 ##############################################################################
 # Run start.sh script when the container starts. 

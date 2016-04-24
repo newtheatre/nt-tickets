@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^list/(?P<slug>[-_\w]+)/$', tickets_views.DetailShow.as_view(), name='detail'),
     url(r'^sidebar/$', tickets_views.sidebar, name='sidebar'),
 
+    url(r'^list-stuff-theatre/$', tickets_views.ListStuFFShows.as_view(), name='stuff-list'),
+
     # Auth views
     # url(r'^login/$', tickets_views.LoginView, name='login'),
     url(r'^login/$', tickets_views.login, name='login'),
@@ -33,6 +35,7 @@ urlpatterns = [
     url(r'^show/(?P<show_name>\d+)/$', tickets_views.ShowReport, name='show_report'),
     url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/$', tickets_views.ShowReport, name='show_report_full'),
     url(r'download/(?P<show_name>\d+)/$', tickets_views.DownloadReport, name='download_report'),
+    url(r'^graph/$', tickets_views.graph_view, name='graph_view'),
 
     # AJAX url handlers
     url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/sale/$', tickets_views.SaleInputAJAX, name='sale_ajax'),

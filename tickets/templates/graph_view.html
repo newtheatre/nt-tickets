@@ -1,0 +1,213 @@
+{% extends 'show_base.html' %}
+{% load static from staticfiles %}
+{% block head %}
+   
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col s12 center-align">
+      <h4 class="nnt-orange light">Show Statistics per Month</h4>
+    </div>
+    <div class="col s12 center-align" id="chart-container">
+      <canvas class="respondCanvas" id="show-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
+    </div>
+  </div>
+  <div class="chart-toggles">
+    <div class="row">
+      <div class="col s6 m3 center-align">
+        <input type="checkbox" id="shows" class="enabled" checked />
+        <label for="shows" style="color: rgba(255, 196, 37, 1)">Shows</label>
+      </div>
+      <div class="col s6 m3 center-align">
+        <input type="checkbox" id="tickets" class="" />
+        <label for="tickets" style="color: rgba(226, 0, 19, 1)">Tickets Reserved</label>
+      </div>
+      <div class="col s6 m3 center-align">
+        <input type="checkbox" id="profit" class="" />
+        <label for="profit" style="color: rgba(60, 216, 97, 1)">Profit</label>
+      </div>
+      <div class="col s6 m3 center-align">
+        <input type="checkbox" id="reservedshow" class="enabled" checked />
+        <label for="reservedshow" style="color: rgba(74, 174, 219, 1)">Reservations Per Show</label>
+      </div>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Most Popular Show</h4>
+      <p class="white-text"><strong>{{ most_popular.show }}</strong> starting on {{ most_popular.date }} with <span class="nnt-orange">{{ most_popular.number }}</span> tickets reserved.</p>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Least Popular Show</h4>
+      <p class="white-text"><strong>{{ least_popular.show }}</strong> starting on {{ least_popular.date }} with <span class="nnt-orange">{{ least_popular.number }}</span> tickets reserved.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 center-align">
+      <h4 class="nnt-orange light">Number of Shows per Category</h4>
+    </div>
+    <div class="col s7 center-align" id="chart-container">
+      <canvas class="respondCanvas" id="donut-chart" width="400" height="400" style="width:100%; height:400px"></canvas>
+    </div>
+    <div class="col s5 dark-background z-depth-1">
+      <ul>
+      <li class="white-text"><div class="dot" style="background-color: rgba(255, 196, 37, 1)"></div>In House</li>
+      <li class="white-text"><div class="dot" style="background-color: rgba(226, 0, 19, 1)"></div>Fringe</li>
+      <li class="white-text"><div class="dot" style="background-color: rgba(60, 216, 97, 1)"></div>External</li>
+      <li class="white-text"><div class="dot" style="background-color: rgba(74, 174, 219, 1)"></div>StuFF</li>
+      {% if category_tally.stuff_events %}
+      <li class="white-text"><div class="dot" style="background-color: rgba(175, 48, 146, 1)"></div>StuFF Events</li>
+      {% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Most Popular Day</h4>
+      <p class="white-text">The most popular day is {{ days.max.1 }} with a total of <span class="nnt-orange">{{ days.max.0 }}</span> tickets reserved</p>
+    </div>
+  </div>
+  <div class="row dark-background z-depth-1">
+    <div class="col s12">
+      <h4 class="nnt-orange light">Least Popular Day</h4>
+      <p class="white-text">The least popular day is {{ days.min.1 }} with a total of <span class="nnt-orange">{{ days.min.0 }}</span> tickets reserved</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+
+<script>
+// Get context with jQuery - using jQuery's .get() method.
+var chart = $("#show-chart").get(0).getContext("2d");
+
+var data = {}
+
+var options = {
+    scaleShowGridLines : true,
+    scaleGridLineColor : "rgba(100,100,100,0.3)",
+    bezierCurveTension : 0.4,
+  }
+
+var enableCheck = function() {
+  SHOn = $('#shows').hasClass('enabled')
+  TOn = $('#tickets').hasClass('enabled')
+  POn = $('#profit').hasClass('enabled')
+  RSHOn = $('#reservedshow').hasClass('enabled')
+
+  if (SHOn) {
+    data.shows = {{shows_by_month|safe}};
+  } else {
+    data.shows = {};
+  }
+
+  if (TOn) {
+    data.tickets = {{tickets_sold|safe}};
+  } else {
+    data.tickets = {};
+  }
+
+  if (POn) {
+    data.profit = {{profit|safe}};
+  } else {
+    data.profit = {};
+  }
+
+  if (RSHOn) {
+    data.rbyshow = {{reserved_by_show|safe}};
+  } else {
+    data.rbyshow = {};
+  }
+}
+
+var currentChart
+
+$(document).ready(function() {
+    enableCheck();
+    data = {
+        labels: {{months|safe}},
+        datasets: [
+          data.shows,
+          data.tickets,
+          data.profit,
+          data.rbyshow,
+        ]
+    };
+    var NewChart = new Chart(chart).Line(data, options);
+    currentChart = NewChart
+});
+
+$('.chart-toggles input').click(function() {
+    currentChart.destroy();
+    $(this).toggleClass('enabled');
+    enableCheck();
+    data = {
+        labels: {{months|safe}},
+        datasets: [
+          data.shows,
+          data.tickets,
+          data.profit,
+          data.rbyshow,
+        ]
+    };
+
+    var NewChart = new Chart(chart).Line(data, options);
+    currentChart = NewChart
+});
+
+</script>
+
+<script>
+var chart2 = $("#donut-chart").get(0).getContext("2d");
+
+var donut_data = [
+    {
+        value: {{category_tally.in_house|safe}},
+        color:"rgba(255, 196, 37, 1)",
+        highlight: "rgba(255, 196, 37, 0.9)",
+        label: "In House"
+    },
+    {
+        value: {{category_tally.fringe|safe}},
+        color: "rgba(226, 0, 19, 1)",
+        highlight: "rgba(226, 0, 19, 0.9)",
+        label: "Fringe"
+    },
+    {
+        value: {{category_tally.external|safe}},
+        color: "rgba(60, 216, 97, 1)",
+        highlight: "rgba(60, 216, 97, 0.9)",
+        label: "External"
+    },
+    {
+        value: {{category_tally.stuff|safe}},
+        color: "rgba(74, 174, 219, 1)",
+        highlight: "rgba(74, 174, 219, 0.9)",
+        label: "StuFF"
+    },
+    {
+        value: {{category_tally.stuff_events|safe}},
+        color: "rgba(175, 48, 146, 1)",
+        highlight: "rgba(175, 48, 146, 0.9)",
+        label: "StuFF Events"
+    }
+]
+
+var donut_options = {
+  segmentShowStroke : true,
+  segmentStrokeColor : "#262426",
+  segmentStrokeWidth : 3,
+  animationSteps : 50,
+}
+
+var myDoughnutChart = new Chart(chart2).Doughnut(donut_data, donut_options);
+
+</script>
+
+{% endblock %}

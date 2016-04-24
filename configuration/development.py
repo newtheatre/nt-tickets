@@ -18,10 +18,8 @@ PUBLIC_CATEGORIES = ['theatre','uncut']
 ACTUALLY_SEND_MAIL = False
 
 AWS_STORAGE_BUCKET_NAME = "nt-tickets-dev"
-STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-STATICFILES_LOCATION = 'static'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+STATIC_URL = '/static/'
 
 AWS_S3_SECURE_URLS = False    # Use HTTP instead of HTTPS
 AWS_QUERYSTRING_AUTH = False    # Remove auth querystrings from the query

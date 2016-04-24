@@ -6,6 +6,8 @@ from django.contrib.sites.models import Site
 from django.http import HttpResponse
 import csv
 
+from datetime import datetime
+
 from tickets.models import *
 import pricing.models as pricing
 from tickets.forms import ReportForm, CancelForm, DownloadForm
@@ -146,8 +148,11 @@ class ShowAdmin(admin.ModelAdmin):
                 'end_date')
 
     list_filter = ['category']
-    ordering = ['start_date', 'name']
     search_fields = ('name', 'description')
+
+    def get_queryset(self, request):
+        time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
+        return Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
 
 
 class OccurrenceAdmin(admin.ModelAdmin):
@@ -168,7 +173,17 @@ class OccurrenceAdmin(admin.ModelAdmin):
                 )
 
     ordering = ['date', 'time']
-    search_fields = ['show']
+    search_fields = ['show__name']
+
+    def get_queryset(self, request):
+        time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
+        return Occurrence.objects.filter(date__gte=time_filter).order_by('date', 'time')
+
+    def get_form(self, request, obj=None, **kwargs):
+        time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
+        form = super(OccurrenceAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['show'].queryset = Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
+        return form
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -176,6 +191,18 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'sort')
     ordering = ['sort']
     search_fields = ['show']
+
+    def has_add_permission(self, request):
+        if request.user.is_superuser:
+          return True
+        else:
+          return False
+
+    def has_change_permission(self, request):
+        if request.user.is_superuser:
+          return True
+        else:
+          return False
 
 
 class InHousePriceAdmin(admin.ModelAdmin):
@@ -242,7 +269,7 @@ class SeasonPriceAdmin(admin.ModelAdmin):
 
 
 class StuFFPriceAdmin(admin.ModelAdmin):
-    fields = ['concession_price', 'public_price', 'member_price']
+    fields = ['show', 'ticket_price',]
 
 
 class StuFFEventPriceAdmin(admin.ModelAdmin):

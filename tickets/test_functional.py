@@ -42,7 +42,7 @@ class ShowFactory(factory.django.DjangoModelFactory):
     model = models.Show
 
   category = factory.SubFactory(CategoryFactory)
-  start_date = datetime.date.today() + datetime.timedelta(days=2)
+  start_date = datetime.date.today()
   end_date = datetime.date.today() + datetime.timedelta(days=5)
 
   name='Test Show'
@@ -50,8 +50,6 @@ class ShowFactory(factory.django.DjangoModelFactory):
   description='Test show present'
   long_description='Some more info'
   # poster=File(open('test/test_poster.jpg'))
-
-
 
 class OccurrenceFactory(factory.django.DjangoModelFactory):
   class Meta:
@@ -63,6 +61,12 @@ class OccurrenceFactory(factory.django.DjangoModelFactory):
   maximum_sell=2
   hours_til_close=2
 
+class TicketFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Ticket
+
+    person_name = 'Test Person'
+    email_address = 'test@person.com'
 
 
 class BookTest(LiveServerTestCase):
@@ -181,6 +185,20 @@ class BookTest(LiveServerTestCase):
       '//form[@class="submit-once"]/div[@class="col col_left"]/div[@class="control-group error required"][1]/div[@class="controls"]/p[@class="help-block"]'
       ).text
     self.assertEqual(occurrence_err, 'This field is required.')
+
+  def test_book_one_sold_out(self):
+    show = models.Show.objects.get(name='Test Show')
+
+    occ = OccurrenceFactory.create(show=show, date = datetime.date.today() + datetime.timedelta(days=1))
+    tick = models.Ticket.objects.create(occurrence=occ, person_name='testman', email_address='1@1.com', quantity=2)
+
+    self.browser.get(self.live_server_url + '/book/' + str(show.id))
+
+    occurrence = Select(self.browser.find_element_by_id('id_occurrence'))
+    occurrence.select_by_value('2')
+
+    sold_out = self.browser.find_element_by_id('id_quantity').text
+    self.assertTrue(sold_out, 'Performance Sold Out')
 
 
 class ListTest(LiveServerTestCase):

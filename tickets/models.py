@@ -87,6 +87,9 @@ class Show(models.Model):
 
     category = models.ForeignKey('Category')
 
+    def date_formatted(self):
+        return self.start_date.strftime('%A %d %B %Y')
+
     def is_current(self):
         today = datetime.date.today()
         if today >= self.end_date:
@@ -174,11 +177,7 @@ class OccurrenceManager(models.Manager):
         for oc in occs:
             combined = datetime.datetime.combine(oc.date, oc.time)
             close_time = combined - datetime.timedelta(hours=oc.hours_til_close)
-            if oc.sold_out():
-                break
-            if oc.date <= today and time >= close_time:
-                break
-            else:
+            if not oc.sold_out() and not (oc.date <= today and time >= close_time):
                 ret.append((
                     oc.id, 
                     oc.datetime_formatted(), 
@@ -335,6 +334,14 @@ class Occurrence(models.Model):
                 fringe += s.number_fringe
         return fringe
 
+    def stuff_tally(self):
+        sale = Sale.objects.filter(occurrence=self)
+        stuff = 0
+        for s in sale:
+            if s.number_stuff > 0:
+                stuff += s.number_stuff
+        return stuff
+
     def matinee_freshers_tally(self):
         sale = Sale.objects.filter(occurrence=self)
         matinee_freshers = 0
@@ -404,7 +411,7 @@ class Ticket(models.Model):
 
 class SaleManager(models.Manager):
 
-    def sold_not_reserved(self, occurrence):
+    def sold_not_reserved(self, occurrence): 
         sale = Sale.objects.filter(occurrence=occurrence, ticket='None')
         number = 0
 
@@ -440,6 +447,8 @@ class Sale(models.Model):
     number_fringe = models.IntegerField(default=0)
     number_matinee_freshers = models.IntegerField(default=0)
     number_matinee_freshers_nnt = models.IntegerField(default=0)
+
+    number_stuff = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
