@@ -1014,6 +1014,12 @@ class ListShows(OrderedListView):
         return super(ListShows, self).get_queryset().filter(end_date__gte=today)
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
+class ListStuFFShows(ListShows):
+    def get_queryset(self):
+        today = datetime.date.today()
+        return super(ListStuFFShows, self).get_queryset().filter(end_date__gte=today).filter(category__name='StuFF')
+        #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
+
 
 class ListPastShows(OrderedListView):
     model = models.Show
