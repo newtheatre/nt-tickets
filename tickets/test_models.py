@@ -77,7 +77,7 @@ class ShowTest(TestCase):
         occ_day = datetime.now()+timedelta(hours=4)
 
         cls.occ = {
-            1: Occurrence.objects.create(show=cls.show[1], date=occ_day.date(), time=cls.now, maximum_sell=2, hours_til_close=2),
+            1: Occurrence.objects.create(show=cls.show[1], date=occ_day.date(), time=occ_day.time(), maximum_sell=2, hours_til_close=0),
         }
 
         cls.ticket = Ticket.objects.create(
@@ -252,10 +252,12 @@ class ShowReallyClosed(TestCase):
             category=cat
             )
 
+        occ_day = datetime.now()-timedelta(hours=7)
+
         cls.occ = Occurrence.objects.create(
             show=cls.show,
-            date=date.today(),
-            time=datetime.now()-timedelta(hours=7),
+            date=occ_day.date(),
+            time=occ_day.time(),
             maximum_sell=2,
             hours_til_close=2,
             unique_code=rand_16(),
