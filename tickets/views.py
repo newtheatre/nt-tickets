@@ -91,14 +91,8 @@ def ShowReport(request, show_name, occ_id):
     report['default_time_matinee'] = \
         config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
-    report['concession_price'] = config.CONCESSION_PRICE[0]
-    report['member_price'] = config.MEMBER_PRICE[0]
-    report['public_price'] = config.PUBLIC_PRICE[0]
-    report['fringe_price'] = config.FRINGE_PRICE[0]
-    report['matinee_freshers_price'] = config.MATINEE_FRESHERS_PRICE[0]
-    report['matinee_freshers_nnt_price'] = config.MATINEE_FRESHERS_NNT_PRICE[0]
-
     report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -241,6 +235,7 @@ def SaleInputAJAX(request, show_name, occ_id):
         elif category.id == 4:
             pricing = models.StuFFPricing.objects.get(show_id=show_name)
 
+
         try:
             number_concession = float(request.POST.get('number_concession'))
         except:
@@ -265,6 +260,11 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_season_sale = float(request.POST.get('number_season_sales'))
         except:
             number_season_sale = float(0)
+
+        try:
+            number_season_sale_nnt = float(request.POST.get('number_season_sales_nnt'))
+        except:
+            number_season_sale_nnt = float(0)
 
         try:
             number_fellow = float(request.POST.get('number_fellow'))
@@ -296,6 +296,7 @@ def SaleInputAJAX(request, show_name, occ_id):
         s.number_public = number_public
         s.number_season = number_season
         s.number_season_sale = number_season_sale
+        s.number_season_sale_nnt = number_season_sale_nnt
         s.number_fellow = number_fellow
         s.number_fringe = number_fringe
         s.number_matinee_freshers = number_matinee_freshers
@@ -317,7 +318,8 @@ def SaleInputAJAX(request, show_name, occ_id):
         except Exception:
             public_sale = float(0)
 
-        season_sale = number_season * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+        season_sale = number_season_sale * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+        season_sale_nnt = number_season_sale_nnt * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
 
         try:
             fringe_sale = number_fringe * float(pricing.fringe_price)
@@ -344,6 +346,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             member_sale +
             public_sale +
             season_sale +
+            season_sale_nnt +
             fringe_sale +
             matinee_fresher_sale +
             matinee_fresher_nnt_sale + 
@@ -359,6 +362,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_matinee_freshers_nnt +
             number_season +
             number_season_sale +
+            number_season_sale_nnt +
             number_fellow + 
             number_stuff
             )
@@ -590,6 +594,7 @@ def SaleReportFull(request, show_name):
         report['matinee_freshers_nnt_price'] = float(0)
 
     report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt
 
     try:
         report['stuff_price'] = float(pricing.stuff_price)
@@ -649,6 +654,7 @@ def DownloadReport(request, show_name):
         public_sale = float(0)
 
     season_sale = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+    season_sale_nnt = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
 
     try:
         fringe_sale = float(pricing.fringe_price)
@@ -686,6 +692,7 @@ def DownloadReport(request, show_name):
         'Public Tickets',
         'Season Tickets',
         'Season Ticket Sales',
+        'Member Season Ticket Sales',
         'Fellow Tickets',
         'StuFF Tickets',
         ])
@@ -699,6 +706,7 @@ def DownloadReport(request, show_name):
             oc.public_tally(),
             oc.season_tally(),
             oc.season_sale_tally(),
+            oc.season_sale_nnt_tally(),
             oc.fellow_tally(),
             oc.stuff_tally(),
             ])
@@ -710,6 +718,7 @@ def DownloadReport(request, show_name):
             oc.public_tally() * public_sale,
             '-',
             oc.season_sale_tally() * season_sale,
+            oc.season_sale_nnt_tally() * season_sale_nnt,
             '-',
             oc.stuff_tally() * stuff_sale,
             ])

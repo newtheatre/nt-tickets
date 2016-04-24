@@ -91,6 +91,7 @@
 											<th class="nnt-purple bold">Public Tickets</th>
 											<th class="nnt-purple bold">Season Tickets</th>
 											<th class="nnt-purple bold">Season Ticket Sales</th>
+											<th class="nnt-purple bold">Member Season Ticket Sales</th>
 											<th class="nnt-purple bold">Fellow Tickets</th>
 											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
 											<th class="nnt-purple bold">Matinee Freshers Tickets</th>
@@ -105,6 +106,7 @@
 											<td class="nnt-orange bold">{{ oc.public_tally }}</td>
 											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
 											<td class="nnt-orange bold">{{ oc.season_sale_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.season_sale_nnt_tally }}</td>
 											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
 											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
 											<td class="nnt-orange bold">{{ oc.matinee_freshers_tally }}</td>
@@ -117,6 +119,7 @@
 											<td class="nnt-orange bold">£{{ oc.public_tally|mul:report.public_price }}</td>
 											<td class="nnt-orange bold">-</td>
 											<td class="nnt-orange bold">£{{ oc.season_sale_tally|mul:report.season_price }}</td>
+											<td class="nnt-orange bold">£{{ oc.season_sale_nnt_tally|mul:report.season_price_nnt }}</td>
 											<td class="nnt-orange bold">-</td>
 											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
 											<td class="nnt-orange bold">£{{ oc.matinee_freshers_tally|mul:report.matinee_freshers_price }}</td>
@@ -135,6 +138,7 @@
 											<th class="nnt-purple bold">Fringe Tickets</th>
 											<th class="nnt-purple bold">Season Tickets</th>
 											<th class="nnt-purple bold">Season Ticket Sales</th>
+											<th class="nnt-purple bold">Member Season Ticket Sales</th>
 											<th class="nnt-purple bold">Fellow Tickets</th>
 										</tr>
 									</thead>
@@ -143,12 +147,14 @@
 											<td class="nnt-orange bold">{{ oc.fringe_tally }}</td>
 											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
 											<td class="nnt-orange bold">{{ oc.season_sale_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.season_sale_nnt_tally }}</td>
 											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
 										</tr>
 										<tr>
 											<td class="nnt-orange bold">£{{ oc.fringe_tally|mul:report.fringe_price }}</td>
 											<td class="nnt-orange bold">-</td>
 											<td class="nnt-orange bold">£{{ oc.season_sale_tally|mul:report.season_price }}</td>
+											<td class="nnt-orange bold">£{{ oc.season_sale_nnt_tally|mul:report.season_price_nnt }}</td>
 											<td class="nnt-orange bold">-</td>
 										</tr>
 									</tbody>
@@ -166,6 +172,7 @@
 											{% if pricing.allow_season_tickets %}
 											<th class="nnt-purple bold">Season Tickets</th>
 											<th class="nnt-purple bold">Season Ticket Sales</th>
+											<th class="nnt-purple bold">Member Season Ticket Sales</th>
 											{% endif %}
 											{% if pricing.allow_fellow_tickets %}
 											<th class="nnt-purple bold">Fellow Tickets</th>
@@ -188,6 +195,7 @@
 											{% if pricing.allow_season_tickets %}
 											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
 											<td class="nnt-orange bold">{{ oc.season_sale_tally }}</td>
+											<td class="nnt-orange bold">{{ oc.season_sale_nnt_tally }}</td>
 											{% endif %}
 											{% if pricing.allow_fellow_tickets %}
 											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
@@ -208,6 +216,7 @@
 											{% if pricing.allow_season_tickets %}
 											<td class="nnt-orange bold">-</td>
 											<td class="nnt-orange bold">£{{ oc.season_sale_tally|mul:report.season_price }}</td>
+											<td class="nnt-orange bold">£{{ oc.season_sale_nnt_tally|mul:report.season_price_nnt }}</td>
 											{% endif %}
 											{% if pricing.allow_fellow_tickets %}
 											<td class="nnt-orange bold">-</td>

@@ -131,6 +131,11 @@
 						{% else %}
 							<input type="hidden" value="0" id="season_price">
 						{% endif %}
+						{% if report.season_price_nnt %}
+							<input type="hidden" value="{{ report.season_price_nnt }}" id="season_price_nnt">
+						{% else %}
+							<input type="hidden" value="0" id="season_price_nnt">
+						{% endif %}
 						{% if pricing.fringe_price %}
 							<input type="hidden" value="{{ pricing.fringe_price }}" id="fringe_price">
 						{% else %}
@@ -173,19 +178,25 @@
 						</div>
 
 						<!-- Season Ticket Numbers -->
-						<div class="input-field col s12 m6 l4">
+						<div class="input-field col s12 m6">
 							<input id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season">Season Pass Tickets</label>
 						</div>
 
 						<!-- Season Ticket Sales -->
-						<div class="input-field col s12 m6 l4">
+						<div class="input-field col s12 m6">
 							<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season_sales">Season Ticket Sales £{{ report.season_price }}</label>
 						</div>
 
+						<!-- Season Ticket Sales NNT -->
+						<div class="input-field col s12 m6">
+							<input id="season_sales_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="season_sales_nnt">Season Ticket Member Sales £{{ report.season_price_nnt }}</label>
+						</div>
+
 						<!-- Fellow Ticket Numbers -->
-						<div class="input-field col s12 m6 l4">
+						<div class="input-field col s12 m6">
 							<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="fellow">Fellow Tickets</label>
 						</div>
@@ -217,25 +228,31 @@
 					<!-- Fringe Shows -->
 					{% elif report.category|stringformat:"s" == "Fringe" %}
 						<!-- Fringe Ticket Sales -->
-						<div class="input-field col s12 m6 l3">
+						<div class="input-field col s12 m4">
 							<input id="fringe" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="fringe">Fringe Tickets £{{ pricing.fringe_price }}</label>
 						</div>
 
 						<!-- Season Ticket Numbers -->
-						<div class="input-field col s12 m6 l3">
+						<div class="input-field col s12 m4">
 							<input id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season">Season Pass Tickets</label>
 						</div>
 
 						<!-- Season Ticket Sales -->
-						<div class="input-field col s12 m6 l3">
+						<div class="input-field col s12 m4">
 							<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="season_sales">Season Pass Ticket Sales £{{ report.season_price }}</label>
 						</div>
 
+						<!-- Season Ticket Sales NNT -->
+						<div class="input-field col s12 m6">
+							<input id="season_sales_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="season_sales_nnt">Season Ticket Member Sales £{{ report.season_price_nnt }}</label>
+						</div>
+
 						<!-- Fellow Ticket Numbers -->
-						<div class="input-field col s12 m6 l3">
+						<div class="input-field col s12 m6">
 							<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="fellow">Fellow Tickets</label>
 						</div>
@@ -280,12 +297,19 @@
 								<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 								<label for="season_sales">Season Pass Ticket Sales £{{ report.season_price }}</label>
 							</div>
+
+							<!-- Season Ticket Sales NNT -->
+						<div class="input-field col s12 m6 l4">
+							<input id="season_sales_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="season_sales_nnt">Season Ticket Member Sales £{{ report.season_price_nnt }}</label>
+						</div>
 						{% else %}
 
 							<!-- Hidden Inputs -->
 							<div class="col s12">
 								<input id="season" type="hidden" value="0">
 								<input id="season_sales" type="hidden" value="0">
+								<input id="season_sales_nnt" type="hidden" value="0">
 							</div>
 						<!-- End allow_season_tickets -->
 						{% endif %}
@@ -462,7 +486,7 @@
 		</div>
 
 	</div>
-	
+
 {% endblock %}
 {% block script %}
 	<!-- Set up modal trigger and sale tally -->
@@ -486,6 +510,7 @@
 			var matinee_freshers_price = document.getElementById("matinee_freshers_price").value;
 			var matinee_freshers_nnt_price = document.getElementById("matinee_freshers_nnt_price").value;
 			var season_price = document.getElementById("season_price").value;
+			var season_price_nnt = document.getElementById("season_price_nnt").value;
 			var stuff_price = document.getElementById("stuff_price").value;
 
 			try {
@@ -542,6 +567,12 @@
 				var num_season_sale = 0;
 			}
 
+			try {
+				var num_season_sale_nnt = document.getElementById("season_sales_nnt").value * season_price_nnt;
+			} catch (err) {
+				var num_season_sale_nnt = 0;
+			}
+
 			try { 
 				var num_stuff = document.getElementById("stuff").value * stuff_price;
 			} catch (err) {
@@ -558,8 +589,9 @@
 				+num_season +
 				+num_fellow +
 				+num_season_sale +
+				+num_season_sale_nnt +
 				+num_stuff;
-				
+
 			xf = parseFloat(x).toFixed(2);
 			document.getElementById("out1").innerHTML = xf;
 			document.getElementById("out2").innerHTML = xf;
@@ -569,9 +601,9 @@
 
 	<script>
 		function checkSell() {
-			if ( {{report.how_many_left}} == 0 ) {
-				$('#sell_button').prop("disabled", true);
-			};
+			// if ( {{report.how_many_left}} == 0 ) {
+			// 	$('#sell_button').prop("disabled", true);
+			// };
 		};
 	</script>
 
@@ -583,6 +615,7 @@
 			event.preventDefault();
 			// console.log("Sell form submitted")  // sanity check
 			sell_tickets();
+			resetButton();
 			return false;
 		});
 	</script>
@@ -591,7 +624,6 @@
 	  $(document).on('submit', '.reserve-form', function(event){
 			var id = $(this).attr('id');
 			event.preventDefault();
-			// console.log(id);
 			// console.log("Collect form submitted");  // sanity check
 			collect_tickets(id);
 			$('#modal2').closeModal();
