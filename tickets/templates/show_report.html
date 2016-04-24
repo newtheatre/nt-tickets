@@ -146,6 +146,11 @@
 						{% else %}
 							<input type="hidden" value="0" id="matinee_freshers_nnt_price">
 						{% endif %}
+						{% if pricing.stuff_price %}
+							<input type="hidden" value="{{ pricing.stuff_price }}" id="stuff_price">
+						{% else %}
+							<input type="hidden" value="0" id="stuff_price">
+						{% endif %}
 					</div>
 					<!-- In House Shows -->
 					{% if report.category|stringformat:"s" == "In House" %}
@@ -335,7 +340,13 @@
 						<div class="input-field col s12">
 							<input id="fringe" type="hidden" value="0">
 						</div>
-
+					{% elif report.category.id == 4 %}
+						<div class="col s12">
+							<div class="input-field col s12">
+									<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+									<label for="stuff">A Ticket Please £{{ report.stuff_price }}</label>
+								</div>
+						</div>
 					{% else %}
 						<div class="col s12">
 							<p class="light red-text center-align report-text">Invalid category applied ({{ report.category }})</p>
@@ -475,16 +486,67 @@
 			var matinee_freshers_price = document.getElementById("matinee_freshers_price").value;
 			var matinee_freshers_nnt_price = document.getElementById("matinee_freshers_nnt_price").value;
 			var season_price = document.getElementById("season_price").value;
+			var stuff_price = document.getElementById("stuff_price").value;
 
-			var num_concession = document.getElementById("concession").value * concession_price;
-			var num_member = document.getElementById("member").value * member_price;
-			var num_public = document.getElementById("public").value * public_price;
-			var num_fringe = document.getElementById("fringe").value * fringe_price;
-			var num_matinee_freshers = document.getElementById("matinee_freshers").value * matinee_freshers_price;
-			var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value * matinee_freshers_nnt_price;
-			var num_season = document.getElementById("season").value * 0;
-			var num_fellow = document.getElementById("fellow").value * 0;
-			var num_season_sale = document.getElementById("season_sales").value * season_price;
+			try {
+				var num_concession = document.getElementById("concession").value * concession_price;
+			} catch (err) {
+				var num_concession = 0;
+			}
+
+			try {
+				var num_member = document.getElementById("member").value * member_price;
+			} catch (err) {
+				var num_member = 0;
+			}
+
+			try {
+				var num_public = document.getElementById("public").value * public_price;
+			} catch (err) {
+				var num_public = 0;
+			}
+
+			try {
+				var num_fringe = document.getElementById("fringe").value * fringe_price;
+			} catch (err) {
+				var num_fringe = 0;
+			}
+
+			try {
+				var num_matinee_freshers = document.getElementById("matinee_freshers").value * matinee_freshers_price;
+			} catch (err) {
+				var num_matinee_freshers = 0;
+			}
+
+			try {
+				var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value * matinee_freshers_nnt_price;
+			} catch (err) {
+				var num_matinee_freshers_nnt = 0;
+			}
+
+			try {
+				var num_season = document.getElementById("season").value * 0;
+			} catch (err) {
+				var num_season = 0;
+			}
+
+			try {
+				var num_fellow = document.getElementById("fellow").value * 0;
+			} catch (err) {
+				var num_fellow = 0;
+			}
+
+			try {
+				var num_season_sale = document.getElementById("season_sales").value * season_price;
+			} catch (err) {
+				var num_season_sale = 0;
+			}
+
+			try { 
+				var num_stuff = document.getElementById("stuff").value * stuff_price;
+			} catch (err) {
+				var num_stuff = 0;
+			}
 
 			var x = 
 				+num_concession +
@@ -495,7 +557,8 @@
 				+num_matinee_freshers_nnt +
 				+num_season +
 				+num_fellow +
-				+num_season_sale;
+				+num_season_sale +
+				+num_stuff;
 				
 			xf = parseFloat(x).toFixed(2);
 			document.getElementById("out1").innerHTML = xf;

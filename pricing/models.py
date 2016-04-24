@@ -9,6 +9,15 @@ from django.utils.encoding import python_2_unicode_compatible
 from tickets.models import *
 
 
+class ShowManager(models.Manager):
+    def get_queryset(self):
+        return (
+            super(ShowManager, self)
+            .get_queryset()
+            .order_by('-start_date')
+        )
+
+
 class PricingBase(models.Model):
 
     class Meta:
@@ -78,7 +87,7 @@ class ExternalPricing(PricingBase):
         verbose_name = 'External Pricing'
         verbose_name_plural = 'External Pricing'
 
-    show = models.ForeignKey(Show)
+    show = models.ForeignKey(Show, limit_choices_to={'category': 3})
 
     matinee_freshers_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_PRICE[0])
     matinee_freshers_nnt_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.MATINEE_FRESHERS_NNT_PRICE[0])
@@ -97,13 +106,14 @@ class ExternalPricing(PricingBase):
 
 
 @python_2_unicode_compatible
-class StuFFPricing(PricingBase):
+class StuFFPricing(models.Model):
 
     class Meta:
         verbose_name = 'StuFF Pricing'
         verbose_name_plural = 'StuFF Pricing'
 
-    show = models.ForeignKey(Show)
+    show = models.ForeignKey(Show, limit_choices_to={'category': 4})
+    stuff_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.CONCESSION_PRICE[0])
 
     def __str__(self):
       s = 'Pricing for: '  + self.show.name
@@ -120,7 +130,8 @@ class StuFFEventPricing(PricingBase):
         verbose_name = 'StuFF Event Pricing'
         verbose_name_plural = 'StuFF Event Pricing'
 
-    show = models.ForeignKey(Show)
+    show = models.ForeignKey(Show, limit_choices_to={'category': 5})
+    ticket_price = models.DecimalField(max_digits=6, decimal_places=2, default=config.CONCESSION_PRICE[0])
 
     def __str__(self):
       s = 'Pricing for: ' + self.show.name
