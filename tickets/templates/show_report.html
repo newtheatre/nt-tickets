@@ -567,6 +567,12 @@
 				var num_season_sale = 0;
 			}
 
+			try {
+				var num_season_sale_nnt = document.getElementById("season_sales_nnt").value * season_price_nnt;
+			} catch (err) {
+				var num_season_sale_nnt = 0;
+			}
+
 			try { 
 				var num_stuff = document.getElementById("stuff").value * stuff_price;
 			} catch (err) {
@@ -583,6 +589,7 @@
 				+num_season +
 				+num_fellow +
 				+num_season_sale +
+				+num_season_sale_nnt +
 				+num_stuff;
 
 			xf = parseFloat(x).toFixed(2);
@@ -594,9 +601,9 @@
 
 	<script>
 		function checkSell() {
-			if ( {{report.how_many_left}} == 0 ) {
-				$('#sell_button').prop("disabled", true);
-			};
+			// if ( {{report.how_many_left}} == 0 ) {
+			// 	$('#sell_button').prop("disabled", true);
+			// };
 		};
 	</script>
 
@@ -608,6 +615,7 @@
 			event.preventDefault();
 			// console.log("Sell form submitted")  // sanity check
 			sell_tickets();
+			resetButton();
 			return false;
 		});
 	</script>

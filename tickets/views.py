@@ -262,6 +262,11 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_season_sale = float(0)
 
         try:
+            number_season_sale_nnt = float(request.POST.get('number_season_sales_nnt'))
+        except:
+            number_season_sale_nnt = float(0)
+
+        try:
             number_fellow = float(request.POST.get('number_fellow'))
         except:
             number_fellow = float(0)
