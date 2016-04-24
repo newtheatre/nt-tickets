@@ -12,8 +12,9 @@ function sell_tickets() {
       number_matinee_freshers : $('#matinee_freshers').val(),
       number_matinee_freshers_nnt : $('#matinee_freshers_nnt').val(),
       number_season : $('#season').val(),
-      number_fellow : $('#fellow').val(),
       number_season_sales : $('#season_sales').val(),
+      number_season_sales_nnt : $('#season_sales_nnt').val(),
+      number_fellow : $('#fellow').val(),
       number_stuff: $('#stuff').val(),
       unique_ticket : $('#unique_ticket').val(),
       reservation: $('#reservation').val()
@@ -28,7 +29,6 @@ function sell_tickets() {
       $('.sale-final').html($('#div-2', data).html());
       $('#reservation_modal_container').html($('#div-3', data).html());
       checkSell();
-
       // console.log(data);
       // console.log("Sell success"); // sanity check after AJAX
     },
