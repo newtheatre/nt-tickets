@@ -24,7 +24,11 @@
 										</div>
 									</div>
 									<div class="card-content">
-										<h1 class="light white-text flow-text" id="title" style="margin-top: 0;">{{ sh.name }}</h1>
+										<h1 class="light flow-text" id="title" style="margin-top: 0;">
+											<a href="show/{{ sh.id }}/0" rel="nofollow" class="title">
+											{{ sh.name }}
+											</a>
+										</h1>
 										<div class="col s6">
 											<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
 												Tickets Reserved: <span class="nnt-text nnt-orange">{{ sh.total_tickets_reserved }}</span>
