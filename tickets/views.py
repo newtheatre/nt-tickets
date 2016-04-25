@@ -377,6 +377,12 @@ def SaleInputAJAX(request, show_name, occ_id):
             if request.POST.get('unique_ticket') != 'None':
                 T = models.Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
                 T.collected = True
+                num_collected = int(request.POST.get('reservation_number'))
+                if num_collected < T.quantity:
+                    T.initial_quantity = T.quantity
+                    T.quantity = num_collected
+                else:
+                    T.initial_quantity = T.quantity
                 T.save()
 
         if occ_id > '0':
@@ -423,15 +429,24 @@ def ReserveInputAJAX(request, show_name, occ_id):
     if request.method == 'POST' and request.is_ajax():
         if occ_id > 0:
             unique_code = request.POST.get('unique_code')
+            number = request.POST.get('number')
 
             try:
                 ticket = models.Ticket.objects.get(unique_code=unique_code)
-                reservation = ticket.person_name
-            except Ticket.DoesNotExist:
-                reservation = 'None'
+                max_number = ticket.quantity
+                if int(number) == max_number:
+                    reservation = ticket.person_name 
+                elif (number < 0) or (int(number) > max_number):
+                    reservation = 'ERROR, BEEP BOOP'
+                else:
+                    reservation = ticket.person_name + ' (' + number + '/' + str(ticket.quantity) + ')'
+            except:
+                reservation = 'ERROR'
 
         context = {
             'unique_code': unique_code,
+            'number': number,
+            'max_number': max_number,
             'reservation': reservation,
         }
         return HttpResponse(json.dumps(context), content_type='application/json')

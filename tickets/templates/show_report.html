@@ -92,15 +92,16 @@
 				<div class="row" id="form-background">
 					<div class="input-field col s12">
 					<!-- Hidden Unique Ticket ID -->
-						<input name="{{ S_form.unique_ticket.name }}" 
-									type="hidden"
-									readonly="True" 
-									value="{{ report.unique_ticket }}"
-									id="unique_ticket">
+					<input name="{{ S_form.unique_ticket.name }}" 
+								type="hidden"
+								readonly="True" 
+								value="{{ report.unique_ticket }}"
+								id="unique_ticket">
 					</div>
 					<!-- Ticket Reservation -->
 					<div class="input-field col s7 l8" id="reservation_container">
 						<input name="ticket" type="text" id="reservation" class="Validate" readonly="True" value="{{ report.reservation }}">
+						<input type="hidden" id="reservation_number" readonly="True" value="0">
 						<label for="ticket">Reservation</label>
 					</div>
 
@@ -618,17 +619,6 @@
 			// console.log("Sell form submitted")  // sanity check
 			sell_tickets();
 			resetButton();
-			return false;
-		});
-	</script>
-
-	<script>
-	  $(document).on('submit', '.reserve-form', function(event){
-			var id = $(this).attr('id');
-			event.preventDefault();
-			// console.log("Collect form submitted");  // sanity check
-			collect_tickets(id);
-			$('#modal2').closeModal();
 			return false;
 		});
 	</script>
