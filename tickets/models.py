@@ -394,6 +394,7 @@ class Ticket(models.Model):
     stamp = models.DateTimeField(auto_now=True)
     person_name = models.CharField(max_length=80)
     email_address = models.EmailField(max_length=80)
+    initial_quantity = models.IntegerField(default=0)
     quantity = models.IntegerField(default=1)
     cancelled = models.BooleanField(default=False)
     collected = models.BooleanField(default=False)
