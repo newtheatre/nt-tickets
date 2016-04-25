@@ -40,7 +40,12 @@
             {% if user.is_authenticated %}
               <li>
               <a class="dropdown-button" data-activates="dropdown1">
-                Welcome, {{ user.username }}
+                Welcome,
+                {% if user.first_name %}
+                  {{ user.first_name }}
+                {% else %}
+                  {{ user.username }}
+                {% endif %}
               <i class="material-icons right">arrow_drop_down</i>
               </a>
               </li>
