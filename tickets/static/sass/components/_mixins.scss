@@ -10,3 +10,11 @@
     -ms-transform: $args1;
     -o-transform: $args1;
 }
+
+@mixin transition($duration, $style) {
+    -webkit-transition: $duration $style;
+    -moz-transition: $duration $style;
+    -ms-transition: $duration $style;
+    -o-transition: $duration $style;
+    transition: $duration $style;
+}

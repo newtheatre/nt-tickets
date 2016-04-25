@@ -198,7 +198,7 @@ class CategoryAdmin(admin.ModelAdmin):
         else:
           return False
 
-    def has_change_permission(self, request):
+    def has_change_permission(self, request, obj=None):
         if request.user.is_superuser:
           return True
         else:

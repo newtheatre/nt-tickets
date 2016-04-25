@@ -13322,3 +13322,17 @@ iframe {
 .ribbon.current {
   background-color: #4CAF50;
 }
+
+/* line 215, ../sass/components/_style.scss */
+.title {
+  color: #FFFFFF !important;
+  -webkit-transition: 0.1s ease-out;
+  -moz-transition: 0.1s ease-out;
+  -ms-transition: 0.1s ease-out;
+  -o-transition: 0.1s ease-out;
+  transition: 0.1s ease-out;
+}
+/* line 218, ../sass/components/_style.scss */
+.title:hover {
+  color: #a54499 !important;
+}

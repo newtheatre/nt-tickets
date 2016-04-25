@@ -17,19 +17,21 @@
 							<div class="card-image show-poster hide-on-small-and-down">
 								<a href="/" rel="nofollow">
 								{% if show.poster %}
-									<img class="responsive-img" src="{{ show.poster.poster_page.url }}" id="report-image">
+									<img class="responsive-img" src="{{ show.poster.poster_page.url }}" id="report-image" />
 								{% else %}
-									<img class="responsive-img" src="{% static 'images/no_image.png' %}" id="report-image">
+									<img class="responsive-img" src="{% static 'images/no_image.png' %}" id="report-image" />
 								{% endif %}
 								</a>
 							</div>
 						</div>
 							<div class="card-content">
-								<h1 class="light white-text flow-text center-on-small-only" id="title">
-								{{ show.name }} 
-								{% if report.have_form %} 
-								on <strong>{{ report.day }}</strong> at <strong>{{ report.time }}</strong> 
-								{% endif %}
+								<h1 class="light white-text flow-text center-on-small-only" id="title" style="margin-top: 0;">
+									<a href="/" rel="nofollow" class="title">
+									{{ show.name }} 
+									{% if report.have_form %} 
+									on <strong>{{ report.day }}</strong> at <strong>{{ report.time }}</strong> 
+									{% endif %}
+									</a>
 								</h1>
 								<div class="row hide-on-small-and-down">
 									<div class="col s6 center-align">

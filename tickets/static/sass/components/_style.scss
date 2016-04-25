@@ -212,3 +212,10 @@ iframe {
   }
 }
 
+.title {
+  color: #FFFFFF !important;
+  @include transition(0.1s, ease-out);
+  &:hover {
+    color: $primary-color !important;
+  }
+}
