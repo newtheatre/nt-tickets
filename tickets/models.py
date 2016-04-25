@@ -198,7 +198,7 @@ class OccurrenceManager(models.Manager):
                 ret.append(( 
                     oc.id, 
                     oc.datetime_formatted(), 
-                    oc.day_formatted(), 
+                    oc.day_date(),
                     oc.unique_code, 
                     oc.time_formatted(), 
                     oc.tickets_sold() 
@@ -238,6 +238,9 @@ class Occurrence(models.Model):
     def datetime_formatted(self):
         return self.date.strftime('%A %d %B ') + \
             self.time.strftime('%-I%p').lower()
+
+    def day_date(self):
+        return self.date.strftime('%A %d %B ')
 
     # Total number of tickets reserved
     def tickets_sold(self):
