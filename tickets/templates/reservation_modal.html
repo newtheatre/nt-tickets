@@ -14,28 +14,45 @@
       {% if tick.cancelled %}
       <tr>
         <th class="red-text text-lighten-3"><strike>{{ tick.person_name }}</strike></th>
-        <th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
+        <th class="grey-text valign-wrapper">
+        <i class="material-icons">chevron_left</i>
+        <strike>{{ tick.quantity }}</strike>
+        <i class="material-icons">chevron_right</i>
+        </th>
         <th><button type="button" class="btn disabled">Add</button></th>
       </tr>
       <!-- Collected Tickets -->
       {% elif tick.collected %}
       <tr>
         <th class="blue-text text-lighten-3"><strike>{{ tick.person_name }}</strike></th>
-        <th class="grey-text"><strike>{{ tick.quantity }}</strike></th>
+        <th class="grey-text valign-wrapper">
+        <i class="material-icons">chevron_left</i>
+        &nbsp;
+        <strike>{{ tick.quantity }}</strike>
+        &nbsp;
+        <i class="material-icons">chevron_right</i>
+        </th>
         <th><button type="button" class="btn disabled">Add</button></th>
       </tr>
       <!-- Everything else -->
       {% else %}
       <tr>
         <th class="nnt-text text-orange">{{ tick.person_name }}</th>
-        <th class="teal-text text-accent-4">{{ tick.quantity }}</th>
+        <th class="teal-text text-accent-4">
+        <li class="waves-effect" onclick="lessTickets( {{ forloop.counter }} )"><i class="material-icons">chevron_left</i></li>
+        &nbsp;
+        <span id="reserve-number_{{ forloop.counter }}">{{ tick.quantity }}</span>
+        &nbsp;
+        <li class="waves-effect" onclick="moreTickets( {{ forloop.counter }} )"><i class="material-icons">chevron_right</i></li>
+        </th>
         <th><form class="reserve-form" id="reserve_{{ forloop.counter }}" method="post" action=".">
         {% csrf_token %}
         <input type="hidden" value="{{ tick.unique_code }}" id="code_reserve_{{ forloop.counter }}" readonly="true">
+        <input type="hidden" value="{{ tick.quantity }}" id="max_reserve_{{ forloop.counter }}" readonly="true">
+        <input type="hidden" value="{{ tick.quantity }}" id="number_reserve_{{ forloop.counter }}" readonly="true">
         <button 
           type="submit" 
-          class="btn nnt purple waves-effect waves-dark"
-          >
+          class="btn nnt purple waves-effect waves-dark">
           Add
         </button>
         </form>
@@ -45,3 +62,39 @@
     {% endfor %}
   </tbody>
 </table>
+
+<script>
+  $(document).on('submit', '.reserve-form', function(event){
+    var id = $(this).attr('id');
+    event.preventDefault();
+    // console.log("Collect form submitted");  // sanity check
+    collect_tickets(id);
+    $('#modal2').closeModal();
+    return false;
+  });
+</script>
+
+<script>
+  function lessTickets(id) {
+    var num = $('#number_reserve_' + id).val();
+    num = +num - 1;
+    if (num <= 1) {
+      num = 1;
+    }
+    document.getElementById('reserve-number_' + id).innerHTML = num;
+    $('#number_reserve_' + id).val(num);
+  }
+</script>
+
+<script>
+  function moreTickets(id) {
+    var num = $('#number_reserve_' + id).val();
+    var max = $('#max_reserve_' + id).val();
+    num = +num + 1;
+    if (num >= max) {
+      num = max;
+    }
+    document.getElementById('reserve-number_' + id).innerHTML = num;
+    $('#number_reserve_' + id).val(num);
+  }
+</script>
