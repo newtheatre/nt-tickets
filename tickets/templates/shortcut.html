@@ -1,5 +1,6 @@
 <!-- Member shortcut -->
 <script>
+try {
   var num_member = parseFloat(document.getElementById("member").value);
   Mousetrap.bind('m', function() {
     num_member = num_member + 1;
@@ -12,10 +13,12 @@
       document.getElementById("member").value = num_member;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Concession Shortcut -->
 <script>
+try {
   var num_concession = parseFloat(document.getElementById("concession").value);
   Mousetrap.bind('c', function() {
     num_concession = num_concession + 1;
@@ -28,10 +31,12 @@
       document.getElementById("concession").value = num_concession;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Public Shortcut -->
 <script>
+try {
   var num_public = parseFloat(document.getElementById("public").value);
   Mousetrap.bind('p', function() {
     num_public = num_public + 1;
@@ -45,10 +50,12 @@
       document.getElementById("public").value = num_public;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Season Pass Shortcut -->
 <script>
+try {
   var num_season = parseFloat(document.getElementById("season").value);
   Mousetrap.bind('s', function() {
     num_season = num_season + 1;
@@ -62,10 +69,12 @@
       document.getElementById("season").value = num_season;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Season Pass Ticket Sales Shortcut -->
 <script>
+try {
   var num_season_sale = parseFloat(document.getElementById("season_sales").value);
   Mousetrap.bind('t', function() {
     num_season_sale = num_season_sale + 1;
@@ -79,10 +88,12 @@
       document.getElementById("season_sales").value = num_season_sale;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Fellow Shortcut -->
 <script>
+try {
   var num_fellow = parseFloat(document.getElementById("fellow").value);
   Mousetrap.bind('f', function() {
     num_fellow = num_fellow + 1;
@@ -96,10 +107,12 @@
       document.getElementById("fellow").value = num_fellow;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Matinee Freshers Shortcut -->
 <script>
+try {
   var num_matinee_freshers = parseFloat(document.getElementById("matinee_freshers").value);
   Mousetrap.bind('b', function() {
     num_matinee_freshers = num_matinee_freshers + 1;
@@ -113,10 +126,12 @@
       document.getElementById("matinee_freshers").value = num_matinee_freshers;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Matinee Freshers nnt Shortcut -->
 <script>
+try {
   var num_matinee_freshers_nnt = parseFloat(document.getElementById("matinee_freshers_nnt").value);
   Mousetrap.bind('n', function() {
     num_matinee_freshers_nnt = num_matinee_freshers_nnt + 1;
@@ -130,10 +145,12 @@
       document.getElementById("matinee_freshers_nnt").value = num_matinee_freshers_nnt;
     }
   })
+} catch (err) {}
 </script>
 
 <!-- Fellow Shortcut -->
 <script>
+try {
   var num_fringe = parseFloat(document.getElementById("fringe").value);
   Mousetrap.bind('d', function() {
     num_fellow = num_fringe + 1;
@@ -147,4 +164,5 @@
       document.getElementById("fringe").value = num_fringe;
     }
   })
+} catch (err) {}
 </script>
