@@ -55,11 +55,14 @@ function collect_tickets(id) {
 
     // Handle a successful response
     success : function(data) {
-      console.log(data)
+      // console.log(data)
+      $("#sale-form")[0].reset();
+      resetButton();
+      
       $('#reservation').val(data.reservation);
       $('#reservation_number').val(data.number);
       $('#unique_ticket').val(data.unique_code);
-      $('#sell_button').prop("disabled", false)
+      // $('#sell_button').prop("disabled", false)
       // console.log('Collect success');  // Sanity check after AJAX
     },
 

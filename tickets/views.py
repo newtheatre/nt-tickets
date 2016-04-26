@@ -435,7 +435,7 @@ def ReserveInputAJAX(request, show_name, occ_id):
                 ticket = models.Ticket.objects.get(unique_code=unique_code)
                 max_number = ticket.quantity
                 if int(number) == max_number:
-                    reservation = ticket.person_name 
+                    reservation = ticket.person_name + ' (' + number + ')'
                 elif (number < 0) or (int(number) > max_number):
                     reservation = 'ERROR, BEEP BOOP'
                 else:
