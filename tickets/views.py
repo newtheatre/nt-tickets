@@ -182,7 +182,7 @@ def ShowReport(request, show_name, occ_id):
         pricing = []
 
     # Testing if the show is current
-    if show.is_current():
+    if show.is_current_show():
         report['current'] = True
     else:
         report['current'] = False
