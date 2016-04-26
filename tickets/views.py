@@ -57,7 +57,7 @@ def ShowIndex(request):
     show_list = []
 
     for sh in shows:
-        if sh.is_current():
+        if sh.is_current_show():
             show_list.append(sh)
 
     paginator = Paginator(show_list, 5)
