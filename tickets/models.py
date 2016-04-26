@@ -98,11 +98,7 @@ class Show(models.Model):
             return True
 
     def is_current_show(self):
-        today = datetime.date.today() - datetime.timedelta(days=1)
-        if today >= self.end_date:
-            return False
-        else:
-            return True
+        return datetime.date.today() > self.end_date
 
     def show_sold_out(self):
         if self.occurrence_set.count() > 0:
