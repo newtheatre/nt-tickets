@@ -101,8 +101,8 @@
 					<!-- Ticket Reservation -->
 					<div class="input-field col s7 l8" id="reservation_container">
 						<input name="ticket" type="text" id="reservation" class="Validate" readonly="True" value="{{ report.reservation }}">
-						<input type="hidden" id="reservation_number" readonly="True" value="0">
 						<label for="ticket">Reservation</label>
+						<input type="hidden" id="reservation_number" readonly="True" value="0" oninput="checkSell(0)">
 					</div>
 
 					<div class="col s5 l4 center-align" id="form-button-inline">
@@ -260,14 +260,6 @@
 							<label for="fellow">Fellow Tickets</label>
 						</div>
 
-						<!-- Hidden Sale Inputs -->
-						<div class="col s12">
-							<input id="concession" type="hidden" value="0">
-							<input id="member" type="hidden" value="0">
-							<input id="public" type="hidden" value="0">
-							<input id="matinee_freshers" type="hidden" value="0">
-							<input id="matinee_freshers_nnt" type="hidden" value="0">
-						</div>
 					<!-- External Shows -->
 					{% elif report.category|stringformat:"s" == "External" %}
 						<!-- Member Ticket Sales -->
@@ -504,7 +496,7 @@
 	<!-- Dynamic addition of sales -->
 	<script>
 	$(document).ready(function(){
-		checkSell();
+		checkSell(0);
 		$(document).keyup(function(){
 			var concession_price = document.getElementById("concession_price").value;
 			var member_price = document.getElementById("member_price").value;
@@ -517,72 +509,85 @@
 			var stuff_price = document.getElementById("stuff_price").value;
 
 			try {
-				var num_concession = document.getElementById("concession").value * concession_price;
+				var num_concession = document.getElementById("concession").value;
 			} catch (err) {
 				var num_concession = 0;
 			}
 
 			try {
-				var num_member = document.getElementById("member").value * member_price;
+				var num_member = document.getElementById("member").value;
 			} catch (err) {
 				var num_member = 0;
 			}
 
 			try {
-				var num_public = document.getElementById("public").value * public_price;
+				var num_public = document.getElementById("public").value;
 			} catch (err) {
 				var num_public = 0;
 			}
 
 			try {
-				var num_fringe = document.getElementById("fringe").value * fringe_price;
+				var num_fringe = document.getElementById("fringe").value;
 			} catch (err) {
 				var num_fringe = 0;
 			}
 
 			try {
-				var num_matinee_freshers = document.getElementById("matinee_freshers").value * matinee_freshers_price;
+				var num_matinee_freshers = document.getElementById("matinee_freshers").value;
 			} catch (err) {
 				var num_matinee_freshers = 0;
 			}
 
 			try {
-				var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value * matinee_freshers_nnt_price;
+				var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value;
 			} catch (err) {
 				var num_matinee_freshers_nnt = 0;
 			}
 
 			try {
-				var num_season = document.getElementById("season").value * 0;
+				var num_season = document.getElementById("season").value;
 			} catch (err) {
 				var num_season = 0;
 			}
 
 			try {
-				var num_fellow = document.getElementById("fellow").value * 0;
+				var num_fellow = document.getElementById("fellow").value;
 			} catch (err) {
 				var num_fellow = 0;
 			}
 
 			try {
-				var num_season_sale = document.getElementById("season_sales").value * season_price;
+				var num_season_sale = document.getElementById("season_sales").value;
 			} catch (err) {
 				var num_season_sale = 0;
 			}
 
 			try {
-				var num_season_sale_nnt = document.getElementById("season_sales_nnt").value * season_price_nnt;
+				var num_season_sale_nnt = document.getElementById("season_sales_nnt").value;
 			} catch (err) {
 				var num_season_sale_nnt = 0;
 			}
 
 			try { 
-				var num_stuff = document.getElementById("stuff").value * stuff_price;
+				var num_stuff = document.getElementById("stuff").value;
 			} catch (err) {
 				var num_stuff = 0;
 			}
 
 			var x = 
+				+num_concession * concession_price +
+				+num_member * member_price +
+				+num_public * public_price +
+				+num_fringe * fringe_price +
+				+num_matinee_freshers * matinee_freshers_price +
+				+num_matinee_freshers_nnt * matinee_freshers_nnt_price +
+				+num_season * 0 +
+				+num_fellow * 0 +
+				+num_season_sale * season_price +
+				+num_season_sale_nnt * season_price_nnt +
+				+num_stuff * stuff_price;
+
+			var number_sold =
 				+num_concession +
 				+num_member +
 				+num_public +
@@ -598,15 +603,27 @@
 			xf = parseFloat(x).toFixed(2);
 			document.getElementById("out1").innerHTML = xf;
 			document.getElementById("out2").innerHTML = xf;
+
+			checkSell(number_sold);
 		});
 	});
 	</script>
 
 	<script>
-		function checkSell() {
-			// if ( {{report.how_many_left}} == 0 ) {
-			// 	$('#sell_button').prop("disabled", true);
-			// };
+		function checkSell(num) {
+			var reservation = $('#reservation').val();
+			var reservation_number = $('#reservation_number').val()
+
+			if ( {{report.how_many_sales_left}} == 0 || num == 0 ) {
+				$('#sell_button').prop("disabled", true);
+			};
+			if (num > 0 && reservation == 'None' && {{report.how_many_sales_left}} > 0) {
+				$('#sell_button').prop("disabled", false);
+			};
+			if (reservation != 'None' && num == reservation_number) {
+				$('#sell_button').prop("disabled", false);
+			};
+
 		};
 	</script>
 
@@ -629,7 +646,7 @@
 		xr = parseFloat(0).toFixed(2);
 		document.getElementById("out1").innerHTML = xr;
 		document.getElementById("out2").innerHTML = xr;
-		checkSell();
+		checkSell(0);
 		// document.getElementById("reservation").innerHTML = "None";
 	}
 	</script>
