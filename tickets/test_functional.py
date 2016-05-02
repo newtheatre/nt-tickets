@@ -1,6 +1,7 @@
-from django.test import LiveServerTestCase
+from django.test import LiveServerTestCase, Client
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
+from django.contrib.sessions.backends.db import SessionStore
 import time
 import factory
 from selenium import webdriver
@@ -11,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from django.core.files import File
+from django.template.defaultfilters import slugify
 from tickets import models
 from pricing import models
 
@@ -21,20 +23,19 @@ import datetime
 import os
 
 def UserFactory():
-  User.objects.create_user(
-    username='Jim', 
-    email='jim@rash.com', 
-    password = 'correcthorsebatterystaple',
-
-    is_superuser = True
+  User.objects.create_superuser(
+    username='Jim',
+    email='jim@rash.com',
+    password='correcthorsebatterystaple',
   )
+
 
 class CategoryFactory(factory.django.DjangoModelFactory):
   class Meta:
     model = models.Category
 
   name = 'In House'
-  slug = 'in_house'
+  slug = slugify(name)
   sort = 1
 
 class ShowFactory(factory.django.DjangoModelFactory):
@@ -56,8 +57,8 @@ class OccurrenceFactory(factory.django.DjangoModelFactory):
     model = models.Occurrence
 
   show = factory.SubFactory(ShowFactory)
-  date = datetime.date.today() + datetime.timedelta(days=2)
-  time=datetime.datetime.now()
+  date = datetime.date.today()
+  time=time="19:30"
   maximum_sell=2
   hours_til_close=2
 
@@ -411,3 +412,132 @@ class ReportTest(StaticLiveServerTestCase):
     # member.click()
     # member.send_keys('1')
     # member.send_keys('tab')
+
+class saleTest(StaticLiveServerTestCase):
+    fixtures = ['initial_pricing.json']
+
+    def setUp(self):
+        self.browser = webdriver.Chrome('bin/chromedriver')
+        # Force desktop sizing
+        self.browser.set_window_size(1200, 1000)
+
+        self.browser.implicitly_wait(10)
+
+        self.user = User.objects.create_superuser(
+            username='Jim', password='Rash', email='jim@rash.com',)
+        self.user.save()
+
+        # In House Show
+        self.show1 = ShowFactory.create(name="TS In House", category=CategoryFactory(name="In House", sort=1))
+        self.occ1 = OccurrenceFactory.create(maximum_sell=80, show=self.show1)
+        self.occ1_2 = OccurrenceFactory.create(maximum_sell=80, show=self.show1, time="14:30")
+
+        # Fringe Show
+        self.show2 = ShowFactory.create(name="TS Fringe", category=CategoryFactory(name="Fringe", sort=2))
+        self.occ2 = OccurrenceFactory.create(maximum_sell=80, show=self.show2)
+
+        # External Show
+        self.show3 = ShowFactory.create(name="TS External 1", category=CategoryFactory(pk=3, name="External", sort=3))
+        self.occ3 = OccurrenceFactory.create(maximum_sell=80, show=self.show3)
+        self.exprice1 = models.ExternalPricing.objects.create(show=self.show3, allow_season_tickets=False, allow_fellow_tickets=False)
+
+        # StuFF Show
+        self.show4 = ShowFactory.create(name="TS StuFF", category=CategoryFactory(name="StuFF", sort=4))
+        self.occ4 = OccurrenceFactory.create(maximum_sell=80, show=self.show4)
+        self.stprice = models.StuFFPricing.objects.create(show=self.show4)
+
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def authenticate(self, n=None):
+        self.assertIn(
+            self.live_server_url + '/login/', self.browser.current_url)
+        if n:
+            self.assertIn('?next=%s' % n, self.browser.current_url)
+            username = self.browser.find_element_by_id('username')
+            password = self.browser.find_element_by_id('password')
+            submit = self.browser.find_element_by_id('submit')
+
+            username.send_keys("Jim")
+            password.send_keys("Rash")
+            submit.click()
+
+        self.assertEqual(self.live_server_url + n, self.browser.current_url)
+
+    def checkInput(self, name, price):
+        submit = self.browser.find_element_by_id('sell_button')
+
+        self.assertTrue(submit.get_attribute('disabled'))
+
+        check = self.browser.find_element_by_id(name)
+        check.click()
+        check.send_keys('1')
+
+        self.assertFalse(submit.get_attribute('disabled'))
+        total1 = self.browser.find_element_by_id('out1').text
+        self.assertEqual(total1, price)
+
+        sale = 0
+        total2 = self.browser.find_element_by_id('final').text
+        sale = float(total2) + float(price)
+
+        submit.click()
+        time.sleep(0.2) # Wait a little bit for things to happen
+        total3 = self.browser.find_element_by_id('final').text
+        self.assertEqual(sale, float(total3))
+
+    def test_sale(self):
+        # Requests address
+        self.browser.get(self.live_server_url + '/')
+        # Gets redirected to login
+        self.authenticate('/')
+
+        # Navigate to in house show page
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show1.id) + '/' + str(self.occ1.id))
+
+        # Check that selling tickets does the things it should
+        self.checkInput('member', '5.00')
+        self.checkInput('concession', '5.00')
+        self.checkInput('public', '8.00')
+        self.checkInput('season', '0.00')
+        self.checkInput('season_sales', '40.00')
+        self.checkInput('season_sales_nnt', '20.00')
+        self.checkInput('fellow', '0.00')
+
+        # Navigate to in house matinee show page
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show1.id) + '/' + str(self.occ1_2.id))
+
+        self.checkInput('matinee_freshers', '2.50')
+        self.checkInput('matinee_freshers_nnt', '2.00')
+
+        # Navigate to fringe show page
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show2.id) + '/' + str(self.occ2.id))
+
+        self.checkInput('fringe', '3.00')
+        self.checkInput('season', '0.00')
+        self.checkInput('season_sales', '40.00')
+        self.checkInput('season_sales_nnt', '20.00')
+        self.checkInput('fellow', '0.00')
+
+        # Navigate to external show page
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show3.id) + '/' + str(self.occ3.id))
+
+        self.checkInput('member', '5.00')
+        self.checkInput('concession', '5.00')
+        self.checkInput('public', '8.00')
+
+        # Navigate to stuff page
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show4.id) + '/' + str(self.occ4.id))
+
+        self.checkInput('stuff', '5.00')
