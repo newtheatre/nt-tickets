@@ -44,21 +44,20 @@ class ShowFactory(factory.django.DjangoModelFactory):
   start_date = datetime.date.today()
   end_date = datetime.date.today() + datetime.timedelta(days=5)
 
-  name='Test Show'
-  location='Somewhere'
-  description='Test show present'
-  long_description='Some more info'
-  # poster=File(open('test/test_poster.jpg'))
+  name = 'Test Show'
+  location = 'Somewhere'
+  description = 'Test show present'
+  long_description = 'Some more info'
 
 class OccurrenceFactory(factory.django.DjangoModelFactory):
   class Meta:
     model = models.Occurrence
 
   show = factory.SubFactory(ShowFactory)
-  date = datetime.date.today()
-  time=time="19:30"
-  maximum_sell=2
-  hours_til_close=2
+  date = datetime.date.today() + datetime.timedelta(days=1)
+  time = "19:30"
+  maximum_sell = 2
+  hours_til_close = 2
 
 class TicketFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -76,7 +75,7 @@ class BookTest(LiveServerTestCase):
 
     self.show1 = ShowFactory.create(name="TS In House", category=CategoryFactory(name="In House", sort=1))
     self.occ1 = OccurrenceFactory.create(show=self.show1)
-    self.occ2 = OccurrenceFactory.create(show=self.show1, date = datetime.date.today() + datetime.timedelta(days=1))
+    self.occ2 = OccurrenceFactory.create(show=self.show1, date = datetime.date.today() + datetime.timedelta(days=2))
 
   def tearDown(self):
     self.browser.quit()
