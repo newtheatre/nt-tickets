@@ -371,21 +371,22 @@ def SaleInputAJAX(request, show_name, occ_id):
         s.price = price
 
         # Don't write to the database unless there is at least one sale
-        if number != 0:
-            s.save()
-
-            if request.POST.get('unique_ticket') != 'None':
-                T = models.Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
-                T.collected = True
-                num_collected = int(request.POST.get('reservation_number'))
-                if num_collected < T.quantity:
-                    T.initial_quantity = T.quantity
-                    T.quantity = num_collected
-                else:
-                    T.initial_quantity = T.quantity
-                T.save()
-
         if occ_id > '0':
+            left = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
+            if (number != 0 and left > 0) or (number != 0 and left == 0 and request.POST.get('unique_ticket') != 'None'):
+                s.save()
+
+                if request.POST.get('unique_ticket') != 'None':
+                    T = models.Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
+                    T.collected = True
+                    num_collected = int(request.POST.get('reservation_number'))
+                    if num_collected < T.quantity:
+                        T.initial_quantity = T.quantity
+                        T.quantity = num_collected
+                    else:
+                        T.initial_quantity = T.quantity
+                    T.save()
+
             # How many tickets have been sold so far
             report['sold'] = occ_fin.total_tickets_sold()
             # Total number of tickets reserved
@@ -396,8 +397,8 @@ def SaleInputAJAX(request, show_name, occ_id):
             report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
 
             # This is really dogey need to fix this properly
-            if report['how_many_sales_left'] < 0:
-                report['how_many_sales_left'] = 0
+            # if report['how_many_sales_left'] < 0:
+            #     report['how_many_sales_left'] = 0
 
             # Maximum amount of free tickets to sell
             report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
@@ -415,9 +416,9 @@ def SaleInputAJAX(request, show_name, occ_id):
         }
 
         return render_to_response(
-        'sale_overview_full.html',
-        context,
-        context_instance=RequestContext(request)
+            'sale_overview_full.html',
+            context,
+            context_instance=RequestContext(request)
         )
     else:
         return HttpResponse(json.dumps('error'), content_type='application/json')

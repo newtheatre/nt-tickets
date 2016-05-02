@@ -92,11 +92,11 @@
 				<div class="row" id="form-background">
 					<div class="input-field col s12">
 					<!-- Hidden Unique Ticket ID -->
-					<input name="{{ S_form.unique_ticket.name }}" 
-								type="hidden"
-								readonly="True" 
-								value="{{ report.unique_ticket }}"
-								id="unique_ticket">
+						<input name="{{ S_form.unique_ticket.name }}" 
+									type="hidden"
+									readonly="True" 
+									value="{{ report.unique_ticket }}"
+									id="unique_ticket">
 					</div>
 					<!-- Ticket Reservation -->
 					<div class="input-field col s7 l8" id="reservation_container">
@@ -514,14 +514,19 @@
 	</script>
 
 	<script>
-		function checkSell(num) {
+		var left={{report.how_many_sales_left}}
+		function checkSell(num, num_left) {
 			var reservation = $('#reservation').val();
 			var reservation_number = $('#reservation_number').val()
+			if ( typeof(num_left) != "undefined" || "") {
+				left = num_left
+			};
+			console.log(num_left)
 
-			if ( {{report.how_many_sales_left}} == 0 || num == 0 ) {
+			if ( left == 0 || num == 0 ) {
 				$('#sell_button').prop("disabled", true);
 			};
-			if (num > 0 && reservation == 'None' && {{report.how_many_sales_left}} > 0) {
+			if (num > 0 && reservation == 'None' && left > 0) {
 				$('#sell_button').prop("disabled", false);
 			};
 			if (reservation != 'None' && num == reservation_number) {

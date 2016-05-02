@@ -417,14 +417,15 @@ class SaleTest(StaticLiveServerTestCase):
         self.show1 = ShowFactory.create(name="TS In House", category=self.in_house)
         self.occ1 = OccurrenceFactory.create(maximum_sell=80, show=self.show1)
         self.occ1_2 = OccurrenceFactory.create(maximum_sell=80, show=self.show1, time="14:30")
-        self.occ1_3 = OccurrenceFactory.create(maximum_sell=10, show=self.show1, time="14:30")
+        self.occ1_3 = OccurrenceFactory.create(maximum_sell=10, show=self.show1)
+        self.occ1_4 = OccurrenceFactory.create(maximum_sell=10, show=self.show1)
         self.reserv1 = {
             1: TicketFactory(occurrence=self.occ1, quantity=10),
             2: TicketFactory(occurrence=self.occ1, quantity=10),
             3: TicketFactory(occurrence=self.occ1, quantity=10, collected=True),
             4: TicketFactory(occurrence=self.occ1, quantity=10, cancelled=True),
             5: TicketFactory(occurrence=self.occ1_2, quantity=10),
-            6: TicketFactory(occurrence=self.occ1_3, quantity=10),
+            6: TicketFactory(occurrence=self.occ1_4, quantity=10),
         }
 
         # Fringe Show
@@ -494,6 +495,14 @@ class SaleTest(StaticLiveServerTestCase):
         self.assertEqual(int(sold), number)
         self.assertEqual(int(reserved), occ.tickets_sold())
         self.assertEqual(int(left), occ.maximum_sell - number - occ.tickets_sold())
+
+    def checkDiasbled(self):
+        submit = self.browser.find_element_by_id('sell_button')
+        self.assertTrue(submit.get_attribute('disabled'))
+        check = self.browser.find_element_by_id('member')
+        check.click()
+        check.send_keys('1')
+        self.assertTrue(submit.get_attribute('disabled'))
 
     def test_sale(self):
         # Requests address
@@ -590,15 +599,7 @@ class SaleTest(StaticLiveServerTestCase):
         # Add the first set of tickets to the form
         add1.click()
         # Check we can't sell tickets unless we sell the same number as on the reservation
-        submit = self.browser.find_element_by_id('sell_button')
-
-        self.assertTrue(submit.get_attribute('disabled'))
-
-        check = self.browser.find_element_by_id('member')
-        check.click()
-        check.send_keys('1')
-
-        self.assertTrue(submit.get_attribute('disabled'))
+        self.checkDiasbled()
 
         # Sell the same number of tickets as on the reservation
         time.sleep(1)
@@ -614,14 +615,8 @@ class SaleTest(StaticLiveServerTestCase):
         add2 = self.browser.find_element_by_xpath('//form[@id="reserve_2"]/button')
         add2.click()
 
-        self.assertTrue(submit.get_attribute('disabled'))
-
         time.sleep(1)
-        check = self.browser.find_element_by_id('member')
-        check.click()
-        check.send_keys('1')
-
-        self.assertTrue(submit.get_attribute('disabled'))
+        self.checkDiasbled()
 
         # Sell the same number of tickets as on the reservation
         self.checkInput('member', '45.00', 9)
@@ -630,6 +625,35 @@ class SaleTest(StaticLiveServerTestCase):
     def test_sale_sold_out(self):
         # Check selling tickets when shows are sold out
         # No reservations
-        # Some reservations
-        pass
+        # Requests address
+        self.browser.get(self.live_server_url + '/')
+        # Gets redirected to login
+        self.authenticate('/')
 
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show1.id) + '/' + str(self.occ1_3.id))
+
+        self.checkInput('member', '50.00', 10)
+
+        # Check that we can't sell any tickets now they're all sold
+        self.checkDiasbled()
+
+        # Some reservations
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show1.id) + '/' + str(self.occ1_4.id))
+
+        self.checkDiasbled()
+
+        reservation = self.browser.find_element_by_id('reserve_button')
+        reservation.click()
+
+        time.sleep(1)
+        add = self.browser.find_element_by_xpath('//form[@id="reserve_1"]/button')
+        add.click()
+
+        time.sleep(1)
+        self.checkDiasbled()
+
+        self.checkInput('member', '50.00', 10)
