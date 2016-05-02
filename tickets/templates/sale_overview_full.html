@@ -1,47 +1,5 @@
-<div>
-  <div id="div-1">
-    <p class="center-align light white-text flow-text">
-    
-    {% if report.sold == 0 %}
-      No tickets sold
-    {% elif report.sold == 1 %}
-      <span class="nnt-purple bold">{{ report.sold }}</span>
-      ticket sold
-    {% else %}
-      <span class="nnt-purple bold">{{ report.sold }}</span>
-      tickets sold
-    {% endif %}
-    &nbsp;
-    &verbar;
-    &nbsp;
-    {% if report.how_many_reserved == 0 %}
-      No tickets reserved
-    {% elif report.how_many_reserved == 1 %}
-      <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
-      ticket reserved, 
-    {% else %}
-      <span class="nnt-orange bold">{{ report.how_many_reserved }}</span>
-      tickets reserved
-    {% endif %}
-    &nbsp;
-    &verbar;
-    &nbsp;
-    <span class="bold">{{ report.how_many_sales_left }}</span>
-    tickets free
-    </p>
-    <div class="progress hide-on-small-and-down" id="report-bar">
-      {% if report.sale_percentage >= report.reserve_percentage %}
-        <div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
-        <div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
-      {% else %}
-        <div class="determinate" style="width: {{ report.reserve_percentage }}%"></div>
-        <div class="determinate" style="width: {{ report.sale_percentage }}%" id="sale-percentage"></div>
-      {% endif %}
-    </div>
-  </div>
-  <div id="div-2">{{ report.total_sales|stringformat:".2f" }}</div>
-  <div id="div-3">
-    <!-- Reservation Modal -->
-    {% include 'reservation_modal.html' %}
-  </div>
-</div>
+<div> 
+  <div id="div-1">{% include 'sale_overview.html' %}</div> 
+  <div id="div-2">{{ report.total_sales|stringformat:".2f" }}</div> 
+  <div id="div-3">{% include 'reservation_modal.html' %}</div> 
+</div> 
