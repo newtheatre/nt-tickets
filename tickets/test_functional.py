@@ -29,7 +29,6 @@ def UserFactory():
     password='correcthorsebatterystaple',
   )
 
-
 class CategoryFactory(factory.django.DjangoModelFactory):
   class Meta:
     model = models.Category
@@ -42,7 +41,6 @@ class ShowFactory(factory.django.DjangoModelFactory):
   class Meta:
     model = models.Show
 
-  category = factory.SubFactory(CategoryFactory)
   start_date = datetime.date.today()
   end_date = datetime.date.today() + datetime.timedelta(days=5)
 
@@ -74,103 +72,99 @@ class BookTest(LiveServerTestCase):
 
   def setUp(self):
     self.browser = webdriver.Chrome('bin/chromedriver')
+    self.browser.implicitly_wait(10)
 
-    OccurrenceFactory.create()
+    self.show1 = ShowFactory.create(name="TS In House", category=CategoryFactory(name="In House", sort=1))
+    self.occ1 = OccurrenceFactory.create(show=self.show1)
+    self.occ2 = OccurrenceFactory.create(show=self.show1, date = datetime.date.today() + datetime.timedelta(days=1))
 
   def tearDown(self):
     self.browser.quit()
 
   def test_book_show_quick(self):
-    browser = self.browser
-    
-    show_id = models.Show.objects.get(name='Test Show').id
 
-    browser.get(self.live_server_url + '/book/' + str(show_id))
+    self.browser.get(self.live_server_url + '/book/' + str(self.show1.id))
 
     # Check the title is correct
-    title_text = browser.find_element_by_xpath(
-      '//p[1]'
-      ).text
+    title_text = self.browser.find_element_by_xpath('//p[1]').text
     self.assertIn(
       title_text,
-      'You\'re booking tickets for Test Show at Somewhere.'
+      'You\'re booking tickets for ' + self.show1.name + ' at Somewhere.'
       )
 
     # Input correct details
-    occurrence = Select(browser.find_element_by_id('id_occurrence'))
-    occurrence.select_by_value(str(show_id))
-    quantity = Select(browser.find_element_by_id('id_quantity'))
+    occurrence = Select(self.browser.find_element_by_id('id_occurrence'))
+    occurrence.select_by_value(str(self.occ1.id))
+    quantity = Select(self.browser.find_element_by_id('id_quantity'))
     quantity.select_by_value('1')
-    name = browser.find_element_by_id('id_person_name')
+    name = self.browser.find_element_by_id('id_person_name')
     name.send_keys('Test Name1')
-    email = browser.find_element_by_id('id_email_address')
+    email = self.browser.find_element_by_id('id_email_address')
     email.send_keys('test@test.com')
 
     # Submit the form
-    browser.find_element_by_id('submit-btn').click()
+    self.browser.find_element_by_id('submit-btn').click()
     # Wait a little for the page to load
-    browser.implicitly_wait(10)
-    thanks_title = browser.find_element_by_xpath('//div[@class="main"]/h1').text
+    self.browser.implicitly_wait(10)
+    thanks_title = self.browser.find_element_by_xpath('//div[@class="main"]/h1').text
     self.assertEqual(thanks_title, 'Thanks!') 
     self.assertEqual(
-      self.live_server_url + '/book/' + str(show_id) + '/thanks/',
-      browser.current_url
+      self.live_server_url + '/book/' + str(self.show1.id) + '/thanks/',
+      self.browser.current_url
       )
 
     # Navigate back to booking
-    browser.get(self.live_server_url + '/book/' + str(show_id))
+    self.browser.get(self.live_server_url + '/book/' + str(self.show1.id))
 
     # Submit another form with the same details
-    occurrence = Select(browser.find_element_by_id('id_occurrence'))
-    occurrence.select_by_value(str(show_id))
-    quantity = Select(browser.find_element_by_id('id_quantity'))
+    occurrence = Select(self.browser.find_element_by_id('id_occurrence'))
+    occurrence.select_by_value(str(self.occ1.id))
+    quantity = Select(self.browser.find_element_by_id('id_quantity'))
     quantity.select_by_value('1')
-    name = browser.find_element_by_id('id_person_name')
+    name = self.browser.find_element_by_id('id_person_name')
     name.send_keys('Test Name1')
-    email = browser.find_element_by_id('id_email_address')
+    email = self.browser.find_element_by_id('id_email_address')
     email.send_keys('test@test.com')
 
     # Submit the form
-    browser.find_element_by_id('submit-btn').click()
+    self.browser.find_element_by_id('submit-btn').click()
     # Wait for the page to load
-    browser.implicitly_wait(10)
-    error_title = browser.find_element_by_xpath('//div[@class="main"]/h1').text
+    self.browser.implicitly_wait(10)
+    error_title = self.browser.find_element_by_xpath('//div[@class="main"]/h1').text
     # Should get an error
     self.assertEqual(error_title, 'Error')
 
     # Wait to be allowed to book tickets again
     time.sleep(6)
     # Navigate to the boking page
-    browser.get(self.live_server_url + '/book/' + str(show_id))
+    self.browser.get(self.live_server_url + '/book/' + str(self.show1.id))
 
     # Submit another form with the same details
-    occurrence = Select(browser.find_element_by_id('id_occurrence'))
-    occurrence.select_by_value(str(show_id))
-    quantity = Select(browser.find_element_by_id('id_quantity'))
+    occurrence = Select(self.browser.find_element_by_id('id_occurrence'))
+    occurrence.select_by_value(str(self.occ1.id))
+    quantity = Select(self.browser.find_element_by_id('id_quantity'))
     quantity.select_by_value('1')
-    name = browser.find_element_by_id('id_person_name')
+    name = self.browser.find_element_by_id('id_person_name')
     name.send_keys('Test Name1')
-    email = browser.find_element_by_id('id_email_address')
+    email = self.browser.find_element_by_id('id_email_address')
     email.send_keys('test@test.com')
 
     # Submit the form
-    browser.find_element_by_id('submit-btn').click()
+    self.browser.find_element_by_id('submit-btn').click()
     # Wait for the page to load
-    browser.implicitly_wait(10)
+    self.browser.implicitly_wait(10)
 
     # Make sure we are allowed to book tickets
-    thanks_title = browser.find_element_by_xpath('//div[@class="main"]/h1').text
+    thanks_title = self.browser.find_element_by_xpath('//div[@class="main"]/h1').text
     self.assertEqual(thanks_title, 'Thanks!') 
     self.assertEqual(
-      self.live_server_url + '/book/' + str(show_id) + '/thanks/',
-      browser.current_url
+      self.live_server_url + '/book/' + str(self.show1.id) + '/thanks/',
+      self.browser.current_url
       )
-
 
   def test_book_show_no_date(self):
     browser = self.browser
-    show_id = models.Show.objects.get(name='Test Show').id
-    browser.get(self.live_server_url + '/book/' + str(show_id))
+    browser.get(self.live_server_url + '/book/' + str(self.show1.id))
 
     # Input correct details but no date or seats
     name = browser.find_element_by_id('id_person_name')
@@ -188,18 +182,13 @@ class BookTest(LiveServerTestCase):
     self.assertEqual(occurrence_err, 'This field is required.')
 
   def test_book_one_sold_out(self):
-    show = models.Show.objects.get(name='Test Show')
 
-    occ = OccurrenceFactory.create(show=show, date = datetime.date.today() + datetime.timedelta(days=1))
-    tick = models.Ticket.objects.create(occurrence=occ, person_name='testman', email_address='1@1.com', quantity=2)
+    self.tick = TicketFactory.create(occurrence=self.occ2, quantity=2)
 
-    self.browser.get(self.live_server_url + '/book/' + str(show.id))
+    self.browser.get(self.live_server_url + '/book/' + str(self.show1.id))
 
-    occurrence = Select(self.browser.find_element_by_id('id_occurrence'))
-    occurrence.select_by_value('2')
-
-    sold_out = self.browser.find_element_by_id('id_quantity').text
-    self.assertTrue(sold_out, 'Performance Sold Out')
+    options = len(self.browser.find_elements_by_xpath('//select[@id="id_occurrence"]'))
+    self.assertEqual(options, 1)
 
 
 class ListTest(LiveServerTestCase):
@@ -207,20 +196,19 @@ class ListTest(LiveServerTestCase):
   def setUp(self):
     self.browser = webdriver.Chrome('bin/chromedriver')
 
-    OccurrenceFactory.create()
+    self.show1 = ShowFactory.create(name="TS In House", category=CategoryFactory(name="In House", sort=1))
+    self.occ1 = OccurrenceFactory.create(show=self.show1)
 
   def tearDown(self):
     self.browser.quit()
 
   def test_list_view(self):
-    browser = self.browser
-
-    browser.get(self.live_server_url + '/list')
+    self.browser.get(self.live_server_url + '/list')
 
     # Check that we have a title
-    browser.implicitly_wait(3)
-    title_text = browser.find_element_by_id('show-title').text
-    self.assertEqual(title_text, 'Test Show')
+    self.browser.implicitly_wait(3)
+    title_text = self.browser.find_element_by_id('show-title').text
+    self.assertEqual(title_text, self.show1.name)
 
 
 class AuthTest(StaticLiveServerTestCase):
@@ -287,14 +275,7 @@ class AuthTest(StaticLiveServerTestCase):
     self.assertIn('Jim', nav_text)
 
     # test that we can logout as well
-    self.browser.get(self.live_server_url + '/login/')
-    drop = self.browser.find_element_by_xpath('//a[@class="dropdown-button"]')
-    logout = self.browser.find_element_by_xpath('//ul[@id="dropdown1"]/li[3]/a')
-
-    action_chains = ActionChains(self.browser)
-    action_chains.click(on_element=drop)
-    action_chains.click(on_element=logout)
-    action_chains.perform()
+    self.browser.get(self.live_server_url + '/logout/')
 
     logout = self.browser.find_element_by_xpath('//h4[@class="light nnt-orange medium-text"]').text
     self.assertEqual(logout, 'Logged Out')
@@ -308,32 +289,33 @@ class IndexTest(StaticLiveServerTestCase):
     self.browser.set_window_size(1200, 1000)
 
     UserFactory()
-    OccurrenceFactory.create()
+
+    self.show1 = ShowFactory.create(name="TS In House", category=CategoryFactory(name="In House", sort=1))
+    self.occ1 = OccurrenceFactory.create(show=self.show1)
 
   def tearDown(self):
     self.browser.quit()
 
   def test_index(self):
-    browser = self.browser
-    browser.get(self.live_server_url + '/')
+    self.browser.get(self.live_server_url + '/')
 
     # Login
-    username = browser.find_element_by_id('username')
+    username = self.browser.find_element_by_id('username')
     username.send_keys('Jim')
-    password = browser.find_element_by_id('password')
+    password = self.browser.find_element_by_id('password')
     # Send the wrong password
     password.send_keys('correcthorsebatterystaple')
 
     # Submit the form
-    submit = browser.find_element_by_id('submit')
+    submit = self.browser.find_element_by_id('submit')
     submit.click()
 
-    title = browser.find_element_by_id('title').text
-    self.assertEqual(title, 'Test Show')
+    title = self.browser.find_element_by_id('title').text
+    self.assertEqual(title, self.show1.name)
 
-    browser.get(self.live_server_url + '/?page=10')
+    self.browser.get(self.live_server_url + '/?page=10')
 
-    page = browser.find_element_by_id('page').text
+    page = self.browser.find_element_by_id('page').text
     self.assertIn('1', page)
 
 
@@ -348,15 +330,14 @@ class ReportTest(StaticLiveServerTestCase):
     self.browser.implicitly_wait(10)
 
     UserFactory()
-    OccurrenceFactory.create(maximum_sell=80)
+
+    self.show1 = ShowFactory.create(name="TS In House", category=CategoryFactory(name="In House", sort=1))
+    self.occ1 = OccurrenceFactory.create(show=self.show1, maximum_sell=80)
 
   def tearDown(self):
     self.browser.quit()
 
-  @override_settings(DEBUG=True)
   def test_report(self):
-    show_id = models.Show.objects.get(name='Test Show').id
-
     self.browser.get(self.live_server_url + '/')
 
     # Login
@@ -413,8 +394,8 @@ class ReportTest(StaticLiveServerTestCase):
     # member.send_keys('1')
     # member.send_keys('tab')
 
-class saleTest(StaticLiveServerTestCase):
-    fixtures = ['initial_pricing.json']
+class SaleTest(StaticLiveServerTestCase):
+    fixtures = ['initial_pricing.json', 'initial_category.json']
 
     def setUp(self):
         self.browser = webdriver.Chrome('bin/chromedriver')
