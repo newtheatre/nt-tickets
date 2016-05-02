@@ -269,7 +269,7 @@ class SeasonPriceAdmin(admin.ModelAdmin):
 
 
 class StuFFPriceAdmin(admin.ModelAdmin):
-    fields = ['show', 'ticket_price',]
+    fields = ['show', 'stuff_price',]
 
 
 class StuFFEventPriceAdmin(admin.ModelAdmin):
