@@ -29,7 +29,7 @@ function sell_tickets() {
       $('#sale-update').html($('#div-1', data).html());
       $('.sale-final').html($('#div-2', data).html());
       $('#reservation_modal_container').html($('#div-3', data).html());
-      checkSell(0);
+      checkSell(0, parseFloat( ($('#div-4', data).html()) ) );
       // console.log(data);
       // console.log("Sell success"); // sanity check after AJAX
     },

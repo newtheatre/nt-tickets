@@ -424,7 +424,8 @@ class SaleTest(StaticLiveServerTestCase):
             3: TicketFactory(occurrence=self.occ1, quantity=10, collected=True),
             4: TicketFactory(occurrence=self.occ1, quantity=10, cancelled=True),
             5: TicketFactory(occurrence=self.occ1_2, quantity=10),
-            6: TicketFactory(occurrence=self.occ1_4, quantity=10),
+            6: TicketFactory(occurrence=self.occ1_4, quantity=5),
+            7: TicketFactory(occurrence=self.occ1_4, quantity=5),
         }
 
         # Fringe Show
@@ -620,6 +621,9 @@ class SaleTest(StaticLiveServerTestCase):
         # Sell the same number of tickets as on the reservation
         self.checkInput('member', '45.00', 9)
 
+        # Check that we can sell the remaining ticket
+        self.checkInput('member', '5.00', 1)
+
 
     def test_sale_sold_out(self):
         # Check selling tickets when shows are sold out
@@ -655,4 +659,21 @@ class SaleTest(StaticLiveServerTestCase):
         time.sleep(1)
         self.checkDiasbled()
 
-        self.checkInput('member', '50.00', 10)
+        self.checkInput('member', '25.00', 5)
+        self.checkDiasbled()
+
+        reservation.click()
+
+        time.sleep(1)
+        # Reduce the number of tickets collected by 1
+        less = self.browser.find_element_by_id('less_2')
+        less.click()
+        # Add this to the form
+        add2 = self.browser.find_element_by_xpath('//form[@id="reserve_2"]/button')
+        add2.click()
+
+        time.sleep(1)
+        self.checkInput('member', '20.00', 4)
+
+        # Check that we can sell the remaining ticket
+        self.checkInput('member', '5.00', 1)
