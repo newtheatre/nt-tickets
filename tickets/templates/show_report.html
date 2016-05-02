@@ -328,8 +328,8 @@
 					{% elif report.category|stringformat:"s" == "StuFF" %}
 						<div class="col s12">
 							<div class="input-field col s12">
-									<input id="stuff_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-									<label for="stuff_sales">A Ticket Please £{{ report.stuff_price }}</label>
+									<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+									<label for="stuff">A Ticket Please £{{ report.stuff_price }}</label>
 								</div>
 						</div>
 					{% else %}
@@ -344,7 +344,7 @@
 					<div class="col s12">
 						<div class="card tiny grey darken-3 bottom-card valign-wrapper">
 							<div class="col s6 m3 center-align">
-								<span class="nnt-orange sale-text">Total sales: <span class="sale-final">{% ShowSales report %}</span></span>
+								<span class="nnt-orange sale-text">Total sales: <span class="bold">£</span><span class="sale-final bold" id="final">{% ShowSales report %}</span></span>
 							</div>
 							<div class="col s6 m3 center-align">
 								<span class="nnt-orange sale-text">Order Total: <span class="bold">£</span><span class="bold" id="out1"></span></span>

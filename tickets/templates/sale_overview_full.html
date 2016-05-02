@@ -39,9 +39,7 @@
       {% endif %}
     </div>
   </div>
-  <div id="div-2">
-    <span class="nnt-orange bold">£{{ report.total_sales|stringformat:".2f" }}</span>
-  </div>
+  <div id="div-2">{{ report.total_sales|stringformat:".2f" }}</div>
   <div id="div-3">
     <!-- Reservation Modal -->
     {% include 'reservation_modal.html' %}
