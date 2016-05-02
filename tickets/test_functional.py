@@ -427,24 +427,41 @@ class saleTest(StaticLiveServerTestCase):
             username='Jim', password='Rash', email='jim@rash.com',)
         self.user.save()
 
+        self.in_house = models.Category.objects.get(slug='in_house')
+        self.fringe = models.Category.objects.get(slug='fringe')
+        self.external = models.Category.objects.get(slug='external')
+        self.stuff = models.Category.objects.get(slug='stuff')
+
         # In House Show
-        self.show1 = ShowFactory.create(name="TS In House", category=CategoryFactory(name="In House", sort=1))
+        self.show1 = ShowFactory.create(name="TS In House", category=self.in_house)
         self.occ1 = OccurrenceFactory.create(maximum_sell=80, show=self.show1)
         self.occ1_2 = OccurrenceFactory.create(maximum_sell=80, show=self.show1, time="14:30")
+        self.occ1_3 = OccurrenceFactory.create(maximum_sell=10, show=self.show1, time="14:30")
+        self.reserv1 = {
+            1: TicketFactory(occurrence=self.occ1, quantity=10),
+            2: TicketFactory(occurrence=self.occ1, quantity=10),
+            3: TicketFactory(occurrence=self.occ1, quantity=10, collected=True),
+            4: TicketFactory(occurrence=self.occ1, quantity=10, cancelled=True),
+            5: TicketFactory(occurrence=self.occ1_2, quantity=10),
+            6: TicketFactory(occurrence=self.occ1_3, quantity=10),
+        }
 
         # Fringe Show
-        self.show2 = ShowFactory.create(name="TS Fringe", category=CategoryFactory(name="Fringe", sort=2))
+        self.show2 = ShowFactory.create(name="TS Fringe", category=self.fringe)
         self.occ2 = OccurrenceFactory.create(maximum_sell=80, show=self.show2)
+        self.reserv2 = TicketFactory(occurrence=self.occ2, quantity=10)
 
         # External Show
-        self.show3 = ShowFactory.create(name="TS External 1", category=CategoryFactory(pk=3, name="External", sort=3))
+        self.show3 = ShowFactory.create(name="TS External 1", category=self.external)
         self.occ3 = OccurrenceFactory.create(maximum_sell=80, show=self.show3)
         self.exprice1 = models.ExternalPricing.objects.create(show=self.show3, allow_season_tickets=False, allow_fellow_tickets=False)
+        self.reserv3 = TicketFactory(occurrence=self.occ3, quantity=10)
 
         # StuFF Show
-        self.show4 = ShowFactory.create(name="TS StuFF", category=CategoryFactory(name="StuFF", sort=4))
+        self.show4 = ShowFactory.create(name="TS StuFF", category=self.stuff)
         self.occ4 = OccurrenceFactory.create(maximum_sell=80, show=self.show4)
         self.stprice = models.StuFFPricing.objects.create(show=self.show4)
+        self.reserv4 = TicketFactory(occurrence=self.occ4, quantity=10)
 
 
     def tearDown(self):
@@ -465,17 +482,18 @@ class saleTest(StaticLiveServerTestCase):
 
         self.assertEqual(self.live_server_url + n, self.browser.current_url)
 
-    def checkInput(self, name, price):
+    def checkInput(self, name, price, number=1):
         submit = self.browser.find_element_by_id('sell_button')
 
         self.assertTrue(submit.get_attribute('disabled'))
 
         check = self.browser.find_element_by_id(name)
         check.click()
-        check.send_keys('1')
+        check.send_keys(number)
 
         self.assertFalse(submit.get_attribute('disabled'))
         total1 = self.browser.find_element_by_id('out1').text
+        time.sleep(0.2)
         self.assertEqual(total1, price)
 
         sale = 0
@@ -486,6 +504,15 @@ class saleTest(StaticLiveServerTestCase):
         time.sleep(0.2) # Wait a little bit for things to happen
         total3 = self.browser.find_element_by_id('final').text
         self.assertEqual(sale, float(total3))
+
+    def checkOutput(self, number, occ):
+        sold = self.browser.find_element_by_id('sold').text
+        reserved = self.browser.find_element_by_id('reserved').text
+        left = self.browser.find_element_by_id('left').text
+
+        self.assertEqual(int(sold), number)
+        self.assertEqual(int(reserved), occ.tickets_sold())
+        self.assertEqual(int(left), occ.maximum_sell - number - occ.tickets_sold())
 
     def test_sale(self):
         # Requests address
@@ -507,6 +534,8 @@ class saleTest(StaticLiveServerTestCase):
         self.checkInput('season_sales_nnt', '20.00')
         self.checkInput('fellow', '0.00')
 
+        self.checkOutput(7, self.occ1)
+
         # Navigate to in house matinee show page
         self.browser.get(
             self.live_server_url + '/show/' + \
@@ -514,6 +543,8 @@ class saleTest(StaticLiveServerTestCase):
 
         self.checkInput('matinee_freshers', '2.50')
         self.checkInput('matinee_freshers_nnt', '2.00')
+
+        self.checkOutput(2, self.occ1_2)
 
         # Navigate to fringe show page
         self.browser.get(
@@ -526,6 +557,8 @@ class saleTest(StaticLiveServerTestCase):
         self.checkInput('season_sales_nnt', '20.00')
         self.checkInput('fellow', '0.00')
 
+        self.checkOutput(5, self.occ2)
+
         # Navigate to external show page
         self.browser.get(
             self.live_server_url + '/show/' + \
@@ -535,9 +568,87 @@ class saleTest(StaticLiveServerTestCase):
         self.checkInput('concession', '5.00')
         self.checkInput('public', '8.00')
 
+        self.checkOutput(3, self.occ3)
+
         # Navigate to stuff page
         self.browser.get(
             self.live_server_url + '/show/' + \
             str(self.show4.id) + '/' + str(self.occ4.id))
 
         self.checkInput('stuff', '5.00')
+
+        self.checkOutput(1, self.occ4)
+
+    def test_sale_reservations(self):
+        # Check selling reserved tickets acts as it should
+        # Selling all the tickets
+        # Requests address
+        self.browser.get(self.live_server_url + '/')
+        # Gets redirected to login
+        self.authenticate('/')
+
+        # Navigate to in house show page
+        self.browser.get(
+            self.live_server_url + '/show/' + \
+            str(self.show1.id) + '/' + str(self.occ1.id))
+
+        reservation = self.browser.find_element_by_id('reserve_button')
+        reservation.click()
+
+        add1 = self.browser.find_element_by_xpath('//form[@id="reserve_1"]/button')
+        add2 = self.browser.find_element_by_xpath('//form[@id="reserve_2"]/button')
+        add3 = self.browser.find_element_by_id('add_button_3')
+        add4 = self.browser.find_element_by_id('add_button_4')
+
+        # Check that the correct buttons are enabled
+        self.assertFalse(add1.get_attribute('disabled'))
+        self.assertFalse(add2.get_attribute('disabled'))
+        self.assertTrue(add3.get_attribute('disabled'))
+        self.assertTrue(add4.get_attribute('disabled'))
+
+        # Add the first set of tickets to the form
+        add1.click()
+        # Check we can't sell tickets unless we sell the same number as on the reservation
+        submit = self.browser.find_element_by_id('sell_button')
+
+        self.assertTrue(submit.get_attribute('disabled'))
+
+        check = self.browser.find_element_by_id('member')
+        check.click()
+        check.send_keys('1')
+
+        self.assertTrue(submit.get_attribute('disabled'))
+
+        # Sell the same number of tickets as on the reservation
+        time.sleep(1)
+        self.checkInput('member', '50.00', 10)
+
+        reservation.click()
+        time.sleep(1)
+        # Reduce the number of tickets collected by 1
+        less = self.browser.find_element_by_id('less_2')
+        less.click()
+
+        # Add this to the form
+        add2 = self.browser.find_element_by_xpath('//form[@id="reserve_2"]/button')
+        add2.click()
+
+        self.assertTrue(submit.get_attribute('disabled'))
+
+        time.sleep(1)
+        check = self.browser.find_element_by_id('member')
+        check.click()
+        check.send_keys('1')
+
+        self.assertTrue(submit.get_attribute('disabled'))
+
+        # Sell the same number of tickets as on the reservation
+        self.checkInput('member', '45.00', 9)
+
+
+    def test_sale_sold_out(self):
+        # Check selling tickets when shows are sold out
+        # No reservations
+        # Some reservations
+        pass
+
