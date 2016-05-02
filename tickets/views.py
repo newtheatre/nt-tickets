@@ -33,6 +33,7 @@ import configuration.keys as keys
 import datetime
 import settings
 
+
 def login(request, **kwargs):
     if request.user.is_authenticated():
         next = request.GET.get('next', '/')
@@ -76,7 +77,7 @@ def ShowIndex(request):
         'show': show,
     }
 
-    return render_to_response('show_index.html', context, context_instance=RequestContext(request)) 
+    return render_to_response('show_index.html', context, context_instance=RequestContext(request))
 
 
 @login_required
@@ -91,8 +92,10 @@ def ShowReport(request, show_name, occ_id):
     report['default_time_matinee'] = \
         config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
-    report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
-    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt
+    report['season_price'] = models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price_nnt
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -104,16 +107,19 @@ def ShowReport(request, show_name, occ_id):
 
         report['max'] = occ_fin.maximum_sell
 
-        report['tickets'] = models.Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
+        report['tickets'] = models.Ticket.objects.filter(
+            occurrence=occ_fin).order_by('person_name')
 
         # How many tickets have been sold so far
         report['sold'] = occ_fin.total_tickets_sold()
         # Total number of tickets reserved
         report['how_many_reserved'] = occ_fin.tickets_sold()
         # How many tickets have been collected
-        report['how_many_collected'] = occ_fin.tickets_sold() - models.Ticket.objects.get_collected(occurrence=occ_fin)
+        report['how_many_collected'] = occ_fin.tickets_sold(
+        ) - models.Ticket.objects.get_collected(occurrence=occ_fin)
         # How many un-reserved tickets are there left to sell
-        report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
+        report['how_many_sales_left'] = occ_fin.maximum_sell - \
+            occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
         # Maximum amount of free tickets to sell
 
         # This is really dogey need to fix this properly
@@ -126,7 +132,8 @@ def ShowReport(request, show_name, occ_id):
 
         report['total_sales'] = occ_fin.total_sales()
 
-        report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
+        report['reserve_percentage'] = (
+            report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
         report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
 
         report['reservation'] = 'None'
@@ -203,7 +210,7 @@ def ShowReport(request, show_name, occ_id):
         'show_report.html',
         context,
         context_instance=RequestContext(request)
-        )
+    )
 
 
 @login_required
@@ -217,7 +224,8 @@ def SaleInputAJAX(request, show_name, occ_id):
         show = get_object_or_404(models.Show, id=show_name)
         s.occurrence = occ_fin
         s.ticket = request.POST.get('reservation')
-        report['tickets'] = models.Ticket.objects.filter(occurrence=occ_fin).order_by('person_name')
+        report['tickets'] = models.Ticket.objects.filter(
+            occurrence=occ_fin).order_by('person_name')
 
         category = show.category
 
@@ -234,7 +242,6 @@ def SaleInputAJAX(request, show_name, occ_id):
 
         elif category.id == 4:
             pricing = models.StuFFPricing.objects.get(show_id=show_name)
-
 
         try:
             number_concession = float(request.POST.get('number_concession'))
@@ -282,7 +289,8 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_matinee_freshers = float(0)
 
         try:
-            number_matinee_freshers_nnt = float(request.POST.get('number_matinee_freshers_nnt'))
+            number_matinee_freshers_nnt = float(
+                request.POST.get('number_matinee_freshers_nnt'))
         except:
             number_matinee_freshers_nnt = float(0)
 
@@ -318,8 +326,10 @@ def SaleInputAJAX(request, show_name, occ_id):
         except Exception:
             public_sale = float(0)
 
-        season_sale = number_season_sale * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
-        season_sale_nnt = number_season_sale_nnt * float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
+        season_sale = number_season_sale * \
+            float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+        season_sale_nnt = number_season_sale_nnt * \
+            float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
 
         try:
             fringe_sale = number_fringe * float(pricing.fringe_price)
@@ -327,12 +337,14 @@ def SaleInputAJAX(request, show_name, occ_id):
             fringe_sale = float(0)
 
         try:
-            matinee_fresher_sale = number_matinee_freshers * float(pricing.matinee_freshers_price)
+            matinee_fresher_sale = number_matinee_freshers * \
+                float(pricing.matinee_freshers_price)
         except Exception:
             matinee_fresher_sale = float(0)
 
         try:
-            matinee_fresher_nnt_sale = number_matinee_freshers_nnt * float(pricing.matinee_freshers_nnt_price)
+            matinee_fresher_nnt_sale = number_matinee_freshers_nnt * \
+                float(pricing.matinee_freshers_nnt_price)
         except Exception:
             matinee_fresher_nnt_sale = float(0)
 
@@ -349,9 +361,9 @@ def SaleInputAJAX(request, show_name, occ_id):
             season_sale_nnt +
             fringe_sale +
             matinee_fresher_sale +
-            matinee_fresher_nnt_sale + 
+            matinee_fresher_nnt_sale +
             stuff_sale
-            )
+        )
 
         number = (
             number_concession +
@@ -363,21 +375,23 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_season +
             number_season_sale +
             number_season_sale_nnt +
-            number_fellow + 
+            number_fellow +
             number_stuff
-            )
+        )
 
         s.number = number
         s.price = price
 
         # Don't write to the database unless there is at least one sale
         if occ_id > '0':
-            left = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
+            left = occ_fin.maximum_sell - occ_fin.tickets_sold() - \
+                models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
             if (number != 0 and left > 0) or (number != 0 and left == 0 and request.POST.get('unique_ticket') != 'None'):
                 s.save()
 
                 if request.POST.get('unique_ticket') != 'None':
-                    T = models.Ticket.objects.get(unique_code=request.POST.get('unique_ticket'))
+                    T = models.Ticket.objects.get(
+                        unique_code=request.POST.get('unique_ticket'))
                     T.collected = True
                     num_collected = int(request.POST.get('reservation_number'))
                     if num_collected < T.quantity:
@@ -392,9 +406,11 @@ def SaleInputAJAX(request, show_name, occ_id):
             # Total number of tickets reserved
             report['how_many_reserved'] = occ_fin.tickets_sold()
             # How many tickets have been collected
-            report['how_many_collected'] = occ_fin.tickets_sold() - models.Ticket.objects.get_collected(occurrence=occ_fin)
+            report['how_many_collected'] = occ_fin.tickets_sold(
+            ) - models.Ticket.objects.get_collected(occurrence=occ_fin)
             # How many un-reserved tickets are there left to sell
-            report['how_many_sales_left'] = occ_fin.maximum_sell - occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
+            report['how_many_sales_left'] = occ_fin.maximum_sell - \
+                occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
 
             # This is really dogey need to fix this properly
             # if report['how_many_sales_left'] < 0:
@@ -405,10 +421,12 @@ def SaleInputAJAX(request, show_name, occ_id):
 
             report['left_to_sell'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
 
-            report['sale_percentage'] = (report['sold'] / float(occ_fin.maximum_sell)) * 100
+            report['sale_percentage'] = (
+                report['sold'] / float(occ_fin.maximum_sell)) * 100
             report['total_sales'] = occ_fin.total_sales()
             report['how_many_reserved'] = occ_fin.tickets_sold()
-            report['reserve_percentage'] = (report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
+            report['reserve_percentage'] = (
+                report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
             report['max'] = occ_fin.maximum_sell
 
         context = {
@@ -440,7 +458,8 @@ def ReserveInputAJAX(request, show_name, occ_id):
                 elif (number < 0) or (int(number) > max_number):
                     reservation = 'ERROR, BEEP BOOP'
                 else:
-                    reservation = ticket.person_name + ' (' + number + '/' + str(ticket.quantity) + ')'
+                    reservation = ticket.person_name + \
+                        ' (' + number + '/' + str(ticket.quantity) + ')'
             except:
                 reservation = 'ERROR'
 
@@ -470,28 +489,28 @@ def GenReportAJAX(request):
             # bug
             content = make_github_issue(
                 title=subject,
-                body=message + '.' + '\n >' + name  + '\n \n' +\
-                    '*This bug was submitted at:* ' +\
-                    '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
+                body=message + '.' + '\n >' + name + '\n \n' +
+                '*This bug was submitted at:* ' +
+                '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
                 labels=['bug', 'ticket-bot']
-                )
+            )
         elif label == 'improvment':
             # improve
             content = make_github_issue(
                 title=subject,
-                body=message + '.' + '\n >' + name + '\n \n' +\
-                    '*This improvment was suggested at:* ' +\
-                    '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
+                body=message + '.' + '\n >' + name + '\n \n' +
+                '*This improvment was suggested at:* ' +
+                '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
                 labels=['enhancement', 'ticket-bot']
-                )
+            )
         else:
             content = make_github_issue(
                 title=subject,
-                body=message + '.' + '\n >' + name + '\n \n' +\
-                    '*This issue was submitted at:* ' +\
-                    '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
+                body=message + '.' + '\n >' + name + '\n \n' +
+                '*This issue was submitted at:* ' +
+                '<a target="_blank" href="http://' + settings.BASE_URL + path + '"">' + path + '</a>',
                 labels=['ticket-bot']
-                )
+            )
 
         return HttpResponse(json.dumps(content), content_type='application/json')
 
@@ -502,7 +521,8 @@ def GenReportAJAX(request):
 def make_github_issue(title, body=None, labels=None):
     git = dict()
     # Github repo to POST data to
-    url = 'https://api.github.com/repos/%s/%s/issues' % (settings.REPO_OWNER, settings.REPO_NAME)
+    url = 'https://api.github.com/repos/%s/%s/issues' % (
+        settings.REPO_OWNER, settings.REPO_NAME)
 
     # Create an authenticated session to create the issue
     session = requests.session(headers={'Authorization': 'token %s' % keys.TOKEN})
@@ -529,7 +549,8 @@ def make_github_issue(title, body=None, labels=None):
 def SaleReport(request):
     now = datetime.datetime.now()
     time_filter = now - datetime.timedelta(weeks=4)
-    show_list = models.Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
+    show_list = models.Show.objects.filter(
+        start_date__gte=time_filter).order_by('start_date')
 
     paginator = Paginator(show_list, 5)
     page = request.GET.get('page')
@@ -549,7 +570,7 @@ def SaleReport(request):
         'sale_report.html',
         context,
         context_instance=RequestContext(request)
-        )
+    )
 
 
 @login_required
@@ -560,7 +581,8 @@ def SaleReportFull(request, show_name):
     report['sale'] = models.Sale.objects.filter(id__in=occurrence)
 
     report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
-    report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
+    report['default_time_matinee'] = config.DEFAULT_TIME_MATINEE.strftime(
+        '%-I:%M %p').lower()
 
     category = show.category
 
@@ -609,8 +631,10 @@ def SaleReportFull(request, show_name):
     except Exception:
         report['matinee_freshers_nnt_price'] = float(0)
 
-    report['season_price'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price
-    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt
+    report['season_price'] = models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price_nnt
 
     try:
         report['stuff_price'] = float(pricing.stuff_price)
@@ -625,10 +649,10 @@ def SaleReportFull(request, show_name):
     }
 
     return render_to_response(
-        'sale_report_full.html', 
-        context, 
+        'sale_report_full.html',
+        context,
         context_instance=RequestContext(request)
-        )
+    )
 
 
 @login_required
@@ -670,7 +694,8 @@ def DownloadReport(request, show_name):
         public_sale = float(0)
 
     season_sale = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
-    season_sale_nnt = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
+    season_sale_nnt = float(
+        models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
 
     try:
         fringe_sale = float(pricing.fringe_price)
@@ -694,14 +719,14 @@ def DownloadReport(request, show_name):
 
     writer = csv.writer(response)
     writer.writerow([
-        show.name, 
-        'Total Sales: £' + str(show.show_sales()), 
-        'Total Tickets Sold: ' + str(show.total_tickets_sold_show()), 
+        show.name,
+        'Total Sales: £' + str(show.show_sales()),
+        'Total Tickets Sold: ' + str(show.total_tickets_sold_show()),
         'Total Tickets Reserved: ' + str(show.total_tickets_reserved()),
         'Out of a possible: ' + str(show.total_possible())
-        ])
+    ])
     writer.writerow([
-        'Show Day', 
+        'Show Day',
         'Show Time',
         'Member Tickets',
         'Concession Tickets',
@@ -711,33 +736,33 @@ def DownloadReport(request, show_name):
         'Member Season Ticket Sales',
         'Fellow Tickets',
         'StuFF Tickets',
-        ])
+    ])
 
     for oc in occurrence:
         writer.writerow([
-            oc.day_formatted(), 
-            oc.time_formatted(), 
-            oc.member_tally(), 
-            oc.concession_tally(), 
+            oc.day_formatted(),
+            oc.time_formatted(),
+            oc.member_tally(),
+            oc.concession_tally(),
             oc.public_tally(),
             oc.season_tally(),
             oc.season_sale_tally(),
             oc.season_sale_nnt_tally(),
             oc.fellow_tally(),
             oc.stuff_tally(),
-            ])
+        ])
         writer.writerow([
             oc.day_formatted(),
             'TOTALS:',
             oc.member_tally() * member_sale,
-            oc.concession_tally() * concession_sale, 
+            oc.concession_tally() * concession_sale,
             oc.public_tally() * public_sale,
             '-',
             oc.season_sale_tally() * season_sale,
             oc.season_sale_nnt_tally() * season_sale_nnt,
             '-',
             oc.stuff_tally() * stuff_sale,
-            ])
+        ])
 
     return response
 
@@ -757,7 +782,8 @@ def book_landing(request, show_id):
     foh_contact = 'foh@newtheatre.org.uk'
 
     if request.method == 'POST':    # If the form has been submitted...
-        form = forms.BookingFormLanding(request.POST, show=show)    # A form bound to the POST data
+        # A form bound to the POST data
+        form = forms.BookingFormLanding(request.POST, show=show)
         if form.is_valid():     # All validation rules pass
             t = models.Ticket()
             person_name = form.cleaned_data['person_name']
@@ -772,15 +798,15 @@ def book_landing(request, show_id):
             if t.occurrence.date < datetime.date.today():
                 return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
             t.quantity = form.cleaned_data['quantity']
-            if t.occurrence.maximum_sell < (t.occurrence.tickets_sold()+t.quantity):
+            if t.occurrence.maximum_sell < (t.occurrence.tickets_sold() + t.quantity):
                 return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}) + "?err=sold_out")
 
             try:
                 tick = models.Ticket.objects.filter(
-                    person_name = person_name,
-                    email_address = email_address,
-                    occurrence = occurrence
-                    )
+                    person_name=person_name,
+                    email_address=email_address,
+                    occurrence=occurrence
+                )
 
                 tick_ordered = tick.order_by('-stamp')[0]
                 if tick_ordered.stamp > datetime.datetime.now() - datetime.timedelta(0, 5, 0):
@@ -805,13 +831,14 @@ def book_landing(request, show_id):
                 body=email_html,
                 to=[t.email_address],
                 from_email="boxoffice@newtheatre.org.uk"
-                )
+            )
             email.content_subtype = 'html'
 
             if settings.ACTUALLY_SEND_MAIL == True:
                 email.send()
 
-            return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))   # Redirect after POST
+            # Redirect after POST
+            return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))
     else:
         form = forms.BookingFormLanding(show=show)    # An unbound form
 
@@ -851,20 +878,21 @@ def graph_view(request):
 
     days = dict()
     days['tally'] = [0, 0, 0, 0, 0, 0, 0, 0]
-    days['days'] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Saturday Matinee']
+    days['days'] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
+                    'Thursday', 'Friday', 'Saturday', 'Saturday Matinee']
 
     for i in range(1, 7):
         for oc in models.Occurrence.objects.all().filter(date__week_day=i):
-            days['tally'][i-1] += oc.tickets_sold()
+            days['tally'][i - 1] += oc.tickets_sold()
 
     for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=16):
-            days['tally'][6] += oc.tickets_sold()
+        days['tally'][6] += oc.tickets_sold()
 
     for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=14).filter(time__hour__lt=16):
-            days['tally'][7] += oc.tickets_sold()
+        days['tally'][7] += oc.tickets_sold()
 
-    day_max = max(xrange(len(days['tally'])),key=days['tally'].__getitem__)
-    day_min = min(xrange(len(days['tally'])),key=days['tally'].__getitem__)
+    day_max = max(xrange(len(days['tally'])), key=days['tally'].__getitem__)
+    day_min = min(xrange(len(days['tally'])), key=days['tally'].__getitem__)
 
     days['max'] = [days['tally'][day_max], days['days'][day_max]]
     days['min'] = [days['tally'][day_min], days['days'][day_min]]
@@ -902,7 +930,8 @@ def graph_view(request):
 
         reserved_per_show.append(reserve_maths)
 
-    months = json.dumps(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+    months = json.dumps(["January", "February", "March", "April", "May", "June",
+                         "July", "August", "September", "October", "November", "December"])
 
     shows_by_month = json.dumps({
         'label': "Shows by month",
@@ -924,7 +953,7 @@ def graph_view(request):
         'pointHighlightFill': "#fff",
         'pointHighlightStroke': "rgba(226, 0, 19, 1)",
         'data': tickets_sold
-        })
+    })
 
     profit = json.dumps({
         'label': "Show Profit",
@@ -935,7 +964,7 @@ def graph_view(request):
         'pointHighlightFill': "#fff",
         'pointHighlightStroke': "rgba(60, 216, 97, 1)",
         'data': profit
-        })
+    })
 
     reserved_by_show = json.dumps({
         'label': "Shows by month",
@@ -948,7 +977,6 @@ def graph_view(request):
         'data': reserved_per_show
     })
 
-
     context = {
         'months': months,
         'shows_by_month': shows_by_month,
@@ -959,13 +987,13 @@ def graph_view(request):
         'profit': profit,
         'most_popular': most_popular,
         'least_popular': least_popular,
-        }
+    }
 
     return render_to_response(
-        'graph_view.html', 
-        context, 
+        'graph_view.html',
+        context,
         context_instance=RequestContext(request)
-        )
+    )
 
 
 def how_many_left(request):
@@ -1039,7 +1067,9 @@ class ListShows(OrderedListView):
         return super(ListShows, self).get_queryset().filter(end_date__gte=today)
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
+
 class ListStuFFShows(ListShows):
+
     def get_queryset(self):
         today = datetime.date.today()
         return super(ListStuFFShows, self).get_queryset().filter(end_date__gte=today).filter(category__name='StuFF')
@@ -1076,7 +1106,8 @@ def sidebar(request):
     exclude = config.SIDEBAR_FILTER_PERIOD
     current_shows = []
     for category in categories:
-        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by('end_date').filter(start_date__lte=limit).filter(category__slug__in=config.PUBLIC_CATEGORIES)
+        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by(
+            'end_date').filter(start_date__lte=limit).filter(category__slug__in=config.PUBLIC_CATEGORIES)
         if len(shows) > 0:
             current_shows.append(shows[0])
     return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude, 'settings': settings})
