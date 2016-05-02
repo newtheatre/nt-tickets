@@ -3,7 +3,8 @@
   "model": "pricing.seasonticketpricing",
   "pk": 1,
   "fields": {
-    "season_ticket_price": "40.00"
+    "season_ticket_price": "40.00",
+    "season_ticket_price_nnt": "20.00"
   }
 },
 {
