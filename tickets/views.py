@@ -58,7 +58,7 @@ def ShowIndex(request):
     show_list = []
 
     for sh in shows:
-        if sh.is_current():
+        if sh.is_current_show():
             show_list.append(sh)
 
     paginator = Paginator(show_list, 5)
@@ -185,7 +185,7 @@ def ShowReport(request, show_name, occ_id):
         pricing = []
 
     # Testing if the show is current
-    if show.is_current():
+    if show.is_current_show():
         report['current'] = True
     else:
         report['current'] = False
