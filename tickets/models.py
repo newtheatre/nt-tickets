@@ -20,6 +20,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class Category(models.Model):
+
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
@@ -27,23 +28,24 @@ class Category(models.Model):
     name = models.CharField(
         max_length=50,
         help_text='Shows up on pages.'
-        )
+    )
     slug = models.SlugField(
         help_text='Will be used in class names, so you can style categories differently.'
-        )
+    )
     sort = models.IntegerField(
         help_text='Low to high, sorts the sidebar.',
         validators=[
-                MinValueValidator(6, 'Minimum values is 6')
-            ]
-        )
+            MinValueValidator(6, 'Minimum values is 6')
+        ]
+    )
 
-    def __str__(self): 
+    def __str__(self):
         return self.name
 
 
 @python_2_unicode_compatible
 class Show(models.Model):
+
     class Meta:
         verbose_name = 'Show'
         verbose_name_plural = 'Shows'
@@ -51,36 +53,36 @@ class Show(models.Model):
     name = models.CharField(max_length=64)
 
     slug = models.SlugField(
-                    blank=True,
-                    help_text='Used in the URL of the detail page, leave blank to auto-generate.'
-                    )
+        blank=True,
+        help_text='Used in the URL of the detail page, leave blank to auto-generate.'
+    )
 
     location = models.CharField(
-                    max_length=30,
-                    default=config.DEFAULT_LOCATION,
-                    help_text='Will show up alongside show, you can hide this with CSS if needed.'
-                    )
+        max_length=30,
+        default=config.DEFAULT_LOCATION,
+        help_text='Will show up alongside show, you can hide this with CSS if needed.'
+    )
 
     description = models.TextField(
-                    help_text='A short description, one paragraph only.'
-                    )
+        help_text='A short description, one paragraph only.'
+    )
 
     long_description = models.TextField(
-                    blank=True,
-                    help_text='Shows up on the detail page, this field is written in Markdown. ' +
-                    '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.'
-                    )
+        blank=True,
+        help_text='Shows up on the detail page, this field is written in Markdown. ' +
+        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.'
+    )
 
     poster = StdImageField(
-                    upload_to=UploadToClassNameDir(),
-                    blank=True, null=True,
-                    help_text='Upload a large image, we will automatically create smaller versions to use.',
-                    variations={
-                        'poster_wall': (126, 178),
-                        'poster_page': (256, 362),
-                        'poster_tiny': (50, 71),
-                        }
-                    )
+        upload_to=UploadToClassNameDir(),
+        blank=True, null=True,
+        help_text='Upload a large image, we will automatically create smaller versions to use.',
+        variations={
+            'poster_wall': (126, 178),
+            'poster_page': (256, 362),
+            'poster_tiny': (50, 71),
+        }
+    )
 
     start_date = models.DateField()
     end_date = models.DateField()
@@ -178,22 +180,24 @@ class OccurrenceManager(models.Manager):
     def get_available(self, show):
         today = datetime.date.today()
         time = datetime.datetime.now()
-        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
+        occs = Occurrence.objects.filter(show=show).filter(
+            date__gte=today).order_by('date', 'time')
         ret = []
         for oc in occs:
             combined = datetime.datetime.combine(oc.date, oc.time)
             close_time = combined - datetime.timedelta(hours=oc.hours_til_close)
             if not oc.sold_out() and not (oc.date <= today and time >= close_time):
                 ret.append((
-                    oc.id, 
-                    oc.datetime_formatted(), 
-                    ))
+                    oc.id,
+                    oc.datetime_formatted(),
+                ))
         return ret
 
     def get_available_show(self, show):
         today = datetime.date.today()
         time = datetime.datetime.now()
-        occs = Occurrence.objects.filter(show=show).filter(date__gte=today).order_by('date', 'time')
+        occs = Occurrence.objects.filter(show=show).filter(
+            date__gte=today).order_by('date', 'time')
         ret = []
         for oc in occs:
             combined = datetime.datetime.combine(oc.date, oc.time)
@@ -201,14 +205,14 @@ class OccurrenceManager(models.Manager):
             if oc.date <= today and time >= close_time:
                 pass
             else:
-                ret.append(( 
-                    oc.id, 
-                    oc.datetime_formatted(), 
+                ret.append((
+                    oc.id,
+                    oc.datetime_formatted(),
                     oc.day_date(),
-                    oc.unique_code, 
-                    oc.time_formatted(), 
-                    oc.tickets_sold() 
-                    ))
+                    oc.unique_code,
+                    oc.time_formatted(),
+                    oc.tickets_sold()
+                ))
         return ret
 
 
@@ -223,14 +227,14 @@ class Occurrence(models.Model):
     date = models.DateField()
     time = models.TimeField(default=config.DEFAULT_TIME)
     maximum_sell = models.PositiveIntegerField(
-                default=config.DEFAULT_MAX_SELL,
-                help_text='The maximum number of tickets we will allow to be reserved.'
-                )
+        default=config.DEFAULT_MAX_SELL,
+        help_text='The maximum number of tickets we will allow to be reserved.'
+    )
 
     hours_til_close = models.IntegerField(
-                default=config.DEFAULT_HOURS_TIL_CLOSE,
-                help_text='Hours before \'time\' that we will stop reservations being made.'
-                )
+        default=config.DEFAULT_HOURS_TIL_CLOSE,
+        help_text='Hours before \'time\' that we will stop reservations being made.'
+    )
     unique_code = models.CharField(max_length=16)
 
     objects = OccurrenceManager()
@@ -400,6 +404,7 @@ class Ticket(models.Model):
     stamp = models.DateTimeField(auto_now=True)
     person_name = models.CharField(max_length=80)
     email_address = models.EmailField(max_length=80)
+    initial_quantity = models.IntegerField(default=0)
     quantity = models.IntegerField(default=1)
     cancelled = models.BooleanField(default=False)
     collected = models.BooleanField(default=False)
@@ -420,7 +425,7 @@ class Ticket(models.Model):
 
 class SaleManager(models.Manager):
 
-    def sold_not_reserved(self, occurrence): 
+    def sold_not_reserved(self, occurrence):
         sale = Sale.objects.filter(occurrence=occurrence, ticket='None')
         number = 0
 
@@ -429,13 +434,14 @@ class SaleManager(models.Manager):
 
         return number
 
+
 class Sale(models.Model):
 
     class Meta:
         verbose_name = 'Sale'
         verbose_name_plural = 'Sales'
 
-    objects=SaleManager()
+    objects = SaleManager()
 
     occurrence = models.ForeignKey(Occurrence)
     ticket = models.CharField(max_length=80)

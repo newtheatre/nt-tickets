@@ -35,10 +35,13 @@ class TicketAdmin(admin.ModelAdmin):
             D_form = DownloadForm(request.POST)     # Download Form
             if R_form.is_valid():
                 occurrence = R_form.cleaned_data['occurrence']
-                report['tickets'] = Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
+                report['tickets'] = Ticket.objects.filter(
+                    occurrence=occurrence).order_by('person_name')
                 report['how_many_sold'] = occurrence.tickets_sold()
-                report['how_many_left'] = occurrence.maximum_sell-occurrence.tickets_sold()
-                report['percentage'] = (report['how_many_sold']/float(occurrence.maximum_sell))*100
+                report['how_many_left'] = occurrence.maximum_sell - \
+                    occurrence.tickets_sold()
+                report['percentage'] = (report['how_many_sold'] /
+                                        float(occurrence.maximum_sell)) * 100
                 report['have_report'] = True
             elif C_form.is_valid():
                 ticket_id = C_form.cleaned_data['ticket']
@@ -51,17 +54,21 @@ class TicketAdmin(admin.ModelAdmin):
 
                 occurrence = Occurrence.objects.get(unique_code=occurrence_id)
 
-                report['tickets'] = Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
+                report['tickets'] = Ticket.objects.filter(
+                    occurrence=occurrence).order_by('person_name')
                 report['how_many_sold'] = occurrence.tickets_sold()
-                report['how_many_left'] = occurrence.maximum_sell-occurrence.tickets_sold()
-                report['percentage'] = (report['how_many_sold']/float(occurrence.maximum_sell))*100
+                report['how_many_left'] = occurrence.maximum_sell - \
+                    occurrence.tickets_sold()
+                report['percentage'] = (report['how_many_sold'] /
+                                        float(occurrence.maximum_sell)) * 100
                 report['have_report'] = True
 
                 R_form = ReportForm(initial={'occurrence': occurrence})
             elif D_form.is_valid():
                 occurrence_id = D_form.cleaned_data['occurrence']
                 occurrence = Occurrence.objects.get(unique_code=occurrence_id)
-                tickets = Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
+                tickets = Ticket.objects.filter(
+                    occurrence=occurrence).order_by('person_name')
 
                 response = HttpResponse(content_type='text/csv')
                 response['Content-Disposition'] = 'attachment; filename=Reservation_Report.csv'
@@ -74,7 +81,7 @@ class TicketAdmin(admin.ModelAdmin):
                     occurrence.time_formatted(),
                     'Total Reserved: ' + str(occurrence.tickets_sold()),
                     'Out of: ' + str(occurrence.maximum_sell)
-                    ])
+                ])
 
                 writer.writerow([
                     'Person Name',
@@ -82,7 +89,7 @@ class TicketAdmin(admin.ModelAdmin):
                     'TimeStamp',
                     'Cancelled?',
                     'Collected?'
-                    ])
+                ])
 
                 for tick in tickets:
                     writer.writerow([
@@ -91,17 +98,19 @@ class TicketAdmin(admin.ModelAdmin):
                         tick.stamp,
                         tick.cancelled,
                         tick.collected
-                        ])
+                    ])
 
-
-                report['tickets'] = Ticket.objects.filter(occurrence=occurrence).order_by('person_name')
+                report['tickets'] = Ticket.objects.filter(
+                    occurrence=occurrence).order_by('person_name')
                 report['how_many_sold'] = occurrence.tickets_sold()
-                report['how_many_left'] = occurrence.maximum_sell-occurrence.tickets_sold()
-                report['percentage'] = (report['how_many_sold']/float(occurrence.maximum_sell))*100
+                report['how_many_left'] = occurrence.maximum_sell - \
+                    occurrence.tickets_sold()
+                report['percentage'] = (report['how_many_sold'] /
+                                        float(occurrence.maximum_sell)) * 100
                 report['have_report'] = True
 
                 R_form = ReportForm(initial={'occurrence': occurrence})
-                
+
                 return response
             else:
                 pass
@@ -129,23 +138,23 @@ class TicketAdmin(admin.ModelAdmin):
 
 class ShowAdmin(admin.ModelAdmin):
     fields = [
-            'name',
-            'location',
-            'category',
-            'poster',
-            'slug',
-            'description',
-            'long_description',
-            'start_date',
-            'end_date'
-            ]
+        'name',
+        'location',
+        'category',
+        'poster',
+        'slug',
+        'description',
+        'long_description',
+        'start_date',
+        'end_date'
+    ]
 
     list_display = (
-                'name',
-                'location',
-                'category',
-                'start_date',
-                'end_date')
+        'name',
+        'location',
+        'category',
+        'start_date',
+        'end_date')
 
     list_filter = ['category']
     search_fields = ('name', 'description')
@@ -157,20 +166,20 @@ class ShowAdmin(admin.ModelAdmin):
 
 class OccurrenceAdmin(admin.ModelAdmin):
     fields = [
-            'show',
-            'date',
-            'time',
-            'maximum_sell',
-            'hours_til_close'
-            ]
+        'show',
+        'date',
+        'time',
+        'maximum_sell',
+        'hours_til_close'
+    ]
 
     list_display = (
-                'show',
-                'date',
-                'time',
-                'maximum_sell',
-                'hours_til_close'
-                )
+        'show',
+        'date',
+        'time',
+        'maximum_sell',
+        'hours_til_close'
+    )
 
     ordering = ['date', 'time']
     search_fields = ['show__name']
@@ -182,7 +191,8 @@ class OccurrenceAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
         form = super(OccurrenceAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['show'].queryset = Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
+        form.base_fields['show'].queryset = Show.objects.filter(
+            start_date__gte=time_filter).order_by('start_date')
         return form
 
 
@@ -194,15 +204,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         if request.user.is_superuser:
-          return True
+            return True
         else:
-          return False
+            return False
 
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser:
-          return True
+            return True
         else:
-          return False
+            return False
 
 
 class InHousePriceAdmin(admin.ModelAdmin):
@@ -217,9 +227,9 @@ class InHousePriceAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         num_objects = self.model.objects.count()
         if num_objects >= 1:
-          return False
+            return False
         else:
-          return True
+            return True
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -233,9 +243,9 @@ class FringePriceAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         num_objects = self.model.objects.count()
         if num_objects >= 1:
-          return False
+            return False
         else:
-          return True
+            return True
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -251,7 +261,7 @@ class ExternalPriceAdmin(admin.ModelAdmin):
         'allow_fellow_tickets',
         'allow_half_matinee',
         'allow_half_nnt_matinee'
-        ]
+    ]
 
 
 class SeasonPriceAdmin(admin.ModelAdmin):
@@ -260,16 +270,16 @@ class SeasonPriceAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         num_objects = self.model.objects.count()
         if num_objects >= 1:
-          return False
+            return False
         else:
-          return True
+            return True
 
     def has_delete_permission(self, request, obj=None):
         return False
 
 
 class StuFFPriceAdmin(admin.ModelAdmin):
-    fields = ['show', 'ticket_price',]
+    fields = ['show', 'stuff_price', ]
 
 
 class StuFFEventPriceAdmin(admin.ModelAdmin):
@@ -287,4 +297,3 @@ admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)
 admin.site.register(pricing.FringePricing, FringePriceAdmin)
 admin.site.register(pricing.StuFFPricing, StuFFPriceAdmin)
 admin.site.register(pricing.StuFFEventPricing, StuFFEventPriceAdmin)
-

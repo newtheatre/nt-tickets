@@ -17,7 +17,8 @@ function sell_tickets() {
       number_fellow : $('#fellow').val(),
       number_stuff: $('#stuff').val(),
       unique_ticket : $('#unique_ticket').val(),
-      reservation: $('#reservation').val()
+      reservation: $('#reservation').val(),
+      reservation_number: $('#reservation_number').val(),
     }, // data sent with the post request
 
     // handle a successful response
@@ -28,7 +29,7 @@ function sell_tickets() {
       $('#sale-update').html($('#div-1', data).html());
       $('.sale-final').html($('#div-2', data).html());
       $('#reservation_modal_container').html($('#div-3', data).html());
-      checkSell();
+      checkSell(0, parseFloat( ($('#div-4', data).html()) ) );
       // console.log(data);
       // console.log("Sell success"); // sanity check after AJAX
     },
@@ -49,14 +50,19 @@ function collect_tickets(id) {
     type : "post",
     data : {
       unique_code : $('#code_' + id).val(),
+      number : $('#number_' + id).val(),
     },
 
     // Handle a successful response
     success : function(data) {
+      // console.log(data)
+      $("#sale-form")[0].reset();
+      resetButton();
+      
       $('#reservation').val(data.reservation);
+      $('#reservation_number').val(data.number);
       $('#unique_ticket').val(data.unique_code);
-      $('#sell_button').prop("disabled", false)
-      // console.log(data);
+      // $('#sell_button').prop("disabled", false)
       // console.log('Collect success');  // Sanity check after AJAX
     },
 
@@ -84,8 +90,8 @@ function gen_report() {
 
     // Handle a successful response
     success : function(data) {
-      console.log(data);
-      console.log('Buggy success');  // Sanity check after AJAX
+      // console.log(data);
+      // console.log('Buggy success');  // Sanity check after AJAX
       if (data.err == false) {
         $('#bug-modal-loader').hide();
         $('#bug-modal-success').show();
