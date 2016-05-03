@@ -102,10 +102,11 @@
 					<div class="input-field col s7 l8" id="reservation_container">
 						<input name="ticket" type="text" id="reservation" class="Validate" readonly="True" value="{{ report.reservation }}">
 						<label for="ticket">Reservation</label>
+						<input type="hidden" id="reservation_number" readonly="True" value="0" oninput="checkSell(0)">
 					</div>
 
 					<div class="col s5 l4 center-align" id="form-button-inline">
-						<button class="btn nnt purple waves-effect waves-dark modal-trigger" href="#modal2">
+						<button class="btn nnt purple waves-effect waves-dark modal-trigger" href="#modal2" id="reserve_button">
 						<i class="material-icons left hide-on-small-and-down">library_books</i>
 						<i class="material-icons hide-on-med-and-up">library_books</i>
 						<span class="hide-on-small-and-down">Reservation</span></button>
@@ -128,16 +129,6 @@
 						{% else %}
 							<input type="hidden" value="0" id="public_price">
 						{% endif %}
-						{% if report.season_price %}
-							<input type="hidden" value="{{ report.season_price }}" id="season_price">
-						{% else %}
-							<input type="hidden" value="0" id="season_price">
-						{% endif %}
-						{% if report.season_price_nnt %}
-							<input type="hidden" value="{{ report.season_price_nnt }}" id="season_price_nnt">
-						{% else %}
-							<input type="hidden" value="0" id="season_price_nnt">
-						{% endif %}
 						{% if pricing.fringe_price %}
 							<input type="hidden" value="{{ pricing.fringe_price }}" id="fringe_price">
 						{% else %}
@@ -152,6 +143,18 @@
 							<input type="hidden" value="{{ pricing.matinee_freshers_nnt_price }}" id="matinee_freshers_nnt_price">
 						{% else %}
 							<input type="hidden" value="0" id="matinee_freshers_nnt_price">
+						{% endif %}
+						<input type="hidden" value="0" id="season_price">
+						<input type="hidden" value="0" id="fellow_price">
+						{% if report.season_price %}
+							<input type="hidden" value="{{ report.season_price }}" id="season_sales_price">
+						{% else %}
+							<input type="hidden" value="0" id="season_sales_price">
+						{% endif %}
+						{% if report.season_price_nnt %}
+							<input type="hidden" value="{{ report.season_price_nnt }}" id="season_sales_nnt_price">
+						{% else %}
+							<input type="hidden" value="0" id="season_sales_nnt_price">
 						{% endif %}
 						{% if pricing.stuff_price %}
 							<input type="hidden" value="{{ pricing.stuff_price }}" id="stuff_price">
@@ -202,31 +205,21 @@
 							<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="fellow">Fellow Tickets</label>
 						</div>
-					{% if report.time|stringformat:"s" == report.default_time %}
-						<div class="col s12">
-							<!-- Hidden Ticket Sales -->
-							<input id="fringe" type="hidden" value="0">
-							<input id="matinee_freshers" type="hidden" value="0">
-							<input id="matinee_freshers_nnt" type="hidden" value="0">
-						</div>
-					{% elif report.time|stringformat:"s" == report.default_time_matinee %}
-						<!-- Matinee Fresher Ticket Sales -->
-						<div class="input-field col s12 m6">
-							<input id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="matinee_freshers">Matinee Fresher Tickets £{{ pricing.matinee_freshers_price }}</label>
-						</div>
 
-						<!-- Matinee Fresher Member Ticket Sales -->
-						<div class="input-field col s12 m6">
-							<input id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="matinee_freshers_nnt">Matinee Member Fresher Tickets £{{ pricing.matinee_freshers_nnt_price }}</label>
-						</div>
+						{% if report.time|stringformat:"s" == report.default_time_matinee %}
+							<!-- Matinee Fresher Ticket Sales -->
+							<div class="input-field col s12 m6">
+								<input id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="matinee_freshers">Matinee Fresher Tickets £{{ pricing.matinee_freshers_price }}</label>
+							</div>
 
-						<!-- Hidden Fringe Ticket Sales -->
-						<div class="col s12">
-							<input id="fringe" type="hidden" value="0">
-						</div>
-					{% endif %}
+							<!-- Matinee Fresher Member Ticket Sales -->
+							<div class="input-field col s12 m6">
+								<input id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="matinee_freshers_nnt">Matinee Member Fresher Tickets £{{ pricing.matinee_freshers_nnt_price }}</label>
+							</div>
+
+						{% endif %}
 					<!-- Fringe Shows -->
 					{% elif report.category|stringformat:"s" == "Fringe" %}
 						<!-- Fringe Ticket Sales -->
@@ -259,14 +252,6 @@
 							<label for="fellow">Fellow Tickets</label>
 						</div>
 
-						<!-- Hidden Sale Inputs -->
-						<div class="col s12">
-							<input id="concession" type="hidden" value="0">
-							<input id="member" type="hidden" value="0">
-							<input id="public" type="hidden" value="0">
-							<input id="matinee_freshers" type="hidden" value="0">
-							<input id="matinee_freshers_nnt" type="hidden" value="0">
-						</div>
 					<!-- External Shows -->
 					{% elif report.category|stringformat:"s" == "External" %}
 						<!-- Member Ticket Sales -->
@@ -287,86 +272,60 @@
 							<label for="public">Public Tickets £{{ pricing.public_price }}</label>
 						</div>
 
-						{% if pricing.allow_season_tickets %}
-							<!-- Season Ticket Numbers -->
+							{% if pricing.allow_season_tickets %}
+								<!-- Season Ticket Numbers -->
+								<div class="input-field col s12 m6 l4">
+									<input id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+									<label for="season">Season Pass Tickets</label>
+								</div>
+
+								<!-- Season Ticket Sales -->
+								<div class="input-field col s12 m6 l4">
+									<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+									<label for="season_sales">Season Pass Ticket Sales £{{ report.season_price }}</label>
+								</div>
+
+								<!-- Season Ticket Sales NNT -->
 							<div class="input-field col s12 m6 l4">
-								<input id="season" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-								<label for="season">Season Pass Tickets</label>
+								<input id="season_sales_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="season_sales_nnt">Season Ticket Member Sales £{{ report.season_price_nnt }}</label>
 							</div>
 
-							<!-- Season Ticket Sales -->
-							<div class="input-field col s12 m6 l4">
-								<input id="season_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-								<label for="season_sales">Season Pass Ticket Sales £{{ report.season_price }}</label>
-							</div>
-
-							<!-- Season Ticket Sales NNT -->
-						<div class="input-field col s12 m6 l4">
-							<input id="season_sales_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-							<label for="season_sales_nnt">Season Ticket Member Sales £{{ report.season_price_nnt }}</label>
-						</div>
-						{% else %}
-
-							<!-- Hidden Inputs -->
-							<div class="col s12">
-								<input id="season" type="hidden" value="0">
-								<input id="season_sales" type="hidden" value="0">
-								<input id="season_sales_nnt" type="hidden" value="0">
-							</div>
-						<!-- End allow_season_tickets -->
-						{% endif %}
-						{% if pricing.allow_fellow_tickets %}
-							<!-- Fellow Ticket Numbers -->
-							<div class="input-field col s12 s6 l4">
-								<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-								<label for="fellow">Fellow Tickets</label>
-							</div>
-						{% else %}
-							<!-- Hidden Inputs -->
-							<div class="col s12">
-								<input id="fellow" type="hidden" value="0">
-							</div>
-						<!-- End allow_fellow_tickets -->
-						{% endif %}
-						{% if report.time|stringformat:"s" == report.default_time_matinee %}
-							{% if pricing.allow_half_matinee %}
-								<!-- Matinee Fresher Ticket Sales -->
-								<div class="input-field col s12 m6">
-									<input id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-									<label for="matineee_freshers">Matinee Fresher Tickets £{{ report.matinee_freshers_price }}</label>
-								</div>
-							{% else %}
-								<!-- Hidden Inputs -->
-								<div class="col s12">
-									<input id="matinee_freshers" type="hidden" value="0">
-								</div>
-							<!-- End allow_half_matinee -->
+							<!-- End allow_season_tickets -->
 							{% endif %}
-							{% if pricing.allow_half_nnt_matinee %}
-								<!-- Matinee Fresher Member Ticket Sales -->
-								<div class="input-field col s12 m6">
-									<input id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-									<label for="matinee_freshers_nnt">Matinee Member Fresher Tickets £{{ report.matinee_freshers_nnt_price }}</label>
+							{% if pricing.allow_fellow_tickets %}
+								<!-- Fellow Ticket Numbers -->
+								<div class="input-field col s12 s6 l4">
+									<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+									<label for="fellow">Fellow Tickets</label>
 								</div>
-							{% else %}
-								<!--  -->
-								<div class="col s12">
-									<input id="matinee_freshers_nnt" type="hidden" value="0">
-								</div>
-							<!-- End allow half nnt matinee -->
+
+							<!-- End allow_fellow_tickets -->
 							{% endif %}
-						{% else %}
-							<div class="col s12">
-								<input id="matinee_freshers_nnt" type="hidden" value="0">
-								<input id="matinee_freshers" type="hidden" value="0">
-							</div>
-						<!-- End matinee -->
-						{% endif %}
-						<!-- Hidden Inputs -->
-						<div class="input-field col s12">
-							<input id="fringe" type="hidden" value="0">
-						</div>
-					{% elif report.category.id == 4 %}
+							{% if report.time|stringformat:"s" == report.default_time_matinee %}
+								{% if pricing.allow_half_matinee %}
+									<!-- Matinee Fresher Ticket Sales -->
+									<div class="input-field col s12 m6">
+										<input id="matinee_freshers" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+										<label for="matineee_freshers">Matinee Fresher Tickets £{{ report.matinee_freshers_price }}</label>
+									</div>
+
+								<!-- End allow_half_matinee -->
+								{% endif %}
+								{% if pricing.allow_half_nnt_matinee %}
+									<!-- Matinee Fresher Member Ticket Sales -->
+									<div class="input-field col s12 m6">
+										<input id="matinee_freshers_nnt" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+										<label for="matinee_freshers_nnt">Matinee Member Fresher Tickets £{{ report.matinee_freshers_nnt_price }}</label>
+									</div>
+
+								<!-- End allow half nnt matinee -->
+								{% endif %}
+
+							<!-- End matinee -->
+							{% endif %}
+
+					{% elif report.category|stringformat:"s" == "StuFF" %}
 						<div class="col s12">
 							<div class="input-field col s12">
 									<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
@@ -379,12 +338,13 @@
 							<br>
 						</div>
 					{% endif %}
+					<!-- End Category If/Else -->
 				</div>
 				<div class="row hide-on-small-and-down">
 					<div class="col s12">
 						<div class="card tiny grey darken-3 bottom-card valign-wrapper">
 							<div class="col s6 m3 center-align">
-								<span class="nnt-orange sale-text">Total sales: <span class="sale-final">{% ShowSales report %}</span></span>
+								<span class="nnt-orange sale-text">Total sales: <span class="bold">£</span><span class="sale-final bold" id="final">{% ShowSales report %}</span></span>
 							</div>
 							<div class="col s6 m3 center-align">
 								<span class="nnt-orange sale-text">Order Total: <span class="bold">£</span><span class="bold" id="out1"></span></span>
@@ -503,110 +463,89 @@
 	<!-- Dynamic addition of sales -->
 	<script>
 	$(document).ready(function(){
-		checkSell();
+		checkSell(0);
 		$(document).keyup(function(){
-			var concession_price = document.getElementById("concession_price").value;
-			var member_price = document.getElementById("member_price").value;
-			var public_price = document.getElementById("public_price").value;
-			var fringe_price = document.getElementById("fringe_price").value;
-			var matinee_freshers_price = document.getElementById("matinee_freshers_price").value;
-			var matinee_freshers_nnt_price = document.getElementById("matinee_freshers_nnt_price").value;
-			var season_price = document.getElementById("season_price").value;
-			var season_price_nnt = document.getElementById("season_price_nnt").value;
-			var stuff_price = document.getElementById("stuff_price").value;
 
-			try {
-				var num_concession = document.getElementById("concession").value * concession_price;
-			} catch (err) {
-				var num_concession = 0;
-			}
-
-			try {
-				var num_member = document.getElementById("member").value * member_price;
-			} catch (err) {
-				var num_member = 0;
-			}
-
-			try {
-				var num_public = document.getElementById("public").value * public_price;
-			} catch (err) {
-				var num_public = 0;
-			}
-
-			try {
-				var num_fringe = document.getElementById("fringe").value * fringe_price;
-			} catch (err) {
-				var num_fringe = 0;
-			}
-
-			try {
-				var num_matinee_freshers = document.getElementById("matinee_freshers").value * matinee_freshers_price;
-			} catch (err) {
-				var num_matinee_freshers = 0;
-			}
-
-			try {
-				var num_matinee_freshers_nnt = document.getElementById("matinee_freshers_nnt").value * matinee_freshers_nnt_price;
-			} catch (err) {
-				var num_matinee_freshers_nnt = 0;
-			}
-
-			try {
-				var num_season = document.getElementById("season").value * 0;
-			} catch (err) {
-				var num_season = 0;
-			}
-
-			try {
-				var num_fellow = document.getElementById("fellow").value * 0;
-			} catch (err) {
-				var num_fellow = 0;
-			}
-
-			try {
-				var num_season_sale = document.getElementById("season_sales").value * season_price;
-			} catch (err) {
-				var num_season_sale = 0;
-			}
-
-			try {
-				var num_season_sale_nnt = document.getElementById("season_sales_nnt").value * season_price_nnt;
-			} catch (err) {
-				var num_season_sale_nnt = 0;
-			}
-
-			try { 
-				var num_stuff = document.getElementById("stuff").value * stuff_price;
-			} catch (err) {
-				var num_stuff = 0;
-			}
+			var num_concession = getInput("concession");
+			var num_member = getInput("member");
+			var num_public = getInput("public");
+			var num_fringe = getInput("fringe");
+			var num_matinee_freshers = getInput("matinee_freshers");
+			var num_matinee_freshers_nnt = getInput("matinee_freshers_nnt");
+			var num_season = getInput("season");
+			var num_fellow = getInput("fellow");
+			var num_season_sale = getInput("season_sales");
+			var num_season_sale_nnt = getInput("season_sales_nnt");
+			var num_stuff = getInput("stuff");
 
 			var x = 
-				+num_concession +
-				+num_member +
-				+num_public +
-				+num_fringe +
-				+num_matinee_freshers +
-				+num_matinee_freshers_nnt +
-				+num_season +
-				+num_fellow +
-				+num_season_sale +
-				+num_season_sale_nnt +
-				+num_stuff;
+				+num_concession[2] +
+				+num_member[2] +
+				+num_public[2] +
+				+num_fringe[2] +
+				+num_matinee_freshers[2] +
+				+num_matinee_freshers_nnt[2] +
+				+num_season[2] +
+				+num_fellow[2] +
+				+num_season_sale[2] +
+				+num_season_sale_nnt[2] +
+				+num_stuff[2];
+
+			var number_sold =
+				+num_concession[0] +
+				+num_member[0] +
+				+num_public[0] +
+				+num_fringe[0] +
+				+num_matinee_freshers[0] +
+				+num_matinee_freshers_nnt[0] +
+				+num_season[0] +
+				+num_fellow[0] +
+				+num_season_sale[0] +
+				+num_season_sale_nnt[0] +
+				+num_stuff[0];
 
 			xf = parseFloat(x).toFixed(2);
 			document.getElementById("out1").innerHTML = xf;
 			document.getElementById("out2").innerHTML = xf;
+
+			checkSell(number_sold);
 		});
 	});
 	</script>
 
 	<script>
-		function checkSell() {
-			// if ( {{report.how_many_left}} == 0 ) {
-			// 	$('#sell_button').prop("disabled", true);
-			// };
+		var left={{report.how_many_sales_left}}
+		function checkSell(num, num_left) {
+			var reservation = $('#reservation').val();
+			var reservation_number = $('#reservation_number').val()
+			if ( typeof(num_left) != "undefined" || "") {
+				left = num_left
+			};
+
+			if ( left == 0 || num == 0 ) {
+				$('#sell_button').prop("disabled", true);
+			};
+			if (num > 0 && reservation == 'None' && left > 0) {
+				$('#sell_button').prop("disabled", false);
+			};
+			if (reservation != 'None' && num == reservation_number) {
+				$('#sell_button').prop("disabled", false);
+			};
+
 		};
+	</script>
+
+	<script>
+		function getInput(name) {
+			var input = $('#' + name).val()
+			var price = $('#' + name + "_price").val()
+			if ( typeof(input) == "undefined" || "") {
+				input = 0
+			};
+			var tot = (+input * +price);
+			// console.log(input, price)
+			return [input, price, tot]
+		}
 	</script>
 
 	{% include 'shortcut.html' %}
@@ -622,24 +561,13 @@
 		});
 	</script>
 
-	<script>
-	  $(document).on('submit', '.reserve-form', function(event){
-			var id = $(this).attr('id');
-			event.preventDefault();
-			// console.log("Collect form submitted");  // sanity check
-			collect_tickets(id);
-			$('#modal2').closeModal();
-			return false;
-		});
-	</script>
-
 	<!-- Reset sale tally on reset -->
 	<script>
 	function resetButton() {
 		xr = parseFloat(0).toFixed(2);
 		document.getElementById("out1").innerHTML = xr;
 		document.getElementById("out2").innerHTML = xr;
-		checkSell();
+		checkSell(0);
 		// document.getElementById("reservation").innerHTML = "None";
 	}
 	</script>

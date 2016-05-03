@@ -33,25 +33,28 @@ urlpatterns = [
     # Admin frontend urls
     url(r'^$', tickets_views.ShowIndex, name='index'),
     url(r'^show/(?P<show_name>\d+)/$', tickets_views.ShowReport, name='show_report'),
-    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/$', tickets_views.ShowReport, name='show_report_full'),
+    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/$',
+        tickets_views.ShowReport, name='show_report_full'),
     url(r'download/(?P<show_name>\d+)/$', tickets_views.DownloadReport, name='download_report'),
     url(r'^graph/$', tickets_views.graph_view, name='graph_view'),
 
     # AJAX url handlers
-    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/sale/$', tickets_views.SaleInputAJAX, name='sale_ajax'),
-    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/reserve/$', tickets_views.ReserveInputAJAX, name='reserve_ajax'),
+    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/sale/$',
+        tickets_views.SaleInputAJAX, name='sale_ajax'),
+    url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/reserve/$',
+        tickets_views.ReserveInputAJAX, name='reserve_ajax'),
     url(r'bug/$', tickets_views.GenReportAJAX, name='bug_ajax'),
 
     # Sale report urls
     url(r'^report/$', tickets_views.SaleReport, name='sale_report'),
     url(r'^report/(?P<show_name>\d+)/$', tickets_views.SaleReportFull, name='sale_report_full'),
 
-] 
+]
 
 if settings.DEBUG:
     urlpatterns = [
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
-    url(r'', include('django.contrib.staticfiles.urls')),
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+        url(r'', include('django.contrib.staticfiles.urls')),
 
-] + urlpatterns
+    ] + urlpatterns

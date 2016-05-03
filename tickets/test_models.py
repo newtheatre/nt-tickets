@@ -8,7 +8,6 @@ from datetime import date, timedelta, datetime
 from django.utils import timezone
 
 
-
 class StaticPageTest(TestCase):
 
     def test_list_view(self):
@@ -35,7 +34,8 @@ class BookTest(TestCase):
             start_date=start_date,
             end_date=end_date,
             category=cat
-            )
+        )
+
     def test_category_name(self):
         cat = Category.objects.get(pk=1).__str__()
         self.assertEqual(cat, 'Test Category')
@@ -73,8 +73,8 @@ class ShowTest(TestCase):
             2: Show.objects.create(name='S2', category=cls.cat, description='show past', long_description=cls.l_desc, start_date=cls.today - timedelta(days=6), end_date=cls.today),
         }
 
-        # Create an occurrence 
-        occ_day = datetime.now()+timedelta(hours=4)
+        # Create an occurrence
+        occ_day = datetime.now() + timedelta(hours=4)
 
         cls.occ = {
             1: Occurrence.objects.create(show=cls.show[1], date=occ_day.date(), time=occ_day.time(), maximum_sell=2, hours_til_close=0),
@@ -85,9 +85,10 @@ class ShowTest(TestCase):
             person_name='testman',
             email_address='test@test.com',
             quantity=1,
-            )
+        )
 
-        cls.sale = Sale.objects.create(occurrence=cls.occ[1], ticket='None', price=1, number=2)
+        cls.sale = Sale.objects.create(
+            occurrence=cls.occ[1], ticket='None', price=1, number=2)
 
     def test_is_current_false(self):
         show = Show.objects.get(name='S1')
@@ -105,7 +106,7 @@ class ShowTest(TestCase):
             quantity=1,
             cancelled=False,
             unique_code=rand_16(),
-            )
+        )
 
         self.assertTrue(show.show_sold_out())
         self.assertTrue(occ.sold_out())
@@ -179,7 +180,7 @@ class ShowTest(TestCase):
             person_name='testman2',
             email_address='test@test.com',
             quantity=2,
-            )
+        )
 
         r = Occurrence.objects.get_available(show)
 
@@ -194,6 +195,7 @@ class ShowTest(TestCase):
 
         self.assertEqual(show.show_sales(), 1)
 
+
 class ShowClosed(TestCase):
 
     @classmethod
@@ -206,7 +208,7 @@ class ShowClosed(TestCase):
             start_date=start_date,
             end_date=end_date,
             category=cat
-            )
+        )
 
         cls.occ = Occurrence.objects.create(
             show=cls.show,
@@ -215,14 +217,14 @@ class ShowClosed(TestCase):
             maximum_sell=2,
             hours_til_close=2,
             unique_code=rand_16(),
-            )
+        )
 
         cls.ticket = Ticket.objects.create(
             occurrence=cls.occ,
             person_name='testman',
             email_address='test@test.com',
             quantity=1,
-            )
+        )
 
     def test_get_available_show_closed(self):
         show = self.show
@@ -250,9 +252,9 @@ class ShowReallyClosed(TestCase):
             start_date=start_date,
             end_date=end_date,
             category=cat
-            )
+        )
 
-        occ_day = datetime.now()-timedelta(hours=7)
+        occ_day = datetime.now() - timedelta(hours=7)
 
         cls.occ = Occurrence.objects.create(
             show=cls.show,
@@ -261,7 +263,7 @@ class ShowReallyClosed(TestCase):
             maximum_sell=2,
             hours_til_close=2,
             unique_code=rand_16(),
-            )
+        )
 
     def test_get_available_show_closed(self):
         show = self.show
@@ -270,6 +272,7 @@ class ShowReallyClosed(TestCase):
 
 
 class SaleTest(TestCase):
+
     @classmethod
     def setUpTestData(cls):
         cat = Category.objects.create(name='Test Category', slug='test', sort=1)
@@ -281,30 +284,34 @@ class SaleTest(TestCase):
         poster = File(open('test/test_poster.jpg'))
 
         # Create some good shows
-        cls.show = Show.objects.create(name='S1', category=cat, location=loc, description='show current', long_description=l_desc, poster=poster, start_date=today, end_date=today + timedelta(days=6))
-        # cls.show{2} = Show.objects.create(name='S2', category=cls.cat, location=cls.loc, description='show past', long_description=cls.l_desc, start_date=cls.today - timedelta(days=6), end_date=cls.today)
+        cls.show = Show.objects.create(name='S1', category=cat, location=loc, description='show current',
+                                       long_description=l_desc, poster=poster, start_date=today, end_date=today + timedelta(days=6))
+        # cls.show{2} = Show.objects.create(name='S2', category=cls.cat,
+        # location=cls.loc, description='show past', long_description=cls.l_desc,
+        # start_date=cls.today - timedelta(days=6), end_date=cls.today)
 
-        # Create an occurrence 
-        cls.occ = Occurrence.objects.create(show=cls.show, date=today, time=datetime.now()+timedelta(hours=3), maximum_sell=80, hours_til_close=2)
+        # Create an occurrence
+        cls.occ = Occurrence.objects.create(show=cls.show, date=today, time=datetime.now(
+        ) + timedelta(hours=3), maximum_sell=80, hours_til_close=2)
 
         cls.ticket = Ticket.objects.create(
             occurrence=cls.occ,
             person_name='testman',
             email_address='test@test.com',
             quantity=1,
-            )
+        )
 
         cls.sale = Sale.objects.create(occurrence=cls.occ, ticket='None', number=18, price=53,
-            number_concession=2,
-            number_member=2,
-            number_public=2,
-            number_season=2,
-            number_season_sale=2,
-            number_fellow=2,
-            number_fringe=2,
-            number_matinee_freshers=2,
-            number_matinee_freshers_nnt=2,
-            )
+                                       number_concession=2,
+                                       number_member=2,
+                                       number_public=2,
+                                       number_season=2,
+                                       number_season_sale=2,
+                                       number_fellow=2,
+                                       number_fringe=2,
+                                       number_matinee_freshers=2,
+                                       number_matinee_freshers_nnt=2,
+                                       )
 
     def test_show_sales(self):
         show = self.show
@@ -338,10 +345,11 @@ class SaleTest(TestCase):
         mat_f = occ.matinee_freshers_tally()
         mat_f_nnt = occ.matinee_freshers_nnt_tally()
 
-        tot = concession + member + public + season + season_sale + fellow + fringe + mat_f + mat_f_nnt
+        tot = concession + member + public + season + \
+            season_sale + fellow + fringe + mat_f + mat_f_nnt
 
         self.assertEqual(tot, 18)
-    
+
     def test_collected(self):
         occ = self.occ
         Ticket.objects.create(
@@ -350,7 +358,7 @@ class SaleTest(TestCase):
             email_address='test@test.com',
             quantity=1,
             collected=1
-            )
+        )
 
         coll = Ticket.objects.get_collected(occurrence=occ)
 
@@ -360,16 +368,16 @@ class SaleTest(TestCase):
         occ = self.occ
 
         Sale.objects.create(occurrence=occ, ticket='testman', number=18, price=53,
-            number_concession=2,
-            number_member=2,
-            number_public=2,
-            number_season=2,
-            number_season_sale=2,
-            number_fellow=2,
-            number_fringe=2,
-            number_matinee_freshers=2,
-            number_matinee_freshers_nnt=2,
-            )
+                            number_concession=2,
+                            number_member=2,
+                            number_public=2,
+                            number_season=2,
+                            number_season_sale=2,
+                            number_fellow=2,
+                            number_fringe=2,
+                            number_matinee_freshers=2,
+                            number_matinee_freshers_nnt=2,
+                            )
 
         sold = Sale.objects.sold_not_reserved(occurrence=occ)
 
