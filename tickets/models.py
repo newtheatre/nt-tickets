@@ -93,7 +93,13 @@ class Show(models.Model):
         return self.start_date.strftime('%A %d %B %Y')
 
     def is_current(self):
-        today = datetime.date.today()
+        return datetime.date.today() <= self.end_date
+
+    def is_current_show(self):
+        return (datetime.date.today() - datetime.timedelta(days=1)) <= self.end_date
+
+    def is_current_show(self):
+        today = datetime.date.today() - datetime.timedelta(days=1)
         if today >= self.end_date:
             return False
         else:

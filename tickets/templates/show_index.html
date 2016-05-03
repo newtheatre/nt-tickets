@@ -9,7 +9,6 @@
 					<p>There are no shows at the moment<p>
 				{% else %}
 					{% for sh in show %}
-						{% if sh.is_current %}
 							<div class="card small grey darken-3">
 								<div class="row">
 									<div class="col s4" id="poster-container">
@@ -48,7 +47,6 @@
 									</div>
 								</div>
 							</div>
-						{% endif %}
 					{% endfor %}
 				{% endif %}
 			</div>
