@@ -122,10 +122,6 @@ def ShowReport(request, show_name, occ_id):
             occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
         # Maximum amount of free tickets to sell
 
-        # This is really dogey need to fix this properly
-        if report['how_many_sales_left'] < 0:
-            report['how_many_sales_left'] = 0
-
         report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
 
         report['left_to_sell'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
@@ -411,10 +407,6 @@ def SaleInputAJAX(request, show_name, occ_id):
             # How many un-reserved tickets are there left to sell
             report['how_many_sales_left'] = occ_fin.maximum_sell - \
                 occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
-
-            # This is really dogey need to fix this properly
-            # if report['how_many_sales_left'] < 0:
-            #     report['how_many_sales_left'] = 0
 
             # Maximum amount of free tickets to sell
             report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
