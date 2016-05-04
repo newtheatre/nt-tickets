@@ -106,7 +106,7 @@
 					</div>
 
 					<div class="col s5 l4 center-align" id="form-button-inline">
-						<button class="btn nnt purple waves-effect waves-dark modal-trigger" href="#modal2" id="reserve_button">
+						<button class="btn nnt purple waves-effect waves-dark modal-trigger" href="#modal2" id="reserve_button" onClick="clearSearch()">
 						<i class="material-icons left hide-on-small-and-down">library_books</i>
 						<i class="material-icons hide-on-med-and-up">library_books</i>
 						<span class="hide-on-small-and-down">Reservation</span></button>
@@ -448,10 +448,13 @@
 				<div class="modal-footer grey darken-2" style="height: 4em">
 					<div class="row no-pad">
 						<form class="col s8">
-							<div class="row no-pad">
-								<div class="input-field col s8 no-pad">
+							<div class="row no-pad valign-wrapper">
+								<div class="input-field col s11 no-pad">
 									<i class="material-icons prefix nnt-orange" id="filter" style="padding-top: 0.3em">search</i>
 									<input id="icon_prefix" type="text" placeholder="Search" class="search" style="margin-bottom: 0;">
+								</div>
+								<div class="s1 no-pad">
+									<li class="waves-effect" onClick="clearSearch()"><i class="material-icons nnt-purple" style="padding-top: 0.3em">clear</i></li>
 								</div>
 							</div>
 						</form>
@@ -597,5 +600,14 @@
 		};
 
 		var reserveList = new List('reservations', options);
+	</script>
+
+	<script>
+		function clearSearch() {
+			$('.search').val('')
+			reserveList.search();
+			$('.search').removeClass('active')
+			$('#filter').removeClass('active')
+		}
 	</script>
 {% endblock %}
