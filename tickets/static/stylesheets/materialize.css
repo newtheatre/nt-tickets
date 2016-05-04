@@ -10438,9 +10438,9 @@ input[type=tel]:focus:not([readonly]),
 input[type=number]:focus:not([readonly]),
 input[type=search]:focus:not([readonly]),
 textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #c471ba;
-  box-shadow: 0 1px 0 0 #c471ba;
-  color: #c471ba;
+  border-bottom: 1px solid #a54499;
+  box-shadow: 0 1px 0 0 #a54499;
+  color: #a54499;
 }
 /* line 84, ../sass/components/_form.scss */
 input:not([type]):focus:not([readonly]) + label,
@@ -10455,7 +10455,7 @@ input[type=tel]:focus:not([readonly]) + label,
 input[type=number]:focus:not([readonly]) + label,
 input[type=search]:focus:not([readonly]) + label,
 textarea.materialize-textarea:focus:not([readonly]) + label {
-  color: #c471ba;
+  color: #a54499;
 }
 /* line 88, ../sass/components/_form.scss */
 input:not([type]).valid, input:not([type]):focus.valid,
@@ -10617,7 +10617,7 @@ textarea.materialize-textarea + label:after {
 }
 /* line 151, ../sass/components/_form.scss */
 .input-field .prefix.active {
-  color: #c471ba;
+  color: #a54499;
 }
 /* line 153, ../sass/components/_form.scss */
 .input-field .prefix ~ input,
