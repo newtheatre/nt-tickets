@@ -1038,15 +1038,19 @@ def list(request):
 
 class OrderedListView(ListView):
 
+    class Meta:
+        ordering = []
+
     def get_queryset(self):
-        return super(OrderedListView, self).get_queryset().order_by(self.order_by)
+        return super(OrderedListView, self).get_queryset()
+        ordering = self.ordering
 
 
 class ListShows(OrderedListView):
     model = models.Show
     template_name = 'list_shows.html'
     context_object_name = 'shows'
-    order_by = 'start_date'
+    ordering = ['start_date' , 'name']
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -1072,7 +1076,7 @@ class ListPastShows(OrderedListView):
     model = models.Show
     template_name = 'list_past_shows.html'
     context_object_name = 'shows'
-    order_by = '-start_date'
+    ordering = ['-start_date', 'name']
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
