@@ -34,12 +34,14 @@
 									</a>
 								</h1>
 								<div class="row hide-on-small-and-down">
+									{% if report.have_form %}
 									<div class="col s6 center-align">
 										<button data-target="picker-modal" 
 										class="btn nnt purple modal-trigger waves-effect waves-dark">
 										<i class="material-icons left">payment</i>Choose Showing</button>
 									</div>
-									<div class="col s6 center-align">
+									{% endif %}
+									<div class="col {% if report.have_form %} s6 {% else %} s12 {% endif %} center-align">
 										<a href="/report/{{ show.id }}">
 											<button class="btn nnt purple waves-effect waves-dark">
 											<i class="material-icons left">description</i>Sale Report</button>
@@ -64,8 +66,9 @@
 					</div>
 				</div>
 			</div>
-
-		{% if report.have_form %}
+		{% if not report.have_form %}
+			{% include 'occurrence_cards.html' %}
+		{% elif report.have_form %}
 		<!-- Sale report overview -->
 		<div class="row">
 			<div class="col s12">
