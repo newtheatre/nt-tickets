@@ -34,14 +34,14 @@
 									</a>
 								</h1>
 								<div class="row hide-on-small-and-down">
-									{% if report.have_form %}
 									<div class="col s6 center-align">
 										<button data-target="picker-modal" 
-										class="btn nnt purple modal-trigger waves-effect waves-dark">
+										class="btn nnt purple waves-effect waves-dark 
+										{% if not report.have_form %}disabled{% else %}modal-trigger{% endif %}
+										">
 										<i class="material-icons left">payment</i>Choose Showing</button>
 									</div>
-									{% endif %}
-									<div class="col {% if report.have_form %} s6 {% else %} s12 {% endif %} center-align">
+									<div class="col s6 center-align">
 										<a href="/report/{{ show.id }}">
 											<button class="btn nnt purple waves-effect waves-dark">
 											<i class="material-icons left">description</i>Sale Report</button>
