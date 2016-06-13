@@ -97,6 +97,9 @@ def ShowReport(request, show_name, occ_id):
     report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
         id=1).season_ticket_price_nnt
 
+    if len(occurrence) == 1 and occ_id == '0':
+        return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
+
     # If there has been an occurrnece selected
     if occ_id > '0':
         report['have_form'] = True
