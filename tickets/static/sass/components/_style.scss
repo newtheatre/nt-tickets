@@ -21,6 +21,7 @@
 
 .nnt-orange {
 	// NNT Orange
+  @include transition(0.1s, ease-out);
   color: color('nnt', 'orange');
 }
 
@@ -215,7 +216,10 @@ iframe {
 .title {
   color: #FFFFFF !important;
   @include transition(0.1s, ease-out);
-  &:hover {
+  &:hover{
     color: $primary-color !important;
+    span {
+      color: $primary-color !important;
+    }
   }
 }
