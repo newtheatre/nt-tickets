@@ -13087,185 +13087,190 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 /* line 22, ../sass/components/_style.scss */
 .nnt-orange {
+  -webkit-transition: 0.1s ease-out;
+  -moz-transition: 0.1s ease-out;
+  -ms-transition: 0.1s ease-out;
+  -o-transition: 0.1s ease-out;
+  transition: 0.1s ease-out;
   color: #ffc425;
 }
 
-/* line 27, ../sass/components/_style.scss */
+/* line 28, ../sass/components/_style.scss */
 .nnt-purple {
   color: #a54499;
 }
 
-/* line 32, ../sass/components/_style.scss */
+/* line 33, ../sass/components/_style.scss */
 #report-image {
   width: 141px;
   height: 200px;
 }
 
-/* line 37, ../sass/components/_style.scss */
+/* line 38, ../sass/components/_style.scss */
 #nav-logo {
   width: auto;
   height: 1.7em;
   padding-top: 0.2em;
 }
 
-/* line 43, ../sass/components/_style.scss */
+/* line 44, ../sass/components/_style.scss */
 #form-button-inline {
   padding-top: 1.6em;
 }
 
-/* line 47, ../sass/components/_style.scss */
+/* line 48, ../sass/components/_style.scss */
 .z-depth-1, nav, .card-panel, .card, .toast, .btn, .btn-large, .btn-floating, .dropdown-content, .collapsible, .side-nav, #form-background {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 }
 
-/* line 51, ../sass/components/_style.scss */
+/* line 52, ../sass/components/_style.scss */
 #form-background {
   background-color: #424242;
   border-radius: 2px;
 }
 
-/* line 57, ../sass/components/_style.scss */
+/* line 58, ../sass/components/_style.scss */
 #report-bar {
   padding-top: 0.4em;
 }
 
-/* line 61, ../sass/components/_style.scss */
+/* line 62, ../sass/components/_style.scss */
 #sale-percentage {
   background-color: #a54499;
 }
 
-/* line 66, ../sass/components/_style.scss */
+/* line 67, ../sass/components/_style.scss */
 .sale-text {
   font-size: 1.3em;
 }
 
-/* line 70, ../sass/components/_style.scss */
+/* line 71, ../sass/components/_style.scss */
 .report-text {
   font-size: 1.2em;
 }
 
-/* line 74, ../sass/components/_style.scss */
+/* line 75, ../sass/components/_style.scss */
 .small-text {
   font-size: 1.1em;
 }
 
-/* line 78, ../sass/components/_style.scss */
+/* line 79, ../sass/components/_style.scss */
 .large-text {
   font-size: 7em;
 }
 
-/* line 82, ../sass/components/_style.scss */
+/* line 83, ../sass/components/_style.scss */
 .medium-text {
   font-size: 4em;
 }
 
-/* line 86, ../sass/components/_style.scss */
+/* line 87, ../sass/components/_style.scss */
 #cancelled {
   background-color: #faf3d1 !important;
 }
 
-/* line 90, ../sass/components/_style.scss */
+/* line 91, ../sass/components/_style.scss */
 #collect {
   background-color: #c7e4f3 !important;
 }
 
-/* line 94, ../sass/components/_style.scss */
+/* line 95, ../sass/components/_style.scss */
 .pad-small {
   margin-top: 0.5em !important;
 }
 
-/* line 98, ../sass/components/_style.scss */
+/* line 99, ../sass/components/_style.scss */
 .pad-medium {
   margin-top: 1em;
 }
 
-/* line 102, ../sass/components/_style.scss */
+/* line 103, ../sass/components/_style.scss */
 .pad-bottom {
   margin-top: 0.2em;
   margin-bottom: 1em;
 }
 
-/* line 107, ../sass/components/_style.scss */
+/* line 108, ../sass/components/_style.scss */
 .login-pad-top {
   margin: 0em 2em;
 }
 
-/* line 111, ../sass/components/_style.scss */
+/* line 112, ../sass/components/_style.scss */
 .sale-container {
   margin: 1em 0.5em;
 }
 
-/* line 115, ../sass/components/_style.scss */
+/* line 116, ../sass/components/_style.scss */
 #cancel-btn, #submit-btn, #close-btn {
   background-color: transparent;
 }
 
-/* line 119, ../sass/components/_style.scss */
+/* line 120, ../sass/components/_style.scss */
 .dark-background {
   background-color: #424242;
   border-radius: 2px;
 }
 
-/* line 124, ../sass/components/_style.scss */
+/* line 125, ../sass/components/_style.scss */
 .no-pad {
   margin: 0px 0px !important;
   padding: 0px 0px !important;
 }
 
-/* line 129, ../sass/components/_style.scss */
+/* line 130, ../sass/components/_style.scss */
 .show-poster, #poster-container {
   width: 150px;
   max-width: 150px;
 }
 
-/* line 134, ../sass/components/_style.scss */
+/* line 135, ../sass/components/_style.scss */
 #mobile-nav a {
   color: #ffc425;
 }
 
-/* line 138, ../sass/components/_style.scss */
+/* line 139, ../sass/components/_style.scss */
 #mobile-nav-name {
   padding: 0 30px;
 }
 
-/* line 142, ../sass/components/_style.scss */
+/* line 143, ../sass/components/_style.scss */
 .bug-content {
   padding: 10px !important;
 }
 
 @media only screen and (max-width: 600px) {
-  /* line 147, ../sass/components/_style.scss */
+  /* line 148, ../sass/components/_style.scss */
   .top-card {
     height: 120px !important;
   }
 
-  /* line 150, ../sass/components/_style.scss */
+  /* line 151, ../sass/components/_style.scss */
   .bottom-card {
     height: 130px !important;
   }
 
-  /* line 153, ../sass/components/_style.scss */
+  /* line 154, ../sass/components/_style.scss */
   .bug-card {
     height: 100px !important;
   }
 
-  /* line 156, ../sass/components/_style.scss */
+  /* line 157, ../sass/components/_style.scss */
   .small-text {
     margin-top: 0px !important;
   }
 
-  /* line 159, ../sass/components/_style.scss */
+  /* line 160, ../sass/components/_style.scss */
   .no-pad-on-small {
     margin: 0px 0px !important;
     padding: 0px 0px !important;
   }
 }
-/* line 165, ../sass/components/_style.scss */
+/* line 166, ../sass/components/_style.scss */
 iframe {
   margin: -1px 0px 0px -2px;
 }
 
-/* line 169, ../sass/components/_style.scss */
+/* line 170, ../sass/components/_style.scss */
 .dot {
   background: #fff;
   width: 10px;
@@ -13275,7 +13280,7 @@ iframe {
   margin-right: 0.6em;
 }
 
-/* line 178, ../sass/components/_style.scss */
+/* line 179, ../sass/components/_style.scss */
 .wrapper {
   margin: 50px auto;
   width: 280px;
@@ -13288,7 +13293,7 @@ iframe {
   z-index: 90;
 }
 
-/* line 188, ../sass/components/_style.scss */
+/* line 189, ../sass/components/_style.scss */
 .ribbon-wrapper {
   width: 85px;
   height: 88px;
@@ -13298,7 +13303,7 @@ iframe {
   right: 0px;
 }
 
-/* line 197, ../sass/components/_style.scss */
+/* line 198, ../sass/components/_style.scss */
 .ribbon {
   text-align: center;
   -webkit-transform: rotate(45deg);
@@ -13314,16 +13319,16 @@ iframe {
   -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
 }
-/* line 207, ../sass/components/_style.scss */
+/* line 208, ../sass/components/_style.scss */
 .ribbon.past {
   background-color: #F44336;
 }
-/* line 210, ../sass/components/_style.scss */
+/* line 211, ../sass/components/_style.scss */
 .ribbon.current {
   background-color: #4CAF50;
 }
 
-/* line 215, ../sass/components/_style.scss */
+/* line 216, ../sass/components/_style.scss */
 .title {
   color: #FFFFFF !important;
   -webkit-transition: 0.1s ease-out;
@@ -13332,7 +13337,11 @@ iframe {
   -o-transition: 0.1s ease-out;
   transition: 0.1s ease-out;
 }
-/* line 218, ../sass/components/_style.scss */
+/* line 219, ../sass/components/_style.scss */
 .title:hover {
+  color: #a54499 !important;
+}
+/* line 221, ../sass/components/_style.scss */
+.title:hover span {
   color: #a54499 !important;
 }
