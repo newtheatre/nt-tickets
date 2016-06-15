@@ -572,7 +572,7 @@ def SaleReport(request):
 def SaleReportFull(request, show_name):
     report = dict()
     show = models.Show.objects.get(id=show_name)
-    occurrence = models.Occurrence.objects.filter(show=show)
+    occurrence = models.Occurrence.objects.filter(show=show).order_by('date', 'time')
     report['sale'] = models.Sale.objects.filter(id__in=occurrence)
 
     report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
