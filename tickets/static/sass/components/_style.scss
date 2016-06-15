@@ -223,3 +223,35 @@ iframe {
     }
   }
 }
+
+.responsive_height_card {
+  @media #{$small-and-down} {
+    height: 130px !important;
+  }
+}
+
+.button_wrapper {
+  position: absolute;
+  bottom: 0;
+
+  &.right {
+    right: 0;
+  }
+
+  &.left { 
+    left: 0;
+  }
+}
+
+.pinned_button_right {
+  position: relative;
+  bottom: 0;
+
+  &.right {
+    right: 0;
+  }
+
+  &.left { 
+    left: 0;
+  }
+}
