@@ -136,7 +136,7 @@ class ShowTest(TestCase):
         day_format = occ.date.strftime('%A')
         time_format = occ.time.strftime('%-I:%M %p').lower()
         datetime_format = occ.date.strftime('%A %d %B ') + \
-            occ.time.strftime('%-I%p').lower()
+            occ.time.strftime('%-I:%M %p').lower()
 
         self.assertEqual(occ.day_formatted(), day_format)
         self.assertEqual(occ.time_formatted(), time_format)
@@ -165,7 +165,7 @@ class ShowTest(TestCase):
         show = Show.objects.get(name='S1')
         occ = Occurrence.objects.get(show=show)
         datetime_format = occ.date.strftime('%A %d %B ') + \
-            occ.time.strftime('%-I%p').lower()
+            occ.time.strftime('%-I:%M %p').lower()
 
         r1 = Occurrence.objects.get_available(show)
 
