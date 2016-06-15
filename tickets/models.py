@@ -247,7 +247,7 @@ class Occurrence(models.Model):
 
     def datetime_formatted(self):
         return self.date.strftime('%A %d %B ') + \
-            self.time.strftime('%-I%p').lower()
+            self.time.strftime('%-I:%M %p').lower()
 
     def day_date(self):
         return self.date.strftime('%A %d %B ')
