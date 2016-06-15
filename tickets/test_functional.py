@@ -391,7 +391,7 @@ class ReportTest(StaticLiveServerTestCase):
         free_text = self.browser.find_element_by_xpath('//div[@id="sale-update"]//p').text
         self.assertIn('No tickets sold', free_text)
         self.assertIn('No tickets reserved', free_text)
-        self.assertIn('80 tickets free', free_text)
+        self.assertIn('80 tickets left', free_text)
 
         # Check selling tickets adds up properly
         pricing = models.InHousePricing.objects.get(id=1)
