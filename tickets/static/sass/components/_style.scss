@@ -21,6 +21,7 @@
 
 .nnt-orange {
 	// NNT Orange
+  @include transition(0.1s, ease-out);
   color: color('nnt', 'orange');
 }
 
@@ -215,7 +216,42 @@ iframe {
 .title {
   color: #FFFFFF !important;
   @include transition(0.1s, ease-out);
-  &:hover {
+  &:hover{
     color: $primary-color !important;
+    span {
+      color: $primary-color !important;
+    }
+  }
+}
+
+.responsive_height_card {
+  @media #{$small-and-down} {
+    height: 130px !important;
+  }
+}
+
+.button_wrapper {
+  position: absolute;
+  bottom: 0;
+
+  &.right {
+    right: 0;
+  }
+
+  &.left { 
+    left: 0;
+  }
+}
+
+.pinned_button_right {
+  position: relative;
+  bottom: 0;
+
+  &.right {
+    right: 0;
+  }
+
+  &.left { 
+    left: 0;
   }
 }

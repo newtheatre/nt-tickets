@@ -1,0 +1,32 @@
+{% for oc in occurrence %}
+<div class="row">
+  <div class="col s12">
+    <div class="card tiny grey darken-3" style="margin: 0;">
+      <div class="card-content">
+        <h1 class="light white-text flow-text center-on-small-only" style="margin: 0;">
+          <a href="/show/{{ show.id }}/{{ oc.0 }}" class="title">
+            {{ oc.2 }} at {{ oc.4 }}, 
+            {% if oc.5 == 1 %}
+              <span class="nnt-orange bold hover_purple">{{ oc.5 }}</span> ticket reserved
+            {% else %}
+              <span class="nnt-orange bold hover_purple">{{ oc.5 }}</span> tickets reserved
+            {% endif %}
+          </a>
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="row">
+  <div class="col s12">
+    <div class="card tiny grey darken-3" style="margin: 0;">
+      <div class="card-content">
+        <h1 class="light red-text flow-text center" style="margin: 0;">
+          There are no showings available
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}

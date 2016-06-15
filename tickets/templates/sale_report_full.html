@@ -1,6 +1,6 @@
 {% extends 'show_base.html' %}
 {% load static from staticfiles %}
-{% load mathfilters %}
+{% load show_tags %}
 {% block head %}
 	<title>{% block title %}{{ show.name }} sales &middot; {% endblock %}</title>
 {% endblock %}
@@ -22,51 +22,54 @@
 							</div>
 						</div>
 							<div class="card-content center-on-small-only">
-								<h1 class="card-title light white-text flow-text no-pad truncate">
+								<h1 class="light white-text flow-text truncate" id="title" style="margin-top: 0;">
 									<a href="/report/" rel="nofollow" class="title">
-									{{ show.name }}
+									{{ show.name }} | {{ report.pricing_error }}
 									</a>
 								</h1>
 
-								<div class="row pad-medium no-pad-on-small">
-									<div class="col s12 m9 l8 no-pad">
-										<div class="col s12">
-											<span class="nnt-orange sale-text">
-											<span class="hide-on-small-and-down">Total Sales: </span>
-											<span class="hide-on-med-and-up">Profit: </span>
-											<span class="bold">£{{ show.show_sales }}</span>
+								<div class="col s12">
+									<!-- Profit -->
+									<div class="col s6">
+										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
+											Sales: <span class="nnt-text nnt-orange">£{{ show.show_sales }}</span>
+										</blockquote>
+
+										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
+											Tickets Reserved: <span class="nnt-text nnt-orange">{{ show.total_tickets_reserved }}
+											<strong>/</strong>
+											{{ show.total_possible }}
 											</span>
-										</div>
-										<div class="col s12">
-											<span class="nnt-purple sale-text">
-											<span class="hide-on-small-and-down">Total Tickets Sold: </span>
-											<span class="hide-on-med-and-up">Sold: </span>
-											<span class="bold">{{ show.total_tickets_sold_show }}</span>
-											</span>
-										</div>
-										<div class="col s12">
-											<span class="nnt-orange sale-text">
-											<span class="hide-on-small-and-down">Total Tickets Reserved: </span>
-											<span class="hide-on-med-and-up">Reserved: </span>
-											<span class="bold">{{ show.total_tickets_reserved }}</span>
-											<span class="hide-on-med-and-down">
-											(out of a possible of: <span class="bold">{{ show.total_possible }})</span>
-											</span>
-											</span>
-										</div>
+										</blockquote>
 									</div>
-									<div class="col s12 m3 l4 center-align">
-										<div class="hide-on-med-and-up pad-small"></div>
-										<a href="download/{{ show.id }}">
-										<button class="btn nnt purple waves-effect waves-dark">
-										<i class="material-icons left hide-on-med-and-down">file_download</i>
-										<i class="material-icons hide-on-large-only">file_download</i>
-										<span class="hide-on-med-and-down">
-										Download
-										</span></button>
-										</a>
+									<!-- Tickets sold -->
+									<div class="col s6">
+										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
+											Tickets Sold: <span class="nnt-text nnt-orange">{{ show.total_tickets_sold_show }}</span>
+										</blockquote>
 									</div>
 								</div>
+								<div class="button_wrapper right">
+									<a href="download/{{ sh.id }}">
+									<button class="btn nnt purple waves-effect waves-dark pinned_button right">
+									<i class="material-icons left hide-on-med-and-down">file_download</i>
+									<i class="material-icons hide-on-large-only">file_download</i>
+									<span class="hide-on-med-and-down">
+									Download
+									</span></button>
+									</a>
+								</div>
+								<div class="button_wrapper left hide-on-med-and-up">
+									<a href="{{ sh.id }}">
+									<button class="btn nnt purple waves-effect waves-dark pinned_button left">
+									<i class="material-icons left hide-on-med-and-down">visibility</i>
+									<i class="material-icons hide-on-large-only">visibility</i>
+									<span class="hide-on-med-and-down">
+									View Report
+									</span></button>
+									</a>
+								</div>
+
 							</div>
 						</div>
 					</div>
@@ -78,9 +81,11 @@
 					<div class="col s12" id="form-background">
 					<div class="sale-container">
 							<div class="col s12 center-align">
-								<span class="light nnt-orange report-text bold">
-								{{ oc.day_formatted }} at {{ oc.time_formatted }}
-								</span>
+								{% if not report.pricing_error %}
+									<span class="light nnt-orange report-text bold">
+									{{ oc.day_formatted }} at {{ oc.time_formatted }}
+									</span>
+								{% endif %}
 							</div>
 							<!-- In House Shows -->
 							{% if show.category.id == 1 %}
@@ -163,7 +168,7 @@
 								</table>
 							</div>
 							<!-- External Shows -->
-							{% elif show.category.id == 3 %}
+							{% elif show.category.id == 3 and not report.pricing_error %}
 								<div class="col s12 center-align">
 								<table class="centered">
 									<thead>
@@ -235,7 +240,7 @@
 									</tbody>
 								</table>
 							</div>
-							{% elif show.category.id == 4 %}
+							{% elif show.category.id == 4 and not report.pricing_error %}
 							<div class="col s12 center-align">
 								<table class="centered">
 									<thead>
@@ -253,9 +258,16 @@
 									</tbody>
 								</table>
 							</div>
+							{% elif report.pricing_error %}
+								<div class="col s12 center-align">
+									<p class="light red-text center-align report-text">Pricing for this show could not be retrieved from the database</p>
+								</div>
 							{% else %}
-								<p class="light red-text center-align report-text">Invalid category applied ({{ show.category }})</p>
+								<div class="col s12 center-align">
+									<p class="light red-text center-align report-text">Invalid category applied ({{ show.category }})</p>
+								</div>
 							{% endif %}
+							{% if not report.pricing_error %}
 							<div class="col s12 center-align">
 								<div class="col s6">
 									<span class="nnt-orange bold small-text">Total tickets:
@@ -268,6 +280,7 @@
 									</span>
 								</div>
 							</div>
+							{% endif %}
 							<div class="col s12"><br></div>
 						</div>
 					</div>

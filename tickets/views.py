@@ -97,6 +97,9 @@ def ShowReport(request, show_name, occ_id):
     report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
         id=1).season_ticket_price_nnt
 
+    if len(occurrence) == 1 and occ_id == '0':
+        return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
+
     # If there has been an occurrnece selected
     if occ_id > '0':
         report['have_form'] = True
@@ -569,7 +572,7 @@ def SaleReport(request):
 def SaleReportFull(request, show_name):
     report = dict()
     show = models.Show.objects.get(id=show_name)
-    occurrence = models.Occurrence.objects.filter(show=show)
+    occurrence = models.Occurrence.objects.filter(show=show).order_by('date', 'time')
     report['sale'] = models.Sale.objects.filter(id__in=occurrence)
 
     report['default_time'] = config.DEFAULT_TIME.strftime('%-I:%M %p').lower()
@@ -587,10 +590,18 @@ def SaleReportFull(request, show_name):
 
     # External Pricing
     elif category.id == 3:
-        pricing = models.ExternalPricing.objects.get(show_id=show_name)
+        try:
+            pricing = models.ExternalPricing.objects.get(show_id=show_name)
+        except:
+            pricing = ''
+            report['pricing_error'] = True
 
     elif category.id == 4:
-        pricing = models.StuFFPricing.objects.get(show_id=show_name)
+        try:
+            pricing = models.StuFFPricing.objects.get(show_id=show_name)
+        except:
+            pricing = ''
+            report['pricing_error'] = True
 
     # Ticket Prices
     try:
@@ -623,10 +634,10 @@ def SaleReportFull(request, show_name):
     except Exception:
         report['matinee_freshers_nnt_price'] = float(0)
 
-    report['season_price'] = models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price
-    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price_nnt
+    report['season_price'] = float(models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price)
+    report['season_price_nnt'] = float(models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price_nnt)
 
     try:
         report['stuff_price'] = float(pricing.stuff_price)
@@ -650,7 +661,7 @@ def SaleReportFull(request, show_name):
 @login_required
 def DownloadReport(request, show_name):
     response = HttpResponse(content_type='text/csv')
-    occurrence = models.Occurrence.objects.filter(show_id=show_name)
+    occurrence = models.Occurrence.objects.filter(show_id=show_name).order_by('date', 'time')
     show = get_object_or_404(models.Show, id=show_name)
     response['Content-Disposition'] = 'attachment; filename=Show_Report.csv'
 

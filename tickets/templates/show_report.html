@@ -36,7 +36,9 @@
 								<div class="row hide-on-small-and-down">
 									<div class="col s6 center-align">
 										<button data-target="picker-modal" 
-										class="btn nnt purple modal-trigger waves-effect waves-dark">
+										class="btn nnt purple waves-effect waves-dark 
+										{% if not report.have_form %}disabled{% else %}modal-trigger{% endif %}
+										">
 										<i class="material-icons left">payment</i>Choose Showing</button>
 									</div>
 									<div class="col s6 center-align">
@@ -64,8 +66,9 @@
 					</div>
 				</div>
 			</div>
-
-		{% if report.have_form %}
+		{% if not report.have_form %}
+			{% include 'occurrence_cards.html' %}
+		{% elif report.have_form %}
 		<!-- Sale report overview -->
 		<div class="row">
 			<div class="col s12">
