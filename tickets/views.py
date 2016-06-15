@@ -590,10 +590,18 @@ def SaleReportFull(request, show_name):
 
     # External Pricing
     elif category.id == 3:
-        pricing = models.ExternalPricing.objects.get(show_id=show_name)
+        try:
+            pricing = models.ExternalPricing.objects.get(show_id=show_name)
+        except:
+            pricing = ''
+            report['pricing_error'] = True
 
     elif category.id == 4:
-        pricing = models.StuFFPricing.objects.get(show_id=show_name)
+        try:
+            pricing = models.StuFFPricing.objects.get(show_id=show_name)
+        except:
+            pricing = ''
+            report['pricing_error'] = True
 
     # Ticket Prices
     try:

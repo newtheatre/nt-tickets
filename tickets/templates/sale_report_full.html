@@ -24,7 +24,7 @@
 							<div class="card-content center-on-small-only">
 								<h1 class="light white-text flow-text truncate" id="title" style="margin-top: 0;">
 									<a href="/report/" rel="nofollow" class="title">
-									{{ show.name }}
+									{{ show.name }} | {{ report.pricing_error }}
 									</a>
 								</h1>
 
@@ -81,9 +81,11 @@
 					<div class="col s12" id="form-background">
 					<div class="sale-container">
 							<div class="col s12 center-align">
-								<span class="light nnt-orange report-text bold">
-								{{ oc.day_formatted }} at {{ oc.time_formatted }}
-								</span>
+								{% if not report.pricing_error %}
+									<span class="light nnt-orange report-text bold">
+									{{ oc.day_formatted }} at {{ oc.time_formatted }}
+									</span>
+								{% endif %}
 							</div>
 							<!-- In House Shows -->
 							{% if show.category.id == 1 %}
@@ -166,7 +168,7 @@
 								</table>
 							</div>
 							<!-- External Shows -->
-							{% elif show.category.id == 3 %}
+							{% elif show.category.id == 3 and not report.pricing_error %}
 								<div class="col s12 center-align">
 								<table class="centered">
 									<thead>
@@ -238,7 +240,7 @@
 									</tbody>
 								</table>
 							</div>
-							{% elif show.category.id == 4 %}
+							{% elif show.category.id == 4 and not report.pricing_error %}
 							<div class="col s12 center-align">
 								<table class="centered">
 									<thead>
@@ -256,9 +258,16 @@
 									</tbody>
 								</table>
 							</div>
+							{% elif report.pricing_error %}
+								<div class="col s12 center-align">
+									<p class="light red-text center-align report-text">Pricing for this show could not be retrieved from the database</p>
+								</div>
 							{% else %}
-								<p class="light red-text center-align report-text">Invalid category applied ({{ show.category }})</p>
+								<div class="col s12 center-align">
+									<p class="light red-text center-align report-text">Invalid category applied ({{ show.category }})</p>
+								</div>
 							{% endif %}
+							{% if not report.pricing_error %}
 							<div class="col s12 center-align">
 								<div class="col s6">
 									<span class="nnt-orange bold small-text">Total tickets:
@@ -271,6 +280,7 @@
 									</span>
 								</div>
 							</div>
+							{% endif %}
 							<div class="col s12"><br></div>
 						</div>
 					</div>
