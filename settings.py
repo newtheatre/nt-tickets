@@ -159,8 +159,6 @@ INSTALLED_APPS = (
     'raven.contrib.django.raven_compat',
     'django_ses',
     'debug_toolbar',
-    'material',
-    'material.frontend',
 
     'tickets',
     'pricing',
