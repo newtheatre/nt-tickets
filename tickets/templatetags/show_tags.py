@@ -2,7 +2,6 @@ from django import template
 # Register for inclusion tag
 register = template.Library()
 
-
 # Sale overview element on show report page
 @register.inclusion_tag('sale_overview.html')
 def ShowSaleOverview(report):
@@ -12,7 +11,6 @@ def ShowSaleOverview(report):
         'report': report,
     }
     return context
-
 
 # Occurrence profit
 @register.inclusion_tag('sale_final.html')
@@ -24,7 +22,6 @@ def ShowSales(report):
   }
   return context
 
-
 # Reservation modal
 @register.inclusion_tag('reservation_modal.html')
 def ReservationModal(report):
@@ -35,3 +32,10 @@ def ReservationModal(report):
   }
   return context
   
+@register.filter
+def mul(value, arg):
+  """Multiply the arg with the value."""
+  try:
+      return format((value * arg), '.2f')
+  except Exception:
+      return ''
