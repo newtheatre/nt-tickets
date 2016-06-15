@@ -626,10 +626,10 @@ def SaleReportFull(request, show_name):
     except Exception:
         report['matinee_freshers_nnt_price'] = float(0)
 
-    report['season_price'] = models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price
-    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price_nnt
+    report['season_price'] = float(models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price)
+    report['season_price_nnt'] = float(models.SeasonTicketPricing.objects.get(
+        id=1).season_ticket_price_nnt)
 
     try:
         report['stuff_price'] = float(pricing.stuff_price)
@@ -653,7 +653,7 @@ def SaleReportFull(request, show_name):
 @login_required
 def DownloadReport(request, show_name):
     response = HttpResponse(content_type='text/csv')
-    occurrence = models.Occurrence.objects.filter(show_id=show_name)
+    occurrence = models.Occurrence.objects.filter(show_id=show_name).order_by('date', 'time')
     show = get_object_or_404(models.Show, id=show_name)
     response['Content-Disposition'] = 'attachment; filename=Show_Report.csv'
 
