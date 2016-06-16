@@ -152,6 +152,55 @@ class OccurrenceInline(admin.TabularInline):
             }),
         )
 
+class ExternalPriceInline(admin.TabularInline):
+    model = pricing.ExternalPricing
+    max_num = 1
+    min_num = 1
+
+    fieldsets = (
+        (None, {
+            'fields':(
+                'concession_price',
+                'member_price',
+                'public_price',
+                'allow_season_tickets',
+                'allow_fellow_tickets',
+                'allow_half_matinee',
+                'allow_half_nnt_matinee',
+                ),
+            }),
+        )
+
+    # Disable delete button
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+class StuFFPriceInline(admin.TabularInline):
+    model = pricing.StuFFPricing
+    max_num = 1
+    min_num = 1
+
+    fieldsets = (
+        (None, {
+            'fields':('stuff_price',)
+            }),
+        )
+
+    # Disable delete button
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+class StuFFEventPriceInline(admin.TabularInline):
+    model = pricing.StuFFEventPricing
+    max_num = 1
+    min_num = 1
+
+    fieldsets = (
+        (None, {
+            'fields':('show', 'concession_price', 'public_price', 'member_price',),
+            }),
+        )
+
 
 class ShowAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -189,6 +238,23 @@ class ShowAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
         return Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        cat = Show.objects.get(pk=object_id).category.name
+        current_inlines = []
+
+        if cat == 'External':
+            current_inlines = [OccurrenceInline, ExternalPriceInline,]
+        elif cat == 'StuFF':
+            current_inlines = [OccurrenceInline, StuFFPriceInline,]
+        elif cat == 'StuFF Events':
+            current_inlines = [OccurrenceInline, StuFFEventPriceInline,]
+        else:
+            current_inlines = [OccurrenceInline,]
+
+        # CODE TO FILL INLINES BASED ON PRODUCT
+        self.inlines = current_inlines
+        return super(ShowAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
 
 class OccurrenceAdmin(admin.ModelAdmin):
