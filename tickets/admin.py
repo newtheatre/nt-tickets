@@ -136,17 +136,44 @@ class TicketAdmin(admin.ModelAdmin):
         }, context_instance=RequestContext(request))
 
 
+class OccurrenceInline(admin.TabularInline):
+    model = Occurrence
+    min_num = 1
+    extra = 0
+
+    fieldsets = (
+        (None, {
+            'fields':(
+                'date',
+                'time',
+                'maximum_sell',
+                'hours_til_close',
+                ),
+            }),
+        )
+
+
 class ShowAdmin(admin.ModelAdmin):
-    fields = [
-        'name',
-        'location',
-        'category',
-        'poster',
-        'slug',
-        'description',
-        'long_description',
-        'start_date',
-        'end_date'
+    fieldsets = (
+        (None, {
+            'fields':(
+                'name',
+                'location',
+                'category',
+                'poster',
+                'description',
+                'long_description',
+                'start_date',
+                'end_date',
+                ),
+            }),
+        ('Advanced Options', {
+            'fields': ('slug',),
+            'classes': ('collapse',),
+          }),
+        )
+    inlines = [
+        OccurrenceInline,
     ]
 
     list_display = (

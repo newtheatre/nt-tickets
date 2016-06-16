@@ -64,13 +64,13 @@ class Show(models.Model):
     )
 
     description = models.TextField(
-        help_text='A short description, one paragraph only.'
+        help_text='A short description, ONE paragraph only.'
     )
 
     long_description = models.TextField(
         blank=True,
         help_text='Shows up on the detail page, this field is written in Markdown. ' +
-        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.'
+        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference).'
     )
 
     poster = StdImageField(
@@ -370,6 +370,15 @@ class Occurrence(models.Model):
             if s.number_matinee_freshers_nnt > 0:
                 matinee_freshers_nnt += s.number_matinee_freshers_nnt
         return matinee_freshers_nnt
+
+    def clean(self, *args, **kwargs): 
+        cleaned_data = super(Occurrence, self).clean(*args, **kwargs)
+
+        # Check to see if the date is within the show dates
+        if self.date > self.show.end_date or self.date < self.show.start_date:
+            raise ValidationError(('Please enter a date within the dates of the show'), code='invalid_occ_date')
+
+        return cleaned_data
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
