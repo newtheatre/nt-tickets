@@ -49,36 +49,17 @@ def logout_view(request):
     return render(request, 'registration/logout.html')
 
 
-@login_required
-def ShowIndex(request):
+class ShowIndex(generic.ListView):
+    template_name = 'show_index.html'
+    paginate_by = 10
 
-    time_filter = datetime.date.today() - datetime.timedelta(days=30)
-    shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
+    def get_context_data(self, **kwargs):
+        context = super(ShowIndex, self).get_context_data(**kwargs)
+        return context
 
-    show_list = []
-
-    for sh in shows:
-        if sh.is_current_show():
-            show_list.append(sh)
-
-    paginator = Paginator(show_list, 5)
-    page = request.GET.get('page')
-
-    try:
-        show = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        show = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        show = paginator.page(paginator.num_pages)
-
-    context = {
-        'show': show,
-    }
-
-    return render_to_response('show_index.html', context, context_instance=RequestContext(request))
-
+    def get_queryset(self):
+        time_filter = datetime.date.today() - datetime.timedelta(days=1)
+        return models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
 
 @login_required
 def ShowReport(request, show_name, occ_id):
@@ -540,32 +521,17 @@ def make_github_issue(title, body=None, labels=None):
         return git
 
 
-@login_required
-def SaleReport(request):
-    now = datetime.datetime.now()
-    time_filter = now - datetime.timedelta(weeks=4)
-    show_list = models.Show.objects.filter(
-        start_date__gte=time_filter).order_by('start_date')
+class SaleReport(generic.ListView):
+    template_name = 'sale_report.html'
+    paginate_by = 10
 
-    paginator = Paginator(show_list, 5)
-    page = request.GET.get('page')
+    def get_context_data(self, **kwargs):
+        context = super(SaleReport, self).get_context_data(**kwargs)
+        return context
 
-    try:
-        show = paginator.page(page)
-    except PageNotAnInteger:
-        show = paginator.page(1)
-    except EmptyPage:
-        show = paginator.page(paginator.num_pages)
-
-    context = {
-        'show': show,
-    }
-
-    return render_to_response(
-        'sale_report.html',
-        context,
-        context_instance=RequestContext(request)
-    )
+    def get_queryset(self):
+        time_filter = datetime.date.today() - datetime.timedelta(weeks=4)
+        return models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
 
 
 @login_required

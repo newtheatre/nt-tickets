@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 
 from tickets import views as tickets_views
 
@@ -31,7 +32,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     # Admin frontend urls
-    url(r'^$', tickets_views.ShowIndex, name='index'),
+    url(r'^$', login_required(tickets_views.ShowIndex.as_view()), name='index'),
     url(r'^show/(?P<show_name>\d+)/$', tickets_views.ShowReport, name='show_report'),
     url(r'^show/(?P<show_name>\d+)/(?P<occ_id>\d+)/$',
         tickets_views.ShowReport, name='show_report_full'),
@@ -46,7 +47,7 @@ urlpatterns = [
     url(r'bug/$', tickets_views.GenReportAJAX, name='bug_ajax'),
 
     # Sale report urls
-    url(r'^report/$', tickets_views.SaleReport, name='sale_report'),
+    url(r'^report/$', login_required(tickets_views.SaleReport.as_view()), name='sale_report'),
     url(r'^report/(?P<show_name>\d+)/$', tickets_views.SaleReportFull, name='sale_report_full'),
 
 ]
