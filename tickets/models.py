@@ -24,6 +24,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+        unique_together = ('name', 'sort',)
 
     name = models.CharField(
         max_length=50,
@@ -49,6 +50,7 @@ class Show(models.Model):
     class Meta:
         verbose_name = 'Show'
         verbose_name_plural = 'Shows'
+        unique_together = ('name', 'start_date', 'end_date')
 
     name = models.CharField(max_length=64)
 
@@ -87,7 +89,7 @@ class Show(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    category = models.ForeignKey('Category')
+    category = models.ForeignKey('Category', default='In House')
 
     def date_formatted(self):
         return self.start_date.strftime('%A %d %B %Y')
@@ -162,6 +164,22 @@ class Show(models.Model):
         md = Markdown()
         return md.convert(self.long_description)
 
+    def clean(self, *args, **kwargs): 
+        cleaned_data = super(Show, self).clean(*args, **kwargs)
+
+        # Check to see if the dates are current
+        if self.start_date and (self.start_date < datetime.date.today()):
+            raise ValidationError(('Please enter a start date which is not in the past'), code='invalid_show_start_date_past')
+        if self.end_date and (self.end_date < datetime.date.today()):
+            raise ValidationError(('Please enter an end date which is not in the past'), code='invalid_show_end_date_past')
+
+        # Check to see if dates require the use of timetravel
+        if self.start_date and self.end_date:
+            if self.end_date < self.start_date:
+                raise ValidationError(('Unless you have invented time travel, a show cannot end before it has started'), code='invalid_show_dates')
+
+        return cleaned_data
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -222,6 +240,7 @@ class Occurrence(models.Model):
     class Meta:
         verbose_name = 'Occurrence'
         verbose_name_plural = 'Occurrences'
+        unique_together = ('show', 'date', 'time')
 
     show = models.ForeignKey(Show)
     date = models.DateField()
@@ -375,8 +394,11 @@ class Occurrence(models.Model):
         cleaned_data = super(Occurrence, self).clean(*args, **kwargs)
 
         # Check to see if the date is within the show dates
-        if self.date > self.show.end_date or self.date < self.show.start_date:
-            raise ValidationError(('Please enter a date within the dates of the show'), code='invalid_occ_date')
+        if self.date:
+            if self.date > self.show.end_date or self.date < self.show.start_date:
+                raise ValidationError(('Please enter a date within the dates of the show'), code='invalid_occ_date')
+            elif self.date < datetime.date.today():
+                raise ValidationError(('Please enter a date which is not in the past'), code='invalid_occ_date_past')
 
         return cleaned_data
 
