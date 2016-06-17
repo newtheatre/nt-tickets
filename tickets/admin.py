@@ -215,6 +215,7 @@ class ShowAdmin(admin.ModelAdmin):
                 'start_date',
                 'end_date',
                 ),
+            'description': 'Press \'Save and continue editing\' to display pricing for StuFF and External shows.'
             }),
         ('Advanced Options', {
             'fields': ('slug',),
