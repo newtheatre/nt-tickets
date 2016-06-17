@@ -332,8 +332,8 @@ class IndexTest(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + '/?page=10')
 
-        page = self.browser.find_element_by_id('page').text
-        self.assertIn('1', page)
+        page = self.browser.find_element_by_css_selector('h1').text
+        self.assertIn('404', page)
 
 
 class ReportTest(StaticLiveServerTestCase):
