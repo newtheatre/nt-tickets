@@ -89,7 +89,7 @@
 							</div>
 							<!-- In House Shows -->
 							{% if show.category.id == 1 %}
-							<div class="col s12 center-align" style="overflow: scroll;">
+							<div class="col s12 center-align sale_table" style="overflow: scroll;">
 								<table class="centered">
 									<thead>
 										<tr>
@@ -290,4 +290,12 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	$(document).ready( function() {
+		$(".sale_table").niceScroll()
+	})
+</script>
 {% endblock %}
