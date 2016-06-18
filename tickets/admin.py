@@ -236,10 +236,12 @@ class ShowAdmin(admin.ModelAdmin):
     list_filter = ['category']
     search_fields = ('name', 'description')
 
+    # Only retrieve recent shows to edit
     def get_queryset(self, request):
         time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
         return Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
 
+    # Get pricing admin options on form save
     def change_view(self, request, object_id, form_url='', extra_context=None):
         cat = Show.objects.get(pk=object_id).category.name
         current_inlines = []

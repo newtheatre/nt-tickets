@@ -66,7 +66,8 @@ class Show(models.Model):
     )
 
     description = models.TextField(
-        help_text='A short description, ONE paragraph only.'
+        help_text='A short description, in 140 characters or less.',
+        max_length=140
     )
 
     long_description = models.TextField(
