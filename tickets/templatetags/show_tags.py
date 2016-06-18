@@ -36,7 +36,15 @@ def ReservationModal(occurrence=None, have_form=False, occ_id=None):
     'tickets': tickets,
   }
   return context
-  
+
+@register.simple_tag
+def get_tally(oc, field):
+  return oc.get_tally(field)
+
+@register.simple_tag
+def mult_tally(oc, field, report):
+  return oc.get_tally(field) * report[str(field) + '_price']
+
 @register.filter
 def mul(value, arg):
   """Multiply the arg with the value."""

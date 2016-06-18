@@ -303,93 +303,14 @@ class Occurrence(models.Model):
             sold += s.price
         return sold
 
-    def member_tally(self):
+    def get_tally(self, field):
         sale = Sale.objects.filter(occurrence=self)
-        member = 0
+        tally = 0
         for s in sale:
-            if s.number_member > 0:
-                member += s.number_member
-        return member
-
-    def concession_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        concession = 0
-        for s in sale:
-            if s.number_concession > 0:
-                concession += s.number_concession
-        return concession
-
-    def public_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        public = 0
-        for s in sale:
-            if s.number_public > 0:
-                public += s.number_public
-        return public
-
-    def season_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        season = 0
-        for s in sale:
-            if s.number_season > 0:
-                season += s.number_season
-        return season
-
-    def season_sale_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        season_sale = 0
-        for s in sale:
-            if s.number_season_sale > 0:
-                season_sale += s.number_season_sale
-        return season_sale
-
-    def season_sale_nnt_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        season_sale_nnt = 0
-        for s in sale:
-            if s.number_season_sale_nnt > 0:
-                season_sale_nnt += s.number_season_sale_nnt
-        return season_sale_nnt
-
-    def fellow_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        fellow = 0
-        for s in sale:
-            if s.number_fellow > 0:
-                fellow += s.number_fellow
-        return fellow
-
-    def fringe_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        fringe = 0
-        for s in sale:
-            if s.number_fringe > 0:
-                fringe += s.number_fringe
-        return fringe
-
-    def stuff_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        stuff = 0
-        for s in sale:
-            if s.number_stuff > 0:
-                stuff += s.number_stuff
-        return stuff
-
-    def matinee_freshers_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        matinee_freshers = 0
-        for s in sale:
-            if s.number_matinee_freshers > 0:
-                matinee_freshers += s.number_matinee_freshers
-        return matinee_freshers
-
-    def matinee_freshers_nnt_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        matinee_freshers_nnt = 0
-        for s in sale:
-            if s.number_matinee_freshers_nnt > 0:
-                matinee_freshers_nnt += s.number_matinee_freshers_nnt
-        return matinee_freshers_nnt
+            num = getattr(s, 'number_' + str(field))
+            if num > 0:
+                tally += num
+        return tally
 
     def clean(self, *args, **kwargs): 
         cleaned_data = super(Occurrence, self).clean(*args, **kwargs)
