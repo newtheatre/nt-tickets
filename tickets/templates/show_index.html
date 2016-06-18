@@ -1,5 +1,6 @@
 {% extends 'show_base.html' %}
 {% load static from staticfiles %}
+{% load show_tags %}
 {% block content %}
 <div class="container">
 	{% include 'dev-text.html' %}
@@ -27,18 +28,18 @@
 							</h1>
 							<div class="col s6">
 								<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
-									Tickets Reserved: <span class="nnt-text nnt-orange">{{ sh.total_tickets_reserved }}</span>
+									Tickets Reserved: <span class="nnt-text nnt-orange">{{ sh.get_sale_data.total_reserved }}</span>
 								</blockquote>
 								<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
-									Tickets Sold: <span class="nnt-text nnt-orange">{{ sh.total_tickets_sold_show }}</span>
+									Tickets Sold: <span class="nnt-text nnt-orange">{{ sh.get_sale_data.total_sold }}</span>
 								</blockquote>
 							</div>
 							<div class="col s6">
 								<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
-									Total Available: <span class="nnt-text nnt-orange">{{ sh.total_possible}}</span>
+									Total Available: <span class="nnt-text nnt-orange">{{ sh.get_sale_data.total_possible }}</span>
 								</blockquote>
 								<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
-									Profit: <span class="nnt-text nnt-orange">£{{ sh.show_sales }}</span>
+									Profit: <span class="nnt-text nnt-orange">£{{ sh.get_sale_data.total_sold }}</span>
 								</blockquote>
 							</div>
 						</div>

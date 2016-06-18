@@ -46,6 +46,10 @@ def mult_tally(oc, field, report):
   return oc.get_tally(field) * report[str(field) + '_price']
 
 @register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+@register.filter
 def mul(value, arg):
   """Multiply the arg with the value."""
   try:

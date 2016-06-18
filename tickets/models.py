@@ -101,69 +101,30 @@ class Show(models.Model):
     def is_current_show(self):
         return (datetime.date.today() - datetime.timedelta(days=1)) <= self.end_date
 
-    def is_current_show(self):
-        today = datetime.date.today() - datetime.timedelta(days=1)
-        if today >= self.end_date:
-            return False
-        else:
-            return True
-
     def show_sold_out(self):
-        if self.occurrence_set.count() > 0:
+        if self.occurrence_set.count():
             for occ in self.occurrence_set.all():
-                if occ.sold_out() is False:
-                    return False
-            return True
+                return occ.sold_out()
         else:
             return False
 
-    # Total profit from all occurrences in a show
-    def show_sales(self):
+    # Get sale data for shows
+    def get_sale_data(self):
         occs = Occurrence.objects.filter(show=self)
-        total = 0
+        totals = {'show_sales': 0, 'total_sold': 0, 'total_reserved': 0, 'total_possible': 0}
         for oc in occs:
-            sale = oc.total_sales()
-            total += sale
-        return total
-
-    # Total number of tickets sold across all occurrences
-    def total_tickets_sold_show(self):
-        sale = Occurrence.objects.filter(show=self)
-        total = 0
-        for s in sale:
-            ticket = s.total_tickets_sold()
-            total += ticket
-        return total
-
-    # Total tickets reserved across all occurrences
-    def total_tickets_reserved(self):
-        occs = Occurrence.objects.filter(show=self)
-        total = 0
-        for oc in occs:
-            reserve = oc.tickets_sold()
-            total += reserve
-        return total
-
-    # Maximum tickets that can be reserved across a whole show
-    def total_possible(self):
-        occs = Occurrence.objects.filter(show=self)
-        total = 0
-        for oc in occs:
-            maximum = oc.maximum_sell
-            total += maximum
-        return total
+            totals['show_sales'] += oc.total_sales()
+            totals['total_sold'] += oc.total_tickets_sold()
+            totals['total_reserved'] += oc.tickets_sold()
+            totals['total_possible'] += oc.maximum_sell
+        return totals
 
     # Does a show have any occurrences
     def has_occurrences(self):
-        occs = Occurrence.objects.filter(show=self)
-        if len(occs) > 0:
-            return True
-        else:
-            return False
+        return Occurrence.objects.filter(show=self).count() > 0
 
     def long_markdown(self):
-        md = Markdown()
-        return md.convert(self.long_description)
+        return Markdown().convert(self.long_description)
 
     def clean(self, *args, **kwargs): 
         cleaned_data = super(Show, self).clean(*args, **kwargs)

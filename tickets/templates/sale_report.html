@@ -36,20 +36,20 @@
 									<!-- Profit -->
 									<div class="col s6">
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
-											Sales: <span class="nnt-text nnt-orange">£{{ sh.show_sales }}</span>
+											Sales: <span class="nnt-text nnt-orange">£{{ sh.get_sale_data.show_sales }}</span>
 										</blockquote>
 
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
-											Tickets Reserved: <span class="nnt-text nnt-orange">{{ sh.total_tickets_reserved }}
+											Tickets Reserved: <span class="nnt-text nnt-orange">{{ sh.get_sale_data.total_reserved }}
 											<strong>/</strong>
-											{{ sh.total_possible }}
+											{{ sh.get_sale_data.total_possible }}
 											</span>
 										</blockquote>
 									</div>
 									<!-- Tickets sold -->
 									<div class="col s6">
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
-											Tickets Sold: <span class="nnt-text nnt-orange">{{ sh.total_tickets_sold_show }}</span>
+											Tickets Sold: <span class="nnt-text nnt-orange">{{ sh.get_sale_data.total_sold }}</span>
 										</blockquote>
 									</div>
 								</div>
