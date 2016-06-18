@@ -78,7 +78,7 @@ def ShowReport(request, show_name, occ_id):
     report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
         id=1).season_ticket_price_nnt
 
-    if len(occurrence) == 1 and occ_id == '0':
+    if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
 
     # If there has been an occurrnece selected
@@ -406,6 +406,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             report['max'] = occ_fin.maximum_sell
 
         context = {
+            'occ_id': occ_id,
             'report': report,
         }
 
