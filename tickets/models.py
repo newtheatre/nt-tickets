@@ -113,8 +113,8 @@ class Show(models.Model):
         occs = Occurrence.objects.filter(show=self)
         totals = {'show_sales': 0, 'total_sold': 0, 'total_reserved': 0, 'total_possible': 0}
         for oc in occs:
-            totals['show_sales'] += oc.total_sales()
-            totals['total_sold'] += oc.total_tickets_sold()
+            totals['show_sales'] += oc.get_ticket_data()['total_profit']
+            totals['total_sold'] += oc.get_ticket_data()['total_sold']
             totals['total_reserved'] += oc.tickets_sold()
             totals['total_possible'] += oc.maximum_sell
         return totals
@@ -235,7 +235,7 @@ class Occurrence(models.Model):
 
     # Total number of tickets reserved
     def tickets_sold(self):
-        tickets = Ticket.objects.filter(occurrence=self).filter(cancelled=False)
+        tickets = Ticket.objects.filter(occurrence=self, cancelled=False)
         sold = 0
         for ticket in tickets:
             sold += ticket.quantity
@@ -243,27 +243,18 @@ class Occurrence(models.Model):
 
     # Find if all the tickets have been reserved
     def sold_out(self):
-        if self.tickets_sold() >= self.maximum_sell:
-            return True
-        else:
-            return False
+        return self.tickets_sold() >= self.maximum_sell
 
     # Total tickets sold
-    def total_tickets_sold(self):
+    def get_ticket_data(self):
         sale = Sale.objects.filter(occurrence=self)
-        sold = 0
+        sold = {'total_sold': 0, 'total_profit': 0}
         for s in sale:
-            sold += s.number
+            sold['total_sold'] += s.number
+            sold['total_profit'] += s.price
         return sold
 
-    # Returns the total profit from ticket sales
-    def total_sales(self):
-        sale = Sale.objects.filter(occurrence=self)
-        sold = 0
-        for s in sale:
-            sold += s.price
-        return sold
-
+    # Get tallys from sale fields
     def get_tally(self, field):
         sale = Sale.objects.filter(occurrence=self)
         tally = 0
@@ -318,6 +309,8 @@ class Ticket(models.Model):
     stamp = models.DateTimeField(auto_now=True)
     person_name = models.CharField(max_length=80)
     email_address = models.EmailField(max_length=80)
+    # Initial quantity is used when not the full number of tickets reserved is bought
+    # It will be used in the future for more stats on the sale reports page
     initial_quantity = models.IntegerField(default=0)
     quantity = models.IntegerField(default=1)
     cancelled = models.BooleanField(default=False)

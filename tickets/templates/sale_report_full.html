@@ -45,7 +45,7 @@
 									<!-- Tickets sold -->
 									<div class="col s6">
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
-											Tickets Sold: <span class="nnt-text nnt-orange">{{ sh.get_sale_data.total_sold }}</span>
+											Tickets Sold: <span class="nnt-text nnt-orange">{{ show.get_sale_data.total_sold }}</span>
 										</blockquote>
 									</div>
 								</div>
@@ -272,12 +272,12 @@
 							<div class="col s12 center-align">
 								<div class="col s6">
 									<span class="nnt-orange bold small-text">Total tickets:
-									<span class="nnt-orange bold small-text">{{ oc.total_tickets_sold }}</span>
+									<span class="nnt-orange bold small-text">{{ oc.get_ticket_data.total_sold }}</span>
 									</span>
 								</div>
 								<div class="col s6">
 									<span class="nnt-orange bold small-text">Total sales:
-									<span class="nnt-orange bold small-text">£{{ oc.total_sales }}</span>
+									<span class="nnt-orange bold small-text">£{{ oc.get_ticket_data.total_profit }}</span>
 									</span>
 								</div>
 							</div>

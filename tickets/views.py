@@ -95,7 +95,7 @@ def ShowReport(request, show_name, occ_id):
             occurrence=occ_fin).order_by('person_name')
 
         # How many tickets have been sold so far
-        report['sold'] = occ_fin.total_tickets_sold()
+        report['sold'] = occ_fin.get_ticket_data()['total_sold']
         # Total number of tickets reserved
         report['how_many_reserved'] = occ_fin.tickets_sold()
         # How many tickets have been collected
@@ -106,11 +106,11 @@ def ShowReport(request, show_name, occ_id):
             occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
         # Maximum amount of free tickets to sell
 
-        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
+        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.get_ticket_data()['total_sold']
 
         report['left_to_sell'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
 
-        report['total_sales'] = occ_fin.total_sales()
+        report['total_sales'] = occ_fin.get_ticket_data()['total_profit']
 
         report['reserve_percentage'] = (
             report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
@@ -382,7 +382,7 @@ def SaleInputAJAX(request, show_name, occ_id):
                     T.save()
 
             # How many tickets have been sold so far
-            report['sold'] = occ_fin.total_tickets_sold()
+            report['sold'] = occ_fin.get_ticket_data()['total_sold']
             # Total number of tickets reserved
             report['how_many_reserved'] = occ_fin.tickets_sold()
             # How many tickets have been collected
@@ -393,13 +393,13 @@ def SaleInputAJAX(request, show_name, occ_id):
                 occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
 
             # Maximum amount of free tickets to sell
-            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.get_ticket_data()['total_sold']
 
             report['left_to_sell'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
 
             report['sale_percentage'] = (
                 report['sold'] / float(occ_fin.maximum_sell)) * 100
-            report['total_sales'] = occ_fin.total_sales()
+            report['total_sales'] = occ_fin.get_ticket_data()['total_profit']
             report['how_many_reserved'] = occ_fin.tickets_sold()
             report['reserve_percentage'] = (
                 report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
@@ -532,7 +532,7 @@ class SaleReport(generic.ListView):
 
     def get_queryset(self):
         time_filter = datetime.date.today() - datetime.timedelta(weeks=4)
-        return models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
+        return models.Show.objects.filter(end_date__gte=time_filter).order_by('end_date')
 
 
 @login_required
