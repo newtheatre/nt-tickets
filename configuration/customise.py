@@ -17,6 +17,8 @@ SIDEBAR_FILTER_PERIOD = 4
 
 PUBLIC_CATEGORIES = ['in_house', 'fringe']
 
+MAX_DISCLOSURE = 10
+
 # These are the default prices when new shows are created
 # They can be changed per show
 
@@ -31,9 +33,9 @@ FELLOW_PRICE = [0.00, '£0.00']
 SEASON_PRICE = [0.00, '£0.00']
 
 CATEGORY_CHOICES = (
-	('IN_HOUSE', 'In House'),
-	('FRINGE', 'Fringe'),
-	('EXTERNAL', 'External'),
-	('STUFF', 'StuFF'),
-	('STUFF_EVENTS', 'StuFF Events'),
-	)
+  ('IN_HOUSE', 'In House'),
+  ('FRINGE', 'Fringe'),
+  ('EXTERNAL', 'External'),
+  ('STUFF', 'StuFF'),
+  ('STUFF_EVENTS', 'StuFF Events'),
+  )
