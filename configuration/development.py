@@ -11,4 +11,4 @@ AWS_QUERYSTRING_AUTH = False    # Remove auth querystrings from the query
 
 MEDIAFILES_LOCATION = 'media'
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
-DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+DEFAULT_FILE_STORAGE = 'NT_Tickets.custom_storages.MediaStorage'
