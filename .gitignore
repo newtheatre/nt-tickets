@@ -7,7 +7,7 @@ media/*
 db.sqlite3
 *.pyc
 .idea/
-env/
+venv/
 NTenv/
 
 /fabfile/*
