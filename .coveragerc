@@ -1,8 +1,8 @@
-[run]
-omit = 
-  NTenv/*, 
-  tickets/migrations/*,
-  pricing/migrations/*,
-  configuration/*,
-  pricing/__init__.py,
+[run] 
+omit =  
+  NTenv/*,  
+  tickets/migrations/*, 
+  pricing/migrations/*, 
+  configuration/*, 
+  pricing/__init__.py, 
   tickets/__init__.py

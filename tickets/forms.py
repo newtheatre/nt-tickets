@@ -5,7 +5,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from tickets.models import *
-import settings
+from django.conf import settings
 
 import configuration.customise as config
 
@@ -16,7 +16,7 @@ class BookingFormLanding(forms.Form):
     occurrence = forms.ChoiceField(label="Date", choices=('0', 'Not Loaded'))
     person_name = forms.CharField(label="Your Full Name", max_length=80)
     email_address = forms.EmailField(max_length=80)
-    max_q = settings.MAX_DISCLOSURE
+    max_q = config.MAX_DISCLOSURE
     quantity = forms.IntegerField(
         label="Number of Seats",
         min_value=1,

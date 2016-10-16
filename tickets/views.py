@@ -14,6 +14,7 @@ from django.views.decorators.cache import cache_page
 import requests0 as requests
 import simplejson as json
 import csv
+import os
 
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -28,10 +29,9 @@ from tickets import models, forms
 from pricing import models
 
 import configuration.customise as config
-import configuration.keys as keys
 
 import datetime
-import settings
+from django.conf import settings
 
 
 def login(request, **kwargs):
@@ -73,10 +73,8 @@ def ShowReport(request, show_name, occ_id):
     report['default_time_matinee'] = \
         config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
-    report['season_price'] = models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price
-    report['season_price_nnt'] = models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price_nnt
+    report['season_price'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price_nnt
 
     if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
@@ -123,25 +121,25 @@ def ShowReport(request, show_name, occ_id):
         report['category'] = category
 
         # In House Pricing
-        if category.id == 1:
+        if category.slug == 'in-house':
             try:
-                pricing = models.InHousePricing.objects.get(id=1)
+                pricing = models.InHousePricing.objects.all()[0]
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
                 pricing = []
                 report['pricing_error'] = True
 
         # Fringe Pricing
-        elif category.id == 2:
+        elif category.slug == 'fringe':
             try:
-                pricing = models.FringePricing.objects.get(id=1)
+                pricing = models.FringePricing.objects.all()[0]
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
                 pricing = []
                 report['pricing_error'] = True
 
         # External Pricing
-        elif category.id == 3:
+        elif category.slug == 'external':
             try:
                 pricing = models.ExternalPricing.objects.get(show_id=show_name)
                 report['matinee_freshers_price'] = pricing.public_price / 2
@@ -151,7 +149,8 @@ def ShowReport(request, show_name, occ_id):
                 pricing = []
                 report['pricing_error'] = True
 
-        elif category.id == 4:
+        # StuFF
+        elif category.slug == 'stuff':
             try:
                 pricing = models.StuFFPricing.objects.get(show_id=show_name)
                 report['stuff_price'] = pricing.stuff_price
@@ -209,18 +208,18 @@ def SaleInputAJAX(request, show_name, occ_id):
 
         category = show.category
 
-        if category.id == 1:
-            pricing = models.InHousePricing.objects.get(id=1)
+        if category.slug == 'in-house':
+            pricing = models.InHousePricing.objects.all()[0]
 
         # Fringe Pricing
-        elif category.id == 2:
-            pricing = models.FringePricing.objects.get(id=1)
+        elif category.slug == 'fringe':
+            pricing = models.FringePricing.objects.all()[0]
 
         # External Pricing
-        elif category.id == 3:
+        elif category.slug == 'external':
             pricing = models.ExternalPricing.objects.get(show_id=show_name)
 
-        elif category.id == 4:
+        elif category.slug == 'stuff':
             pricing = models.StuFFPricing.objects.get(show_id=show_name)
 
         try:
@@ -307,9 +306,9 @@ def SaleInputAJAX(request, show_name, occ_id):
             public_sale = float(0)
 
         season_sale = number_season_sale * \
-            float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
+            float(models.SeasonTicketPricing.objects.all()[0].season_ticket_price)
         season_sale_nnt = number_season_sale_nnt * \
-            float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
+            float(models.SeasonTicketPricing.objects.all()[0].season_ticket_price_nnt)
 
         try:
             fringe_sale = number_fringe * float(pricing.fringe_price)
@@ -502,7 +501,7 @@ def make_github_issue(title, body=None, labels=None):
         settings.REPO_OWNER, settings.REPO_NAME)
 
     # Create an authenticated session to create the issue
-    session = requests.session(headers={'Authorization': 'token %s' % keys.TOKEN})
+    session = requests.session(headers={'Authorization': 'token %s' % os.environ.get('TOKEN')})
 
     # Create our issue
     issue = {'title': title,
@@ -893,12 +892,12 @@ def how_many_left(request):
         response_data = {}
         response_data['sold_out'] = occ.sold_out()
         left = occ.maximum_sell - occ.tickets_sold()
-        if left <= settings.MAX_DISCLOSURE:
+        if left <= config.MAX_DISCLOSURE:
             response_data['more_than_max'] = False
             response_data['how_many_left'] = left
         else:
             response_data['more_than_max'] = True
-            response_data['how_many_left'] = settings.MAX_DISCLOSURE
+            response_data['how_many_left'] = config.MAX_DISCLOSURE
         response_data['error'] = False
         return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:

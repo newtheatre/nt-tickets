@@ -22,9 +22,8 @@ configuration/environment.py
 # configuration/production.py
 # configuration/development.py
 
-configuration/keys.py
+configuration/keys.sh
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+!.elasticbeanstalk/config.yml

@@ -1,0 +1,13 @@
+branch-defaults:
+  default:
+    environment: tickets-prod
+    group_suffix: null
+  master:
+    environment: tickets-prod
+global:
+  application_name: NT_Tickets
+  default_ec2_keyname: nt-tickets-keypair
+  default_platform: Python 2.7
+  default_region: eu-west-1
+  profile: eb-cli
+  sc: null
