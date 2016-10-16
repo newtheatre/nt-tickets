@@ -90,7 +90,7 @@ class Show(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    category = models.ForeignKey('Category', default='In House')
+    category = models.ForeignKey('Category')
 
     def date_formatted(self):
         return self.start_date.strftime('%A %d %B %Y')
