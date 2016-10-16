@@ -4,49 +4,68 @@
     <tr class="grey-text text-lighten-4">
       <th data-field="name">Name</th>
       <th data-field="quantity">Quantity</th>
+      {% if have_form %}
       <th data-field="add">Add</th>
+      {% endif %}
     </tr>
   </thead>
   <!-- Table body -->
   <tbody class="list">
-    {% for tick in report.tickets %}
+    {% for tick in tickets %}
       <!-- Cancelled Tickets -->
       {% if tick.cancelled %}
       <tr>
         <td class="red-text text-lighten-3 name"><strike>{{ tick.person_name }}</strike></td>
         <td class="grey-text valign-wrapper">
+        {% if have_form %}
         <i class="material-icons" id="less_{{ forloop.counter }}">chevron_left</i>
         &nbsp;
+        {% endif %}
         <strike>{{ tick.quantity }}</strike>
+        {% if have_form %}
         &nbsp;
         <i class="material-icons" id="more_{{ forloop.counter }}">chevron_right</i>
+        {% endif %}
         </td>
+        {% if have_form %}
         <td><button type="button" class="btn" id="add_button_{{ forloop.counter }}" disabled>Add</button></td>
+        {% endif %}
       </tr>
       <!-- Collected Tickets -->
       {% elif tick.collected %}
       <tr>
         <td class="blue-text text-lighten-3 name"><strike>{{ tick.person_name }}</strike></td>
         <td class="grey-text valign-wrapper">
+        {% if have_form %}
         <i class="material-icons" id="less_{{ forloop.counter }}">chevron_left</i>
         &nbsp;
+        {% endif %}
         <strike>{{ tick.quantity }}</strike>
+        {% if have_form %}
         &nbsp;
         <i class="material-icons" id="more_{{ forloop.counter }}">chevron_right</i>
+        {% endif %}
         </td>
+        {% if have_form %}
         <td><button type="button" class="btn" id="add_button_{{ forloop.counter }}" disabled>Add</button></td>
+        {% endif %}
       </tr>
       <!-- Everything else -->
       {% else %}
       <tr>
         <td class="nnt-text text-orange name">{{ tick.person_name }}</td>
         <td class="teal-text text-accent-4">
+        {% if have_form %}
         <li class="waves-effect" onclick="lessTickets( {{ forloop.counter }} )" id="less_{{ forloop.counter }}"><i class="material-icons">chevron_left</i></li>
         &nbsp;
+        {% endif %}
         <span id="reserve-number_{{ forloop.counter }}">{{ tick.quantity }}</span>
+        {% if have_form %}
         &nbsp;
         <li class="waves-effect" onclick="moreTickets( {{ forloop.counter }} )" id="more_{{ forloop.counter }}"><i class="material-icons">chevron_right</i></li>
+        {% endif %}
         </td>
+        {% if have_form %}
         <td><form class="reserve-form" id="reserve_{{ forloop.counter }}" method="post" action=".">
         {% csrf_token %}
         <input type="hidden" value="{{ tick.unique_code }}" id="code_reserve_{{ forloop.counter }}" readonly="true">
@@ -59,6 +78,7 @@
         </button>
         </form>
         </td>
+        {% endif %}
       </tr>
       {% endif %}
     {% endfor %}
@@ -71,7 +91,7 @@
     event.preventDefault();
     // console.log("Collect form submitted");  // sanity check
     collect_tickets(id);
-    $('#modal2').closeModal();
+    $('#modal_1').closeModal();
     return false;
   });
 </script>

@@ -109,7 +109,7 @@
 					</div>
 
 					<div class="col s5 l4 center-align" id="form-button-inline">
-						<button class="btn nnt purple waves-effect waves-dark modal-trigger" href="#modal2" id="reserve_button" onClick="clearSearch()">
+						<button class="btn nnt purple waves-effect waves-dark modal-trigger" href="#modal_1" id="reserve_button" onClick="clearSearch()">
 						<i class="material-icons left hide-on-small-and-down">library_books</i>
 						<i class="material-icons hide-on-med-and-up">library_books</i>
 						<span class="hide-on-small-and-down">Reservation</span></button>
@@ -405,7 +405,6 @@
 		{% endif %}
 
 <script src="http://listjs.com/no-cdn/list.js"></script>
-
 		<!-- Occurrence Modal Structure -->
 		<div id="picker-modal" class="modal bottom-sheet" style="display: block; overflow: scroll;">
 			<div class="modal-content">
@@ -435,13 +434,24 @@
 		</div>
 
 		<!-- Reservation Modal Structure -->
-		<div id="modal2" class="modal modal-fixed-footer grey darken-3">
+		
+		{% for oc in occurrence %}
+		<div id="modal_{{forloop.counter}}" class="modal modal-fixed-footer grey darken-3">
 			<div id="reservations">
 				<div class="modal-content">
 					<h4 class="nnt-text text-orange">Reservations for {{ show.name }}</h4>
+					<h5 class="nnt-text text-orange thin">
+						{% if not report.have_form %}
+						{{ oc.2 }} at {{ oc.4 }}
+						{% endif %}
+						</h5>
 						<div class="row">
 							<div class="col s12" id="reservation_modal_container">
-								{% ReservationModal report %}
+								{% if not report.have_form %}
+									{% ReservationModal oc report.have_form %}
+								{% else %}
+									{% ReservationModal 'None' report.have_form occ_id %}
+								{% endif %}
 								<!-- See sale_overview_full.html -->
 								<!-- and reservation_modal.html -->
 								<!-- and show_tags.py -->
@@ -468,6 +478,7 @@
 				</div>
 			</div>
 		</div>
+		{% endfor %}
 
 	</div>
 

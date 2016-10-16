@@ -8,7 +8,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col s12">
-				<div class="card small grey darken-3">
+				<div class="card small grey darken-3 responsive_height_card">
 					<div class="row">
 						<div class="col s4" id="poster-container">
 							<div class="card-image show-poster hide-on-small-and-down">
@@ -24,7 +24,7 @@
 							<div class="card-content center-on-small-only">
 								<h1 class="light white-text flow-text truncate" id="title" style="margin-top: 0;">
 									<a href="/report/" rel="nofollow" class="title">
-									{{ show.name }} | {{ report.pricing_error }}
+									{{ show.name }}
 									</a>
 								</h1>
 
@@ -32,20 +32,20 @@
 									<!-- Profit -->
 									<div class="col s6">
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
-											Sales: <span class="nnt-text nnt-orange">£{{ show.show_sales }}</span>
+											Sales: <span class="nnt-text nnt-orange">£{{ show.get_sale_data.show_sales }}</span>
 										</blockquote>
 
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
-											Tickets Reserved: <span class="nnt-text nnt-orange">{{ show.total_tickets_reserved }}
+											Tickets Reserved: <span class="nnt-text nnt-orange">{{ show.get_sale_data.total_reserved }}
 											<strong>/</strong>
-											{{ show.total_possible }}
+											{{ show.get_sale_data.total_possible }}
 											</span>
 										</blockquote>
 									</div>
 									<!-- Tickets sold -->
 									<div class="col s6">
 										<blockquote class="grey-text text-lighten-1 hide-on-small-and-down">
-											Tickets Sold: <span class="nnt-text nnt-orange">{{ show.total_tickets_sold_show }}</span>
+											Tickets Sold: <span class="nnt-text nnt-orange">{{ show.get_sale_data.total_sold }}</span>
 										</blockquote>
 									</div>
 								</div>
@@ -89,7 +89,7 @@
 							</div>
 							<!-- In House Shows -->
 							{% if show.category.id == 1 %}
-							<div class="col s12 center-align" style="overflow: scroll;">
+							<div class="col s12 center-align sale_table" style="overflow: scroll;">
 								<table class="centered">
 									<thead>
 										<tr>
@@ -108,29 +108,29 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td class="nnt-orange bold">{{ oc.member_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.concession_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.public_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_sale_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_sale_nnt_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'member' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'concession' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'public' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season_sale' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season_sale_nnt' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'fellow' %}</td>
 											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
-											<td class="nnt-orange bold">{{ oc.matinee_freshers_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.matinee_freshers_nnt_tally }}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'matinee_freshers' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'matinee_freshers_nnt' %}</td>
 											{% endif %}
 										</tr>
 										<tr>
-											<td class="nnt-orange bold">£{{ oc.member_tally|mul:report.member_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.concession_tally|mul:report.concession_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.public_tally|mul:report.public_price }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'member' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'concession' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'public' report %}</td>
 											<td class="nnt-orange bold">-</td>
-											<td class="nnt-orange bold">£{{ oc.season_sale_tally|mul:report.season_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.season_sale_nnt_tally|mul:report.season_price_nnt }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'season_sale' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'season_sale_nnt' report %}</td>
 											<td class="nnt-orange bold">-</td>
 											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
-											<td class="nnt-orange bold">£{{ oc.matinee_freshers_tally|mul:report.matinee_freshers_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.matinee_freshers_nnt_tally|mul:report.matinee_freshers_nnt_price }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'matinee_freshers' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'matinee_freshers_nnt' report %}</td>
 											{% endif %}
 										</tr>
 									</tbody>
@@ -151,17 +151,17 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td class="nnt-orange bold">{{ oc.fringe_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_sale_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_sale_nnt_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'fringe' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season_sale' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season_sale_nnt' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'fellow' %}</td>
 										</tr>
 										<tr>
-											<td class="nnt-orange bold">£{{ oc.fringe_tally|mul:report.fringe_price }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'fringe' report %}</td>
 											<td class="nnt-orange bold">-</td>
-											<td class="nnt-orange bold">£{{ oc.season_sale_tally|mul:report.season_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.season_sale_nnt_tally|mul:report.season_price_nnt }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'season_sale' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'season_sale_nnt' report %}</td>
 											<td class="nnt-orange bold">-</td>
 										</tr>
 									</tbody>
@@ -196,50 +196,51 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td class="nnt-orange bold">{{ oc.member_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.concession_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.public_tally }}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'member' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'concession' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'public' %}</td>
 											{% if pricing.allow_season_tickets %}
-											<td class="nnt-orange bold">{{ oc.season_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_sale_tally }}</td>
-											<td class="nnt-orange bold">{{ oc.season_sale_nnt_tally }}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season_sale' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'season_sale_nnt' %}</td>
 											{% endif %}
 											{% if pricing.allow_fellow_tickets %}
-											<td class="nnt-orange bold">{{ oc.fellow_tally }}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'fellow' %}</td>
 											{% endif %}
 											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
 												{% if pricing.allow_half_matinee %}
-												<td class="nnt-orange bold">{{ oc.matinee_freshers_tally }}</td>
+												<td class="nnt-orange bold">{% get_tally oc 'matinee_freshers' %}</td>
 												{% endif %}
 												{% if pricing.allow_half_nnt_matinee %}
-												<td class="nnt-orange bold">{{ oc.matinee_freshers_nnt_tally }}</td>
+												<td class="nnt-orange bold">{% get_tally oc 'matinee_freshers_nnt' %}</td>
 												{% endif %}
 											{% endif %}
 										</tr>
 										<tr>
-											<td class="nnt-orange bold">£{{ oc.member_tally|mul:pricing.member_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.concession_tally|mul:pricing.concession_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.public_tally|mul:pricing.public_price }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'member' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'concession' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'public' report %}</td>
 											{% if pricing.allow_season_tickets %}
 											<td class="nnt-orange bold">-</td>
-											<td class="nnt-orange bold">£{{ oc.season_sale_tally|mul:report.season_price }}</td>
-											<td class="nnt-orange bold">£{{ oc.season_sale_nnt_tally|mul:report.season_price_nnt }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'season_sale' report %}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'season_sale_nnt' report %}</td>
 											{% endif %}
 											{% if pricing.allow_fellow_tickets %}
 											<td class="nnt-orange bold">-</td>
 											{% endif %}
 											{% if oc.time_formatted|stringformat:"s" == report.default_time_matinee %}
 												{% if pricing.allow_half_matinee %}
-												<td class="nnt-orange bold">£{{ oc.matinee_freshers_tally|mul:report.matinee_freshers_price }}</td>
+												<td class="nnt-orange bold">£{% mult_tally oc 'matinee_freshers' report %}</td>
 												{% endif %}
 												{% if pricing.allow_half_nnt_matinee %}
-												<td class="nnt-orange bold">£{{ oc.matinee_freshers_nnt_tally|mul:report.matinee_freshers_nnt_price }}</td>
+												<td class="nnt-orange bold">£{% mult_tally oc 'matinee_freshers_nnt' report %}</td>
 												{% endif %}
 											{% endif %}
 										</tr>
 									</tbody>
 								</table>
 							</div>
+							<!-- StuFF Shows -->
 							{% elif show.category.id == 4 and not report.pricing_error %}
 							<div class="col s12 center-align">
 								<table class="centered">
@@ -250,10 +251,10 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td class="nnt-orange bold">{{ oc.stuff_tally }}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'stuff' %}</td>
 										</tr>
 										<tr>
-											<td class="nnt-orange bold">£{{ oc.stuff_tally|mul:report.stuff_price }}</td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'stuff' report %}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -271,12 +272,12 @@
 							<div class="col s12 center-align">
 								<div class="col s6">
 									<span class="nnt-orange bold small-text">Total tickets:
-									<span class="nnt-orange bold small-text">{{ oc.total_tickets_sold }}</span>
+									<span class="nnt-orange bold small-text">{{ oc.get_ticket_data.total_sold }}</span>
 									</span>
 								</div>
 								<div class="col s6">
 									<span class="nnt-orange bold small-text">Total sales:
-									<span class="nnt-orange bold small-text">£{{ oc.total_sales }}</span>
+									<span class="nnt-orange bold small-text">£{{ oc.get_ticket_data.total_profit }}</span>
 									</span>
 								</div>
 							</div>
@@ -289,4 +290,12 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	$(document).ready( function() {
+		$(".sale_table").niceScroll()
+	})
+</script>
 {% endblock %}

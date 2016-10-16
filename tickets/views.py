@@ -49,36 +49,17 @@ def logout_view(request):
     return render(request, 'registration/logout.html')
 
 
-@login_required
-def ShowIndex(request):
+class ShowIndex(generic.ListView):
+    template_name = 'show_index.html'
+    paginate_by = 10
 
-    time_filter = datetime.date.today() - datetime.timedelta(days=30)
-    shows = models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
+    def get_context_data(self, **kwargs):
+        context = super(ShowIndex, self).get_context_data(**kwargs)
+        return context
 
-    show_list = []
-
-    for sh in shows:
-        if sh.is_current_show():
-            show_list.append(sh)
-
-    paginator = Paginator(show_list, 5)
-    page = request.GET.get('page')
-
-    try:
-        show = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        show = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        show = paginator.page(paginator.num_pages)
-
-    context = {
-        'show': show,
-    }
-
-    return render_to_response('show_index.html', context, context_instance=RequestContext(request))
-
+    def get_queryset(self):
+        time_filter = datetime.date.today() - datetime.timedelta(days=1)
+        return models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
 
 @login_required
 def ShowReport(request, show_name, occ_id):
@@ -95,7 +76,7 @@ def ShowReport(request, show_name, occ_id):
     report['season_price'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price
     report['season_price_nnt'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price_nnt
 
-    if len(occurrence) == 1 and occ_id == '0':
+    if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
 
     # If there has been an occurrnece selected
@@ -112,7 +93,7 @@ def ShowReport(request, show_name, occ_id):
             occurrence=occ_fin).order_by('person_name')
 
         # How many tickets have been sold so far
-        report['sold'] = occ_fin.total_tickets_sold()
+        report['sold'] = occ_fin.get_ticket_data()['total_sold']
         # Total number of tickets reserved
         report['how_many_reserved'] = occ_fin.tickets_sold()
         # How many tickets have been collected
@@ -123,11 +104,11 @@ def ShowReport(request, show_name, occ_id):
             occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
         # Maximum amount of free tickets to sell
 
-        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
+        report['how_many_left'] = occ_fin.maximum_sell - occ_fin.get_ticket_data()['total_sold']
 
         report['left_to_sell'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
 
-        report['total_sales'] = occ_fin.total_sales()
+        report['total_sales'] = occ_fin.get_ticket_data()['total_profit']
 
         report['reserve_percentage'] = (
             report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
@@ -400,7 +381,7 @@ def SaleInputAJAX(request, show_name, occ_id):
                     T.save()
 
             # How many tickets have been sold so far
-            report['sold'] = occ_fin.total_tickets_sold()
+            report['sold'] = occ_fin.get_ticket_data()['total_sold']
             # Total number of tickets reserved
             report['how_many_reserved'] = occ_fin.tickets_sold()
             # How many tickets have been collected
@@ -411,19 +392,20 @@ def SaleInputAJAX(request, show_name, occ_id):
                 occ_fin.tickets_sold() - models.Sale.objects.sold_not_reserved(occurrence=occ_fin)
 
             # Maximum amount of free tickets to sell
-            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.total_tickets_sold()
+            report['how_many_left'] = occ_fin.maximum_sell - occ_fin.get_ticket_data()['total_sold']
 
             report['left_to_sell'] = occ_fin.maximum_sell - occ_fin.tickets_sold()
 
             report['sale_percentage'] = (
                 report['sold'] / float(occ_fin.maximum_sell)) * 100
-            report['total_sales'] = occ_fin.total_sales()
+            report['total_sales'] = occ_fin.get_ticket_data()['total_profit']
             report['how_many_reserved'] = occ_fin.tickets_sold()
             report['reserve_percentage'] = (
                 report['how_many_reserved'] / float(occ_fin.maximum_sell)) * 100
             report['max'] = occ_fin.maximum_sell
 
         context = {
+            'occ_id': occ_id,
             'report': report,
         }
 
@@ -539,32 +521,17 @@ def make_github_issue(title, body=None, labels=None):
         return git
 
 
-@login_required
-def SaleReport(request):
-    now = datetime.datetime.now()
-    time_filter = now - datetime.timedelta(weeks=4)
-    show_list = models.Show.objects.filter(
-        start_date__gte=time_filter).order_by('start_date')
+class SaleReport(generic.ListView):
+    template_name = 'sale_report.html'
+    paginate_by = 10
 
-    paginator = Paginator(show_list, 5)
-    page = request.GET.get('page')
+    def get_context_data(self, **kwargs):
+        context = super(SaleReport, self).get_context_data(**kwargs)
+        return context
 
-    try:
-        show = paginator.page(page)
-    except PageNotAnInteger:
-        show = paginator.page(1)
-    except EmptyPage:
-        show = paginator.page(paginator.num_pages)
-
-    context = {
-        'show': show,
-    }
-
-    return render_to_response(
-        'sale_report.html',
-        context,
-        context_instance=RequestContext(request)
-    )
+    def get_queryset(self):
+        time_filter = datetime.date.today() - datetime.timedelta(weeks=4)
+        return models.Show.objects.filter(end_date__gte=time_filter).order_by('end_date')
 
 
 @login_required
@@ -774,86 +741,6 @@ def defaultFNI(request):
     return HttpResponse(html)
 
 
-def book_landing(request, show_id):
-    show = get_object_or_404(models.Show, id=show_id)
-    if show.is_current() is False:
-        return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
-    step = 1
-    total = 2
-    message = "Tickets for performances are reserved online and payed for on collection at the box office."
-    foh_contact = 'foh@newtheatre.org.uk'
-
-    if request.method == 'POST':    # If the form has been submitted...
-        # A form bound to the POST data
-        form = forms.BookingFormLanding(request.POST, show=show)
-        if form.is_valid():     # All validation rules pass
-            t = models.Ticket()
-            person_name = form.cleaned_data['person_name']
-            email_address = form.cleaned_data['email_address']
-
-            t.person_name = person_name
-            t.email_address = email_address
-            # t.show = show
-            occ_id = form.cleaned_data['occurrence']
-            occurrence = models.Occurrence.objects.get(pk=occ_id)
-            t.occurrence = occurrence
-            if t.occurrence.date < datetime.date.today():
-                return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
-            t.quantity = form.cleaned_data['quantity']
-            if t.occurrence.maximum_sell < (t.occurrence.tickets_sold() + t.quantity):
-                return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}) + "?err=sold_out")
-
-            try:
-                tick = models.Ticket.objects.filter(
-                    person_name=person_name,
-                    email_address=email_address,
-                    occurrence=occurrence
-                )
-
-                tick_ordered = tick.order_by('-stamp')[0]
-                if tick_ordered.stamp > datetime.datetime.now() - datetime.timedelta(0, 5, 0):
-                    return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}) + "?err=time")
-                else:
-                    t.save()
-            except IndexError:
-                t.save()
-
-            request.session["ticket"] = t
-
-            email_html = get_template('email/confirm_inline.html').render(
-                Context({
-                    'show': show,
-                    'ticket': t,
-                    'settings': settings,
-                    'customise': config,
-                }))
-            email_subject = 'Tickets reserved for ' + show.name
-            email = EmailMessage(
-                subject=email_subject,
-                body=email_html,
-                to=[t.email_address],
-                from_email="boxoffice@newtheatre.org.uk"
-            )
-            email.content_subtype = 'html'
-
-            if settings.ACTUALLY_SEND_MAIL == True:
-                email.send()
-
-            # Redirect after POST
-            return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))
-    else:
-        form = forms.BookingFormLanding(show=show)    # An unbound form
-
-    return render(request, 'book_landing.html', {
-        'form': form,
-        'show': show,
-        'step': step,
-        'total': total,
-        'message': message,
-        'foh_contact': foh_contact,
-    })
-
-
 @login_required
 @cache_page(60 * 30)
 def graph_view(request):
@@ -1020,24 +907,6 @@ def how_many_left(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def book_finish(request, show_id):
-    show = models.Show.objects.get(id=show_id)
-    ticket = request.session["ticket"]
-
-    return render(request, 'book_finish.html', {
-        'show': show,
-        'ticket': ticket,
-    })
-
-
-def book_error(request, show_id):
-    if 'err' in request.GET:
-        err = request.GET['err']
-    else:
-        err = None
-    return render(request, 'book_error.html', {'err': err})
-
-
 def list(request):
     shows = models.Show.objects.all()
 
@@ -1117,26 +986,3 @@ def sidebar(request):
         if len(shows) > 0:
             current_shows.append(shows[0])
     return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude, 'settings': settings})
-
-
-def cancel(request, ref_id):
-    ticket = get_object_or_404(models.Ticket, unique_code=ref_id)
-    if request.POST.get("id", "") == ticket.unique_code:
-        ticket.cancelled = True
-        ticket.save()
-        cancelled = True
-        already_cancelled = False
-    elif ticket.cancelled is True:
-        already_cancelled = True
-        cancelled = False
-    else:
-        cancelled = False
-        already_cancelled = False
-
-    context = {
-        'ticket': ticket,
-        'cancelled': cancelled,
-        'already_cancelled': already_cancelled,
-    }
-
-    return render(request, 'cancel.html', context)
