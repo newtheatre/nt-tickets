@@ -1,13 +1,13 @@
 language: python
 python:
 - '2.7'
+env:
+- DEBUG=0
+- STAGING=1
+  secure: "aqVmKDvFYv5yEe2uCJkpfAM5IKAntVruHzI97Y32mMQ1klFO7w53Bm+Q+0k9/O4bCM7A0C7FiaVd68FAjw5DAiGogZW4/fnkds17sbyWwVAGcMtIzkG2d0JrLipp/bwOQz8yBycznaxAmqgpeds03lJKqbK/0lw9Ihj32nr/G+0D11tS8HA9lCQz2tQ5XNdfPY+oue/91/8yqmsfNOt//zczlaqOnfB7xDhHoZLnjtqbPcxVWFcPGtoPoJjpkc/Dr32mgHrDDAjQ3BIulWvLVVKJDGLfGklsB12x1kbLg/+ShpSDS+6dHfG60I4rZ6uRAVduJcuWCatmHIyG9+XqZSy2PDDf8mGItLRRXazUs97nPm4p+939y9z6mHt/AwiNCUkLSvMKEOZo5dorXI8mMLSxT7xTvvvwsbwaNmiAI9Tu1e4hLI5aPyIMlz29kEbb7hj7X7tv+7brVgnCwipBNLQoFtMdAUfRt6YadSBjOjojX2kH1UGvGVg7rwZ5V4QkLloHWdaKUQqsWC5vcnF/y4WW61gRhcbhiNNM8zT7+uhOWW9HBW9e9wUZxowVEhi+HgRW1XqTcB0t7PjD/LL0xAynTm8Clq4VDCVkh/koEyeydqatOAH+wz0W9CuAodUIOXK8CisQ8rSnk4p5qmdenPsaDQTdC2iQOOFd9QFTuNM="
 install:
 - pip install -r requirements.txt
 - pip install coveralls
-before_script:
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
-- sleep 3
 script:
 - coverage run --omit='/home/travis/virtualenv/*' manage.py test tickets.test_models
   pricing
