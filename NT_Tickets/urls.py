@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 
-from tickets import views, booking
+from tickets import views
 
 from django.contrib import admin
 admin.autodiscover()
@@ -28,10 +28,10 @@ admin.autodiscover()
 urlpatterns = [
     # User frontend urls
     # url(r'^api/0.1/remain$', tickets_views.how_many_left),
-    url(r'^book/(?P<show_id>\d+)/$', booking.book_landing, name='book'),
-    url(r'^book/(?P<show_id>\d+)/thanks/$', booking.book_finish, name='finish'),
-    url(r'^book/(?P<show_id>\d+)/error/$', booking.book_error, name='error'),
-    url(r'^cancel/(?P<ref_id>.*)/$', booking.cancel, name='cancel'),
+    url(r'^book/(?P<show_id>\d+)/$', views.book_landing, name='book'),
+    url(r'^book/(?P<show_id>\d+)/thanks/$', views.book_finish, name='finish'),
+    url(r'^book/(?P<show_id>\d+)/error/$', views.book_error, name='error'),
+    url(r'^cancel/(?P<ref_id>.*)/$', views.cancel, name='cancel'),
     url(r'^list/$', views.ListShows.as_view(), name='list'),
     url(r'^list-past/$', views.ListPastShows.as_view(), name='list-past'),
     url(r'^list/(?P<slug>[-_\w]+)/$', views.DetailShow.as_view(), name='detail'),
