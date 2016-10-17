@@ -7,24 +7,13 @@ media/*
 db.sqlite3
 *.pyc
 .idea/
-env/
-NTenv/
-
-/fabfile/*
+venv/
 
 htmlcov/
 *.coverage
 
-fabfile/
-
-# configuration/staging.py
-configuration/environment.py
-# configuration/production.py
-# configuration/development.py
-
-configuration/keys.py
+bin/secrets.sh
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+!.elasticbeanstalk/config.yml

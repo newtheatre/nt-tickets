@@ -11,6 +11,7 @@
   <script src="https://code.jquery.com/jquery-1.12.0.min.js" integrity="sha256-Xxq2X+KtazgaGuA2cWR1v3jJsuMJUozyIXDB3e793L8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="{% static 'js/bin/materialize.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery.nicescroll.js' %}"></script>
   {% block head %}
   {% endblock %}
 </head>
@@ -98,6 +99,7 @@
       });
       $(".button-collapse").sideNav();
       $('.tooltipped').tooltip({delay: 50});
+      $("html").niceScroll();
     });
   </script>
 

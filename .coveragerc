@@ -1,6 +1,6 @@
 [run]
-omit = 
-  NTenv/*, 
+omit =
+  NTenv/*,
   tickets/migrations/*,
   pricing/migrations/*,
   configuration/*,

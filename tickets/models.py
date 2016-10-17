@@ -24,6 +24,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+        unique_together = ('name', 'sort',)
 
     name = models.CharField(
         max_length=50,
@@ -49,6 +50,7 @@ class Show(models.Model):
     class Meta:
         verbose_name = 'Show'
         verbose_name_plural = 'Shows'
+        unique_together = ('name', 'start_date', 'end_date')
 
     name = models.CharField(max_length=64)
 
@@ -64,13 +66,14 @@ class Show(models.Model):
     )
 
     description = models.TextField(
-        help_text='A short description, one paragraph only.'
+        help_text='A short description, in 140 characters or less.',
+        max_length=140
     )
 
     long_description = models.TextField(
         blank=True,
         help_text='Shows up on the detail page, this field is written in Markdown. ' +
-        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference.'
+        '(See <a href="http://www.darkcoding.net/software/markdown-quick-reference/">Markdown reference</a> for reference).'
     )
 
     poster = StdImageField(
@@ -98,69 +101,46 @@ class Show(models.Model):
     def is_current_show(self):
         return (datetime.date.today() - datetime.timedelta(days=1)) <= self.end_date
 
-    def is_current_show(self):
-        today = datetime.date.today() - datetime.timedelta(days=1)
-        if today >= self.end_date:
-            return False
-        else:
-            return True
-
     def show_sold_out(self):
-        if self.occurrence_set.count() > 0:
+        if self.occurrence_set.count():
             for occ in self.occurrence_set.all():
-                if occ.sold_out() is False:
-                    return False
-            return True
+                return occ.sold_out()
         else:
             return False
 
-    # Total profit from all occurrences in a show
-    def show_sales(self):
+    # Get sale data for shows
+    def get_sale_data(self):
         occs = Occurrence.objects.filter(show=self)
-        total = 0
+        totals = {'show_sales': 0, 'total_sold': 0, 'total_reserved': 0, 'total_possible': 0}
         for oc in occs:
-            sale = oc.total_sales()
-            total += sale
-        return total
-
-    # Total number of tickets sold across all occurrences
-    def total_tickets_sold_show(self):
-        sale = Occurrence.objects.filter(show=self)
-        total = 0
-        for s in sale:
-            ticket = s.total_tickets_sold()
-            total += ticket
-        return total
-
-    # Total tickets reserved across all occurrences
-    def total_tickets_reserved(self):
-        occs = Occurrence.objects.filter(show=self)
-        total = 0
-        for oc in occs:
-            reserve = oc.tickets_sold()
-            total += reserve
-        return total
-
-    # Maximum tickets that can be reserved across a whole show
-    def total_possible(self):
-        occs = Occurrence.objects.filter(show=self)
-        total = 0
-        for oc in occs:
-            maximum = oc.maximum_sell
-            total += maximum
-        return total
+            totals['show_sales'] += oc.get_ticket_data()['total_profit']
+            totals['total_sold'] += oc.get_ticket_data()['total_sold']
+            totals['total_reserved'] += oc.tickets_sold()
+            totals['total_possible'] += oc.maximum_sell
+        return totals
 
     # Does a show have any occurrences
     def has_occurrences(self):
-        occs = Occurrence.objects.filter(show=self)
-        if len(occs) > 0:
-            return True
-        else:
-            return False
+        return Occurrence.objects.filter(show=self).count() > 0
 
     def long_markdown(self):
-        md = Markdown()
-        return md.convert(self.long_description)
+        return Markdown().convert(self.long_description)
+
+    def clean(self, *args, **kwargs): 
+        cleaned_data = super(Show, self).clean(*args, **kwargs)
+
+        # Check to see if the dates are current
+        if self.start_date and (self.start_date < datetime.date.today()):
+            raise ValidationError(('Please enter a start date which is not in the past'), code='invalid_show_start_date_past')
+        if self.end_date and (self.end_date < datetime.date.today()):
+            raise ValidationError(('Please enter an end date which is not in the past'), code='invalid_show_end_date_past')
+
+        # Check to see if dates require the use of timetravel
+        if self.start_date and self.end_date:
+            if self.end_date < self.start_date:
+                raise ValidationError(('Unless you have invented time travel, a show cannot end before it has started'), code='invalid_show_dates')
+
+        return cleaned_data
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -222,6 +202,7 @@ class Occurrence(models.Model):
     class Meta:
         verbose_name = 'Occurrence'
         verbose_name_plural = 'Occurrences'
+        unique_together = ('show', 'date', 'time')
 
     show = models.ForeignKey(Show)
     date = models.DateField()
@@ -254,7 +235,7 @@ class Occurrence(models.Model):
 
     # Total number of tickets reserved
     def tickets_sold(self):
-        tickets = Ticket.objects.filter(occurrence=self).filter(cancelled=False)
+        tickets = Ticket.objects.filter(occurrence=self, cancelled=False)
         sold = 0
         for ticket in tickets:
             sold += ticket.quantity
@@ -262,114 +243,38 @@ class Occurrence(models.Model):
 
     # Find if all the tickets have been reserved
     def sold_out(self):
-        if self.tickets_sold() >= self.maximum_sell:
-            return True
-        else:
-            return False
+        return self.tickets_sold() >= self.maximum_sell
 
     # Total tickets sold
-    def total_tickets_sold(self):
+    def get_ticket_data(self):
         sale = Sale.objects.filter(occurrence=self)
-        sold = 0
+        sold = {'total_sold': 0, 'total_profit': 0}
         for s in sale:
-            sold += s.number
+            sold['total_sold'] += s.number
+            sold['total_profit'] += s.price
         return sold
 
-    # Returns the total profit from ticket sales
-    def total_sales(self):
+    # Get tallys from sale fields
+    def get_tally(self, field):
         sale = Sale.objects.filter(occurrence=self)
-        sold = 0
+        tally = 0
         for s in sale:
-            sold += s.price
-        return sold
+            num = getattr(s, 'number_' + str(field))
+            if num > 0:
+                tally += num
+        return tally
 
-    def member_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        member = 0
-        for s in sale:
-            if s.number_member > 0:
-                member += s.number_member
-        return member
+    def clean(self, *args, **kwargs): 
+        cleaned_data = super(Occurrence, self).clean(*args, **kwargs)
 
-    def concession_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        concession = 0
-        for s in sale:
-            if s.number_concession > 0:
-                concession += s.number_concession
-        return concession
+        # Check to see if the date is within the show dates
+        if self.date:
+            if self.date > self.show.end_date or self.date < self.show.start_date:
+                raise ValidationError(('Please enter a date within the dates of the show'), code='invalid_occ_date')
+            elif self.date < datetime.date.today():
+                raise ValidationError(('Please enter a date which is not in the past'), code='invalid_occ_date_past')
 
-    def public_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        public = 0
-        for s in sale:
-            if s.number_public > 0:
-                public += s.number_public
-        return public
-
-    def season_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        season = 0
-        for s in sale:
-            if s.number_season > 0:
-                season += s.number_season
-        return season
-
-    def season_sale_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        season_sale = 0
-        for s in sale:
-            if s.number_season_sale > 0:
-                season_sale += s.number_season_sale
-        return season_sale
-
-    def season_sale_nnt_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        season_sale_nnt = 0
-        for s in sale:
-            if s.number_season_sale_nnt > 0:
-                season_sale_nnt += s.number_season_sale_nnt
-        return season_sale_nnt
-
-    def fellow_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        fellow = 0
-        for s in sale:
-            if s.number_fellow > 0:
-                fellow += s.number_fellow
-        return fellow
-
-    def fringe_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        fringe = 0
-        for s in sale:
-            if s.number_fringe > 0:
-                fringe += s.number_fringe
-        return fringe
-
-    def stuff_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        stuff = 0
-        for s in sale:
-            if s.number_stuff > 0:
-                stuff += s.number_stuff
-        return stuff
-
-    def matinee_freshers_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        matinee_freshers = 0
-        for s in sale:
-            if s.number_matinee_freshers > 0:
-                matinee_freshers += s.number_matinee_freshers
-        return matinee_freshers
-
-    def matinee_freshers_nnt_tally(self):
-        sale = Sale.objects.filter(occurrence=self)
-        matinee_freshers_nnt = 0
-        for s in sale:
-            if s.number_matinee_freshers_nnt > 0:
-                matinee_freshers_nnt += s.number_matinee_freshers_nnt
-        return matinee_freshers_nnt
+        return cleaned_data
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
@@ -404,6 +309,8 @@ class Ticket(models.Model):
     stamp = models.DateTimeField(auto_now=True)
     person_name = models.CharField(max_length=80)
     email_address = models.EmailField(max_length=80)
+    # Initial quantity is used when not the full number of tickets reserved is bought
+    # It will be used in the future for more stats on the sale reports page
     initial_quantity = models.IntegerField(default=0)
     quantity = models.IntegerField(default=1)
     cancelled = models.BooleanField(default=False)

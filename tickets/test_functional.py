@@ -2,6 +2,7 @@ from django.test import LiveServerTestCase, Client
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 from django.contrib.sessions.backends.db import SessionStore
+from django.core.management import call_command
 import time
 import factory
 from selenium import webdriver
@@ -16,7 +17,6 @@ from django.template.defaultfilters import slugify
 from tickets import models
 from pricing import models
 
-from django.test.utils import override_settings
 from django.conf import settings
 
 import datetime
@@ -31,49 +31,56 @@ def UserFactory():
     )
 
 
-class CategoryFactory(factory.django.DjangoModelFactory):
+def createCategory(*args, **kwargs):
+    name = kwargs.get('name', 'In House')
+    cat, created = models.Category.objects.get_or_create(
+        name=name,
+        slug=slugify(name),
+        sort=kwargs.get('sort', 1)
+    )
 
-    class Meta:
-        model = models.Category
-
-    name = 'In House'
-    slug = slugify(name)
-    sort = 1
-
-
-class ShowFactory(factory.django.DjangoModelFactory):
-
-    class Meta:
-        model = models.Show
-
-    start_date = datetime.date.today()
-    end_date = datetime.date.today() + datetime.timedelta(days=5)
-
-    name = 'Test Show'
-    location = 'Somewhere'
-    description = 'Test show present'
-    long_description = 'Some more info'
+    return cat
 
 
-class OccurrenceFactory(factory.django.DjangoModelFactory):
+def createShow(*args, **kwargs):
+    show, created = models.Show.objects.get_or_create(
+        name=kwargs.get('name', 'Test Show'),
+        location='Somewhere',
+        description='Test show present',
+        long_description='Some more info',
 
-    class Meta:
-        model = models.Occurrence
+        start_date=kwargs.get('start_date', datetime.date.today()),
+        end_date=kwargs.get('end_date', datetime.date.today() + datetime.timedelta(days=5)),
 
-    show = factory.SubFactory(ShowFactory)
-    date = datetime.date.today() + datetime.timedelta(days=1)
-    time = "19:30"
-    maximum_sell = 2
-    hours_til_close = 2
+        category=kwargs.get('category', createCategory())
+    )
+
+    return show
 
 
-class TicketFactory(factory.django.DjangoModelFactory):
+def createOccurrence(*args, **kwargs):
+    occ, created = models.Occurrence.objects.get_or_create(
+        show=kwargs.get('show', createShow()),
+        date=kwargs.get('date', datetime.date.today() + datetime.timedelta(days=1)),
+        time=kwargs.get('time', "19:30"),
+        maximum_sell=kwargs.get('maximum_sell', 2),
+        hours_til_close=kwargs.get('hours_til_close', 2)
+    )
 
-    class Meta:
-        model = models.Ticket
+    return occ
 
-    person_name = 'Test Person'
-    email_address = 'test@person.com'
+
+def createTicket(*args, **kwargs):
+    tick = models.Ticket.objects.create(
+        occurrence=kwargs.get('occurrence', createOccurrence()),
+        person_name='Test Person',
+        email_address='test@person.com',
+        quantity=kwargs.get('quantity', 2),
+        collected=kwargs.get('collected', False),
+        cancelled=kwargs.get('cancelled', False)
+    )
+
+    return tick
 
 
 class BookTest(LiveServerTestCase):
@@ -82,10 +89,10 @@ class BookTest(LiveServerTestCase):
         self.browser = webdriver.Chrome('bin/chromedriver')
         self.browser.implicitly_wait(10)
 
-        self.show1 = ShowFactory.create(
-            name="TS In House", category=CategoryFactory(name="In House", sort=1))
-        self.occ1 = OccurrenceFactory.create(show=self.show1)
-        self.occ2 = OccurrenceFactory.create(
+        self.show1 = createShow(
+            name="TS In House")
+        self.occ1 = createOccurrence(show=self.show1)
+        self.occ2 = createOccurrence(
             show=self.show1, date=datetime.date.today() + datetime.timedelta(days=2))
 
     def tearDown(self):
@@ -207,9 +214,9 @@ class ListTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Chrome('bin/chromedriver')
 
-        self.show1 = ShowFactory.create(
-            name="TS In House", category=CategoryFactory(name="In House", sort=1))
-        self.occ1 = OccurrenceFactory.create(show=self.show1)
+        self.show1 = createShow(
+            name="TS In House")
+        self.occ1 = createOccurrence(show=self.show1)
 
     def tearDown(self):
         self.browser.quit()
@@ -306,9 +313,9 @@ class IndexTest(StaticLiveServerTestCase):
 
         UserFactory()
 
-        self.show1 = ShowFactory.create(
-            name="TS In House", category=CategoryFactory(name="In House", sort=1))
-        self.occ1 = OccurrenceFactory.create(show=self.show1)
+        self.show1 = createShow(
+            name="TS In House")
+        self.occ1 = createOccurrence(show=self.show1)
 
     def tearDown(self):
         self.browser.quit()
@@ -332,14 +339,15 @@ class IndexTest(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + '/?page=10')
 
-        page = self.browser.find_element_by_id('page').text
-        self.assertIn('1', page)
+        page = self.browser.find_element_by_css_selector('h1').text
+        self.assertIn('404', page)
 
 
 class ReportTest(StaticLiveServerTestCase):
-    fixtures = ['initial_pricing.json']
 
     def setUp(self):
+        call_command('create_pricing')
+
         self.browser = webdriver.Chrome('bin/chromedriver')
         # Force desktop sizing
         self.browser.set_window_size(1200, 1000)
@@ -348,9 +356,9 @@ class ReportTest(StaticLiveServerTestCase):
 
         UserFactory()
 
-        self.show1 = ShowFactory.create(
-            name="TS In House", category=CategoryFactory(name="In House", sort=1))
-        self.occ1 = OccurrenceFactory.create(show=self.show1, maximum_sell=80)
+        self.show1 = createShow(
+            name="TS In House")
+        self.occ1 = createOccurrence(show=self.show1, maximum_sell=80)
 
     def tearDown(self):
         self.browser.quit()
@@ -416,9 +424,16 @@ class ReportTest(StaticLiveServerTestCase):
 
 
 class SaleTest(StaticLiveServerTestCase):
-    fixtures = ['initial_pricing.json', 'initial_category.json']
+
+    def __init__(self, *args, **kwargs):
+        super(SaleTest, self).__init__(*args, **kwargs)
+        if settings.DEBUG == False:
+            settings.DEBUG = True
 
     def setUp(self):
+        call_command('create_pricing')
+        call_command('create_categories')
+
         self.browser = webdriver.Chrome('bin/chromedriver')
         # Force desktop sizing
         self.browser.set_window_size(1200, 1000)
@@ -429,45 +444,45 @@ class SaleTest(StaticLiveServerTestCase):
             username='Jim', password='Rash', email='jim@rash.com',)
         self.user.save()
 
-        self.in_house = models.Category.objects.get(slug='in_house')
+        self.in_house = models.Category.objects.get(slug='in-house')
         self.fringe = models.Category.objects.get(slug='fringe')
         self.external = models.Category.objects.get(slug='external')
         self.stuff = models.Category.objects.get(slug='stuff')
 
         # In House Show
-        self.show1 = ShowFactory.create(name="TS In House", category=self.in_house)
-        self.occ1 = OccurrenceFactory.create(maximum_sell=80, show=self.show1)
-        self.occ1_2 = OccurrenceFactory.create(
-            maximum_sell=80, show=self.show1, time="14:30")
-        self.occ1_3 = OccurrenceFactory.create(maximum_sell=10, show=self.show1)
-        self.occ1_4 = OccurrenceFactory.create(maximum_sell=10, show=self.show1)
+        self.show1 = createShow(name='TS In House', category=self.in_house)
+        self.occ1 = createOccurrence(maximum_sell=80, show=self.show1, time='08:00')
+        self.occ1_2 = createOccurrence(
+            maximum_sell=80, show=self.show1, time='14:30')
+        self.occ1_3 = createOccurrence(maximum_sell=10, show=self.show1, time='09:00')
+        self.occ1_4 = createOccurrence(maximum_sell=10, show=self.show1, time='10:00')
         self.reserv1 = {
-            1: TicketFactory(occurrence=self.occ1, quantity=10),
-            2: TicketFactory(occurrence=self.occ1, quantity=10),
-            3: TicketFactory(occurrence=self.occ1, quantity=10, collected=True),
-            4: TicketFactory(occurrence=self.occ1, quantity=10, cancelled=True),
-            5: TicketFactory(occurrence=self.occ1_2, quantity=10),
-            6: TicketFactory(occurrence=self.occ1_4, quantity=5),
-            7: TicketFactory(occurrence=self.occ1_4, quantity=5),
+            1: createTicket(occurrence=self.occ1, quantity=10),
+            2: createTicket(occurrence=self.occ1, quantity=10),
+            3: createTicket(occurrence=self.occ1, quantity=10, collected=True),
+            4: createTicket(occurrence=self.occ1, quantity=10, cancelled=True),
+            5: createTicket(occurrence=self.occ1_2, quantity=10),
+            6: createTicket(occurrence=self.occ1_4, quantity=5),
+            7: createTicket(occurrence=self.occ1_4, quantity=5),
         }
 
         # Fringe Show
-        self.show2 = ShowFactory.create(name="TS Fringe", category=self.fringe)
-        self.occ2 = OccurrenceFactory.create(maximum_sell=80, show=self.show2)
-        self.reserv2 = TicketFactory(occurrence=self.occ2, quantity=10)
+        self.show2 = createShow(name="TS Fringe", category=self.fringe)
+        self.occ2 = createOccurrence(maximum_sell=80, show=self.show2)
+        self.reserv2 = createTicket(occurrence=self.occ2, quantity=10)
 
         # External Show
-        self.show3 = ShowFactory.create(name="TS External 1", category=self.external)
-        self.occ3 = OccurrenceFactory.create(maximum_sell=80, show=self.show3)
+        self.show3 = createShow(name="TS External 1", category=self.external)
+        self.occ3 = createOccurrence(maximum_sell=80, show=self.show3)
         self.exprice1 = models.ExternalPricing.objects.create(
             show=self.show3, allow_season_tickets=False, allow_fellow_tickets=False)
-        self.reserv3 = TicketFactory(occurrence=self.occ3, quantity=10)
+        self.reserv3 = createTicket(occurrence=self.occ3, quantity=10)
 
         # StuFF Show
-        self.show4 = ShowFactory.create(name="TS StuFF", category=self.stuff)
-        self.occ4 = OccurrenceFactory.create(maximum_sell=80, show=self.show4)
+        self.show4 = createShow(name="TS StuFF", category=self.stuff)
+        self.occ4 = createOccurrence(maximum_sell=80, show=self.show4)
         self.stprice = models.StuFFPricing.objects.create(show=self.show4)
-        self.reserv4 = TicketFactory(occurrence=self.occ4, quantity=10)
+        self.reserv4 = createTicket(occurrence=self.occ4, quantity=10)
 
     def tearDown(self):
         self.browser.quit()
@@ -621,7 +636,9 @@ class SaleTest(StaticLiveServerTestCase):
 
         # Add the first set of tickets to the form
         add1.click()
+
         # Check we can't sell tickets unless we sell the same number as on the reservation
+        time.sleep(1)
         self.checkDiasbled()
 
         # Sell the same number of tickets as on the reservation
