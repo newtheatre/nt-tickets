@@ -8,21 +8,11 @@ db.sqlite3
 *.pyc
 .idea/
 venv/
-NTenv/
-
-/fabfile/*
 
 htmlcov/
 *.coverage
 
-fabfile/
-
-# configuration/staging.py
-configuration/environment.py
-# configuration/production.py
-# configuration/development.py
-
-configuration/keys.sh
+bin/secrets.sh
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
