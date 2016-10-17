@@ -1,15 +1,6 @@
 language: python
 python:
 - '2.7'
-before_install:
-- openssl aes-256-cbc -K $encrypted_eab4b1048f57_key -iv $encrypted_eab4b1048f57_iv
-  -in configuration/secrets.tar.enc -out configuration/secrets.tar -d
-- tar xvf configuration/secrets.tar
-env:
-  matrix:
-  - AWS_CREDENTIAL_FILE=configuration/keys.py
-  global:
-    secure: O58boP/RbxvoN2LRHaE5lFgi/9Dh3GHYiZ420AVjrsDIYN1sNcchi4xAm8wgZsNxqkgSHRvQ0D+dJFdTko83DTBCURB8ntcBYKTwrGHlv6vg73oOzCnEW8LhVc3Cj5tkox+0UhOXk+D/52mrx+/lVhaLY68XV3xJ+tkc1HxtHYxdDB0lKF8/g1CD2b7rka+Sn7IEg41Y6iFZPw39AeDOwBR/n9pOaa1fVxkZ3E59rkRxH6XcE796BEgdNkUqwhT56CBbyqwaHagUhTosD5oamT3nilKNPKhtZEprnDvyReVAB4eEWIc25rwclxpO9F6pzCpu8Zjm+AVb7K6efJW0n8YPTNtygYRxIQes3phgWGbYMC+/eC409dd6AVkrSiVGjnQKRUPInUePy9LrsIuJx4clGmalHfg1n+UYFeQBBSv8uLfqKeJBtYQ0hqDhBcTuJzzTzXg6DcNqUCyYLf3AUEIxv2MVau+UCFT8Ne49pkYsk/GNOz7Rv5fr+9Q98d/FZ2So3ypx73wFrdI+k1d+HlsrAambKZVuc7NOFkyID+9QawgrkkwSclMHTEnFaGjwQa5fi77c6UxoROrm4NyeIBGFMGHTUyj6pPUADEQ3tepmBUSfaqyH/BCOhF3VUEBngG5KL9j4LRR0F1E0SDAfphypAncY3I+8yKgiNBc724U=
 install:
 - pip install -r requirements.txt
 - pip install coveralls
