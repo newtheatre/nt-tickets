@@ -121,7 +121,7 @@ def ShowReport(request, show_name, occ_id):
         report['category'] = category
 
         # In House Pricing
-        if category.slug == 'in-house':
+        if category.slug == 'in_house':
             try:
                 pricing = models.InHousePricing.objects.all()[0]
                 report['pricing_error'] = False
