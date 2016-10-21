@@ -73,8 +73,8 @@ def ShowReport(request, show_name, occ_id):
     report['default_time_matinee'] = \
         config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
-    report['season_price'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price
-    report['season_price_nnt'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price_nnt
+    report['season_price'] = models.SeasonTicketPricing.objects.all()[0].season_sale_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price
 
     if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
@@ -600,10 +600,8 @@ def SaleReportFull(request, show_name):
     except Exception:
         report['matinee_freshers_nnt_price'] = float(0)
 
-    report['season_price'] = float(models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price)
-    report['season_price_nnt'] = float(models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price_nnt)
+    report['season_sale_price'] = float(models.SeasonTicketPricing.objects.all()[0].season_sale_price)
+    report['season_sale_nnt_price'] = float(models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price)
 
     try:
         report['stuff_price'] = float(pricing.stuff_price)
@@ -662,9 +660,8 @@ def DownloadReport(request, show_name):
     except Exception:
         public_sale = float(0)
 
-    season_sale = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
-    season_sale_nnt = float(
-        models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
+    season_sale = float(models.SeasonTicketPricing.objects.all()[0].season_sale_price)
+    season_sale_nnt = float(models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price)
 
     try:
         fringe_sale = float(pricing.fringe_price)

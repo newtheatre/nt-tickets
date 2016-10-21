@@ -361,7 +361,7 @@ class ExternalPriceAdmin(admin.ModelAdmin):
 
 
 class SeasonPriceAdmin(admin.ModelAdmin):
-    fields = ['season_ticket_price', 'season_ticket_price_nnt']
+    fields = ['season_sale_price', 'season_sale_nnt_price']
 
     def has_add_permission(self, request):
         num_objects = self.model.objects.count()
