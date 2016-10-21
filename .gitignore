@@ -16,4 +16,3 @@ bin/secrets.sh
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
-!.elasticbeanstalk/config.yml
