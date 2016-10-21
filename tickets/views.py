@@ -686,10 +686,10 @@ def DownloadReport(request, show_name):
     writer = csv.writer(response)
     writer.writerow([
         show.name,
-        'Total Sales: £' + str(show.show_sales()),
-        'Total Tickets Sold: ' + str(show.total_tickets_sold_show()),
-        'Total Tickets Reserved: ' + str(show.total_tickets_reserved()),
-        'Out of a possible: ' + str(show.total_possible())
+        'Total Sales: £' + str(show.get_sale_data()['show_sales']),
+        'Total Tickets Sold: ' + str(show.get_sale_data()['total_sold']),
+        'Total Tickets Reserved: ' + str(show.get_sale_data()['total_reserved']),
+        'Out of a possible: ' + str(show.get_sale_data()['total_possible'])
     ])
     writer.writerow([
         'Show Day',
@@ -708,26 +708,26 @@ def DownloadReport(request, show_name):
         writer.writerow([
             oc.day_formatted(),
             oc.time_formatted(),
-            oc.member_tally(),
-            oc.concession_tally(),
-            oc.public_tally(),
-            oc.season_tally(),
-            oc.season_sale_tally(),
-            oc.season_sale_nnt_tally(),
-            oc.fellow_tally(),
-            oc.stuff_tally(),
+            oc.get_tally('member'),
+            oc.get_tally('concession'),
+            oc.get_tally('public'),
+            oc.get_tally('season'),
+            oc.get_tally('season_sale'),
+            oc.get_tally('season_sale_nnt'),
+            oc.get_tally('fellow'),
+            oc.get_tally('stuff'),
         ])
         writer.writerow([
             oc.day_formatted(),
             'TOTALS:',
-            oc.member_tally() * member_sale,
-            oc.concession_tally() * concession_sale,
-            oc.public_tally() * public_sale,
+            oc.get_tally('member') * member_sale,
+            oc.get_tally('concession') * concession_sale,
+            oc.get_tally('public') * public_sale,
             '-',
-            oc.season_sale_tally() * season_sale,
-            oc.season_sale_nnt_tally() * season_sale_nnt,
+            oc.get_tally('season_sale') * season_sale,
+            oc.get_tally('season_sale_nnt') * season_sale_nnt,
             '-',
-            oc.stuff_tally() * stuff_sale,
+            oc.get_tally('stuff') * stuff_sale,
         ])
 
     return response
@@ -784,16 +784,16 @@ def graph_view(request):
     days['min'] = [days['tally'][day_min], days['days'][day_min]]
 
     for sh in all_shows:
-        if sh.total_tickets_reserved() > most_popular['number']:
-            most_popular['number'] = sh.total_tickets_reserved()
+        if sh.get_sale_data()['total_reserved'] > most_popular['number']:
+            most_popular['number'] = sh.get_sale_data()['total_reserved']
             most_popular['show'] = sh.name
             most_popular['date'] = sh.date_formatted()
 
     least_popular['number'] = most_popular['number']
 
     for sh in all_shows:
-        if sh.total_tickets_reserved() < least_popular['number'] and sh.total_tickets_reserved() != 0:
-            least_popular['number'] = sh.total_tickets_reserved()
+        if sh.get_sale_data()['total_reserved'] < least_popular['number'] and sh.get_sale_data()['total_reserved'] != 0:
+            least_popular['number'] = sh.get_sale_data()['total_reserved']
             least_popular['show'] = sh.name
             least_popular['date'] = sh.date_formatted()
 
@@ -802,8 +802,8 @@ def graph_view(request):
         sold = 0
         show_profit = 0
         for sh in queryset:
-            sold += sh.total_tickets_reserved()
-            show_profit += sh.show_sales()
+            sold += sh.get_sale_data()['total_reserved']
+            show_profit += sh.get_sale_data()['show_sales']
 
         tickets_sold.append(sold)
         profit.append(show_profit)
