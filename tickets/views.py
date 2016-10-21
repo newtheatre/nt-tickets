@@ -306,9 +306,9 @@ def SaleInputAJAX(request, show_name, occ_id):
             public_sale = float(0)
 
         season_sale = number_season_sale * \
-            float(models.SeasonTicketPricing.objects.all()[0].season_ticket_price)
+            float(models.SeasonTicketPricing.objects.all()[0].season_sale_price)
         season_sale_nnt = number_season_sale_nnt * \
-            float(models.SeasonTicketPricing.objects.all()[0].season_ticket_price_nnt)
+            float(models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price)
 
         try:
             fringe_sale = number_fringe * float(pricing.fringe_price)
