@@ -89,8 +89,7 @@ class BookTest(LiveServerTestCase):
         self.browser = webdriver.Chrome('bin/chromedriver')
         self.browser.implicitly_wait(10)
 
-        self.show1 = createShow(
-            name="TS In House")
+        self.show1 = createShow()
         self.occ1 = createOccurrence(show=self.show1)
         self.occ2 = createOccurrence(
             show=self.show1, date=datetime.date.today() + datetime.timedelta(days=2))
@@ -200,7 +199,7 @@ class BookTest(LiveServerTestCase):
 
     def test_book_one_sold_out(self):
 
-        self.tick = TicketFactory.create(occurrence=self.occ2, quantity=2)
+        self.tick = createTicket()
 
         self.browser.get(self.live_server_url + '/book/' + str(self.show1.id))
 
