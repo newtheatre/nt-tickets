@@ -256,7 +256,7 @@ if not DEBUG and not STAGING:
         'dsn': os.environ.get('DSN'),
         # If you are using git, you can also automatically configure the
         # release based on the git info.
-        # 'release': raven.fetch_git_sha(os.path.dirname(__file__)),
+        'release': raven.fetch_git_sha(os.path.dirname(__file__)),
     }
 elif STAGING:
     from configuration.staging import *
