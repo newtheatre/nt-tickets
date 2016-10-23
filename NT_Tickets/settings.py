@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 import raven
+import zipfile
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -251,12 +252,15 @@ STATICFILES_DIRS = ()
 if not DEBUG and not STAGING:
     from configuration.production import *
 
+    with zipfile.ZipFile('/opt/elasticbeanstalk/deploy/appsource/source_bundle') as z:
+        return eb_git_vers=z.comment
+
     # Only run Raven in production environment
     RAVEN_CONFIG = {
         'dsn': os.environ.get('DSN'),
         # If you are using git, you can also automatically configure the
         # release based on the git info.
-        'release': raven.fetch_git_sha(os.path.dirname(__file__)),
+        'release': eb_git_vers,
     }
 elif STAGING:
     from configuration.staging import *
