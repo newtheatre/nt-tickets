@@ -250,16 +250,14 @@ STATICFILES_FINDERS = (
 STATICFILES_DIRS = ()
 
 if not DEBUG and not STAGING:
-    with zipfile.ZipFile('/opt/elasticbeanstalk/deploy/appsource/source_bundle') as z:
-        return z
-
     from configuration.production import *
+
     # Only run Raven in production environment
     RAVEN_CONFIG = {
         'dsn': os.environ.get('DSN'),
         # If you are using git, you can also automatically configure the
         # release based on the git info.
-        'release': z.comment,
+        # 'release': raven.fetch_git_sha(os.path.dirname(__file__)),
     }
 elif STAGING:
     from configuration.staging import *
