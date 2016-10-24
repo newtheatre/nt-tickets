@@ -2,6 +2,8 @@
 
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.views.decorators.clickjacking import xframe_options_exempt
+from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage, send_mail
@@ -881,7 +883,7 @@ def graph_view(request):
         context_instance=RequestContext(request)
     )
 
-
+@xframe_options_exempt
 def how_many_left(request):
     if 'occ' in request.GET:
         occ = get_object_or_404(models.Occurrence, pk=request.GET['occ'])
@@ -903,7 +905,7 @@ def how_many_left(request):
         response_data['error_message'] = 'Required parameters not given'
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-
+@xframe_options_exempt
 def list(request):
     shows = models.Show.objects.all()
 
@@ -911,7 +913,7 @@ def list(request):
         'shows': shows
     })
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class OrderedListView(ListView):
 
     class Meta:
@@ -921,7 +923,7 @@ class OrderedListView(ListView):
         return super(OrderedListView, self).get_queryset()
         ordering = self.ordering
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class ListShows(OrderedListView):
     model = models.Show
     template_name = 'list_shows.html'
@@ -939,7 +941,7 @@ class ListShows(OrderedListView):
         return super(ListShows, self).get_queryset().filter(end_date__gte=today)
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class ListStuFFShows(ListShows):
 
     def get_queryset(self):
@@ -947,7 +949,7 @@ class ListStuFFShows(ListShows):
         return super(ListStuFFShows, self).get_queryset().filter(end_date__gte=today).filter(category__name='StuFF')
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class ListPastShows(OrderedListView):
     model = models.Show
     template_name = 'list_past_shows.html'
@@ -964,13 +966,13 @@ class ListPastShows(OrderedListView):
         today = datetime.date.today()
         return super(ListPastShows, self).get_queryset().filter(end_date__lte=today)
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class DetailShow(DetailView):
     model = models.Show
     template_name = 'detail_show.html'
     context_object_name = 'show'
 
-
+@xframe_options_exempt
 def sidebar(request):
     categories = models.Category.objects.all().exclude(sort=0).order_by('sort')
     today = datetime.date.today()
@@ -984,7 +986,7 @@ def sidebar(request):
             current_shows.append(shows[0])
     return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude, 'settings': settings})
 
-
+@xframe_options_exempt
 def book_landing(request, show_id):
     show = get_object_or_404(models.Show, id=show_id)
     if show.is_current() is False:
@@ -1064,7 +1066,7 @@ def book_landing(request, show_id):
         'foh_contact': foh_contact,
     })
 
-
+@xframe_options_exempt
 def book_finish(request, show_id):
     show = models.Show.objects.get(id=show_id)
     ticket = request.session["ticket"]
@@ -1074,7 +1076,7 @@ def book_finish(request, show_id):
         'ticket': ticket,
     })
 
-
+@xframe_options_exempt
 def book_error(request, show_id):
     if 'err' in request.GET:
         err = request.GET['err']
@@ -1082,7 +1084,7 @@ def book_error(request, show_id):
         err = None
     return render(request, 'book_error.html', {'err': err})
 
-
+@xframe_options_exempt
 def cancel(request, ref_id):
     ticket = get_object_or_404(models.Ticket, unique_code=ref_id)
     if request.POST.get("id", "") == ticket.unique_code:
