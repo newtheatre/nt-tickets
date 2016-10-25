@@ -1,7 +1,7 @@
 {% load static from staticfiles %}
 {% for show in shows %}
 <section class="show {{show.category.slug}}-show">
-<h2>{{ show.category }}</h2>
+<h2 class="show_category_header">{{ show.category }}</h2>
 {% if show.poster %}
   <a href="http://newtheatre.org.uk/uk/whats-on"><img src="{{show.poster.poster_page.url}}" /></a>
 {% else %}
