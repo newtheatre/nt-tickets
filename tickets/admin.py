@@ -231,10 +231,16 @@ class ShowAdmin(admin.ModelAdmin):
         'location',
         'category',
         'start_date',
-        'end_date')
+        'end_date',
+        'num_occurrences',
+        )
 
     list_filter = ['category']
     search_fields = ('name', 'description')
+
+    def num_occurrences(self, obj):
+        return obj.occurrence_set.count()
+    num_occurrences.short_description = 'Occurrences'
 
     # Only retrieve recent shows to edit
     def get_queryset(self, request):
@@ -385,7 +391,7 @@ class StuFFEventPriceAdmin(admin.ModelAdmin):
 # admin.site.unregister(Site)
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Occurrence, OccurrenceAdmin)
+# admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
 admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
