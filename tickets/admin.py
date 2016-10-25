@@ -138,8 +138,8 @@ class TicketAdmin(admin.ModelAdmin):
 
 class OccurrenceInline(admin.TabularInline):
     model = Occurrence
-    min_num = 1
-    extra = 0
+    min_num = 0
+    extra = 1
 
     fieldsets = (
         (None, {
