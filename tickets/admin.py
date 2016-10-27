@@ -138,8 +138,8 @@ class TicketAdmin(admin.ModelAdmin):
 
 class OccurrenceInline(admin.TabularInline):
     model = Occurrence
-    min_num = 1
-    extra = 0
+    min_num = 0
+    extra = 1
 
     fieldsets = (
         (None, {
@@ -231,10 +231,16 @@ class ShowAdmin(admin.ModelAdmin):
         'location',
         'category',
         'start_date',
-        'end_date')
+        'end_date',
+        'num_occurrences',
+        )
 
     list_filter = ['category']
     search_fields = ('name', 'description')
+
+    def num_occurrences(self, obj):
+        return obj.occurrence_set.count()
+    num_occurrences.short_description = 'Occurrences'
 
     # Only retrieve recent shows to edit
     def get_queryset(self, request):
@@ -361,7 +367,7 @@ class ExternalPriceAdmin(admin.ModelAdmin):
 
 
 class SeasonPriceAdmin(admin.ModelAdmin):
-    fields = ['season_ticket_price', 'season_ticket_price_nnt']
+    fields = ['season_sale_price', 'season_sale_nnt_price']
 
     def has_add_permission(self, request):
         num_objects = self.model.objects.count()
@@ -385,7 +391,7 @@ class StuFFEventPriceAdmin(admin.ModelAdmin):
 # admin.site.unregister(Site)
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Occurrence, OccurrenceAdmin)
+# admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
 admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)

@@ -8,8 +8,8 @@ class Command(BaseCommand):
 
     if not models.SeasonTicketPricing.objects.all().exists():
       models.SeasonTicketPricing.objects.create(
-          season_ticket_price='40.00',
-          season_ticket_price_nnt='20.00'
+          season_sale_price='40.00',
+          season_sale_nnt_price='20.00'
         )
 
     if not models.InHousePricing.objects.all().exists():

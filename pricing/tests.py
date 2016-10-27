@@ -14,7 +14,7 @@ class TestPricing(TestCase):
         cls.show1 = Show.objects.create(name='S1', category=cat, description='huh',
                                         long_description='ooh', start_date=today, end_date=today + timedelta(days=2))
 
-        cls.season = SeasonTicketPricing.objects.create(season_ticket_price=40)
+        cls.season = SeasonTicketPricing.objects.create(season_sale_price=40)
         cls.in_house = InHousePricing.objects.create(
             matinee_freshers_price=4, matinee_freshers_nnt_price=5)
         cls.fringe = FringePricing.objects.create(fringe_price=2)
@@ -26,7 +26,7 @@ class TestPricing(TestCase):
         season = self.season
 
         name = season.__str__()
-        p = season.season_ticket_price
+        p = season.season_sale_price
 
         self.assertEqual(name, 'Season Ticket Pricing')
         self.assertEqual(p, 40)

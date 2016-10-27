@@ -2,6 +2,8 @@
 
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.views.decorators.clickjacking import xframe_options_exempt
+from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage, send_mail
@@ -73,8 +75,8 @@ def ShowReport(request, show_name, occ_id):
     report['default_time_matinee'] = \
         config.DEFAULT_TIME_MATINEE.strftime('%-I:%M %p').lower()
 
-    report['season_price'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price
-    report['season_price_nnt'] = models.SeasonTicketPricing.objects.all()[0].season_ticket_price_nnt
+    report['season_price'] = models.SeasonTicketPricing.objects.all()[0].season_sale_price
+    report['season_price_nnt'] = models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price
 
     if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
@@ -306,9 +308,9 @@ def SaleInputAJAX(request, show_name, occ_id):
             public_sale = float(0)
 
         season_sale = number_season_sale * \
-            float(models.SeasonTicketPricing.objects.all()[0].season_ticket_price)
+            float(models.SeasonTicketPricing.objects.all()[0].season_sale_price)
         season_sale_nnt = number_season_sale_nnt * \
-            float(models.SeasonTicketPricing.objects.all()[0].season_ticket_price_nnt)
+            float(models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price)
 
         try:
             fringe_sale = number_fringe * float(pricing.fringe_price)
@@ -600,10 +602,8 @@ def SaleReportFull(request, show_name):
     except Exception:
         report['matinee_freshers_nnt_price'] = float(0)
 
-    report['season_price'] = float(models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price)
-    report['season_price_nnt'] = float(models.SeasonTicketPricing.objects.get(
-        id=1).season_ticket_price_nnt)
+    report['season_sale_price'] = float(models.SeasonTicketPricing.objects.all()[0].season_sale_price)
+    report['season_sale_nnt_price'] = float(models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price)
 
     try:
         report['stuff_price'] = float(pricing.stuff_price)
@@ -629,7 +629,7 @@ def DownloadReport(request, show_name):
     response = HttpResponse(content_type='text/csv')
     occurrence = models.Occurrence.objects.filter(show_id=show_name).order_by('date', 'time')
     show = get_object_or_404(models.Show, id=show_name)
-    response['Content-Disposition'] = 'attachment; filename=Show_Report.csv'
+    response['Content-Disposition'] = 'attachment; filename=%s_report.csv' % (show.name)
 
     category = show.category
 
@@ -662,9 +662,8 @@ def DownloadReport(request, show_name):
     except Exception:
         public_sale = float(0)
 
-    season_sale = float(models.SeasonTicketPricing.objects.get(id=1).season_ticket_price)
-    season_sale_nnt = float(
-        models.SeasonTicketPricing.objects.get(id=1).season_ticket_price_nnt)
+    season_sale = float(models.SeasonTicketPricing.objects.all()[0].season_sale_price)
+    season_sale_nnt = float(models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price)
 
     try:
         fringe_sale = float(pricing.fringe_price)
@@ -689,10 +688,10 @@ def DownloadReport(request, show_name):
     writer = csv.writer(response)
     writer.writerow([
         show.name,
-        'Total Sales: £' + str(show.show_sales()),
-        'Total Tickets Sold: ' + str(show.total_tickets_sold_show()),
-        'Total Tickets Reserved: ' + str(show.total_tickets_reserved()),
-        'Out of a possible: ' + str(show.total_possible())
+        'Total Sales: £' + str(show.get_sale_data()['show_sales']),
+        'Total Tickets Sold: ' + str(show.get_sale_data()['total_sold']),
+        'Total Tickets Reserved: ' + str(show.get_sale_data()['total_reserved']),
+        'Out of a possible: ' + str(show.get_sale_data()['total_possible'])
     ])
     writer.writerow([
         'Show Day',
@@ -711,26 +710,26 @@ def DownloadReport(request, show_name):
         writer.writerow([
             oc.day_formatted(),
             oc.time_formatted(),
-            oc.member_tally(),
-            oc.concession_tally(),
-            oc.public_tally(),
-            oc.season_tally(),
-            oc.season_sale_tally(),
-            oc.season_sale_nnt_tally(),
-            oc.fellow_tally(),
-            oc.stuff_tally(),
+            oc.get_tally('member'),
+            oc.get_tally('concession'),
+            oc.get_tally('public'),
+            oc.get_tally('season'),
+            oc.get_tally('season_sale'),
+            oc.get_tally('season_sale_nnt'),
+            oc.get_tally('fellow'),
+            oc.get_tally('stuff'),
         ])
         writer.writerow([
             oc.day_formatted(),
             'TOTALS:',
-            oc.member_tally() * member_sale,
-            oc.concession_tally() * concession_sale,
-            oc.public_tally() * public_sale,
+            oc.get_tally('member') * member_sale,
+            oc.get_tally('concession') * concession_sale,
+            oc.get_tally('public') * public_sale,
             '-',
-            oc.season_sale_tally() * season_sale,
-            oc.season_sale_nnt_tally() * season_sale_nnt,
+            oc.get_tally('season_sale') * season_sale,
+            oc.get_tally('season_sale_nnt') * season_sale_nnt,
             '-',
-            oc.stuff_tally() * stuff_sale,
+            oc.get_tally('stuff') * stuff_sale,
         ])
 
     return response
@@ -787,16 +786,16 @@ def graph_view(request):
     days['min'] = [days['tally'][day_min], days['days'][day_min]]
 
     for sh in all_shows:
-        if sh.total_tickets_reserved() > most_popular['number']:
-            most_popular['number'] = sh.total_tickets_reserved()
+        if sh.get_sale_data()['total_reserved'] > most_popular['number']:
+            most_popular['number'] = sh.get_sale_data()['total_reserved']
             most_popular['show'] = sh.name
             most_popular['date'] = sh.date_formatted()
 
     least_popular['number'] = most_popular['number']
 
     for sh in all_shows:
-        if sh.total_tickets_reserved() < least_popular['number'] and sh.total_tickets_reserved() != 0:
-            least_popular['number'] = sh.total_tickets_reserved()
+        if sh.get_sale_data()['total_reserved'] < least_popular['number'] and sh.get_sale_data()['total_reserved'] != 0:
+            least_popular['number'] = sh.get_sale_data()['total_reserved']
             least_popular['show'] = sh.name
             least_popular['date'] = sh.date_formatted()
 
@@ -805,8 +804,8 @@ def graph_view(request):
         sold = 0
         show_profit = 0
         for sh in queryset:
-            sold += sh.total_tickets_reserved()
-            show_profit += sh.show_sales()
+            sold += sh.get_sale_data()['total_reserved']
+            show_profit += sh.get_sale_data()['show_sales']
 
         tickets_sold.append(sold)
         profit.append(show_profit)
@@ -884,7 +883,7 @@ def graph_view(request):
         context_instance=RequestContext(request)
     )
 
-
+@xframe_options_exempt
 def how_many_left(request):
     if 'occ' in request.GET:
         occ = get_object_or_404(models.Occurrence, pk=request.GET['occ'])
@@ -906,7 +905,7 @@ def how_many_left(request):
         response_data['error_message'] = 'Required parameters not given'
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-
+@xframe_options_exempt
 def list(request):
     shows = models.Show.objects.all()
 
@@ -914,7 +913,7 @@ def list(request):
         'shows': shows
     })
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class OrderedListView(ListView):
 
     class Meta:
@@ -924,7 +923,7 @@ class OrderedListView(ListView):
         return super(OrderedListView, self).get_queryset()
         ordering = self.ordering
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class ListShows(OrderedListView):
     model = models.Show
     template_name = 'list_shows.html'
@@ -942,7 +941,7 @@ class ListShows(OrderedListView):
         return super(ListShows, self).get_queryset().filter(end_date__gte=today)
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class ListStuFFShows(ListShows):
 
     def get_queryset(self):
@@ -950,7 +949,7 @@ class ListStuFFShows(ListShows):
         return super(ListStuFFShows, self).get_queryset().filter(end_date__gte=today).filter(category__name='StuFF')
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class ListPastShows(OrderedListView):
     model = models.Show
     template_name = 'list_past_shows.html'
@@ -967,13 +966,13 @@ class ListPastShows(OrderedListView):
         today = datetime.date.today()
         return super(ListPastShows, self).get_queryset().filter(end_date__lte=today)
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class DetailShow(DetailView):
     model = models.Show
     template_name = 'detail_show.html'
     context_object_name = 'show'
 
-
+@xframe_options_exempt
 def sidebar(request):
     categories = models.Category.objects.all().exclude(sort=0).order_by('sort')
     today = datetime.date.today()
@@ -987,7 +986,7 @@ def sidebar(request):
             current_shows.append(shows[0])
     return render(request, 'sidebar.html', {'shows': current_shows, 'exclude': exclude, 'settings': settings})
 
-
+@xframe_options_exempt
 def book_landing(request, show_id):
     show = get_object_or_404(models.Show, id=show_id)
     if show.is_current() is False:
@@ -1067,7 +1066,7 @@ def book_landing(request, show_id):
         'foh_contact': foh_contact,
     })
 
-
+@xframe_options_exempt
 def book_finish(request, show_id):
     show = models.Show.objects.get(id=show_id)
     ticket = request.session["ticket"]
@@ -1077,7 +1076,7 @@ def book_finish(request, show_id):
         'ticket': ticket,
     })
 
-
+@xframe_options_exempt
 def book_error(request, show_id):
     if 'err' in request.GET:
         err = request.GET['err']
@@ -1085,7 +1084,7 @@ def book_error(request, show_id):
         err = None
     return render(request, 'book_error.html', {'err': err})
 
-
+@xframe_options_exempt
 def cancel(request, ref_id):
     ticket = get_object_or_404(models.Ticket, unique_code=ref_id)
     if request.POST.get("id", "") == ticket.unique_code:

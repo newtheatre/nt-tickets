@@ -52,7 +52,7 @@ class Show(models.Model):
         verbose_name_plural = 'Shows'
         unique_together = ('name', 'start_date', 'end_date')
 
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=255)
 
     slug = models.SlugField(
         blank=True,
@@ -66,8 +66,7 @@ class Show(models.Model):
     )
 
     description = models.TextField(
-        help_text='A short description, in 140 characters or less.',
-        max_length=140
+        help_text='A short description',
     )
 
     long_description = models.TextField(

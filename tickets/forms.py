@@ -4,7 +4,7 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
-from tickets.models import *
+from tickets import models
 from django.conf import settings
 
 import configuration.customise as config
@@ -30,13 +30,13 @@ class BookingFormLanding(forms.Form):
     def __init__(self, *args, **kwargs):
         show = kwargs.pop('show', None)
         super(BookingFormLanding, self).__init__(*args, **kwargs)
-        self.fields['occurrence'].choices = Occurrence.objects.get_available(show=show)
+        self.fields['occurrence'].choices = models.Occurrence.objects.get_available(show=show)
 
 
 class ReportForm(forms.Form):
     today = datetime.date.today()
     hide_filter = today - datetime.timedelta(weeks=4)
-    occurrence = forms.ModelChoiceField(queryset=Occurrence.objects.filter(
+    occurrence = forms.ModelChoiceField(queryset=models.Occurrence.objects.filter(
         date__gte=hide_filter).order_by('date', 'time'), label='')
 
 

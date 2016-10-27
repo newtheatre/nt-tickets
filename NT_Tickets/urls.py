@@ -27,7 +27,7 @@ admin.autodiscover()
 
 urlpatterns = [
     # User frontend urls
-    # url(r'^api/0.1/remain$', tickets_views.how_many_left),
+    url(r'^api/0.1/remain$', views.how_many_left),
     url(r'^book/(?P<show_id>\d+)/$', views.book_landing, name='book'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', views.book_finish, name='finish'),
     url(r'^book/(?P<show_id>\d+)/error/$', views.book_error, name='error'),

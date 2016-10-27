@@ -15,7 +15,7 @@ DEFAULT_HOURS_TIL_CLOSE = 2
 
 SIDEBAR_FILTER_PERIOD = 4
 
-PUBLIC_CATEGORIES = ['in_house', 'fringe']
+PUBLIC_CATEGORIES = ['in-house', 'fringe']
 
 MAX_DISCLOSURE = 10
 
