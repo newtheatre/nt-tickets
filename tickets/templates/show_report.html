@@ -404,7 +404,7 @@
 			</div>
 		{% endif %}
 
-<script src="http://listjs.com/no-cdn/list.js"></script>
+<!-- <script src="http://listjs.com/no-cdn/list.js"></script> -->
 		<!-- Occurrence Modal Structure -->
 		<div id="picker-modal" class="modal bottom-sheet" style="display: block; overflow: scroll;">
 			<div class="modal-content">
@@ -552,17 +552,19 @@
 			var reservation = $('#reservation').val();
 			var reservation_number = $('#reservation_number').val()
 			if ( typeof(num_left) != "undefined" || "") {
-				left = num_left
+				num_left = left
 			};
 
-			if ( left == 0 || num == 0 ) {
+			if ( num_left == 0 || num == 0 ) {
 				$('#sell_button').prop("disabled", true);
 			};
-			if (num > 0 && reservation == 'None' && left > 0) {
+			if (num > 0 && reservation == 'None' && num_left > 0) {
 				$('#sell_button').prop("disabled", false);
 			};
 			if (reservation != 'None' && num == reservation_number) {
 				$('#sell_button').prop("disabled", false);
+			} else {
+				$('#sell_button').prop("disabled", true);
 			};
 
 		};
