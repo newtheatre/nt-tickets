@@ -551,7 +551,7 @@
 		function checkSell(num, num_left) {
 			var reservation = $('#reservation').val();
 			var reservation_number = $('#reservation_number').val()
-			if ( typeof(num_left) != "undefined" || "") {
+			if ( typeof(num_left) == "undefined" || "") {
 				num_left = left
 			};
 
@@ -563,7 +563,7 @@
 			};
 			if (reservation != 'None' && num == reservation_number) {
 				$('#sell_button').prop("disabled", false);
-			} else {
+			} else if (reservation != 'None' && num != reservation_number) {
 				$('#sell_button').prop("disabled", true);
 			};
 
