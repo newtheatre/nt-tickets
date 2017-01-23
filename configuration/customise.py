@@ -15,7 +15,7 @@ DEFAULT_HOURS_TIL_CLOSE = 2
 
 SIDEBAR_FILTER_PERIOD = 4
 
-PUBLIC_CATEGORIES = ['in-house', 'fringe']
+PUBLIC_CATEGORIES = ['in-house', 'fringe', 'external']
 
 MAX_DISCLOSURE = 10
 
@@ -33,9 +33,9 @@ FELLOW_PRICE = [0.00, '£0.00']
 SEASON_PRICE = [0.00, '£0.00']
 
 CATEGORY_CHOICES = (
-  ('IN_HOUSE', 'In House'),
-  ('FRINGE', 'Fringe'),
-  ('EXTERNAL', 'External'),
-  ('STUFF', 'StuFF'),
-  ('STUFF_EVENTS', 'StuFF Events'),
-  )
+    ('IN_HOUSE', 'In House'),
+    ('FRINGE', 'Fringe'),
+    ('EXTERNAL', 'External'),
+    ('STUFF', 'StuFF'),
+    ('STUFF_EVENTS', 'StuFF Events'),
+)
