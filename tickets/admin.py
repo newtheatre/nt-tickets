@@ -5,6 +5,8 @@ from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 from django.http import HttpResponse
 import csv
+import json
+from io import StringIO
 
 from datetime import datetime
 
@@ -202,7 +204,29 @@ class StuFFEventPriceInline(admin.TabularInline):
         )
 
 
+def get_emails(modeladmin, request, queryset):
+    get_emails.short_description = "Get Emails"
+    emails = dict()
+    for show in queryset:
+        occurrences = Occurrence.objects.all().filter(show=show)
+        for occ in occurrences:
+            tickets = Ticket.objects.all().filter(occurrence=occ, cancelled=False, collected=False)
+            for tick in tickets:
+                emails[tick.person_name] = tick.email_address
+
+    f = StringIO()
+    json.dump(emails, f, indent=2, sort_keys=True)
+
+    f.seek(0)
+    response = HttpResponse(f, content_type='text/json')
+    response['Content-Disposition'] = 'attachment; filename=emails.json'
+
+    return response
+
+
+
 class ShowAdmin(admin.ModelAdmin):
+    actions = [get_emails]
     fieldsets = (
         (None, {
             'fields':(
@@ -238,14 +262,22 @@ class ShowAdmin(admin.ModelAdmin):
     list_filter = ['category']
     search_fields = ('name', 'description')
 
+    def get_actions(self, request):
+        actions = super(ShowAdmin, self).get_actions(request)
+        if not request.user.is_superuser:
+            if 'get_emails' in actions:
+                del actions['get_emails']
+
+        return actions
+
     def num_occurrences(self, obj):
         return obj.occurrence_set.count()
     num_occurrences.short_description = 'Occurrences'
 
     # Only retrieve recent shows to edit
     def get_queryset(self, request):
-        time_filter = datetime.datetime.now() - datetime.timedelta(weeks=1)
-        return Show.objects.filter(start_date__gte=time_filter).order_by('start_date')
+        time_filter = datetime.datetime.now() - datetime.timedelta(weeks=4)
+        return Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
 
     # Get pricing admin options on form save
     def change_view(self, request, object_id, form_url='', extra_context=None):
