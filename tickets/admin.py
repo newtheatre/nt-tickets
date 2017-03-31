@@ -4,6 +4,7 @@ from django.conf.urls import url
 from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 from django.http import HttpResponse
+from django.template.response import TemplateResponse
 import csv
 import json
 from io import StringIO
@@ -204,25 +205,23 @@ class StuFFEventPriceInline(admin.TabularInline):
         )
 
 
-def get_emails(modeladmin, request, queryset):
+def get_emails(request, queryset):
     get_emails.short_description = "Get Emails"
-    emails = dict()
+    data = dict()
     for show in queryset:
         occurrences = Occurrence.objects.all().filter(show=show)
         for occ in occurrences:
+            data[occ.__str__()] = dict()
             tickets = Ticket.objects.all().filter(occurrence=occ, cancelled=False, collected=False)
             for tick in tickets:
-                emails[tick.person_name] = tick.email_address
+                data[occ.__str__()][tick.person_name] = tick.email_address
 
-    f = StringIO()
-    json.dump(emails, f, indent=2, sort_keys=True)
+    context = {
+        'data': data,
+        'title': 'Email list for selected shows'
+    }
 
-    f.seek(0)
-    response = HttpResponse(f, content_type='text/json')
-    response['Content-Disposition'] = 'attachment; filename=emails.json'
-
-    return response
-
+    return TemplateResponse(request, 'admin/get_emails.html', context)
 
 
 class ShowAdmin(admin.ModelAdmin):
