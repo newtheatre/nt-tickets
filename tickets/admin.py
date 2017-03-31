@@ -203,7 +203,7 @@ class StuFFEventPriceInline(admin.TabularInline):
         )
 
 
-def get_emails(request, queryset):
+def get_emails(modeladmin, request, queryset):
     get_emails.short_description = "Get Emails"
     data = dict()
     for show in queryset:
