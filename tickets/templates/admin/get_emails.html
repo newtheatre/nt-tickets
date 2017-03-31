@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+{% load static from staticfiles %}
+{% load i18n admin_static admin_list %}
+{% load admin_urls %}
+
+{% block content %}
+
+{% for key, value in data.items %}
+    <h2>{{ key }}</h2>
+    {% for key, value in value.items %}
+        <p>{{ key }} - {{ value }}</p>
+    {% endfor %}
+    <br>
+{% endfor %}
+
+{% endblock %}
