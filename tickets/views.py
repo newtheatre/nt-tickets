@@ -946,7 +946,7 @@ class ListStuFFShows(ListShows):
 
     def get_queryset(self):
         today = datetime.date.today()
-        return super(ListStuFFShows, self).get_queryset().filter(end_date__gte=today).filter(category__name='StuFF')
+        return super(ListStuFFShows, self).get_queryset().filter(end_date__gte=today).filter(category__name='StuFF').order_by('start_date')
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
 @method_decorator(xframe_options_exempt, name='dispatch')

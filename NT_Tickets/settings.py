@@ -23,12 +23,15 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG'))) if os.environ.get('DEBUG') else True
 STAGING = bool(int(os.environ.get('STAGING'))) if os.environ.get('STAGING') else False
+
+# SECURITY WARNING: keep the secret key used in production secret!
+if not DEBUG:
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+else:
+    SECRET_KEY = 'wi$7j2y_g(x_3et3wl*d0kawd1ud3zbncs7^4s(-!!k+20-lsi'
 
 ALLOWED_HOSTS = []
 
