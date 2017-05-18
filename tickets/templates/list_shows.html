@@ -14,7 +14,7 @@
 		{% endif %}
 		<h3 id="show-title">{{ show.name }}</h3>
 		<p class="meta">{% if show.start_date != show.end_date %} {{ show.start_date|date:"j M" }} to {% endif %} {{ show.end_date|date:"j M o" }}</p>
-		<p>{{ show.description }}</p>
+		<p>{{ show.long_markdown }}</p>
 		<div class="venue cat-{{ show.category.slug }}">Venue: {{ show.location }}</div>
 
 		<div class="category cat-{{ show.category.slug }}">{{ show.category }}</div>
