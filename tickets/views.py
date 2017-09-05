@@ -503,7 +503,7 @@ def make_github_issue(title, body=None, labels=None):
         settings.REPO_OWNER, settings.REPO_NAME)
 
     # Create an authenticated session to create the issue
-    session = requests.session(headers={'Authorization': 'token %s' % os.environ.get('TOKEN')})
+    session = requests.session(headers={'Authorization': 'token %s' % os.environ.get('GITHUB_TOKEN')})
 
     # Create our issue
     issue = {'title': title,
