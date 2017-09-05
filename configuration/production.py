@@ -1,11 +1,8 @@
-import os
+# import os
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
 
-import dj_database_url
-DATABASES = {
-        'default': dj_database_url.config()
-        }
+
 
 # STATIC_URL = "/static/"
 
@@ -24,4 +21,4 @@ DATABASES = {
 # MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 # DEFAULT_FILE_STORAGE = 'NT_Tickets.custom_storages.MediaStorage'
 
-ACTUALLY_SEND_MAIL = True
+# ACTUALLY_SEND_MAIL = True
