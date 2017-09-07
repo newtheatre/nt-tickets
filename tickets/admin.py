@@ -273,8 +273,8 @@ class ShowAdmin(admin.ModelAdmin):
 
     # Only retrieve recent shows to edit
     def get_queryset(self, request):
-        time_filter = datetime.datetime.now() - datetime.timedelta(weeks=4)
-        return Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
+        # time_filter = datetime.datetime.now() - datetime.timedelta(weeks=4)
+        return Show.objects.order_by('-start_date')
 
     # Get pricing admin options on form save
     def change_view(self, request, object_id, form_url='', extra_context=None):
