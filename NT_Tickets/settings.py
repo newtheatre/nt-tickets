@@ -28,9 +28,6 @@ ADMINS = (
     # (Harry Bridge, 'harry@harrybridge.co.uk')
 )
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True  # Redirect all http requests to https
 
 # Email SES and seacucumber
 EMAIL_USE_SSL = True
