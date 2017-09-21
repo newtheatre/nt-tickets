@@ -22,7 +22,7 @@ if not DEBUG:
 else:
     SECRET_KEY = 'wi$7j2y_g(x_3et3wl*d0kawd1ud3zbncs7^4s(-!!k+20-lsi'
 
-ALLOWED_HOSTS = ['ticketing.newtheatre.org', 'nt-tickets.herokuapp.com']
+ALLOWED_HOSTS = ['ticketing.newtheatre.org.uk', 'nt-tickets.herokuapp.com']
 
 ADMINS = (
     # (Harry Bridge, 'harry@harrybridge.co.uk')
