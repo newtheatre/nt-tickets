@@ -25,6 +25,7 @@ from django.views import generic
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.shortcuts import render_to_response
+from django.db.models import Count, Min, Sum, Avg
 
 # Import models
 from tickets import models, forms
@@ -503,7 +504,7 @@ def make_github_issue(title, body=None, labels=None):
         settings.REPO_OWNER, settings.REPO_NAME)
 
     # Create an authenticated session to create the issue
-    session = requests.session(headers={'Authorization': 'token %s' % os.environ.get('TOKEN')})
+    session = requests.session(headers={'Authorization': 'token %s' % os.environ.get('GITHUB_TOKEN')})
 
     # Create our issue
     issue = {'title': title,
@@ -741,7 +742,6 @@ def defaultFNI(request):
 
 
 @login_required
-@cache_page(60 * 30)
 def graph_view(request):
     all_shows = models.Show.objects.all().order_by('start_date')
 
@@ -764,20 +764,24 @@ def graph_view(request):
     category_tally['stuff'] = all_shows.filter(category=4).count()
     category_tally['stuff_events'] = all_shows.filter(category=5).count()
 
+    #######################################################
+    # Non-cancelled reservation count by day
+    #######################################################
+
     days = dict()
     days['tally'] = [0, 0, 0, 0, 0, 0, 0, 0]
     days['days'] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Saturday Matinee']
 
+    # Sunday - Friday
     for i in range(1, 7):
-        for oc in models.Occurrence.objects.all().filter(date__week_day=i):
-            days['tally'][i - 1] += oc.tickets_sold()
+        days['tally'][i - 1] = models.Ticket.objects.filter(cancelled=False, occurrence__date__week_day=i).aggregate(Sum('quantity'))['quantity__sum']
 
-    for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=16):
-        days['tally'][6] += oc.tickets_sold()
+    # Saturday evening
+    days['tally'][6] = models.Ticket.objects.filter(cancelled=False, occurrence__date__week_day=7, occurrence__time__hour__gte=16).aggregate(Sum('quantity'))['quantity__sum']
 
-    for oc in models.Occurrence.objects.all().filter(date__week_day=7).filter(time__hour__gte=14).filter(time__hour__lt=16):
-        days['tally'][7] += oc.tickets_sold()
+    # Saturday matinee
+    days['tally'][7] = models.Ticket.objects.filter(cancelled=False, occurrence__date__week_day=7, occurrence__time__hour__lt=16).aggregate(Sum('quantity'))['quantity__sum']
 
     day_max = max(xrange(len(days['tally'])), key=days['tally'].__getitem__)
     day_min = min(xrange(len(days['tally'])), key=days['tally'].__getitem__)
@@ -785,37 +789,40 @@ def graph_view(request):
     days['max'] = [days['tally'][day_max], days['days'][day_max]]
     days['min'] = [days['tally'][day_min], days['days'][day_min]]
 
-    for sh in all_shows:
-        if sh.get_sale_data()['total_reserved'] > most_popular['number']:
-            most_popular['number'] = sh.get_sale_data()['total_reserved']
-            most_popular['show'] = sh.name
-            most_popular['date'] = sh.date_formatted()
+    #######################################################
+    # Most/least popular shows by non-cancelled reservation count
+    #######################################################
+    show_tallys = models.Ticket.objects.filter(cancelled=False).values('occurrence__show').annotate(Sum('quantity'))
 
-    least_popular['number'] = most_popular['number']
+    most_popular_show_data = show_tallys.order_by('-quantity__sum')[0]
+    sh = models.Show.objects.get(pk=most_popular_show_data['occurrence__show'])
 
-    for sh in all_shows:
-        if sh.get_sale_data()['total_reserved'] < least_popular['number'] and sh.get_sale_data()['total_reserved'] != 0:
-            least_popular['number'] = sh.get_sale_data()['total_reserved']
-            least_popular['show'] = sh.name
-            least_popular['date'] = sh.date_formatted()
+    most_popular['number'] = most_popular_show_data['quantity__sum']
+    most_popular['show'] = sh.name
+    most_popular['date'] = sh.date_formatted()
+
+    least_popular_show_data = show_tallys.order_by('quantity__sum')[0]
+    sh = models.Show.objects.get(pk=least_popular_show_data['occurrence__show'])
+
+    least_popular['number'] = least_popular_show_data['quantity__sum']
+    least_popular['show'] = sh.name
+    least_popular['date'] = sh.date_formatted()
+
+    ####################################################
+    # Data per-month for num non-cancelled reservations, and show profit
+    ####################################################
 
     for i in range(1, 13):
-        queryset = all_shows.filter(start_date__month=i)
-        sold = 0
-        show_profit = 0
-        for sh in queryset:
-            sold += sh.get_sale_data()['total_reserved']
-            show_profit += sh.get_sale_data()['show_sales']
-
+        sold = models.Ticket.objects.filter(cancelled=False, occurrence__show__start_date__month=i).aggregate(Sum('quantity'))['quantity__sum']
+        show_profit = models.Sale.objects.filter(occurrence__show__start_date__month=i).aggregate(Sum('price'))['price__sum']
+        num_shows = models.Show.objects.filter(start_date__month=i).count()
         tickets_sold.append(sold)
         profit.append(show_profit)
-
-        shows_date.append(queryset.count())
+        shows_date.append(num_shows)
         try:
-            reserve_maths = sold / queryset.count()
+            reserve_maths = sold / num_shows
         except:
             reserve_maths = 0
-
         reserved_per_show.append(reserve_maths)
 
     months = json.dumps(["January", "February", "March", "April", "May", "June",
