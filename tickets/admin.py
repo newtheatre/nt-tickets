@@ -294,6 +294,22 @@ class ShowAdmin(admin.ModelAdmin):
         self.inlines = current_inlines
         return super(ShowAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
+class SaleAdmin(admin.ModelAdmin):
+    ordering = ['stamp']
+    # Disable editing of values, delete only.
+    readonly_fields=(
+        'ticket',
+        'occurrence',
+        'price', 
+        'stamp')
+    fields = [
+        readonly_fields
+    ]
+
+    list_display = ('occurrence', 'ticket', 'price', 'stamp')
+    search_fields = ['occurrence']
+    list_filter = ['occurrence']
+
 
 class OccurrenceAdmin(admin.ModelAdmin):
     fields = [
@@ -422,6 +438,7 @@ admin.site.register(Show, ShowAdmin)
 admin.site.register(Category, CategoryAdmin)
 # admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
+admin.site.register(Sale, SaleAdmin)
 admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
 admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
 admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)
