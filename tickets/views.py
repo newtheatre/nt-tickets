@@ -536,6 +536,17 @@ class SaleReport(generic.ListView):
         time_filter = datetime.date.today() - datetime.timedelta(weeks=4)
         return models.Show.objects.filter(end_date__gte=time_filter).order_by('end_date')
 
+class SaleReportAll(generic.ListView):
+    template_name = 'sale_report.html'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(SaleReportAll, self).get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
+        # time_filter = datetime.date.today() - datetime.timedelta(weeks=4)
+        return models.Show.objects.order_by('-end_date')
 
 @login_required
 def SaleReportFull(request, show_name):
