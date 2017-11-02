@@ -6,6 +6,16 @@
 {% block content %}
 <div class="container">
 	<div class="row">
+		<div class="col s6">
+			<a href="/report"><button class="btn nnt purple waves-effect waves-dark">
+			Most recent shows</button></a>
+		</div>
+		<div class="col s6 right-align">
+			<a href="/report/all"><button class="btn nnt purple waves-effect waves-dark">
+			Archived shows</button></a>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col s12">
 				{% for sh in object_list %}
 					<div class="card small grey darken-3 responsive_height_card">

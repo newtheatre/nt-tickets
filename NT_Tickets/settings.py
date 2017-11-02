@@ -189,6 +189,7 @@ ADMIN_REORDER = (
         'tickets.Show',
         'tickets.Occurrence',
         'tickets.Ticket',
+        'tickets.Sale',
         )
     },
 

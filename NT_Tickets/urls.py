@@ -64,6 +64,7 @@ urlpatterns = [
 
     # Sale report urls
     url(r'^report/$', login_required(views.SaleReport.as_view()), name='sale_report'),
+    url(r'^report/all/$', login_required(views.SaleReportAll.as_view()), name='sale_report_all'),
     url(r'^report/(?P<show_name>\d+)/$', views.SaleReportFull, name='sale_report_full'),
 
 ]
