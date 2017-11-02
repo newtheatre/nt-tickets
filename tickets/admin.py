@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
+from django.forms import CheckboxSelectMultiple
 import csv
 
 from datetime import datetime
@@ -233,6 +234,7 @@ class ShowAdmin(admin.ModelAdmin):
                 'poster',
                 'description',
                 'long_description',
+                'warnings',
                 'start_date',
                 'end_date',
                 ),
@@ -246,6 +248,10 @@ class ShowAdmin(admin.ModelAdmin):
     inlines = [
         OccurrenceInline,
     ]
+
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple},
+    }
 
     list_display = (
         'name',
@@ -439,6 +445,7 @@ admin.site.register(Category, CategoryAdmin)
 # admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(Sale, SaleAdmin)
+admin.site.register(Warnings)
 admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
 admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
 admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)

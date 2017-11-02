@@ -61,6 +61,15 @@
 										</a>
 									</div>
 								</div>
+								{% if show.warnings %}
+								<div class="row">
+									<div class="col s12">
+										<p class="white-text"><strong>Content warnings</strong>:
+										This show contains {% for content_warning in show.warnings.all %}{% if forloop.last %}and {% endif %}<strong>{{ content_warning|lower }}</strong>{% if not forloop.last%}, {% endif %}{%endfor %}.</p>
+										{% comment %}{# Scope to add icons #}{% for content_warning in show.warnings.all %}<i class="material-icons">{{ content_warning.icon }}</i>&nbsp;{% endfor %}{% endcomment %}
+									</div>
+								</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>

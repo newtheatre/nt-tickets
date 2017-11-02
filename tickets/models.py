@@ -43,6 +43,25 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+@python_2_unicode_compatible
+class Warnings(models.Model):
+    class Meta:
+        verbose_name = 'Content Warning'
+        verbose_name_plural = 'Content Warnings'
+
+    title = models.CharField(
+        max_length = 100,
+        help_text = 'The name of the warning'
+    )
+    icon = models.CharField(
+        max_length = 50,
+        help_text = 'An icon code, from this list: https://material.io/icons/',
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.title
+
 
 @python_2_unicode_compatible
 class Show(models.Model):
@@ -85,6 +104,8 @@ class Show(models.Model):
             'poster_tiny': (50, 71),
         }
     )
+
+    warnings = models.ManyToManyField('Warnings', default=None)
 
     start_date = models.DateField()
     end_date = models.DateField()
