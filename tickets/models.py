@@ -59,6 +59,16 @@ class Warnings(models.Model):
         blank=True,
     )
 
+    category_choices = (
+        ('A', 'Action'),
+        ('D', 'Dialogue'),
+        ('T', 'Technical Effects')
+    )
+    category = models.CharField(
+        max_length = 50,
+        choices = category_choices
+    )
+
     def __str__(self):
         return self.title
 
@@ -105,7 +115,7 @@ class Show(models.Model):
         }
     )
 
-    warnings = models.ManyToManyField('Warnings', default=None)
+    warnings = models.ManyToManyField('Warnings', blank=True)
 
     start_date = models.DateField()
     end_date = models.DateField()

@@ -300,6 +300,21 @@ class ShowAdmin(admin.ModelAdmin):
         self.inlines = current_inlines
         return super(ShowAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
+class ShowWarningAdmin(admin.ModelAdmin):
+    ordering = ['category', 'title']
+    list_display = ('title', 'category')
+    search_fields = ['title']
+    list_filter = ['category']
+
+    def make_tech(modeladmin, request, queryset):
+        queryset.update(category='T')
+    def make_action(modeladmin, request, queryset):
+        queryset.update(category='A')
+    def make_dialogue(modeladmin, request, queryset):
+        queryset.update(category='D')
+
+    actions = [make_tech, make_action, make_dialogue]
+
 class SaleAdmin(admin.ModelAdmin):
     ordering = ['stamp']
     # Disable editing of values, delete only.
@@ -445,7 +460,7 @@ admin.site.register(Category, CategoryAdmin)
 # admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(Sale, SaleAdmin)
-admin.site.register(Warnings)
+admin.site.register(Warnings, ShowWarningAdmin)
 admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
 admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
 admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)
