@@ -10,7 +10,7 @@
 		{% if show.poster %}
 			<img src="{{ show.poster.poster_page.url }}" style="float:left" />
 		{% else %}
-			<img src="{% static 'images/no_poster.png' %}" style="float:left"/>
+			<img src="//{{ request.get_host }}{% static 'images/no_poster.png' %}" style="float:left"/>
 		{% endif %}
 		<h3 id="show-title">{{ show.name }}</h3>
 		<p class="meta">{% if show.start_date != show.end_date %} {{ show.start_date|date:"j M" }} to {% endif %} {{ show.end_date|date:"j M o" }}</p>
