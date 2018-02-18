@@ -5,7 +5,7 @@
 {% if show.poster %}
   <a href="http://newtheatre.org.uk/uk/whats-on"><img class="sidebar_poster" src="{{show.poster.poster_page.url}}" /></a>
 {% else %}
-  <a href="http://newtheatre.org.uk/uk/whats-on"><img class="sidebar_poster" src="{% static 'images/no_image.png' %}" /></a>
+  <a href="http://newtheatre.org.uk/uk/whats-on"><img class="sidebar_poster" src="{{ request.build_absolute_uri }}{% static 'images/no_image.png' %}" /></a>
 {% endif %}
 <div>
 <p class="sidebar_date">{% if show.start_date != show.end_date %}{{show.start_date|date:"j M"}} to {% endif %}{{show.end_date|date:"j M o"}}</p>
