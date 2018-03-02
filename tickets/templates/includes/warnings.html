@@ -8,9 +8,10 @@
 	{% endif %}
 		{% if show.warnings.all %}
 			 {% for content_warning in show.warnings.all|dictsort:'title'|dictsort:'category' %}
-			 	<span class="
-			 		{% if chips == True %}chip {% if content_warning.category == 'A' %}red{% elif content_warning.category == 'D' %}orange{% elif content_warning.category == 'T' %}yellow{% endif %}{% endif %}
-			 		tooltipped" data-position="bottom" data-delay="20" data-tooltip="Found in the {{ content_warning.get_category_display|lower }} of the show."><strong>{% if chips == True %}{{ content_warning|title }}{% else %}{{ content_warning|lower }}{% endif %}</strong></span>{% if not forloop.last and chips == False %},{% else %}.{% endif %}{% endfor %}
+			 	{% if content_warning.visible == True or foh == True %}
+				 	<span class="
+				 		{% if chips == True %}chip {% if content_warning.category == 'A' %}red{% elif content_warning.category == 'D' %}orange{% elif content_warning.category == 'T' %}yellow{% endif %}{% endif %}
+				 		tooltipped" data-position="bottom" data-delay="20" data-tooltip="Found in the {{ content_warning.get_category_display|lower }} of the show."><strong>{% if chips == True %}{{ content_warning|title }}{% else %}{{ content_warning|lower }}{% endif %}</strong></span>{% if not forloop.last and chips == False %},{% else %}{% endif %}{% endif %}{% endfor %}
 			</p>
 			{% comment %}{# Scope to add icons #}{% for content_warning in show.warnings.all %}<i class="material-icons">{{ content_warning.icon }}</i>&nbsp;{% endfor %}{% endcomment %}
 		{% else %}

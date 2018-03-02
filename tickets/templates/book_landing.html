@@ -8,7 +8,7 @@ Book Tickets
 {% block content %}
 <p class="lead" id="title_text">You're booking tickets for {{show.name}} at {{show.location}}.</p>
 <p>{{ message }}</p>
-{% include "includes/warnings.html" with chips=False %}
+{% include "includes/warnings.html" with chips=False foh=False %}
 
 <form method="post" class="submit-once">
 {% csrf_token %}

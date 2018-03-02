@@ -68,6 +68,10 @@ class Warnings(models.Model):
         max_length = 50,
         choices = category_choices
     )
+    visible = models.BooleanField(
+        default = False,
+        help_text = 'Whether this is visible to audiences (all are visible to FOH).'
+    )
 
     def __str__(self):
         return self.title
