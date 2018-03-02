@@ -13,6 +13,7 @@
 				 		{% if chips == True %}chip {% if content_warning.category == 'A' %}red{% elif content_warning.category == 'D' %}orange{% elif content_warning.category == 'T' %}yellow{% endif %}{% endif %}
 				 		tooltipped" data-position="bottom" data-delay="20" data-tooltip="Found in the {{ content_warning.get_category_display|lower }} of the show."><strong>{% if chips == True %}{{ content_warning|title }}{% else %}{{ content_warning|lower }}{% endif %}</strong></span>{% if not forloop.last and chips == False %},{% else %}{% endif %}{% endif %}{% endfor %}
 			</p>
+			{% if foh == False %}<p>For full details of content warnings for this show, please email <a href="mailto:boxoffice@newtheatre.org.uk">boxoffice@newtheatre.org.uk</a>.</p>{% endif %}
 			{% comment %}{# Scope to add icons #}{% for content_warning in show.warnings.all %}<i class="material-icons">{{ content_warning.icon }}</i>&nbsp;{% endfor %}{% endcomment %}
 		{% else %}
 			<i>There are no content warnings for this show.</i>
