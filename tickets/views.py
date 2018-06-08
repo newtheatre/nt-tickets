@@ -62,7 +62,9 @@ class ShowIndex(generic.ListView):
 
     def get_queryset(self):
         time_filter = datetime.date.today() - datetime.timedelta(days=1)
-        return models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
+        return models.Show.objects.filter(end_date__gte=time_filter) \
+            .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+            .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
 
 @login_required
 def ShowReport(request, show_name, occ_id):
