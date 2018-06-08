@@ -26,7 +26,7 @@
 		<h3 id="show-title">{{ show.name }}</h3>
 		<p class="meta">
 			{% for occurence in show.occurrence_set.all %}
-				{{ occurence.date|date:"d/m/Y" }} {{ occurence.time|date:"h:mA" }}{% if not forloop.last %},{%endif%}
+				{{ occurence.date|date:"d/m/Y" }} {{ occurence.time|date:"h:iA"|lower }}{% if not forloop.last %},{%endif%}
 			{% endfor %}
 		</p>
 		<div class="venue cat-{{ show.category.slug }}">{{ show.location }}</div>
