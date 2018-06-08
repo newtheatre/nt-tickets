@@ -7,6 +7,12 @@
 
 {% for show in shows %}
 	{% ifchanged show.start_date %}
+
+		{% if forloop.first %}
+		{% else %}
+			</ul>
+		{% endif %}
+
 		<h3>{{ show.start_date|date:"l jS F" }}</h3>
 		<ul>
 	{% endifchanged %}
