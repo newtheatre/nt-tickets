@@ -370,6 +370,10 @@ class Sale(models.Model):
     number_matinee_freshers_nnt = models.IntegerField(default=0)
 
     number_stuff = models.IntegerField(default=0)
+    number_festival = models.IntegerField(default=0)
+    number_festival_sales = models.IntegerField(default=0)
+    number_day = models.IntegerField(default=0)
+    number_day_sales = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.unique_code:

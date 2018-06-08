@@ -155,8 +155,10 @@ def ShowReport(request, show_name, occ_id):
         # StuFF
         elif category.slug == 'stuff':
             try:
-                pricing = models.StuFFPricing.objects.get(show_id=show_name)
-                report['stuff_price'] = pricing.stuff_price
+                pricing = {}
+                pricing['stuff_price'] = models.StuFFPricing.objects.get(show_id=show_name).stuff_price
+                pricing['festival_sales_price'] = config.FESTIVAL_SALES_PRICE[0]
+                pricing['day_sales_price'] = config.DAY_SALES_PRICE[0]
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
                 pricing = []
@@ -281,6 +283,26 @@ def SaleInputAJAX(request, show_name, occ_id):
         except:
             number_stuff = float(0)
 
+        try:
+            number_day = float(request.POST.get('number_day'))
+        except:
+            number_day = float(0)
+
+        try:
+            number_day_sales = float(request.POST.get('number_day_sales'))
+        except:
+            number_day_sales = float(0)
+
+        try:
+            number_festival = float(request.POST.get('number_festival'))
+        except:
+            number_festival = float(0)
+
+        try:
+            number_festival_sales = float(request.POST.get('number_festival_sales'))
+        except:
+            number_festival_sales = float(0)
+
         s.number_concession = number_concession
         s.number_member = number_member
         s.number_public = number_public
@@ -292,6 +314,10 @@ def SaleInputAJAX(request, show_name, occ_id):
         s.number_matinee_freshers = number_matinee_freshers
         s.number_matinee_freshers_nnt = number_matinee_freshers_nnt
         s.number_stuff = number_stuff
+        s.number_day = number_day
+        s.number_day_sales = number_day_sales
+        s.number_festival = number_festival
+        s.number_festival_sales = number_festival_sales
 
         try:
             concession_sale = number_concession * float(pricing.concession_price)
@@ -335,6 +361,16 @@ def SaleInputAJAX(request, show_name, occ_id):
         except Exception:
             stuff_sale = float(0)
 
+        try:
+            festival_sale = number_festival_sales * float(config.FESTIVAL_SALES_PRICE[0])
+        except Exception:
+            festival_sale = float(0)
+
+        try:
+            day_sale = number_day_sales * float(config.DAY_SALES_PRICE[0])
+        except Exception:
+            day_sale = float(0)
+
         price = (
             concession_sale +
             member_sale +
@@ -344,7 +380,9 @@ def SaleInputAJAX(request, show_name, occ_id):
             fringe_sale +
             matinee_fresher_sale +
             matinee_fresher_nnt_sale +
-            stuff_sale
+            stuff_sale +
+            festival_sale +
+            day_sale
         )
 
         number = (
@@ -358,7 +396,11 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_season_sale +
             number_season_sale_nnt +
             number_fellow +
-            number_stuff
+            number_stuff +
+            number_day +
+            number_festival +
+            number_day_sales +
+            number_festival_sales
         )
 
         s.number = number
@@ -621,6 +663,11 @@ def SaleReportFull(request, show_name):
         report['stuff_price'] = float(pricing.stuff_price)
     except Exception:
         report['stuff_price'] = float(0)
+
+    report['festival_price'] = float(0)
+    report['day_price'] = float(0)
+    report['festival_sales_price'] = config.FESTIVAL_SALES_PRICE[0]
+    report['day_sales_price'] = config.DAY_SALES_PRICE[0]
 
     context = {
         'show': show,
