@@ -1005,7 +1005,9 @@ class ListShows(OrderedListView):
 
     def get_queryset(self):
         today = datetime.date.today()
-        return super(ListShows, self).get_queryset().filter(end_date__gte=today)
+        return super(ListShows, self).get_queryset().filter(end_date__gte=today) \
+            .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+            .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
 @method_decorator(xframe_options_exempt, name='dispatch')
