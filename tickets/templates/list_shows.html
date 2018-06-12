@@ -20,8 +20,8 @@
 
 				{{ show.end_date|date:"j M o" }}
 				
-				{% if show.occurrence_set.all|length_is: "1" %}
-					{{ occurence.time|date:"h:iA"|lower }}
+				{% if show.occurrence_set.all|length_is:1 %}
+					{{ show.occurrence_set.first.time|date:"h:iA"|lower }}
 				{% endif %}
 		</p>
 		<p>{{ show.description }}</p>
