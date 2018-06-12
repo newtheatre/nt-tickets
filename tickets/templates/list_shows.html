@@ -13,7 +13,17 @@
 			<img src="//{{ request.get_host }}{% static 'images/no_poster.png' %}" style="float:left"/>
 		{% endif %}
 		<h3 id="show-title">{{ show.name }}</h3>
-		<p class="meta">{% if show.start_date != show.end_date %} {{ show.start_date|date:"j M" }} to {% endif %} {{ show.end_date|date:"j M o" }}</p>
+		<p class="meta">
+				{% if show.start_date != show.end_date %} 
+					{{ show.start_date|date:"j M" }} to 
+				{% endif %} 
+
+				{{ show.end_date|date:"j M o" }}
+				
+				{% if show.occurrence_set.all|length_is: "1" %}
+					{{ occurence.time|date:"h:iA"|lower }}
+				{% endif %}
+		</p>
 		<p>{{ show.description }}</p>
 		<div class="venue cat-{{ show.category.slug }}">Venue: {{ show.location }}</div>
 
