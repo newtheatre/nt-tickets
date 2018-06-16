@@ -103,7 +103,8 @@ class Show(models.Model):
     def show_sold_out(self):
         if self.occurrence_set.count():
             for occ in self.occurrence_set.all():
-                return occ.sold_out()
+                if occ.sold_out():
+                    return True
         else:
             return False
 
