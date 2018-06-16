@@ -108,8 +108,7 @@ class Show(models.Model):
             return False
 
     def booking_closed(self):
-        print(len(Occurrence.objects.get_available_show(self)))
-        if len(Occurrence.objects.get_available_show(self)) > 0:
+        if len(Occurrence.objects.get_available(self)) > 0:
             return False
         else:
             return True
@@ -187,7 +186,7 @@ class OccurrenceManager(models.Manager):
         ret = []
         for oc in occs:
             combined = datetime.datetime.combine(oc.date, oc.time)
-            close_time = combined - datetime.timedelta(hours=oc.hours_til_close)
+            close_time = combined + datetime.timedelta(hours=3)
             if oc.date <= today and time >= close_time:
                 pass
             else:
