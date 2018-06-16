@@ -530,8 +530,8 @@
 	<script>
 	$(document).ready(function(){
 		checkSell(0);
-		$(document).keyup(function(){
-
+		const dynamicUpdate = function(){
+			console.log
 			var num_concession = getInput("concession");
 			var num_member = getInput("member");
 			var num_public = getInput("public");
@@ -587,7 +587,10 @@
 			document.getElementById("out2").innerHTML = xf;
 
 			checkSell(number_sold);
-		});
+		};
+		$(document).keyup(dynamicUpdate);
+		$(document).mouseup(dynamicUpdate);
+		
 	});
 	</script>
 
