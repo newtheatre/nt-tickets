@@ -341,11 +341,14 @@
 							{% endif %}
 
 					{% elif report.category|stringformat:"s" == "StuFF" %}
-						<div class="col s12">
-							<div class="input-field col s12">
-									<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-									<label for="stuff">Single Show Ticket £{{ pricing.stuff_price }}</label>
-								</div>
+						<div class="input-field col s12 m6">
+								<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="stuff">Single Show Ticket £{{ pricing.stuff_price }}</label>
+						</div>
+
+						<div class="input-field col s12 m6">
+									<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+									<label for="fellow">Comp Ticket</label>
 						</div>
 
 						<div class="input-field col s12 m6">
