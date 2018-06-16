@@ -561,10 +561,10 @@
 				+num_fellow[2] +
 				+num_season_sale[2] +
 				+num_season_sale_nnt[2] +
-				+num_stuff[2]
-				+num_festival[2]
-				+num_festival_sales[2]
-				+num_day[2]
+				+num_stuff[2] + 
+				+num_festival[2] +
+				+num_festival_sales[2] +
+				+num_day[2] +
 				+num_day_sales[2];
 
 			var number_sold =
@@ -578,11 +578,13 @@
 				+num_fellow[0] +
 				+num_season_sale[0] +
 				+num_season_sale_nnt[0] +
-				+num_stuff[0]
-				+num_festival[0]
-				+num_festival_sales[0]
-				+num_day[0]
+				+num_stuff[0] +
+				+num_festival[0] +
+				+num_festival_sales[0] +
+				+num_day[0] +
 				+num_day_sales[0];
+
+			console.log("Number", x, number_sold);
 
 			xf = parseFloat(x).toFixed(2);
 			document.getElementById("out1").innerHTML = xf;
@@ -606,7 +608,7 @@
 			};
 
 			if ( num_left == 0 || num == 0 ) {
-				// $('#sell_button').prop("disabled", true);
+				$('#sell_button').prop("disabled", true);
 			};
 			if (num > 0 && reservation == 'None' && num_left > 0) {
 				$('#sell_button').prop("disabled", false);
@@ -614,7 +616,7 @@
 			if (reservation != 'None' && num == reservation_number) {
 				$('#sell_button').prop("disabled", false);
 			} else if (reservation != 'None' && num != reservation_number) {
-				// $('#sell_button').prop("disabled", true);
+				$('#sell_button').prop("disabled", true);
 			};
 
 		};
