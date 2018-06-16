@@ -534,7 +534,6 @@
 	$(document).ready(function(){
 		checkSell(0);
 		const dynamicUpdate = function(){
-			console.log
 			var num_concession = getInput("concession");
 			var num_member = getInput("member");
 			var num_public = getInput("public");
@@ -607,7 +606,7 @@
 			};
 
 			if ( num_left == 0 || num == 0 ) {
-				$('#sell_button').prop("disabled", true);
+				// $('#sell_button').prop("disabled", true);
 			};
 			if (num > 0 && reservation == 'None' && num_left > 0) {
 				$('#sell_button').prop("disabled", false);
@@ -615,7 +614,7 @@
 			if (reservation != 'None' && num == reservation_number) {
 				$('#sell_button').prop("disabled", false);
 			} else if (reservation != 'None' && num != reservation_number) {
-				$('#sell_button').prop("disabled", true);
+				// $('#sell_button').prop("disabled", true);
 			};
 
 		};
