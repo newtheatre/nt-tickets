@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^sidebar/$', views.sidebar, name='sidebar'),
 
     url(r'^list-stuff-theatre/$', views.ListStuFFShows.as_view(), name='stuff-list'),
+    url(r'^showall.json$', views.ShowJSON.as_view(), name='show_json'),
 
     # Auth views
     # url(r'^login/$', tickets_views.LoginView, name='login'),
