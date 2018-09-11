@@ -18,17 +18,17 @@ import configuration.customise as config
 from django.utils.encoding import python_2_unicode_compatible
 
 class CategoryManager(models.Manager):
-	def get_by_natural_key(self, name):
-		return self.get(name=name)
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
 
 @python_2_unicode_compatible
 class Category(models.Model):
 
-	objects = CategoryManager()
+    objects = CategoryManager()
 
-	def natural_key(self):
-		return self.name 
-		
+    def natural_key(self):
+        return self.name
+
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
