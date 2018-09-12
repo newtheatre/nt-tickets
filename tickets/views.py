@@ -22,8 +22,6 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
 from django.shortcuts import render_to_response
 from django.db.models import Count, Min, Sum, Avg
 
@@ -66,17 +64,6 @@ class ShowIndex(generic.ListView):
             .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
             .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
 
-class ShowJSON(DetailView):
-
-	def get(self, request, *args, **kwargs):
-		shows = models.Show.objects.all()
-		# Want to use the 'is_current' function for now and future shows 
-		# Want to get a list of occurrences in this data, with ticket info.
-		# (The two ShowIndex functions could be useful...)
-		shows_json = serializers.serialize('json', shows,
-			use_natural_foreign_keys=True)
-		return HttpResponse(shows_json, content_type='application/json')
-		# return JsonResponse(shows_json)
 
 @login_required
 def ShowReport(request, show_name, occ_id):
@@ -993,7 +980,7 @@ def list(request):
     })
 
 @method_decorator(xframe_options_exempt, name='dispatch')
-class OrderedListView(ListView):
+class OrderedListView(generic.ListView):
 
     class Meta:
         ordering = []
@@ -1052,7 +1039,7 @@ class ListPastShows(OrderedListView):
         return super(ListPastShows, self).get_queryset().filter(end_date__lte=today)
 
 @method_decorator(xframe_options_exempt, name='dispatch')
-class DetailShow(DetailView):
+class DetailShow(generic.DetailView):
     model = models.Show
     template_name = 'detail_show.html'
     context_object_name = 'show'

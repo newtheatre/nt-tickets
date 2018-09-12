@@ -19,15 +19,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from rest_framework import routers
 
-from tickets import views
+from tickets import views, api
 
 from django.contrib import admin
 admin.autodiscover()
 
+router = routers.DefaultRouter()
+router.register(r'shows', api.ShowViewSet)
+
 urlpatterns = [
     # User frontend urls
-    url(r'^api/0.1/remain$', views.how_many_left),
+    # url(r'^api/0.1/remain$', views.how_many_left), # TODO move to api
     url(r'^book/(?P<show_id>\d+)/$', views.book_landing, name='book'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', views.book_finish, name='finish'),
     url(r'^book/(?P<show_id>\d+)/error/$', views.book_error, name='error'),
@@ -37,8 +41,8 @@ urlpatterns = [
     url(r'^list/(?P<slug>[-_\w]+)/$', views.DetailShow.as_view(), name='detail'),
     url(r'^sidebar/$', views.sidebar, name='sidebar'),
 
-    url(r'^list-stuff-theatre/$', views.ListStuFFShows.as_view(), name='stuff-list'),
-    url(r'^showall.json$', views.ShowJSON.as_view(), name='show_json'),
+    # url(r'^list-stuff-theatre/$', views.ListStuFFShows.as_view(), name='stuff-list'), # TODO move to api
+    # url(r'^showall.json$', views.ShowJSON.as_view(), name='show_json'), #TODO move to api
 
     # Auth views
     # url(r'^login/$', tickets_views.LoginView, name='login'),
@@ -68,4 +72,6 @@ urlpatterns = [
     url(r'^report/all/$', login_required(views.SaleReportAll.as_view()), name='sale_report_all'),
     url(r'^report/(?P<show_name>\d+)/$', views.SaleReportFull, name='sale_report_full'),
 
+    # API Urls
+    url(r'^api/', include(router.urls)),
 ]

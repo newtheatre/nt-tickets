@@ -24,6 +24,9 @@ else:
 
 ALLOWED_HOSTS = ['ticketing.newtheatre.org.uk', 'nt-tickets.herokuapp.com']
 
+if DEBUG:
+    ALLOWED_HOSTS.append('localhost')
+
 ADMINS = (
     # (Harry Bridge, 'harry@harrybridge.co.uk')
 )
@@ -46,7 +49,7 @@ if not DEBUG:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ACTUALLY_SEND_MAIL = True
+ACTUALLY_SEND_MAIL = True if not DEBUG else False
 
 # The repository to add issues to
 REPO_OWNER = 'newtheatre'
@@ -121,6 +124,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'NT_Tickets.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases

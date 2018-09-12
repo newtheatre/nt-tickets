@@ -30,3 +30,4 @@ requests-transition==1.0.4
 factory_boy==2.7.0
 psycopg2==2.7.1
 whitenoise==3.3.0
+djangorestframework==3.82
