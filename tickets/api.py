@@ -57,3 +57,14 @@ class ShowViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
         else:
             return Http404
+
+    @action(detail=False, url_name='list-past-shows', url_path='past')
+    def list_past_shows(self, request):
+        today = datetime.date.today()
+
+        queryset = models.Show.objects.filter(end_date__lte=today).order_by('-start_date')
+        queryset = self.paginate_queryset(queryset)
+
+        serializer = self.get_serializer(queryset, context={'request': request}, read_only=True, many=True)
+
+        return self.get_paginated_response(serializer.data)
