@@ -6,11 +6,14 @@
 # api/shows/filter/<category_slug>    get             filter shows to a specific category
 # api/shows/sidebar                   get             get the shows for the sidebar
 #
-# api/tickets/book/                   post            book a ticket
+# api/book/                           post            book a ticket
 #   occurrence_id
 #   person_name
 #   email_address
 #   quantity
+#
+# api/book/cancel                     post            cancel a reservation
+#   ticket_id
 
 
 from rest_framework import serializers, viewsets, status
@@ -182,6 +185,20 @@ class BookingViewSet(viewsets.ViewSet):
         # })
 
         # serializer = ShowSerializer(show, context={'request': request}, read_only=True)
+            serializer = self.serializer_class(reservation, read_only=True)
+
+            return Response(serializer.data)
+        else:
+            # TODO make nice errors
+            return Response({"error": "Not a post request"}, status=status.HTTP_400_BAD_REQUEST)  # Not a post
+
+    @action(detail=False, url_name='cancel_booking', url_path='cancel', methods=['POST'])
+    def cancel(self, request):
+        if request.method == 'POST':
+            reservation = get_object_or_404(models.Ticket, pk=request.POST.get('ticket_id', None))
+            reservation.cancelled = True
+            reservation.save()
+
             serializer = self.serializer_class(reservation, read_only=True)
 
             return Response(serializer.data)
