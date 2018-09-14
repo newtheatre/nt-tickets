@@ -1,12 +1,13 @@
-'''
-endpoint                method          result
 
-api/shows/list          get             list current shows for whatson
-api/shows/<id>          get             get a specific show
+# endpoint                            method          result
+#
+# api/shows/                          get             list current shows for what's on
+# api/shows/<id>                      get             get a specific show
+# api/shows/filter/<category_slug>    get             filter shows to a specific category
+# api/shows/sidebar                   get             get the shows for the sidebar
+#
+# api/tickets/book/<id>               post            book a ticket
 
-api/tickets/book/<id>   post            book a ticket
-
-'''
 
 from rest_framework import serializers, viewsets
 from rest_framework.decorators import action
@@ -16,6 +17,7 @@ from django.db.models import Min
 import datetime
 
 from tickets import models
+from configuration import customise
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -34,9 +36,11 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
     occurrence_set = OccurrenceSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
 
+    # TODO get poster URL
+
     class Meta:
         model = models.Show
-        fields = ('id', 'url', 'name', 'start_date', 'end_date', 'is_current', 'category', 'occurrence_set')
+        fields = ('id', 'url', 'name', 'start_date', 'end_date', 'is_current', 'poster', 'category', 'occurrence_set')
 
 
 class ShowViewSet(viewsets.ModelViewSet):
@@ -68,3 +72,22 @@ class ShowViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, context={'request': request}, read_only=True, many=True)
 
         return self.get_paginated_response(serializer.data)
+
+    @action(detail=False, url_name='sidebar', url_path='sidebar')
+    def sidebar(self, request):
+        today = datetime.date.today()
+        limit = today + datetime.timedelta(weeks=customise.SIDEBAR_FILTER_PERIOD)
+
+        current_shows = list()
+        for category in customise.PUBLIC_CATEGORIES:
+            show = models.Show.objects \
+                .filter(category__slug=category) \
+                .filter(end_date__gte=today) \
+                .order_by('end_date') \
+                .filter(start_date__lte=limit)[:1]
+
+            current_shows.append(
+                self.get_serializer(show, context={'request': request}, read_only=True, many=True).data
+            )
+
+        return Response(current_shows)
