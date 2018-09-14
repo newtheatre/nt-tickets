@@ -13,6 +13,7 @@ class Command(BaseCommand):
 
         self.delete_shows()
         self.delete_occurrences()
+        self.delete_tickets()
 
     @staticmethod
     def delete_shows():
@@ -23,3 +24,8 @@ class Command(BaseCommand):
     def delete_occurrences():
         for occurrence in models.Occurrence.objects.all():
             occurrence.delete()
+
+    @staticmethod
+    def delete_tickets():
+        for ticket in models.Ticket.objects.all():
+            ticket.delete()
