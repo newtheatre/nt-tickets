@@ -945,7 +945,6 @@ def graph_view(request):
     return render_to_response(
         'graph_view.html',
         context,
-        context_instance=RequestContext(request)
     )
 
 @xframe_options_exempt
@@ -1120,7 +1119,7 @@ def book_landing(request, show_id):
             )
             email.content_subtype = 'html'
 
-            if settings.ACTUALLY_SEND_MAIL == True:
+            if settings.ACTUALLY_SEND_MAIL:
                 email.send()
 
             # Redirect after POST
@@ -1128,14 +1127,16 @@ def book_landing(request, show_id):
     else:
         form = forms.BookingFormLanding(show=show)    # An unbound form
 
-    return render(request, 'book_landing.html', {
+    context = {
         'form': form,
         'show': show,
         'step': step,
         'total': total,
         'message': message,
         'foh_contact': foh_contact,
-    })
+    }
+
+    return render(request, 'book_landing.html', context)
 
 @xframe_options_exempt
 def book_finish(request, show_id):
