@@ -32,18 +32,17 @@ router.register(r'book', api.BookingViewSet, base_name='book')
 
 urlpatterns = [
     # User frontend urls
-    # url(r'^api/0.1/remain$', views.how_many_left), # TODO move to api and all below
+    url(r'^api/0.1/remain$', views.how_many_left),
     url(r'^book/(?P<show_id>\d+)/$', views.book_landing, name='book'),
     url(r'^book/(?P<show_id>\d+)/thanks/$', views.book_finish, name='finish'),
     url(r'^book/(?P<show_id>\d+)/error/$', views.book_error, name='error'),
     url(r'^cancel/(?P<ref_id>.*)/$', views.cancel, name='cancel'),
-    # url(r'^list/$', views.ListShows.as_view(), name='list'),
-    # url(r'^list-past/$', views.ListPastShows.as_view(), name='list-past'),
-    # url(r'^list/(?P<slug>[-_\w]+)/$', views.DetailShow.as_view(), name='detail'),
-    # url(r'^sidebar/$', views.sidebar, name='sidebar'),
+    url(r'^list/$', views.ListShows.as_view(), name='list'),
+    url(r'^list-past/$', views.ListPastShows.as_view(), name='list-past'),
+    url(r'^list/(?P<slug>[-_\w]+)/$', views.DetailShow.as_view(), name='detail'),
+    url(r'^sidebar/$', views.sidebar, name='sidebar'),
 
-    # url(r'^list-stuff-theatre/$', views.ListStuFFShows.as_view(), name='stuff-list'), # TODO move to api
-    # url(r'^showall.json$', views.ShowJSON.as_view(), name='show_json'), #TODO move to api
+    url(r'^list-stuff-theatre/$', views.ListStuFFShows.as_view(), name='stuff-list'),
 
     # Auth views
     # url(r'^login/$', tickets_views.LoginView, name='login'),

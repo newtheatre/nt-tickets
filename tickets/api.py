@@ -11,7 +11,7 @@
 #   email_address
 #   quantity
 #
-# api/book/cancel                     post            cancel a reservation
+# api/book/cancel                     post            cancel a ticket
 #   ticket_id
 
 
@@ -175,6 +175,7 @@ class BookingViewSet(viewsets.ViewSet):
     def cancel_reservation(self, request):
         if request.method == 'POST':
             reservation = get_object_or_404(models.Ticket, unique_code=request.POST.get('ticket_unique_code', None))
+
             reservation.cancelled = True
             reservation.save()
 

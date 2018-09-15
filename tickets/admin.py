@@ -127,14 +127,14 @@ class TicketAdmin(admin.ModelAdmin):
             'D_form': D_form,
             'occurrence': occurrence,
             'report': report,
-        }, context_instance=RequestContext(request))
+        })
 
     def review(self, request, id=5):
         entry = Ticket.objects.get(pk=id)
 
         return render_to_response('self.review_template', {
 
-        }, context_instance=RequestContext(request))
+        })
 
 
 class OccurrenceInline(admin.TabularInline):
@@ -248,6 +248,7 @@ class ShowAdmin(admin.ModelAdmin):
     ]
 
     list_display = (
+        'pk',
         'name',
         'location',
         'category',

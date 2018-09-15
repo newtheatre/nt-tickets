@@ -193,8 +193,7 @@ def ShowReport(request, show_name, occ_id):
 
     return render_to_response(
         'show_report.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 
