@@ -1,4 +1,3 @@
-
 # endpoint                            method          result
 #
 # api/shows/                          get             list current shows for what's on
@@ -21,10 +20,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from django.db.models import Min
+from django.core.mail import EmailMessage
+from django.template.loader import get_template
+from django.template import Context, RequestContext
 import datetime
 
 from tickets import models
 from configuration import customise
+from django.conf import settings
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -76,17 +79,6 @@ class ShowViewSet(viewsets.ModelViewSet):
             return Response({"error": "Category not found"},
                             status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=False, url_name='list-past-shows', url_path='past')
-    def list_past_shows(self, request):
-        today = datetime.date.today()
-
-        queryset = models.Show.objects.filter(end_date__lte=today).order_by('-start_date')
-        queryset = self.paginate_queryset(queryset)
-
-        serializer = self.get_serializer(queryset, context={'request': request}, read_only=True, many=True)
-
-        return self.get_paginated_response(serializer.data)
-
     @action(detail=False, url_name='sidebar', url_path='sidebar')
     def sidebar(self, request):
         today = datetime.date.today()
@@ -111,12 +103,33 @@ class BookingViewSet(viewsets.ViewSet):
     serializer_class = TicketSerializer
     queryset = models.Ticket.objects.all()
 
-    def list(self, request):
+    def list(self):
         queryset = models.Ticket.objects.all().order_by('-stamp')
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
-    # @action(detail=False, url_name='')
+    @staticmethod
+    def send_mail(**kwargs):
+        reservation = kwargs.pop('reservation')
+        # Send a confirmation email, probs move this so cancel can use this too
+        email_html = get_template('email/confirm_inline.html').render(
+            Context({
+                'show': reservation.occurrence.show,
+                'ticket': reservation,
+                'settings': settings,
+            }))
+
+        email = EmailMessage(
+            subject='Tickets reserved for ' + reservation.occurrence.show.name,
+            body=email_html,
+            to=[reservation.email_address],
+            from_email="boxoffice@newtheatre.org.uk"
+        )
+        email.content_subtype = 'html'
+
+        if settings.ACTUALLY_SEND_MAIL:
+            email.send()
+
     def create(self, request):
         if request.method == 'POST':
             defaults = request.POST.dict()
@@ -149,59 +162,27 @@ class BookingViewSet(viewsets.ViewSet):
             except IndexError:
                 reservation.save()
 
-        #         request.session["ticket"] = t
-        #
-        #         email_html = get_template('email/confirm_inline.html').render(
-        #             Context({
-        #                 'show': show,
-        #                 'ticket': t,
-        #                 'settings': settings,
-        #                 'customise': config,
-        #             }))
-        #         email_subject = 'Tickets reserved for ' + show.name
-        #         email = EmailMessage(
-        #             subject=email_subject,
-        #             body=email_html,
-        #             to=[t.email_address],
-        #             from_email="boxoffice@newtheatre.org.uk"
-        #         )
-        #         email.content_subtype = 'html'
-        #
-        #         if settings.ACTUALLY_SEND_MAIL == True:
-        #             email.send()
-        #
-        #         # Redirect after POST
-        #         return HttpResponseRedirect(reverse('finish', kwargs={'show_id': show.id}))
-        # else:
-        #     form = forms.BookingFormLanding(show=show)  # An unbound form
-        #
-        # return render(request, 'book_landing.html', {
-        #     'form': form,
-        #     'show': show,
-        #     'step': step,
-        #     'total': total,
-        #     'message': message,
-        #     'foh_contact': foh_contact,
-        # })
+            self.send_mail(reservation=reservation)
 
-        # serializer = ShowSerializer(show, context={'request': request}, read_only=True)
             serializer = self.serializer_class(reservation, read_only=True)
 
             return Response(serializer.data)
         else:
             # TODO make nice errors
-            return Response({"error": "Not a post request"}, status=status.HTTP_400_BAD_REQUEST)  # Not a post
+            return Response({"error": "bad request"}, status=status.HTTP_400_BAD_REQUEST)  # Not a post
 
     @action(detail=False, url_name='cancel_booking', url_path='cancel', methods=['POST'])
-    def cancel(self, request):
+    def cancel_reservation(self, request):
         if request.method == 'POST':
-            reservation = get_object_or_404(models.Ticket, pk=request.POST.get('ticket_id', None))
+            reservation = get_object_or_404(models.Ticket, unique_code=request.POST.get('ticket_unique_code', None))
             reservation.cancelled = True
             reservation.save()
 
+            # TODO send cancellation email
+
             serializer = self.serializer_class(reservation, read_only=True)
 
             return Response(serializer.data)
         else:
             # TODO make nice errors
-            return Response({"error": "Not a post request"}, status=status.HTTP_400_BAD_REQUEST)  # Not a post
+            return Response({"error": "bad request"}, status=status.HTTP_400_BAD_REQUEST)  # Not a post
