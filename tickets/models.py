@@ -100,10 +100,14 @@ class Show(models.Model):
         return (datetime.date.today() - datetime.timedelta(days=1)) <= self.end_date
 
     def show_sold_out(self):
-        if self.occurrence_set.count():
+        if self.has_occurrences():
+            occ_max_sell_count = 0
+            ticket_count = 0
             for occ in self.occurrence_set.all():
-                if occ.sold_out():
-                    return True
+                ticket_count += occ.tickets_sold()
+                occ_max_sell_count += occ.maximum_sell
+
+            return ticket_count >= occ_max_sell_count
         else:
             return False
 
