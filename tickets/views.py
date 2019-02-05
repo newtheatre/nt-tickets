@@ -22,8 +22,6 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
 from django.shortcuts import render_to_response
 from django.db.models import Count, Min, Sum, Avg
 
@@ -65,6 +63,7 @@ class ShowIndex(generic.ListView):
         return models.Show.objects.filter(end_date__gte=time_filter) \
             .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
             .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
+
 
 @login_required
 def ShowReport(request, show_name, occ_id):
@@ -194,8 +193,7 @@ def ShowReport(request, show_name, occ_id):
 
     return render_to_response(
         'show_report.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 
@@ -947,7 +945,6 @@ def graph_view(request):
     return render_to_response(
         'graph_view.html',
         context,
-        context_instance=RequestContext(request)
     )
 
 @xframe_options_exempt
@@ -981,7 +978,7 @@ def list(request):
     })
 
 @method_decorator(xframe_options_exempt, name='dispatch')
-class OrderedListView(ListView):
+class OrderedListView(generic.ListView):
 
     class Meta:
         ordering = []
@@ -1040,7 +1037,7 @@ class ListPastShows(OrderedListView):
         return super(ListPastShows, self).get_queryset().filter(end_date__lte=today)
 
 @method_decorator(xframe_options_exempt, name='dispatch')
-class DetailShow(DetailView):
+class DetailShow(generic.DetailView):
     model = models.Show
     template_name = 'detail_show.html'
     context_object_name = 'show'
@@ -1122,7 +1119,7 @@ def book_landing(request, show_id):
             )
             email.content_subtype = 'html'
 
-            if settings.ACTUALLY_SEND_MAIL == True:
+            if settings.ACTUALLY_SEND_MAIL:
                 email.send()
 
             # Redirect after POST
@@ -1130,14 +1127,16 @@ def book_landing(request, show_id):
     else:
         form = forms.BookingFormLanding(show=show)    # An unbound form
 
-    return render(request, 'book_landing.html', {
+    context = {
         'form': form,
         'show': show,
         'step': step,
         'total': total,
         'message': message,
         'foh_contact': foh_contact,
-    })
+    }
+
+    return render(request, 'book_landing.html', context)
 
 @xframe_options_exempt
 def book_finish(request, show_id):
