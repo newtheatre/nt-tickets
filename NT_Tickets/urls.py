@@ -28,7 +28,7 @@ admin.autodiscover()
 
 router = routers.DefaultRouter()
 router.register(r'shows', api.ShowViewSet)
-router.register(r'book', api.BookingViewSet, base_name='book')
+# router.register(r'book', api.BookingViewSet, base_name='book')
 
 urlpatterns = [
     # User frontend urls
