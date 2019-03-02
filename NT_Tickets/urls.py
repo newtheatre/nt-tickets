@@ -27,7 +27,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 router = routers.DefaultRouter()
-router.register(r'shows', api.ShowViewSet)
+router.register(r'shows', api.ShowViewSet, base_name='Show')
 # router.register(r'book', api.BookingViewSet, base_name='book')
 
 urlpatterns = [
