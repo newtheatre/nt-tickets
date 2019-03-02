@@ -45,11 +45,13 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
 
 class ShowViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ShowSerializer
-    time_filter = datetime.date.today()
-    queryset = models.Show.objects.filter(end_date__gte=time_filter) \
-        .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
-        .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
 
+    def get_queryset(self):
+        time_filter = datetime.date.today()
+        return models.Show.objects.filter(end_date__gte=time_filter) \
+          .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+          .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
+    
     @action(detail=False, url_name='category-filter', url_path='filter/(?P<category>.+)')
     def category_filter(self, request, category=None):
         if category is not None:
