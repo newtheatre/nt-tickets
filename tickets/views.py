@@ -22,7 +22,6 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
-from django.shortcuts import render_to_response
 from django.db.models import Count, Min, Sum, Avg
 
 # Import models
@@ -191,10 +190,7 @@ def ShowReport(request, show_name, occ_id):
         'pricing': pricing,
     }
 
-    return render_to_response(
-        'show_report.html',
-        context
-    )
+    return render(request, 'show_report.html', context)
 
 
 @login_required
@@ -454,11 +450,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             'report': report,
         }
 
-        return render_to_response(
-            'sale_overview_full.html',
-            context,
-            context_instance=RequestContext(request)
-        )
+        return render(request, 'sale_overview_full.html', context)
     else:
         return HttpResponse(json.dumps('error'), content_type='application/json')
 
@@ -676,11 +668,7 @@ def SaleReportFull(request, show_name):
         'report': report,
     }
 
-    return render_to_response(
-        'sale_report_full.html',
-        context,
-        context_instance=RequestContext(request)
-    )
+    return render(request, 'sale_report_full.html', context)
 
 
 @login_required
@@ -942,10 +930,7 @@ def graph_view(request):
         'least_popular': least_popular,
     }
 
-    return render_to_response(
-        'graph_view.html',
-        context,
-    )
+    return render(request, 'graph_view.html', context)
 
 @xframe_options_exempt
 def how_many_left(request):
