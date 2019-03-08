@@ -18,7 +18,7 @@ import datetime
 from tickets import models
 from configuration import customise
 from django.conf import settings
-
+from rest_framework import serializers
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,12 +35,14 @@ class OccurrenceSerializer(serializers.ModelSerializer):
 class ShowSerializer(serializers.HyperlinkedModelSerializer):
     occurrence_set = OccurrenceSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
+    small_poster = serializers.SerializerMethodField()
 
-    # TODO get poster URL
-
+    def get_small_poster(self, obj):
+        return obj.poster.poster_page.url
+    
     class Meta:
         model = models.Show
-        fields = ('id', 'url', 'name', 'description', 'location', 'description', 'long_description', 'start_date', 'end_date', 'is_current', 'poster', 'category', 'occurrence_set', 'show_sold_out')
+        fields = ('id', 'url', 'name', 'description', 'location', 'description', 'long_description', 'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 'category', 'occurrence_set', 'show_sold_out')
 
 
 class ShowViewSet(viewsets.ReadOnlyModelViewSet):
