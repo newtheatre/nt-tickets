@@ -38,7 +38,8 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
     small_poster = serializers.SerializerMethodField()
 
     def get_small_poster(self, obj):
-        return obj.poster.poster_page.url
+        if obj.poster:
+            return obj.poster.poster_page.url
     
     class Meta:
         model = models.Show
