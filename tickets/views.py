@@ -1112,6 +1112,23 @@ def book_landing(request, show_id):
     else:
         form = forms.BookingFormLanding(show=show)    # An unbound form
 
+    pricing = None
+    if show.category.slug == 'in-house':
+        pricing = models.InHousePricing.objects.all()[0]
+    # Fringe Pricing
+    elif show.category.slug == 'fringe':
+        pricing = models.FringePricing.objects.all()[0]
+    # External Pricing
+    elif show.category.slug == 'external':
+        pricing = models.ExternalPricing.objects.get(show_id=show_name)
+    elif show.category.slug == 'stuff':
+        pricing = models.StuFFPricing.objects.get(show_id=show_name)
+
+    season_pricing = {
+        'season_price': models.SeasonTicketPricing.objects.all()[0].season_sale_price,
+        'season_price_nnt': models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price
+    }
+
     context = {
         'form': form,
         'show': show,
@@ -1119,6 +1136,8 @@ def book_landing(request, show_id):
         'total': total,
         'message': message,
         'foh_contact': foh_contact,
+        'pricing': pricing,
+        'season_pricing': season_pricing
     }
 
     return render(request, 'book_landing.html', context)
