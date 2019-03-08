@@ -1124,10 +1124,13 @@ def book_landing(request, show_id):
     elif show.category.slug == 'stuff':
         pricing = models.StuFFPricing.objects.get(show_id=show_name)
 
-    season_pricing = {
-        'season_price': models.SeasonTicketPricing.objects.all()[0].season_sale_price,
-        'season_price_nnt': models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price
-    }
+    season_pricing = {}
+    season_model = models.SeasonTicketPricing.objects.first()
+    if season_model:
+        season_pricing = {
+            'season_price': season_model.season_sale_price,
+            'season_price_nnt': season_model.season_sale_nnt_price
+        }
 
     context = {
         'form': form,
