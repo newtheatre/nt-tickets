@@ -43,7 +43,7 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = models.Show
-        fields = ('id', 'url', 'name', 'description', 'location', 'description', 'long_description', 'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 'category', 'occurrence_set', 'show_sold_out')
+        fields = ('id', 'url', 'name', 'description', 'location', 'description', 'long_description', 'long_markdown', 'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 'category', 'occurrence_set', 'show_sold_out')
 
 
 class ShowViewSet(viewsets.ReadOnlyModelViewSet):
