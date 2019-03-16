@@ -138,12 +138,6 @@ class Show(models.Model):
     def clean(self, *args, **kwargs): 
         cleaned_data = super(Show, self).clean(*args, **kwargs)
 
-        # Check to see if the dates are current
-        if self.start_date and (self.start_date < datetime.date.today()):
-            raise ValidationError(('Please enter a start date which is not in the past'), code='invalid_show_start_date_past')
-        if self.end_date and (self.end_date < datetime.date.today()):
-            raise ValidationError(('Please enter an end date which is not in the past'), code='invalid_show_end_date_past')
-
         # Check to see if dates require the use of timetravel
         if self.start_date and self.end_date:
             if self.end_date < self.start_date:
