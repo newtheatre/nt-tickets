@@ -274,8 +274,6 @@ class Occurrence(models.Model):
         if self.date:
             if self.date > self.show.end_date or self.date < self.show.start_date:
                 raise ValidationError(('Please enter a date within the dates of the show'), code='invalid_occ_date')
-            elif self.date < datetime.date.today():
-                raise ValidationError(('Please enter a date which is not in the past'), code='invalid_occ_date_past')
 
         return cleaned_data
 
