@@ -59,7 +59,7 @@ class ShowViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, url_name='category-filter', url_path='filter/(?P<category>.+)')
     def category_filter(self, request, category=None):
         if category is not None:
-            queryset = self.queryset.filter(category__slug=category)
+            queryset = self.get_queryset().filter(category__slug=category)
             queryset = self.paginate_queryset(queryset)
 
             serializer = self.get_serializer(queryset, context={'request': request}, read_only=True, many=True)
