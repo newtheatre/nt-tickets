@@ -1120,9 +1120,9 @@ def book_landing(request, show_id):
         pricing = models.FringePricing.objects.all()[0]
     # External Pricing
     elif show.category.slug == 'external':
-        pricing = models.ExternalPricing.objects.get(show_id=show_name)
+        pricing = models.ExternalPricing.objects.get(show_id=show.id)
     elif show.category.slug == 'stuff':
-        pricing = models.StuFFPricing.objects.get(show_id=show_name)
+        pricing = models.StuFFPricing.objects.get(show_id=show.id)
 
     season_pricing = {}
     season_model = models.SeasonTicketPricing.objects.first()
