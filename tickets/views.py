@@ -1113,16 +1113,19 @@ def book_landing(request, show_id):
         form = forms.BookingFormLanding(show=show)    # An unbound form
 
     pricing = None
-    if show.category.slug == 'in-house':
-        pricing = models.InHousePricing.objects.all()[0]
-    # Fringe Pricing
-    elif show.category.slug == 'fringe':
-        pricing = models.FringePricing.objects.all()[0]
-    # External Pricing
-    elif show.category.slug == 'external':
-        pricing = models.ExternalPricing.objects.get(show_id=show.id)
-    elif show.category.slug == 'stuff':
-        pricing = models.StuFFPricing.objects.get(show_id=show.id)
+    try:
+        if show.category.slug == 'in-house':
+            pricing = models.InHousePricing.objects.all()[0]
+        # Fringe Pricing
+        elif show.category.slug == 'fringe':
+            pricing = models.FringePricing.objects.all()[0]
+        # External Pricing
+        elif show.category.slug == 'external':
+            pricing = models.ExternalPricing.objects.get(show_id=show.id)
+        elif show.category.slug == 'stuff':
+            pricing = models.StuFFPricing.objects.get(show_id=show.id)
+    except ObjectDoesNotExist:
+        pass
 
     season_pricing = {}
     season_model = models.SeasonTicketPricing.objects.first()
