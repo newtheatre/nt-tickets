@@ -39,7 +39,7 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_small_poster(self, obj):
         if obj.poster:
-            return obj.poster.poster_page.url
+            return obj.poster.poster_whatson.url
     
     class Meta:
         model = models.Show

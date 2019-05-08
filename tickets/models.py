@@ -82,6 +82,7 @@ class Show(models.Model):
             'poster_wall': (126, 178),
             'poster_page': (256, 362),
             'poster_tiny': (50, 71),
+            'poster_whatson': (500, 750),
         }
     )
 
