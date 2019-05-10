@@ -66,7 +66,8 @@ class Warnings(models.Model):
     )
     category = models.CharField(
         max_length = 50,
-        choices = category_choices
+        choices = category_choices,
+        default = 'A'
     )
     visible = models.BooleanField(
         default = False,
