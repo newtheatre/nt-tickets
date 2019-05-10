@@ -24,3 +24,20 @@ float: left;
 .clear {
 clear: left;
 }
+
+table.ticket_pricing{
+	width: 100%;
+}
+
+table.ticket_pricing th, td{
+	text-align: left;
+	padding: 10px;
+}
+
+table.ticket_pricing tr{
+	border-bottom: 1px solid #eee;
+}
+
+.lead.pricing{
+	margin-bottom: 10px;
+}

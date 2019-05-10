@@ -4,8 +4,19 @@
 			<strong>Huh</strong> No shows found.
 	</div>
 {% else %}
-<ul>
+
 {% for show in shows %}
+	{% ifchanged show.start_date %}
+
+		{% if forloop.first %}
+		{% else %}
+			</ul>
+		{% endif %}
+
+		<h3>{{ show.start_date|date:"l jS F" }}</h3>
+		<ul>
+	{% endifchanged %}
+
 	<li{% if show.poster %} class="poster" {% else %} class="noposter" {% endif %}>
 		{% if show.poster %}
 			<img src="{{ show.poster.poster_page.url }}" style="float:left" />
@@ -14,22 +25,16 @@
 		{% endif %}
 		<h3 id="show-title">{{ show.name }}</h3>
 		<p class="meta">
-				{% if show.start_date != show.end_date %} 
-					{{ show.start_date|date:"j M" }} to 
-				{% endif %} 
-
-				{{ show.end_date|date:"j M o" }}
-				
-				{% if show.occurrence_set.all|length_is:1 %}
-					{{ show.occurrence_set.first.time|date:"h:iA"|lower }}
-				{% endif %}
+			{% for occurence in show.occurrence_set.all %}
+				{{ occurence.date|date:"d/m/Y" }} {{ occurence.time|date:"h:iA"|lower }}{% if not forloop.last %},{%endif%}
+			{% endfor %}
 		</p>
+		<div class="venue cat-{{ show.category.slug }}">{{ show.location }}</div>
 		<p>{{ show.description }}</p>
-		<div class="venue cat-{{ show.category.slug }}">Venue: {{ show.location }}</div>
-
 		<div class="category cat-{{ show.category.slug }}">{{ show.category }}</div>
 		{% include 'book_button.html' with settings=settings %}
 	</li>
+
 {% endfor %}
 </ul>
 {% endif %}

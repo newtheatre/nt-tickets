@@ -19,11 +19,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from rest_framework import routers
 
-from tickets import views
+from tickets import views, api
 
 from django.contrib import admin
 admin.autodiscover()
+
+router = routers.DefaultRouter()
+router.register(r'shows', api.ShowViewSet)
+# router.register(r'book', api.BookingViewSet, base_name='book')
 
 urlpatterns = [
     # User frontend urls
@@ -67,4 +72,6 @@ urlpatterns = [
     url(r'^report/all/$', login_required(views.SaleReportAll.as_view()), name='sale_report_all'),
     url(r'^report/(?P<show_name>\d+)/$', views.SaleReportFull, name='sale_report_full'),
 
+    # API Urls
+    url(r'^api/', include(router.urls)),
 ]

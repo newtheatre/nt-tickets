@@ -164,6 +164,18 @@
 						{% else %}
 							<input type="hidden" value="0" id="stuff_price">
 						{% endif %}
+						{% if pricing.festival_sales_price %}
+							<input type="hidden" value="{{ pricing.festival_sales_price }}" id="festival_sales_price">
+						{% else %}
+							<input type="hidden" value="0" id="festival_sales_price">
+						{% endif %}
+						{% if pricing.day_sales_price %}
+							<input type="hidden" value="{{ pricing.day_sales_price }}" id="day_sales_price">
+						{% else %}
+							<input type="hidden" value="0" id="day_sales_price">
+						{% endif %}
+						<input type="hidden" value="0" id="festival_price">
+						<input type="hidden" value="0" id="day_price">
 					</div>
 					<!-- In House Shows -->
 					{% if report.category|stringformat:"s" == "In House" %}
@@ -329,12 +341,36 @@
 							{% endif %}
 
 					{% elif report.category|stringformat:"s" == "StuFF" %}
-						<div class="col s12">
-							<div class="input-field col s12">
-									<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
-									<label for="stuff">A Ticket Please £{{ report.stuff_price }}</label>
-								</div>
+						<div class="input-field col s12 m6">
+								<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="stuff">Single Show Ticket £{{ pricing.stuff_price }}</label>
 						</div>
+
+						<div class="input-field col s12 m6">
+									<input id="fellow" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+									<label for="fellow">Comp Ticket</label>
+						</div>
+
+						<div class="input-field col s12 m6">
+								<input id="festival" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="festival">Festival Pass Tickets</label>
+						</div>
+
+						<div class="input-field col s12 m6">
+							<input id="festival_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="festival_sales">Festival Pass Sales £{{ pricing.festival_sales_price|floatformat:2 }}</label>
+						</div>
+
+						<div class="input-field col s12 m6">
+								<input id="day" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="day">Day Pass Tickets</label>
+						</div>
+
+						<div class="input-field col s12 m6">
+							<input id="day_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="day_sales">Day Pass Sales £{{ pricing.day_sales_price|floatformat:2 }}</label>
+						</div>
+
 					{% else %}
 						<div class="col s12">
 							<p class="light red-text center-align report-text">Invalid category applied ({{ report.category }})</p>
@@ -497,8 +533,7 @@
 	<script>
 	$(document).ready(function(){
 		checkSell(0);
-		$(document).keyup(function(){
-
+		const dynamicUpdate = function(){
 			var num_concession = getInput("concession");
 			var num_member = getInput("member");
 			var num_public = getInput("public");
@@ -510,6 +545,10 @@
 			var num_season_sale = getInput("season_sales");
 			var num_season_sale_nnt = getInput("season_sales_nnt");
 			var num_stuff = getInput("stuff");
+			var num_festival = getInput("festival");
+			var num_festival_sales = getInput("festival_sales");
+			var num_day = getInput("day");
+			var num_day_sales = getInput("day_sales");
 
 			var x = 
 				+num_concession[2] +
@@ -522,7 +561,11 @@
 				+num_fellow[2] +
 				+num_season_sale[2] +
 				+num_season_sale_nnt[2] +
-				+num_stuff[2];
+				+num_stuff[2] + 
+				+num_festival[2] +
+				+num_festival_sales[2] +
+				+num_day[2] +
+				+num_day_sales[2];
 
 			var number_sold =
 				+num_concession[0] +
@@ -535,14 +578,23 @@
 				+num_fellow[0] +
 				+num_season_sale[0] +
 				+num_season_sale_nnt[0] +
-				+num_stuff[0];
+				+num_stuff[0] +
+				+num_festival[0] +
+				+num_festival_sales[0] +
+				+num_day[0] +
+				+num_day_sales[0];
+
+			console.log("Number", x, number_sold);
 
 			xf = parseFloat(x).toFixed(2);
 			document.getElementById("out1").innerHTML = xf;
 			document.getElementById("out2").innerHTML = xf;
 
 			checkSell(number_sold);
-		});
+		};
+		$(document).keyup(dynamicUpdate);
+		$(document).mouseup(dynamicUpdate);
+		
 	});
 	</script>
 
