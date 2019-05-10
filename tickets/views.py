@@ -22,9 +22,6 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
-from django.shortcuts import render_to_response
 from django.db.models import Count, Min, Sum, Avg
 
 # Import models
@@ -62,7 +59,10 @@ class ShowIndex(generic.ListView):
 
     def get_queryset(self):
         time_filter = datetime.date.today() - datetime.timedelta(days=1)
-        return models.Show.objects.filter(end_date__gte=time_filter).order_by('start_date')
+        return models.Show.objects.filter(end_date__gte=time_filter) \
+            .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+            .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
+
 
 @login_required
 def ShowReport(request, show_name, occ_id):
@@ -155,8 +155,10 @@ def ShowReport(request, show_name, occ_id):
         # StuFF
         elif category.slug == 'stuff':
             try:
-                pricing = models.StuFFPricing.objects.get(show_id=show_name)
-                report['stuff_price'] = pricing.stuff_price
+                pricing = {}
+                pricing['stuff_price'] = models.StuFFPricing.objects.get(show_id=show_name).stuff_price
+                pricing['festival_sales_price'] = config.FESTIVAL_SALES_PRICE[0]
+                pricing['day_sales_price'] = config.DAY_SALES_PRICE[0]
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
                 pricing = []
@@ -188,11 +190,7 @@ def ShowReport(request, show_name, occ_id):
         'pricing': pricing,
     }
 
-    return render_to_response(
-        'show_report.html',
-        context,
-        context_instance=RequestContext(request)
-    )
+    return render(request, 'show_report.html', context)
 
 
 @login_required
@@ -281,6 +279,26 @@ def SaleInputAJAX(request, show_name, occ_id):
         except:
             number_stuff = float(0)
 
+        try:
+            number_day = float(request.POST.get('number_day'))
+        except:
+            number_day = float(0)
+
+        try:
+            number_day_sales = float(request.POST.get('number_day_sales'))
+        except:
+            number_day_sales = float(0)
+
+        try:
+            number_festival = float(request.POST.get('number_festival'))
+        except:
+            number_festival = float(0)
+
+        try:
+            number_festival_sales = float(request.POST.get('number_festival_sales'))
+        except:
+            number_festival_sales = float(0)
+
         s.number_concession = number_concession
         s.number_member = number_member
         s.number_public = number_public
@@ -292,6 +310,10 @@ def SaleInputAJAX(request, show_name, occ_id):
         s.number_matinee_freshers = number_matinee_freshers
         s.number_matinee_freshers_nnt = number_matinee_freshers_nnt
         s.number_stuff = number_stuff
+        s.number_day = number_day
+        s.number_day_sales = number_day_sales
+        s.number_festival = number_festival
+        s.number_festival_sales = number_festival_sales
 
         try:
             concession_sale = number_concession * float(pricing.concession_price)
@@ -335,6 +357,16 @@ def SaleInputAJAX(request, show_name, occ_id):
         except Exception:
             stuff_sale = float(0)
 
+        try:
+            festival_sale = number_festival_sales * float(config.FESTIVAL_SALES_PRICE[0])
+        except Exception:
+            festival_sale = float(0)
+
+        try:
+            day_sale = number_day_sales * float(config.DAY_SALES_PRICE[0])
+        except Exception:
+            day_sale = float(0)
+
         price = (
             concession_sale +
             member_sale +
@@ -344,7 +376,9 @@ def SaleInputAJAX(request, show_name, occ_id):
             fringe_sale +
             matinee_fresher_sale +
             matinee_fresher_nnt_sale +
-            stuff_sale
+            stuff_sale +
+            festival_sale +
+            day_sale
         )
 
         number = (
@@ -358,7 +392,11 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_season_sale +
             number_season_sale_nnt +
             number_fellow +
-            number_stuff
+            number_stuff +
+            number_day +
+            number_festival +
+            number_day_sales +
+            number_festival_sales
         )
 
         s.number = number
@@ -412,11 +450,7 @@ def SaleInputAJAX(request, show_name, occ_id):
             'report': report,
         }
 
-        return render_to_response(
-            'sale_overview_full.html',
-            context,
-            context_instance=RequestContext(request)
-        )
+        return render(request, 'sale_overview_full.html', context)
     else:
         return HttpResponse(json.dumps('error'), content_type='application/json')
 
@@ -622,6 +656,11 @@ def SaleReportFull(request, show_name):
     except Exception:
         report['stuff_price'] = float(0)
 
+    report['festival_price'] = float(0)
+    report['day_price'] = float(0)
+    report['festival_sales_price'] = config.FESTIVAL_SALES_PRICE[0]
+    report['day_sales_price'] = config.DAY_SALES_PRICE[0]
+
     context = {
         'show': show,
         'pricing': pricing,
@@ -629,11 +668,7 @@ def SaleReportFull(request, show_name):
         'report': report,
     }
 
-    return render_to_response(
-        'sale_report_full.html',
-        context,
-        context_instance=RequestContext(request)
-    )
+    return render(request, 'sale_report_full.html', context)
 
 
 @login_required
@@ -895,11 +930,7 @@ def graph_view(request):
         'least_popular': least_popular,
     }
 
-    return render_to_response(
-        'graph_view.html',
-        context,
-        context_instance=RequestContext(request)
-    )
+    return render(request, 'graph_view.html', context)
 
 @xframe_options_exempt
 def how_many_left(request):
@@ -932,7 +963,7 @@ def list(request):
     })
 
 @method_decorator(xframe_options_exempt, name='dispatch')
-class OrderedListView(ListView):
+class OrderedListView(generic.ListView):
 
     class Meta:
         ordering = []
@@ -956,15 +987,21 @@ class ListShows(OrderedListView):
 
     def get_queryset(self):
         today = datetime.date.today()
-        return super(ListShows, self).get_queryset().filter(end_date__gte=today)
+        return super(ListShows, self).get_queryset().filter(end_date__gte=today) \
+            .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+            .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
 @method_decorator(xframe_options_exempt, name='dispatch')
 class ListStuFFShows(ListShows):
-
+    template_name = 'list_stuff_shows.html'
     def get_queryset(self):
         today = datetime.date.today()
-        return super(ListStuFFShows, self).get_queryset().filter(end_date__gte=today).filter(category__name='StuFF').order_by('start_date')
+        return super(ListStuFFShows, self).get_queryset() \
+                                        .filter(end_date__gte=today) \
+                                        .filter(category__name='StuFF') \
+                                        .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+                                        .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
 
 @method_decorator(xframe_options_exempt, name='dispatch')
@@ -985,7 +1022,7 @@ class ListPastShows(OrderedListView):
         return super(ListPastShows, self).get_queryset().filter(end_date__lte=today)
 
 @method_decorator(xframe_options_exempt, name='dispatch')
-class DetailShow(DetailView):
+class DetailShow(generic.DetailView):
     model = models.Show
     template_name = 'detail_show.html'
     context_object_name = 'show'
@@ -1067,7 +1104,7 @@ def book_landing(request, show_id):
             )
             email.content_subtype = 'html'
 
-            if settings.ACTUALLY_SEND_MAIL == True:
+            if settings.ACTUALLY_SEND_MAIL:
                 email.send()
 
             # Redirect after POST
@@ -1075,14 +1112,41 @@ def book_landing(request, show_id):
     else:
         form = forms.BookingFormLanding(show=show)    # An unbound form
 
-    return render(request, 'book_landing.html', {
+    pricing = None
+    try:
+        if show.category.slug == 'in-house':
+            pricing = models.InHousePricing.objects.all()[0]
+        # Fringe Pricing
+        elif show.category.slug == 'fringe':
+            pricing = models.FringePricing.objects.all()[0]
+        # External Pricing
+        elif show.category.slug == 'external':
+            pricing = models.ExternalPricing.objects.get(show_id=show.id)
+        elif show.category.slug == 'stuff':
+            pricing = models.StuFFPricing.objects.get(show_id=show.id)
+    except ObjectDoesNotExist:
+        pass
+
+    season_pricing = {}
+    season_model = models.SeasonTicketPricing.objects.first()
+    if season_model:
+        season_pricing = {
+            'season_price': season_model.season_sale_price,
+            'season_price_nnt': season_model.season_sale_nnt_price
+        }
+
+    context = {
         'form': form,
         'show': show,
         'step': step,
         'total': total,
         'message': message,
         'foh_contact': foh_contact,
-    })
+        'pricing': pricing,
+        'season_pricing': season_pricing
+    }
+
+    return render(request, 'book_landing.html', context)
 
 @xframe_options_exempt
 def book_finish(request, show_id):

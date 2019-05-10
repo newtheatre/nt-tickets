@@ -42,4 +42,46 @@ Book Tickets
 		document.getElementById('submit-btn').disabled = true;
 	});
 </script>
+<div class="main">
+<p class="lead pricing" id="title_text">Ticket pricing</p>
+<table class="ticket_pricing">
+	
+	{% if show.category.name == "In House" %}
+		<tr><td>Member Tickets</td><td>£{{ pricing.member_price }}</td></tr>
+		<tr><td>Concession Tickets</td><td>£{{ pricing.concession_price }}</td></tr>
+		<tr><td>Public Tickets</td><td>£{{ pricing.public_price }}</td></tr>
+		<tr><td>Season Ticket</td><td>£{{ season_pricing.season_price }}</td></tr>
+		<tr><td>Season Ticket Member</td><td>£{{ season_pricing.season_price_nnt }}</td></tr>
+		<tr><td>Matinee Fresher Tickets</td><td>£{{ pricing.matinee_freshers_price }}</td></tr>
+		<tr><td>Matinee Fresher (members)</td><td>£{{ pricing.matinee_freshers_nnt_price }}</td></tr>
+	<!-- Fringe Shows -->
+	{% elif show.category.name == "Fringe" %}
+		<tr><td>Fringe Tickets</td><td>£{{ pricing.fringe_price }}</td></tr>
+		<tr><td>Season Pass Ticket</td><td>£{{ season_pricing.season_price }}</td></tr>
+		<tr><td>Season Ticket Member</td><td>£{{ season_pricing.season_price_nnt }}</td></tr>
+	<!-- External Shows -->
+	{% elif show.category.name == "External" %}
+		<tr><td>Member Tickets</td><td>£{{ pricing.member_price }}</td></tr>
+		<tr><td>Concession Tickets</td><td>£{{ pricing.concession_price }}</td></tr>
+		<tr><td>Public Tickets</td><td>£{{ pricing.public_price }}</td></tr>
+
+		{% if pricing.allow_season_tickets %}
+			<tr><td>Season Pass Ticket Sales</td><td>£{{ season_pricing.season_price }}</td></tr>
+			<tr><td>Season Ticket Member Sales</td><td>£{{ season_pricing.season_price_nnt }}</td></tr>
+		{% endif %}
+
+		{% if pricing.allow_half_matinee %}
+			<tr><td>Matinee Fresher Tickets</td><td>£{{ pricing.matinee_freshers_price }}</td></tr>
+		{% endif %}
+		{% if pricing.allow_half_nnt_matinee %}
+			<tr><td>Matinee Member Fresher Tickets</td><td>£{{ pricing.matinee_freshers_nnt_price }}</td></tr>
+		{% endif %}
+
+	{% elif show.category.name == "StuFF" %}
+		<tr><td>Single Show Ticket</td><td>£{{ pricing.stuff_price }}</td></tr>
+		<tr><td>Festival Pass Sales</td><td>£{{ pricing.festival_sales_price|floatformat:2 }}</td></tr>
+		<tr><td>Day Pass Sales</td><td>£{{ pricing.day_sales_price|floatformat:2 }}</td></tr>
+	{% endif %}
+</table>
+</div>
 {% endblock %}

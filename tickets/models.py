@@ -20,7 +20,6 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class Category(models.Model):
-
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
@@ -117,6 +116,7 @@ class Show(models.Model):
             'poster_wall': (126, 178),
             'poster_page': (256, 362),
             'poster_tiny': (50, 71),
+            'poster_whatson': (500, 750),
         }
     )
 
@@ -137,11 +137,22 @@ class Show(models.Model):
         return (datetime.date.today() - datetime.timedelta(days=1)) <= self.end_date
 
     def show_sold_out(self):
-        if self.occurrence_set.count():
+        if self.has_occurrences():
+            occ_max_sell_count = 0
+            ticket_count = 0
             for occ in self.occurrence_set.all():
-                return occ.sold_out()
+                ticket_count += occ.tickets_sold()
+                occ_max_sell_count += occ.maximum_sell
+
+            return ticket_count >= occ_max_sell_count
         else:
             return False
+
+    def booking_closed(self):
+        if len(Occurrence.objects.get_available(self)) > 0:
+            return False
+        else:
+            return True
 
     # Get sale data for shows
     def get_sale_data(self):
@@ -163,12 +174,6 @@ class Show(models.Model):
 
     def clean(self, *args, **kwargs): 
         cleaned_data = super(Show, self).clean(*args, **kwargs)
-
-        # Check to see if the dates are current
-        if self.start_date and (self.start_date < datetime.date.today()):
-            raise ValidationError(('Please enter a start date which is not in the past'), code='invalid_show_start_date_past')
-        if self.end_date and (self.end_date < datetime.date.today()):
-            raise ValidationError(('Please enter an end date which is not in the past'), code='invalid_show_end_date_past')
 
         # Check to see if dates require the use of timetravel
         if self.start_date and self.end_date:
@@ -306,8 +311,6 @@ class Occurrence(models.Model):
         if self.date:
             if self.date > self.show.end_date or self.date < self.show.start_date:
                 raise ValidationError(('Please enter a date within the dates of the show'), code='invalid_occ_date')
-            elif self.date < datetime.date.today():
-                raise ValidationError(('Please enter a date which is not in the past'), code='invalid_occ_date_past')
 
         return cleaned_data
 
@@ -406,6 +409,10 @@ class Sale(models.Model):
     number_matinee_freshers_nnt = models.IntegerField(default=0)
 
     number_stuff = models.IntegerField(default=0)
+    number_festival = models.IntegerField(default=0)
+    number_festival_sales = models.IntegerField(default=0)
+    number_day = models.IntegerField(default=0)
+    number_day_sales = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.unique_code:

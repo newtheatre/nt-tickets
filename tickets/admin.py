@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.template import RequestContext
 from django.conf.urls import url
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
@@ -122,21 +122,20 @@ class TicketAdmin(admin.ModelAdmin):
             C_form = CancelForm()
             D_form = DownloadForm()
 
-        return render_to_response('admin/tickets_index.html', {
+        context = {
             'R_form': R_form,
             'C_form': C_form,
             'D_form': D_form,
             'occurrence': occurrence,
             'report': report,
-        }, context_instance=RequestContext(request))
+        }
+        
+        return render(request, 'admin/tickets_index.html', context)
 
     def review(self, request, id=5):
         entry = Ticket.objects.get(pk=id)
 
-        return render_to_response('self.review_template', {
-
-        }, context_instance=RequestContext(request))
-
+        return render(request, 'self.review_template', {})
 
 class OccurrenceInline(admin.TabularInline):
     model = Occurrence
@@ -254,6 +253,7 @@ class ShowAdmin(admin.ModelAdmin):
     }
 
     list_display = (
+        'pk',
         'name',
         'location',
         'category',

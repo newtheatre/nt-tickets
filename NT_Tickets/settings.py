@@ -24,6 +24,9 @@ else:
 
 ALLOWED_HOSTS = ['ticketing.newtheatre.org.uk', 'nt-tickets.herokuapp.com']
 
+if DEBUG:
+    ALLOWED_HOSTS.append('localhost')
+
 ADMINS = (
     # (Harry Bridge, 'harry@harrybridge.co.uk')
 )
@@ -46,7 +49,7 @@ if not DEBUG:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ACTUALLY_SEND_MAIL = True
+ACTUALLY_SEND_MAIL = True if not DEBUG else False
 
 # The repository to add issues to
 REPO_OWNER = 'newtheatre'
@@ -81,12 +84,14 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     # 'django_ses',
     # 'debug_toolbar',
+    'corsheaders',
 
     'tickets',
     'pricing',
 ]
 
 MIDDLEWARE_CLASSES = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -98,6 +103,15 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'admin_reorder.middleware.ModelAdminReorder',
 ]
+
+CORS_ORIGIN_WHITELIST = [
+    "localhost:4000",
+    "samosborne.me",
+    "newtheatre.org.uk",
+    "alpha.newtheatre.org.uk"
+]
+
+CORS_URLS_REGEX = r'^/api/.*$'
 
 ROOT_URLCONF = 'NT_Tickets.urls'
 
@@ -121,6 +135,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'NT_Tickets.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
