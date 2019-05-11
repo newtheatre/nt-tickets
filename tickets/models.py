@@ -59,17 +59,17 @@ class Warnings(models.Model):
     )
 
     category_choices = (
-        ('A', 'Action'),
-        ('D', 'Dialogue'),
-        ('T', 'Technical Effects')
+        ('1', 'Technical Effects'),
+        ('2', 'Action'),
+        ('3', 'Dialogue')
     )
     category = models.CharField(
         max_length = 50,
         choices = category_choices,
-        default = 'A'
+        default = '2'
     )
     visible = models.BooleanField(
-        default = False,
+        default = True,
         help_text = 'Whether this is visible to audiences (all are visible to FOH).'
     )
 
@@ -121,6 +121,11 @@ class Show(models.Model):
     )
 
     warnings = models.ManyToManyField('Warnings', blank=True)
+
+    warnings_notes = models.TextField(
+        blank=True,
+        help_text = "Description of any content warnings. Visible to Front of House only."
+    )
 
     start_date = models.DateField()
     end_date = models.DateField()

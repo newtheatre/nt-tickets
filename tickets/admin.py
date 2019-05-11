@@ -234,6 +234,7 @@ class ShowAdmin(admin.ModelAdmin):
                 'description',
                 'long_description',
                 'warnings',
+                'warnings_notes',
                 'start_date',
                 'end_date',
                 ),
@@ -307,11 +308,11 @@ class ShowWarningAdmin(admin.ModelAdmin):
     list_filter = ['category']
 
     def make_tech(modeladmin, request, queryset):
-        queryset.update(category='T')
+        queryset.update(category='1')
     def make_action(modeladmin, request, queryset):
-        queryset.update(category='A')
+        queryset.update(category='2')
     def make_dialogue(modeladmin, request, queryset):
-        queryset.update(category='D')
+        queryset.update(category='3')
 
     actions = [make_tech, make_action, make_dialogue]
 
