@@ -1,5 +1,5 @@
 {% spaceless %}
-{% if show.warnings_technical or show.warnings_action or show.warnings_dialogue %}
+{% if show.warnings_technical.all or show.warnings_action.all or show.warnings_dialogue.all %}
 	<p {% if foh == True %}class="white-text"{% endif %}>Please note this show contains: 
 	{% if show.warnings_technical.all %}
 		{% for warning in show.warnings_technical.all|dictsort:'title' %}
@@ -30,6 +30,6 @@
 	{% endif %}
 		{% comment %}{# Scope to add icons #}{% for content_warning in show.warnings.all %}<i class="material-icons">{{ content_warning.icon }}</i>&nbsp;{% endfor %}{% endcomment %}
 {% else %}
-	<i>There are no content warnings for this show.</i>
+	<p {% if foh == True %}class="white-text"{% endif %}><i>There are no content warnings for this show.</i></p>
 {% endif %}
 {% endspaceless %}
