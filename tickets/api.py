@@ -31,16 +31,18 @@ class OccurrenceSerializer(serializers.ModelSerializer):
         model = models.Occurrence
         fields = ('id', 'date', 'time', 'maximum_sell', 'tickets_sold', 'sold_out')
 
-class WarningSerializer(serializers.ModelSerializer):
+class ContentWarningSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Warnings 
+        model = models.ContentWarning
         fields = ('title', 'category')
 
 
 class ShowSerializer(serializers.HyperlinkedModelSerializer):
     occurrence_set = OccurrenceSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
-    warnings = WarningSerializer(many=True, read_only=True)
+    warnings_technical = ContentWarningSerializer(many=True, read_only=True)
+    warnings_action = ContentWarningSerializer(many=True, read_only=True)
+    warnings_dialogue = ContentWarningSerializer(many=True, read_only=True)
     small_poster = serializers.SerializerMethodField()
 
     def get_small_poster(self, obj):
@@ -49,7 +51,11 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = models.Show
-        fields = ('id', 'url', 'name', 'description', 'location', 'description', 'long_description', 'long_markdown', 'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 'warnings', 'category', 'occurrence_set', 'show_sold_out')
+        fields = ('id', 'url', 'name', 'description', 
+            'location', 'description', 'long_description', 'long_markdown', 
+            'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 
+            'warnings_technical', 'warnings_action', 'warnings_dialogue',
+            'category', 'occurrence_set', 'show_sold_out')
 
 
 class ShowViewSet(viewsets.ReadOnlyModelViewSet):
