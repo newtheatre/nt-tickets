@@ -244,7 +244,7 @@ class ShowAdmin(admin.ModelAdmin):
           }),
         ('Content Warnings', {
             'fields': ('warnings_technical', 'warnings_action', 'warnings_dialogue', 'warnings_notes'),
-            'classes': ('collapse in',),
+            'classes': ('collapse',),
         }),
         )
     inlines = [
@@ -309,12 +309,10 @@ class ContentWarningAdmin(admin.ModelAdmin):
 
     def make_tech(modeladmin, request, queryset):
         queryset.update(category='1')
-    def make_action(modeladmin, request, queryset):
+    def make_content(modeladmin, request, queryset):
         queryset.update(category='2')
-    def make_dialogue(modeladmin, request, queryset):
-        queryset.update(category='3')
 
-    actions = [make_tech, make_action, make_dialogue]
+    actions = [make_tech, make_content]
 
 class SaleAdmin(admin.ModelAdmin):
     ordering = ['stamp']

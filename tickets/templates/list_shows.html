@@ -25,7 +25,7 @@
 				{% endif %}
 		</p>
 		<p>{{ show.description }}</p>
-		{% include "includes/warnings.html" with chips=False %}
+		{% include "includes/warnings.html" %}
 		<div class="venue cat-{{ show.category.slug }}">Venue: {{ show.location }}</div>
 
 		<div class="category cat-{{ show.category.slug }}">{{ show.category }}</div>
