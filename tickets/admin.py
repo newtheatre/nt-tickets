@@ -233,10 +233,8 @@ class ShowAdmin(admin.ModelAdmin):
                 'poster',
                 'description',
                 'long_description',
-                'warnings',
-                'warnings_notes',
-                'start_date',
-                'end_date',
+                ('start_date',
+                'end_date'),
                 ),
             'description': 'Press \'Save and continue editing\' to display pricing for StuFF and External shows.'
             }),
@@ -244,14 +242,16 @@ class ShowAdmin(admin.ModelAdmin):
             'fields': ('slug',),
             'classes': ('collapse',),
           }),
+        ('Content Warnings', {
+            'fields': ('warnings_technical', 'warnings_action', 'warnings_dialogue', 'warnings_notes'),
+            'classes': ('collapse in',),
+        }),
         )
     inlines = [
         OccurrenceInline,
     ]
 
-    formfield_overrides = {
-        models.ManyToManyField: {'widget': CheckboxSelectMultiple},
-    }
+    filter_horizontal = ('warnings_dialogue', 'warnings_action', 'warnings_technical')
 
     list_display = (
         'pk',
@@ -301,7 +301,7 @@ class ShowAdmin(admin.ModelAdmin):
         self.inlines = current_inlines
         return super(ShowAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
-class ShowWarningAdmin(admin.ModelAdmin):
+class ContentWarningAdmin(admin.ModelAdmin):
     ordering = ['category', 'title']
     list_display = ('title', 'category')
     search_fields = ['title']
@@ -461,7 +461,7 @@ admin.site.register(Category, CategoryAdmin)
 # admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(Sale, SaleAdmin)
-admin.site.register(Warnings, ShowWarningAdmin)
+admin.site.register(ContentWarning, ContentWarningAdmin)
 admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
 admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
 admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)

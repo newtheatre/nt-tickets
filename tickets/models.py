@@ -43,7 +43,7 @@ class Category(models.Model):
         return self.name
 
 @python_2_unicode_compatible
-class Warnings(models.Model):
+class ContentWarning(models.Model):
     class Meta:
         verbose_name = 'Content Warning'
         verbose_name_plural = 'Content Warnings'
@@ -60,17 +60,12 @@ class Warnings(models.Model):
 
     category_choices = (
         ('1', 'Technical Effects'),
-        ('2', 'Action'),
-        ('3', 'Dialogue')
+        ('2', 'Content'),
     )
     category = models.CharField(
         max_length = 50,
         choices = category_choices,
         default = '2'
-    )
-    visible = models.BooleanField(
-        default = True,
-        help_text = 'Whether this is visible to audiences (all are visible to FOH).'
     )
 
     def __str__(self):
@@ -120,7 +115,27 @@ class Show(models.Model):
         }
     )
 
-    warnings = models.ManyToManyField('Warnings', blank=True)
+    warnings_technical = models.ManyToManyField(
+        'ContentWarning', 
+        blank=True,
+        limit_choices_to={'category': '1'},
+        related_name='warnings_technical',
+        verbose_name = 'Technical Warnings'
+    )
+    warnings_action = models.ManyToManyField(
+        'ContentWarning',
+        blank=True,
+        limit_choices_to={'category': '2'},
+        related_name = 'warnings_action',
+        verbose_name = 'Scenes of...',
+    )
+    warnings_dialogue = models.ManyToManyField(
+        'ContentWarning',
+        blank=True,
+        limit_choices_to={'category': '2'},
+        related_name = 'warnings_dialogue',
+        verbose_name = 'Discussions / themes of...',
+    )
 
     warnings_notes = models.TextField(
         blank=True,
