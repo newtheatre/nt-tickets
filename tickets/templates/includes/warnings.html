@@ -1,31 +1,35 @@
-{% if show.warnings %}
-	{% if chips == True %}
-		<p class="white-text"><strong>Content warnings</strong>:
-	{% else %}
-		<p>Please note this show contains: 
+{% spaceless %}
+{% if show.warnings_technical or show.warnings_action or show.warnings_dialogue %}
+	<p {% if foh == True %}class="white-text"{% endif %}>Please note this show contains: 
+	{% if show.warnings_technical.all %}
+		{% for warning in show.warnings_technical.all|dictsort:'title' %}
+			<strong>{{ warning | lower }}</strong>{% if not forloop.last %}, {% elif forloop.last and show.warnings_dialogue.all or show.warnings_action.all %}; {% endif %}
+		{% endfor %}
 	{% endif %}
-		{% if show.warnings.all %}
-			 {% for content_warning in show.warnings.all|dictsort:'title'|dictsort:'category' %}
-			 	{% if content_warning.visible == True or foh == True %}
-				 	<span class="
-				 		{% if chips == True %}{% if content_warning.category == '1' %}red{% elif content_warning.category == '2' %}orange{% elif content_warning.category == '3' %}amber{% endif %}{% endif %}
-				 		tooltipped" data-position="bottom" data-delay="20" data-tooltip="Found in the {{ content_warning.get_category_display|lower }} of the show."><strong>{% if chips == True %}{{ content_warning|title }}{% else %}{{ content_warning|lower }}{% endif %}</strong></span>{% if not forloop.last and chips == False %},{% else %}{% endif %}{% endif %}{% endfor %}
-			</p>
-			{% if foh == False %}<p>For full details of content warnings for this show, please email <a href="mailto:boxoffice@newtheatre.org.uk">boxoffice@newtheatre.org.uk</a>.</p>
-			{% else %}
-				{% if show.warnings_notes %}
-					<a class="modal-trigger" href="#warnings_modal">Show full content warnings</a>
-					<div class="modal grey darken-3 text-white" id="warnings_modal">
-						<div class="modal-content white-text">
-							<h4 class="nnt-text text-orange">Full content warnings
-							 <a href="#!" class="modal-action modal-close right nnt-text text-orange"><i class="material-icons">cancel</i></a></h4>
-							<p>{{ show.warnings_notes }}</p>
-						</div>
-					</div>
-				{% endif %}
-			{% endif %}
-			{% comment %}{# Scope to add icons #}{% for content_warning in show.warnings.all %}<i class="material-icons">{{ content_warning.icon }}</i>&nbsp;{% endfor %}{% endcomment %}
-		{% else %}
-			<i>There are no content warnings for this show.</i>
+	{% if show.warnings_action.all %}scenes featuring 
+		{% for warning in show.warnings_action.all|dictsort:'title' %}
+			<strong>{{ warning | lower }}</strong>{% if not forloop.last %}, {% elif forloop.last and show.warnings_dialogue.all %}; {% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if show.warnings_dialogue.all %}discussions/themes of   
+		{% for warning in show.warnings_dialogue.all|dictsort:'title' %}
+			<strong>{{ warning | lower }}</strong>{% if not forloop.last %},{% endif %}{% endfor %}
+	{% endif %}
+	{% if foh == False %}<p>For full details of content warnings for this show, please email <a href="mailto:boxoffice@newtheatre.org.uk">foh@newtheatre.org.uk</a>.</p>
+	{% else %}
+		{% if show.warnings_notes %}
+			<p><a class="modal-trigger" href="#warnings_modal">Show full content warnings</a></p>
+			<div class="modal grey darken-3 text-white" id="warnings_modal">
+				<div class="modal-content white-text">
+					<h4 class="nnt-text text-orange">Full content warnings
+					 <a href="#!" class="modal-action modal-close right nnt-text text-orange"><i class="material-icons">cancel</i></a></h4>
+					<p>{{ show.warnings_notes }}</p>
+				</div>
+			</div>
 		{% endif %}
+	{% endif %}
+		{% comment %}{# Scope to add icons #}{% for content_warning in show.warnings.all %}<i class="material-icons">{{ content_warning.icon }}</i>&nbsp;{% endfor %}{% endcomment %}
+{% else %}
+	<i>There are no content warnings for this show.</i>
 {% endif %}
+{% endspaceless %}
