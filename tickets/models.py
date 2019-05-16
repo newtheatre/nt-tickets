@@ -42,6 +42,35 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+@python_2_unicode_compatible
+class ContentWarning(models.Model):
+    class Meta:
+        verbose_name = 'Content Warning'
+        verbose_name_plural = 'Content Warnings'
+
+    title = models.CharField(
+        max_length = 100,
+        help_text = 'The name of the warning'
+    )
+    icon = models.CharField(
+        max_length = 50,
+        help_text = 'An icon code, from this list: https://material.io/icons/',
+        blank=True,
+    )
+
+    category_choices = (
+        ('1', 'Technical Effects'),
+        ('2', 'Content'),
+    )
+    category = models.CharField(
+        max_length = 50,
+        choices = category_choices,
+        default = '2'
+    )
+
+    def __str__(self):
+        return self.title
+
 
 @python_2_unicode_compatible
 class Show(models.Model):
@@ -84,6 +113,33 @@ class Show(models.Model):
             'poster_tiny': (50, 71),
             'poster_whatson': (500, 750),
         }
+    )
+
+    warnings_technical = models.ManyToManyField(
+        'ContentWarning', 
+        blank=True,
+        limit_choices_to={'category': '1'},
+        related_name='warnings_technical',
+        verbose_name = 'Technical Warnings'
+    )
+    warnings_action = models.ManyToManyField(
+        'ContentWarning',
+        blank=True,
+        limit_choices_to={'category': '2'},
+        related_name = 'warnings_action',
+        verbose_name = 'Scenes of...',
+    )
+    warnings_dialogue = models.ManyToManyField(
+        'ContentWarning',
+        blank=True,
+        limit_choices_to={'category': '2'},
+        related_name = 'warnings_dialogue',
+        verbose_name = 'Discussions / themes of...',
+    )
+
+    warnings_notes = models.TextField(
+        blank=True,
+        help_text = "Description of any content warnings. Visible to Front of House only."
     )
 
     start_date = models.DateField()

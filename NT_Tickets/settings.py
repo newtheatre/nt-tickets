@@ -208,6 +208,7 @@ ADMIN_REORDER = (
         'tickets.Occurrence',
         'tickets.Ticket',
         'tickets.Sale',
+        'tickets.ContentWarning',
         )
     },
 
