@@ -93,6 +93,16 @@ class Show(models.Model):
         help_text='Will show up alongside show, you can hide this with CSS if needed.'
     )
 
+    runtime = models.IntegerField(
+        blank=True, null=True,
+        help_text = 'Show running time in minutes, without interval time.'
+    )
+
+    interval_number = models.IntegerField(
+        default = 0,
+        help_text = 'Number of intervals the show has, typically 0 or 1.'
+    )
+
     description = models.TextField(
         help_text='A short description',
     )

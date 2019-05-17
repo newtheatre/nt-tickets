@@ -26,7 +26,7 @@
 								</div>
 							</div>
 							<div class="col col s12 m8 l9">
-								<h1 class="light white-text flow-text center" id="title" style="margin-top: 0;">
+								<h1 class="light white-text flow-text center" id="title" style="margin-top: 0; margin-bottom: 0.5rem;">
 									<a href="/" rel="nofollow" class="title">
 									{{ show.name }} 
 									{% if report.have_form %} 
@@ -34,6 +34,15 @@
 									{% endif %}
 									</a>
 								</h1>
+								{% if show.runtime %}
+									<h3 class="light white-text flow-text center" id="runtiem" style="margin-top: 0;"><em>
+										{{ show.runtime }} minutes, 
+										{% if show.interval_number == 0 %}without interval
+										{% elif show.interval_number == 1 %}with 1 interval
+										{% elif show.interval_number > 1 %}with {{ show.interval_number }} intervals
+										{% endif %} 
+									</em></h3>
+								{% endif %}
 								<div class="row hide-on-small-and-down">
 									<div class="col s6 center-align">
 										<button data-target="picker-modal" 
