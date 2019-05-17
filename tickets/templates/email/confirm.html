@@ -74,6 +74,7 @@
 <tr>
 <td>
 <p>You've successfully reserved {{ticket.quantity}} {% if ticket.quantity == 1 %}ticket{% else %}tickets{% endif %} for the performance on <strong>{{ticket.occurrence.date|date:"l d F"}}</strong>, the show is due to begin at <strong>{{ticket.occurrence.time}}</strong> Tickets can be collected up to <strong>half an hour</strong> before the show starts.</p>
+{% include "includes/warnings.html" %}
 <p>We'd be sad not to see you but if can't attend please <a href="http://{{settings.BASE_URL}}{% url 'cancel' ticket.unique_code %}">cancel your tickets</a> so others can take your place.</p>
 <p>Please don't hesitate to contact us if you have any questions.</p>
 </td>

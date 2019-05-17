@@ -9,23 +9,24 @@
 {% block content %}
 	<!-- Top Card -->
 	<div class="container">
-		<div class="row top-card">
+		<div class="row">
 			<div class="col s12">
-				<div class="card small grey darken-3 top-card">
-					<div class="row">
-						<div class="col s4" id="poster-container">
-							<div class="card-image show-poster hide-on-small-and-down">
-								<a href="/" rel="nofollow">
-								{% if show.poster %}
-									<img class="responsive-img" src="{{ show.poster.poster_page.url }}" id="report-image" />
-								{% else %}
-									<img class="responsive-img" src="{% static 'images/no_image.png' %}" id="report-image" />
-								{% endif %}
-								</a>
+				<div class="card grey darken-3">
+					<div class="card-content">
+						<div class="row">
+							<div class="col s4" id="poster-container">
+								<div class="card-image show-poster hide-on-small-and-down">
+									<a href="/" rel="nofollow">
+									{% if show.poster %}
+										<img class="responsive-img" src="{{ show.poster.poster_page.url }}" id="report-image" />
+									{% else %}
+										<img class="responsive-img" src="{% static 'images/no_image.png' %}" id="report-image" />
+									{% endif %}
+									</a>
+								</div>
 							</div>
-						</div>
-							<div class="card-content">
-								<h1 class="light white-text flow-text center-on-small-only" id="title" style="margin-top: 0;">
+							<div class="col col s12 m8 l9">
+								<h1 class="light white-text flow-text center" id="title" style="margin-top: 0;">
 									<a href="/" rel="nofollow" class="title">
 									{{ show.name }} 
 									{% if report.have_form %} 
@@ -61,11 +62,15 @@
 										</a>
 									</div>
 								</div>
+								{% if report.have_form %}
+									{% include "includes/warnings.html" with foh=True %}
+								{% endif %}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 		{% if not report.have_form %}
 			{% include 'occurrence_cards.html' %}
 		{% elif report.have_form %}

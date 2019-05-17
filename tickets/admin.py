@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
+from django.forms import CheckboxSelectMultiple
 import csv
 
 from datetime import datetime
@@ -232,8 +233,8 @@ class ShowAdmin(admin.ModelAdmin):
                 'poster',
                 'description',
                 'long_description',
-                'start_date',
-                'end_date',
+                ('start_date',
+                'end_date'),
                 ),
             'description': 'Press \'Save and continue editing\' to display pricing for StuFF and External shows.'
             }),
@@ -241,10 +242,16 @@ class ShowAdmin(admin.ModelAdmin):
             'fields': ('slug',),
             'classes': ('collapse',),
           }),
+        ('Content Warnings', {
+            'fields': ('warnings_technical', 'warnings_action', 'warnings_dialogue', 'warnings_notes'),
+            'classes': ('collapse',),
+        }),
         )
     inlines = [
         OccurrenceInline,
     ]
+
+    filter_horizontal = ('warnings_dialogue', 'warnings_action', 'warnings_technical')
 
     list_display = (
         'pk',
@@ -293,6 +300,19 @@ class ShowAdmin(admin.ModelAdmin):
         # CODE TO FILL INLINES BASED ON PRODUCT
         self.inlines = current_inlines
         return super(ShowAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
+
+class ContentWarningAdmin(admin.ModelAdmin):
+    ordering = ['category', 'title']
+    list_display = ('title', 'category')
+    search_fields = ['title']
+    list_filter = ['category']
+
+    def make_tech(modeladmin, request, queryset):
+        queryset.update(category='1')
+    def make_content(modeladmin, request, queryset):
+        queryset.update(category='2')
+
+    actions = [make_tech, make_content]
 
 class SaleAdmin(admin.ModelAdmin):
     ordering = ['stamp']
@@ -439,6 +459,7 @@ admin.site.register(Category, CategoryAdmin)
 # admin.site.register(Occurrence, OccurrenceAdmin)
 admin.site.register(Ticket, TicketAdmin)
 admin.site.register(Sale, SaleAdmin)
+admin.site.register(ContentWarning, ContentWarningAdmin)
 admin.site.register(pricing.InHousePricing, InHousePriceAdmin)
 admin.site.register(pricing.ExternalPricing, ExternalPriceAdmin)
 admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)
