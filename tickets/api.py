@@ -51,7 +51,7 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = models.Show
-        fields = ('id', 'url', 'name', 'description', 
+        fields = ('id', 'url', 'name', 'runtime', 'interval_number',
             'location', 'description', 'long_description', 'long_markdown', 
             'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 
             'warnings_technical', 'warnings_action', 'warnings_dialogue',
