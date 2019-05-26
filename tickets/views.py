@@ -79,6 +79,9 @@ def ShowReport(request, show_name, occ_id):
     report['season_price'] = models.SeasonTicketPricing.objects.all()[0].season_sale_price
     report['season_price_nnt'] = models.SeasonTicketPricing.objects.all()[0].season_sale_nnt_price
 
+    report['stuff_day_pass'] = models.StuFFPassPricing.objects.all()[0].day_pass
+    report['stuff_festival_pass'] = models.StuFFPassPricing.objects.all()[0].festival_pass 
+
     if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
 
@@ -157,8 +160,8 @@ def ShowReport(request, show_name, occ_id):
             try:
                 pricing = {}
                 pricing['stuff_price'] = models.StuFFPricing.objects.get(show_id=show_name).stuff_price
-                pricing['festival_sales_price'] = config.FESTIVAL_SALES_PRICE[0]
-                pricing['day_sales_price'] = config.DAY_SALES_PRICE[0]
+                pricing['festival_sales_price'] = report['stuff_festival_pass']
+                pricing['day_sales_price'] = report['stuff_day_pass']
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
                 pricing = []
@@ -358,12 +361,12 @@ def SaleInputAJAX(request, show_name, occ_id):
             stuff_sale = float(0)
 
         try:
-            festival_sale = number_festival_sales * float(config.FESTIVAL_SALES_PRICE[0])
+            festival_sale = number_festival_sales * float(models.StuFFPassPricing.objects.all()[0].festival_pass)
         except Exception:
             festival_sale = float(0)
 
         try:
-            day_sale = number_day_sales * float(config.DAY_SALES_PRICE[0])
+            day_sale = number_day_sales * float(models.StuFFPassPricing.objects.all()[0].day_pass)
         except Exception:
             day_sale = float(0)
 
@@ -658,8 +661,8 @@ def SaleReportFull(request, show_name):
 
     report['festival_price'] = float(0)
     report['day_price'] = float(0)
-    report['festival_sales_price'] = config.FESTIVAL_SALES_PRICE[0]
-    report['day_sales_price'] = config.DAY_SALES_PRICE[0]
+    report['festival_sales_price'] = float(models.StuFFPassPricing.objects.all()[0].festival_pass)
+    report['day_sales_price'] = float(models.StuFFPassPricing.objects.all()[0].day_pass)
 
     context = {
         'show': show,
@@ -1113,6 +1116,7 @@ def book_landing(request, show_id):
         form = forms.BookingFormLanding(show=show)    # An unbound form
 
     pricing = None
+    pricing_stuff = None 
     try:
         if show.category.slug == 'in-house':
             pricing = models.InHousePricing.objects.all()[0]
@@ -1124,6 +1128,10 @@ def book_landing(request, show_id):
             pricing = models.ExternalPricing.objects.get(show_id=show.id)
         elif show.category.slug == 'stuff':
             pricing = models.StuFFPricing.objects.get(show_id=show.id)
+            pricing_stuff = {
+                'festival_pass': models.StuFFPassPricing.objects.all()[0].festival_pass,
+                'day_pass': models.StuFFPassPricing.objects.all()[0].day_pass
+            }
     except ObjectDoesNotExist:
         pass
 
@@ -1143,6 +1151,7 @@ def book_landing(request, show_id):
         'message': message,
         'foh_contact': foh_contact,
         'pricing': pricing,
+        'pricing_stuff': pricing_stuff,
         'season_pricing': season_pricing
     }
 
