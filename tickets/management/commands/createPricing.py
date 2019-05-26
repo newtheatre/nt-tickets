@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+import configuration.customise as config
 from pricing import models
 
 
@@ -25,4 +26,10 @@ class Command(BaseCommand):
         if not models.FringePricing.objects.all().exists():
             models.FringePricing.objects.create(
                 fringe_price='3.00'
+            )
+
+        if not models.StuFFPassPricing.objects.all().exists():
+            models.StuFFPassPricing.objects.create(
+                festival_pass=config.FESTIVAL_SALES_PRICE[0],
+                day_pass=config.DAY_SALES_PRICE[0]
             )
