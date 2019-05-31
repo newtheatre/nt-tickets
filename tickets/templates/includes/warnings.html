@@ -29,6 +29,8 @@
 		{% endif %}
 	{% endif %}
 		{% comment %}{# Scope to add icons #}{% for content_warning in show.warnings.all %}<i class="material-icons">{{ content_warning.icon }}</i>&nbsp;{% endfor %}{% endcomment %}
+{% elif show.no_warnings == False %}
+	<p {% if foh == True %}class="white-text"{% endif %}><i>Content warnings for this show are to be confirmed. For more information, please email <a href="mailto:boxoffice@newtheatre.org.uk">foh@newtheatre.org.uk</a></i></p>
 {% else %}
 	<p {% if foh == True %}class="white-text"{% endif %}><i>There are no content warnings for this show.</i></p>
 {% endif %}

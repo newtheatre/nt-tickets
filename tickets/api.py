@@ -53,8 +53,8 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Show
         fields = ('id', 'url', 'name', 'runtime', 'interval_number',
             'location', 'description', 'long_description', 'long_markdown', 
-            'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 
-            'warnings_technical', 'warnings_action', 'warnings_dialogue',
+            'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 'programme',
+            'no_warnings', 'warnings_technical', 'warnings_action', 'warnings_dialogue',
             'category', 'occurrence_set', 'show_sold_out')
 
 

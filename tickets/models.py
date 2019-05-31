@@ -125,6 +125,16 @@ class Show(models.Model):
         }
     )
 
+    programme = models.URLField(
+        blank=True, null=True,
+        help_text='Link to a page or PDF hosting a programme. Try hosting it on Google Drive or <a href="https://github.com/newtheatre/history-project/tree/master/assets/for_shows" target="_blank">Github</a>.'
+    )
+
+    no_warnings = models.BooleanField(
+        default=False,
+        help_text='Select True if a show has no content warnings.'
+    )
+
     warnings_technical = models.ManyToManyField(
         'ContentWarning', 
         blank=True,

@@ -232,6 +232,7 @@ class ShowAdmin(admin.ModelAdmin):
                 'category',
                 ('runtime', 'interval_number'),
                 'poster',
+                'programme',
                 'description',
                 'long_description',
                 ('start_date',
@@ -244,7 +245,7 @@ class ShowAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
           }),
         ('Content Warnings', {
-            'fields': ('warnings_technical', 'warnings_action', 'warnings_dialogue', 'warnings_notes'),
+            'fields': ('no_warnings', 'warnings_technical', 'warnings_action', 'warnings_dialogue', 'warnings_notes'),
             'classes': ('collapse',),
         }),
         )
