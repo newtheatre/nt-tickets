@@ -79,8 +79,8 @@ Book Tickets
 
 	{% elif show.category.name == "StuFF" %}
 		<tr><td>Single Show Ticket</td><td>£{{ pricing.stuff_price }}</td></tr>
-		<tr><td>Festival Pass Sales</td><td>£{{ pricing.festival_sales_price|floatformat:2 }}</td></tr>
-		<tr><td>Day Pass Sales</td><td>£{{ pricing.day_sales_price|floatformat:2 }}</td></tr>
+		<tr><td>Festival Pass</td><td>£{{ pricing_stuff.festival_pass }}</td></tr>
+		<tr><td>Day Pass</td><td>£{{ pricing_stuff.day_pass }}</td></tr>
 	{% endif %}
 </table>
 </div>

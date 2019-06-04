@@ -220,6 +220,7 @@ ADMIN_REORDER = (
         'pricing.FringePricing',
         'pricing.ExternalPricing',
         'pricing.StuFFPricing',
+        'pricing.StuFFPassPricing',
         'pricing.StuFFEventPricing',
         )    
     },
