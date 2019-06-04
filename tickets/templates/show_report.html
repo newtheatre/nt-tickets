@@ -354,6 +354,7 @@
 							<!-- End matinee -->
 							{% endif %}
 
+					<!-- StuFF Shows --> 
 					{% elif report.category|stringformat:"s" == "StuFF" %}
 						<div class="input-field col s12 m6">
 								<input id="stuff" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
@@ -384,7 +385,8 @@
 							<input id="day_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="day_sales">Day Pass Sales £{{ pricing.day_sales_price|floatformat:2 }}</label>
 						</div>
-
+					<!-- End StuFF Shows -->
+					
 					{% else %}
 						<div class="col s12">
 							<p class="light red-text center-align report-text">Invalid category applied ({{ report.category }})</p>

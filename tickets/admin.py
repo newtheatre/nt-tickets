@@ -453,6 +453,8 @@ class StuFFPriceAdmin(admin.ModelAdmin):
 class StuFFEventPriceAdmin(admin.ModelAdmin):
     fields = ['show', 'concession_price', 'public_price', 'member_price']
 
+class StuFFPassAdmin(admin.ModelAdmin):
+    fields = ['day_pass', 'festival_pass']
 
 # admin.site.unregister(Site)
 admin.site.register(Show, ShowAdmin)
@@ -467,3 +469,4 @@ admin.site.register(pricing.SeasonTicketPricing, SeasonPriceAdmin)
 admin.site.register(pricing.FringePricing, FringePriceAdmin)
 admin.site.register(pricing.StuFFPricing, StuFFPriceAdmin)
 admin.site.register(pricing.StuFFEventPricing, StuFFEventPriceAdmin)
+admin.site.register(pricing.StuFFPassPricing, StuFFPassAdmin)

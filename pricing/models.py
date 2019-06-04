@@ -126,7 +126,7 @@ class StuFFPricing(models.Model):
 
     show = models.ForeignKey(Show, limit_choices_to={'category': 4})
     stuff_price = models.DecimalField(
-        max_digits=6, decimal_places=2, default=config.CONCESSION_PRICE[0])
+        max_digits=6, decimal_places=2, default=config.FRINGE_PRICE[0])
 
     def __str__(self):
         s = 'Pricing for: ' + self.show.name
@@ -135,6 +135,22 @@ class StuFFPricing(models.Model):
     def save(self, *args, **kwargs):
         super(StuFFPricing, self).save(*args, **kwargs)
 
+@python_2_unicode_compatible
+class StuFFPassPricing(models.Model):
+    class Meta:
+        verbose_name = 'StuFF Pass'
+        verbose_name_plural = 'StuFF Passes'
+
+    day_pass = models.DecimalField(
+        max_digits=6, decimal_places=2, default=config.DAY_SALES_PRICE[0])
+    festival_pass = models.DecimalField(
+        max_digits=6, decimal_places=2, default=config.FESTIVAL_SALES_PRICE[0])
+
+    def __str__(self):
+        return 'StuFF Festival and Day Pass Pricing'
+
+    def save(self, *args, **kwargs):
+        super(StuFFPassPricing, self).save(*args, **kwargs)
 
 @python_2_unicode_compatible
 class StuFFEventPricing(PricingBase):
