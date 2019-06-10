@@ -167,6 +167,8 @@ class Show(models.Model):
 
     category = models.ForeignKey('Category')
 
+    allow_reservations = models.BooleanField(default=True)
+
     def date_formatted(self):
         return self.start_date.strftime('%A %d %B %Y')
 
