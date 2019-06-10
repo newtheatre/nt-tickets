@@ -241,7 +241,7 @@ class ShowAdmin(admin.ModelAdmin):
             'description': 'Press \'Save and continue editing\' to display pricing for StuFF and External shows.'
             }),
         ('Advanced Options', {
-            'fields': ('slug',),
+            'fields': ('slug','allow_reservations',),
             'classes': ('collapse',),
           }),
         ('Content Warnings', {
