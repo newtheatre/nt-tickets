@@ -1051,7 +1051,7 @@ def book_landing(request, show_id):
         return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
     step = 1
     total = 2
-    message = "Tickets for performances are reserved online and payed for on collection at the box office."
+    message = "Tickets for performances are reserved online and paid for on collection at the box office."
     foh_contact = 'foh@newtheatre.org.uk'
 
     if request.method == 'POST':    # If the form has been submitted...
