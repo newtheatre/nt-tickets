@@ -81,6 +81,7 @@ def ShowReport(request, show_name, occ_id):
 
     report['stuff_day_pass'] = models.StuFFPassPricing.objects.all()[0].day_pass
     report['stuff_festival_pass'] = models.StuFFPassPricing.objects.all()[0].festival_pass 
+    report['stuff_performer_pass'] = models.StuFFPassPricing.objects.all()[0].performer_pass
 
     if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
@@ -162,6 +163,7 @@ def ShowReport(request, show_name, occ_id):
                 pricing['stuff_price'] = models.StuFFPricing.objects.get(show_id=show_name).stuff_price
                 pricing['festival_sales_price'] = report['stuff_festival_pass']
                 pricing['day_sales_price'] = report['stuff_day_pass']
+                pricing['performer_sales_price'] = report['stuff_performer_pass']
                 report['pricing_error'] = False
             except ObjectDoesNotExist:
                 pricing = []
@@ -302,6 +304,16 @@ def SaleInputAJAX(request, show_name, occ_id):
         except:
             number_festival_sales = float(0)
 
+        try:
+            number_performer = float(request.POST.get('number_performer'))
+        except:
+            number_performer = float(0)
+
+        try:
+            number_performer_sales = float(request.POST.get('number_performer_sales'))
+        except:
+            number_performer_sales = float(0)
+
         s.number_concession = number_concession
         s.number_member = number_member
         s.number_public = number_public
@@ -317,6 +329,8 @@ def SaleInputAJAX(request, show_name, occ_id):
         s.number_day_sales = number_day_sales
         s.number_festival = number_festival
         s.number_festival_sales = number_festival_sales
+        s.number_performer = number_performer
+        s.number_performer_sales = number_performer_sales 
 
         try:
             concession_sale = number_concession * float(pricing.concession_price)
@@ -370,6 +384,11 @@ def SaleInputAJAX(request, show_name, occ_id):
         except Exception:
             day_sale = float(0)
 
+        try:
+            performer_sale = number_performer_sales * float(models.StuFFPassPricing.objects.all()[0].performer_pass)
+        except Exception:
+            performer_sale = float(0)
+
         price = (
             concession_sale +
             member_sale +
@@ -381,7 +400,8 @@ def SaleInputAJAX(request, show_name, occ_id):
             matinee_fresher_nnt_sale +
             stuff_sale +
             festival_sale +
-            day_sale
+            day_sale + 
+            performer_sale 
         )
 
         number = (
@@ -399,7 +419,9 @@ def SaleInputAJAX(request, show_name, occ_id):
             number_day +
             number_festival +
             number_day_sales +
-            number_festival_sales
+            number_festival_sales +
+            number_performer + 
+            number_performer_sales
         )
 
         s.number = number
@@ -661,8 +683,10 @@ def SaleReportFull(request, show_name):
 
     report['festival_price'] = float(0)
     report['day_price'] = float(0)
+    report['performer_price'] = float(0)
     report['festival_sales_price'] = float(models.StuFFPassPricing.objects.all()[0].festival_pass)
     report['day_sales_price'] = float(models.StuFFPassPricing.objects.all()[0].day_pass)
+    report['performer_sales_price'] = float(models.StuFFPassPricing.objects.all()[0].performer_pass)
 
     context = {
         'show': show,
@@ -1130,7 +1154,8 @@ def book_landing(request, show_id):
             pricing = models.StuFFPricing.objects.get(show_id=show.id)
             pricing_stuff = {
                 'festival_pass': models.StuFFPassPricing.objects.all()[0].festival_pass,
-                'day_pass': models.StuFFPassPricing.objects.all()[0].day_pass
+                'day_pass': models.StuFFPassPricing.objects.all()[0].day_pass,
+                'performer_pass': models.StuFFPassPricing.objects.all()[0].performer_pass,
             }
     except ObjectDoesNotExist:
         pass

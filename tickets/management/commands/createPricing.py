@@ -31,5 +31,6 @@ class Command(BaseCommand):
         if not models.StuFFPassPricing.objects.all().exists():
             models.StuFFPassPricing.objects.create(
                 festival_pass=config.FESTIVAL_SALES_PRICE[0],
-                day_pass=config.DAY_SALES_PRICE[0]
+                day_pass=config.DAY_SALES_PRICE[0],
+                performer_pass=config.PERFORMER_SALES_PRICE[0],
             )

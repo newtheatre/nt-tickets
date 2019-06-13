@@ -145,9 +145,11 @@ class StuFFPassPricing(models.Model):
         max_digits=6, decimal_places=2, default=config.DAY_SALES_PRICE[0])
     festival_pass = models.DecimalField(
         max_digits=6, decimal_places=2, default=config.FESTIVAL_SALES_PRICE[0])
+    performer_pass = models.DecimalField(
+        max_digits=6, decimal_places=2, default=config.PERFORMER_SALES_PRICE[0])
 
     def __str__(self):
-        return 'StuFF Festival and Day Pass Pricing'
+        return 'StuFF Pass Pricing'
 
     def save(self, *args, **kwargs):
         super(StuFFPassPricing, self).save(*args, **kwargs)

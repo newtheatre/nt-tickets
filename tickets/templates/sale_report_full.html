@@ -252,6 +252,8 @@
 											<th class="nnt-purple bold">Day Ticket Sales</th>
 											<th class="nnt-purple bold">Festival Tickets Used</th>
 											<th class="nnt-purple bold">Festival Ticket Sales</th>
+											<th class="nnt-purple bold">Performer Tickets Used</th>
+											<th class="nnt-purple bold">Performer Ticket Sales</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -262,6 +264,8 @@
 											<td class="nnt-orange bold">{% get_tally oc 'day_sales' %}</td>
 											<td class="nnt-orange bold">{% get_tally oc 'festival' %}</td>
 											<td class="nnt-orange bold">{% get_tally oc 'festival_sales' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'performer' %}</td>
+											<td class="nnt-orange bold">{% get_tally oc 'performer_sales' %}</td>
 										</tr>
 										<tr>
 											<td class="nnt-orange bold">£{% mult_tally oc 'stuff' report %}</td>
@@ -270,6 +274,8 @@
 											<td class="nnt-orange bold">£{% mult_tally oc 'day_sales' report %}</td>
 											<td class="nnt-orange bold"></td>
 											<td class="nnt-orange bold">£{% mult_tally oc 'festival_sales' report %}</td>
+											<td class="nnt-orange bold"></td>
+											<td class="nnt-orange bold">£{% mult_tally oc 'performer_sales' report %}</td>
 										</tr>
 									</tbody>
 								</table>
