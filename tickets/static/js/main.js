@@ -20,6 +20,8 @@ function sell_tickets() {
       number_day_sales: $('#day_sales').val(),
       number_festival: $('#festival').val(),
       number_festival_sales: $('#festival_sales').val(),
+      number_performer: $('#performer').val(),
+      number_performer_sales: $('#performer_sales').val(),
       unique_ticket : $('#unique_ticket').val(),
       reservation: $('#reservation').val(),
       reservation_number: $('#reservation_number').val(),

@@ -188,8 +188,14 @@
 						{% else %}
 							<input type="hidden" value="0" id="day_sales_price">
 						{% endif %}
+						{% if pricing.performer_sales_price %}
+							<input type="hidden" value="{{ pricing.performer_sales_price }}" id="performer_sales_price">
+						{% else %}
+							<input type="hidden" value="0" id="performer_sales_price">
+						{% endif %}
 						<input type="hidden" value="0" id="festival_price">
 						<input type="hidden" value="0" id="day_price">
+						<input type="hidden" value="0" id="performer_price">
 					</div>
 					<!-- In House Shows -->
 					{% if report.category|stringformat:"s" == "In House" %}
@@ -385,6 +391,16 @@
 							<input id="day_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
 							<label for="day_sales">Day Pass Sales £{{ pricing.day_sales_price|floatformat:2 }}</label>
 						</div>
+
+						<div class="input-field col s12 m6">
+								<input id="performer" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+								<label for="performer">Performer Pass Tickets</label>
+						</div>
+
+						<div class="input-field col s12 m6">
+							<input id="performer_sales" type="number" class="validate" value="0" max="{{ report.how_many_left }}" min="0" onclick="this.focus();this.select()">
+							<label for="performer_sales">Performer Pass Sales £{{ pricing.performer_sales_price|floatformat:2 }}</label>
+						</div>
 					<!-- End StuFF Shows -->
 					
 					{% else %}
@@ -565,6 +581,8 @@
 			var num_festival_sales = getInput("festival_sales");
 			var num_day = getInput("day");
 			var num_day_sales = getInput("day_sales");
+			var num_performer = getInput("performer");
+			var num_performer_sales = getInput("performer_sales");
 
 			var x = 
 				+num_concession[2] +
@@ -581,7 +599,9 @@
 				+num_festival[2] +
 				+num_festival_sales[2] +
 				+num_day[2] +
-				+num_day_sales[2];
+				+num_day_sales[2] +
+				+num_performer[2] +
+				+num_performer_sales[2];
 
 			var number_sold =
 				+num_concession[0] +
@@ -598,7 +618,9 @@
 				+num_festival[0] +
 				+num_festival_sales[0] +
 				+num_day[0] +
-				+num_day_sales[0];
+				+num_day_sales[0] +
+				+num_performer[0] +
+				+num_performer_sales[0];
 
 			console.log("Number", x, number_sold);
 

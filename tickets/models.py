@@ -84,6 +84,7 @@ class Show(models.Model):
 
     slug = models.SlugField(
         blank=True,
+        max_length=255,
         help_text='Used in the URL of the detail page, leave blank to auto-generate.'
     )
 
@@ -455,6 +456,8 @@ class Sale(models.Model):
     number_festival_sales = models.IntegerField(default=0)
     number_day = models.IntegerField(default=0)
     number_day_sales = models.IntegerField(default=0)
+    number_performer = models.IntegerField(default=0)
+    number_performer_sales = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
