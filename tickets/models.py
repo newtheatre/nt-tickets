@@ -170,6 +170,11 @@ class Show(models.Model):
 
     allow_reservations = models.BooleanField(default=True)
 
+    external_link = models.URLField(
+        blank=True,
+        help_text = "Link to an external booking website; overrides NT reservation capability. Don't forget the 'http://'!",
+    )
+
     def date_formatted(self):
         return self.start_date.strftime('%A %d %B %Y')
 
