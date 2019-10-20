@@ -223,13 +223,19 @@ def get_emails(modeladmin, request, queryset):
 
 
 class ShowAdmin(admin.ModelAdmin):
-    actions = [get_emails]
+    def make_draft(modeladmin, request, queryset):
+        queryset.update(is_draft=True)
+    def publish(modeladmin, request, queryset):
+        queryset.update(is_draft=False)
+
+    actions = [get_emails, make_draft, publish]
     fieldsets = (
         (None, {
             'fields':(
                 'name',
                 'location',
                 'category',
+                'is_draft',
                 ('runtime', 'interval_number'),
                 'poster',
                 'programme',
@@ -258,6 +264,7 @@ class ShowAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'name',
+        'is_draft',
         'location',
         'category',
         'start_date',
@@ -265,7 +272,7 @@ class ShowAdmin(admin.ModelAdmin):
         'num_occurrences',
         )
 
-    list_filter = ['category']
+    list_filter = ['category', 'is_draft']
     search_fields = ('name', 'description')
 
     def get_actions(self, request):

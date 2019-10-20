@@ -82,6 +82,9 @@ class Show(models.Model):
 
     name = models.CharField(max_length=255)
 
+    is_draft = models.BooleanField(default=False,
+        help_text="Tick to hide from all listings, etc. Useful for being able to add the new season as draft until launch date.")
+
     slug = models.SlugField(
         blank=True,
         max_length=255,
