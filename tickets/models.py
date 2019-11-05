@@ -17,6 +17,8 @@ import configuration.customise as config
 
 from django.utils.encoding import python_2_unicode_compatible
 
+from collections import Counter 
+
 
 @python_2_unicode_compatible
 class Category(models.Model):
@@ -219,6 +221,59 @@ class Show(models.Model):
     # Does a show have any occurrences
     def has_occurrences(self):
         return Occurrence.objects.filter(show=self).count() > 0
+
+    def occurrences_formatted(self):
+        occ_list = Occurrence.objects.filter(show=self).order_by('date').order_by('time')
+        time_list = []
+        date_list = []
+        for o in occ_list:
+            time_list.append(o.time)
+            date_list.append(o.date)
+
+        # One-shot
+        if occ_list.count() <= 1:
+            return occ_list[0].time_formatted()
+        # All shows at the same time
+        elif all (x==time_list[0] for x in time_list):
+            return 'All performances at ' + occ_list[0].time_formatted()
+        # Two shows, each at different times
+        elif occ_list.count() == 2:
+            # 1. The shows are the same day
+            if all (x==date_list[0] for x in date_list):
+                return occ_list[0].time_formatted() + ' and ' + occ_list[1].time_formatted()
+            # 2. Two shows at different times on different days 
+            else:
+                return occ_list[0].day_formatted() + ' at ' + occ_list[0].time_formatted() \
+                    + '; ' + occ_list[1].day_formatted() + ' at ' + occ_list[1].time_formatted()
+        else: 
+            # Many shows
+            ## Only one odd one out
+            if len(set(time_list)) == 2:
+                odd_one_out = [i for i, n in Counter(time_list).iteritems() if n == 1]
+                if not odd_one_out: 
+                    return 'Various performance times, click "Reserve tickets" for details.'
+                odd_one_out = occ_list.get(time=odd_one_out[0])
+                # Get the usual time, making sure not to accidentally select the 'one off' time
+                if time_list[0] == odd_one_out.time:
+                    majority_time = time_list[1]
+                else:
+                    majority_time = time_list[0]
+                majority = occ_list.filter(time=majority_time)[0]
+                # Get the occurrences with the majority time; just need one of them 
+
+                # Is the odd one out an additional performance or a distinct one?
+                # eg., Wed-Sat evenings plus Sat Mat
+                # Or, Wed-Fri evenings plus Sat Mat 
+                if len(set(date_list)) == len(date_list):
+                    # Distinct performance 
+                    return 'Performances at ' + majority.time_formatted() + \
+                        ', with ' + odd_one_out.day_formatted() + "'s at " + odd_one_out.time_formatted()
+                else:
+                    # Additional performance 
+                    return 'Performances at ' + majority.time_formatted() + \
+                        ', plus ' + odd_one_out.day_formatted() + ' at ' + odd_one_out.time_formatted()
+            else: 
+                return 'Various performance times, click "Reserve tickets" for details.'
 
     def long_markdown(self):
         return Markdown().convert(self.long_description)
