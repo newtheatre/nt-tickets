@@ -55,7 +55,8 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
             'location', 'description', 'long_description', 'long_markdown', 
             'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 'programme',
             'no_warnings', 'warnings_technical', 'warnings_action', 'warnings_dialogue',
-            'category', 'allow_reservations', 'external_link', 'occurrence_set', 'show_sold_out')
+            'category', 'allow_reservations', 'external_link', 'occurrence_set', 'show_sold_out',
+            'occurrences_formatted')
 
 
 class ShowViewSet(viewsets.ReadOnlyModelViewSet):
