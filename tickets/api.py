@@ -61,7 +61,7 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
 class ShowViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ShowSerializer
     queryset = models.Show.objects \
-          .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+          .filter(is_draft=False).annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
           .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
     
     def get_queryset(self):
