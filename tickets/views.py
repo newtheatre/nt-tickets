@@ -706,7 +706,7 @@ def DownloadReport(request, show_name):
     response = HttpResponse(content_type='text/csv')
     occurrence = models.Occurrence.objects.filter(show_id=show_name).order_by('date', 'time')
     show = get_object_or_404(models.Show, id=show_name)
-    response['Content-Disposition'] = 'attachment; filename=%s_report.csv' % (show.name)
+    response['Content-Disposition'] = 'attachment; filename="%s_sale_report_%s.csv"' % (str(show.name), datetime.datetime.now().strftime("%d-%b-%Y"))
 
     category = show.category
 
@@ -764,7 +764,7 @@ def DownloadReport(request, show_name):
 
     writer = csv.writer(response)
     writer.writerow([
-        show.name,
+        str(show.name),
         'Total Sales: £' + str(show.get_sale_data()['show_sales']),
         'Total Tickets Sold: ' + str(show.get_sale_data()['total_sold']),
         'Total Tickets Reserved: ' + str(show.get_sale_data()['total_reserved']),
