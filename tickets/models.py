@@ -451,8 +451,8 @@ class Ticket(models.Model):
 
     occurrence = models.ForeignKey(Occurrence)
     stamp = models.DateTimeField(auto_now=True)
-    person_name = models.CharField(max_length=80)
-    email_address = models.EmailField(max_length=80)
+    person_name = models.CharField(max_length=200)
+    email_address = models.EmailField(max_length=200)
     # Initial quantity is used when not the full number of tickets reserved is bought
     # It will be used in the future for more stats on the sale reports page
     initial_quantity = models.IntegerField(default=0)
