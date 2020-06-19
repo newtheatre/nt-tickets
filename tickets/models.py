@@ -230,8 +230,11 @@ class Show(models.Model):
             time_list.append(o.time)
             date_list.append(o.date)
 
+        # No occurrences
+        if occ_list.count() == 0:
+            return "Performance times TBC"
         # One-shot
-        if occ_list.count() <= 1:
+        elif occ_list.count() == 1:
             return occ_list[0].time_formatted()
         # All shows at the same time
         elif all (x==time_list[0] for x in time_list):
