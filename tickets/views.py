@@ -85,6 +85,9 @@ def ShowReport(request, show_name, occ_id):
 
     if occ_id == '0' and len(occurrence) == 1:
         return HttpResponseRedirect('/show/' + str(show.id) + '/' + str(occurrence[0][0]) + '/')
+    if show.is_draft is True:
+        return HttpResponseRedirect('/')
+        # No reports for draft shows, thank you.
 
     # If there has been an occurrnece selected
     if occ_id > '0':
@@ -593,7 +596,7 @@ class SaleReport(generic.ListView):
 
     def get_queryset(self):
         time_filter = datetime.date.today() - datetime.timedelta(weeks=4)
-        return models.Show.objects.filter(end_date__gte=time_filter).order_by('end_date')
+        return models.Show.objects.filter(is_draft=False).filter(end_date__gte=time_filter).order_by('end_date')
 
 class SaleReportAll(generic.ListView):
     template_name = 'sale_report.html'
@@ -605,7 +608,7 @@ class SaleReportAll(generic.ListView):
 
     def get_queryset(self):
         # time_filter = datetime.date.today() - datetime.timedelta(weeks=4)
-        return models.Show.objects.order_by('-end_date')
+        return models.Show.objects.filter(is_draft=False).order_by('-end_date')
 
 @login_required
 def SaleReportFull(request, show_name):
@@ -816,7 +819,7 @@ def defaultFNI(request):
 
 @login_required
 def graph_view(request):
-    all_shows = models.Show.objects.all().order_by('start_date')
+    all_shows = models.Show.objects.all().filter(is_draft=False).order_by('start_date')
 
     shows_date = []
     tickets_sold = []
@@ -1014,7 +1017,7 @@ class ListShows(OrderedListView):
 
     def get_queryset(self):
         today = datetime.date.today()
-        return super(ListShows, self).get_queryset().filter(end_date__gte=today) \
+        return super(ListShows, self).get_queryset().filter(is_draft=False).filter(end_date__gte=today) \
             .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
             .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
         #.filter(category__slug__in=settings.PUBLIC_CATEGORIES)
@@ -1025,6 +1028,7 @@ class ListStuFFShows(ListShows):
     def get_queryset(self):
         today = datetime.date.today()
         return super(ListStuFFShows, self).get_queryset() \
+                                        .filter(is_draft=False) \
                                         .filter(end_date__gte=today) \
                                         .filter(category__name='StuFF') \
                                         .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
@@ -1046,7 +1050,7 @@ class ListPastShows(OrderedListView):
 
     def get_queryset(self):
         today = datetime.date.today()
-        return super(ListPastShows, self).get_queryset().filter(end_date__lte=today)
+        return super(ListPastShows, self).get_queryset().filter(is_draft=False).filter(end_date__lte=today)
 
 @method_decorator(xframe_options_exempt, name='dispatch')
 class DetailShow(generic.DetailView):
@@ -1062,7 +1066,7 @@ def sidebar(request):
     exclude = config.SIDEBAR_FILTER_PERIOD
     current_shows = []
     for category in categories:
-        shows = models.Show.objects.filter(category=category).filter(end_date__gte=today).order_by(
+        shows = models.Show.objects.filter(category=category).filter(is_draft=False).filter(end_date__gte=today).order_by(
             'end_date').filter(start_date__lte=limit).filter(category__slug__in=config.PUBLIC_CATEGORIES)
         if len(shows) > 0:
             current_shows.append(shows[0])
@@ -1071,7 +1075,7 @@ def sidebar(request):
 @xframe_options_exempt
 def book_landing(request, show_id):
     show = get_object_or_404(models.Show, id=show_id)
-    if show.is_current() is False:
+    if (show.is_current() is False) or (show.is_draft is True): #or show.is_draft is False:
         return HttpResponseRedirect(reverse('error', kwargs={'show_id': show.id}))
     step = 1
     total = 2

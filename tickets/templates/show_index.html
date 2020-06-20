@@ -10,21 +10,30 @@
 					<div class="row">
 						<div class="col s4" id="poster-container">
 							<div class="card-image show-poster">
-								<a href="show/{{ sh.id }}/0/" rel="nofollow">
+								{% if sh.is_draft is False %}<a href="show/{{ sh.id }}/0/" rel="nofollow">{% endif %}
 								{% if sh.poster %}
 									<img class="responsive-img" src="{{ sh.poster.poster_page.url }}" id="report-image">
 								{% else %}
 									<img class="responsive-img" src="{% static 'images/no_image.png' %}" id="report-image">
 								{% endif %}
-								</a>
+								{% if sh.is_draft is False %}</a>{% endif %}
 							</div>
 						</div>
 						<div class="card-content">
 							<h1 class="light flow-text" id="title" style="margin-top: 0;">
-								<a href="show/{{ sh.id }}/0/" rel="nofollow" class="title">
+								{% if sh.is_draft is True %}
+								<p class="white-text">{{ sh.name }}</p>
+								<p><span class="chip nnt-purple" style="margin-top:1rem;">Booking not open yet</span></p>
+								{% if user.is_staff %}
+								<p style="margin-top: 2rem;"><a class="waves-effect waves-light btn nnt purple" href="admin/tickets/show/{{ sh.pk }}/change/">Edit</a></p>
+								{% endif %}
+								{% else %}
+								<a href="show/{{ sh.id }}/0" rel="nofollow" class="title">
 								{{ sh.name }}
 								</a>
+								{% endif %}
 							</h1>
+							{% if sh.is_draft is False %}
 							<div class="col s6">
 								<blockquote class="grey-text text-lighten-1 hide-on-small-and-down truncate">
 									Tickets Reserved: <span class="nnt-text nnt-orange">{{ sh.get_sale_data.total_reserved }}</span>
@@ -41,6 +50,7 @@
 									Profit: <span class="nnt-text nnt-orange">£{{ sh.get_sale_data.show_sales }}</span>
 								</blockquote>
 							</div>
+							{% endif %}
 						</div>
 					</div>
 				</div>

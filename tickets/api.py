@@ -55,13 +55,14 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
             'location', 'description', 'long_description', 'long_markdown', 
             'start_date', 'end_date', 'is_current', 'poster', 'small_poster', 'programme',
             'no_warnings', 'warnings_technical', 'warnings_action', 'warnings_dialogue',
-            'category', 'allow_reservations', 'external_link', 'occurrence_set', 'show_sold_out')
+            'category', 'allow_reservations', 'external_link', 'occurrence_set', 'show_sold_out',
+            'occurrences_formatted')
 
 
 class ShowViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ShowSerializer
     queryset = models.Show.objects \
-          .annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
+          .filter(is_draft=False).annotate(earliest_occurrence_time=Min('occurrence__time'), earliest_occurrence_date=Min('occurrence__date')) \
           .order_by('start_date', 'earliest_occurrence_date', 'earliest_occurrence_time')
     
     def get_queryset(self):
