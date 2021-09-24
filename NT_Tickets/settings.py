@@ -49,7 +49,12 @@ if not DEBUG:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ACTUALLY_SEND_MAIL = True if not DEBUG else False
+if DEBUG:
+  ACTUALLY_SEND_MAIL = False
+elif os.environ.get('ACTUALLY_SEND_MAIL'):
+  ACTUALLY_SEND_MAIL = bool(int(os.environ.get('ACTUALLY_SEND_MAIL')))
+else:
+  ACTUALLY_SEND_MAIL = True
 
 # The repository to add issues to
 REPO_OWNER = 'newtheatre'
