@@ -28,7 +28,7 @@ wsgiref==0.1.2
 coverage==4.2
 requests-transition==1.0.4
 factory_boy==2.7.0
-psycopg2==2.7.1
+psycopg2==2.9.1
 whitenoise==3.3.0
 djangorestframework==3.8.2
 django-cors-headers==2.4.0
